@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">मुख्य ड्यासबोर्ड</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-download me-1"></i>निर्यात
+            </button>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i>नयाँ डाटा थप्नुहोस्
+        </button>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            कुल जनसंख्या
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">40,235</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            कुल घरपरिवार
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">8,547</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-home fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            कुल वडा संख्या
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            डाटा कवरेज
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">85%</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-chart-pie fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity and Quick Actions -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">हालैको गतिविधि</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-primary"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">जनसंख्या डाटा अपडेट</h6>
+                            <p class="timeline-description">वडा नं. ३ को जनसंख्या डाटा अपडेट गरियो</p>
+                            <small class="text-muted">२ घण्टा अगाडि</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">प्रतिवेदन उत्पादन</h6>
+                            <p class="timeline-description">मासिक प्रतिवेदन सफलतापूर्वक उत्पादन गरियो</p>
+                            <small class="text-muted">५ घण्टा अगाडि</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-info"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">नयाँ प्रयोगकर्ता</h6>
+                            <p class="timeline-description">वडा अधिकारी खाता सिर्जना गरियो</p>
+                            <small class="text-muted">१ दिन अगाडि</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">त्वरित कार्यहरू</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus-circle me-2 text-primary"></i>
+                        नयाँ डाटा इन्ट्री
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-pdf me-2 text-danger"></i>
+                        PDF प्रतिवेदन उत्पादन
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-download me-2 text-success"></i>
+                        डाटा निर्यात
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-chart-bar me-2 text-info"></i>
+                        तथ्याङ्क हेर्नुहोस्
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog me-2 text-warning"></i>
+                        सेटिङ्स
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 3rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -2.5rem;
+    width: 2px;
+    height: 100%;
+    background-color: #e3e6f0;
+}
+
+.timeline-marker {
+    position: absolute;
+    top: 0.2rem;
+    left: -3rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px #e3e6f0;
+}
+
+.timeline-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-description {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+</style>
+{% endblock %}

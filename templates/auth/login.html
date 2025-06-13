@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h4 text-gray-900 mb-4">स्वागतम्!</h1>
+                        <p class="text-muted">{{ municipality_name }}</p>
+                        <p class="text-muted small">डिजिटल प्रोफाइल प्रतिवेदन प्रणाली</p>
+                    </div>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="user">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="id_username" class="form-label">प्रयोगकर्तानाम:</label>
+                            <input type="text" 
+                                   class="form-control form-control-user" 
+                                   id="id_username" 
+                                   name="username" 
+                                   placeholder="आफ्नो प्रयोगकर्तानाम प्रविष्ट गर्नुहोस्"
+                                   required>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="id_password" class="form-label">पासवर्ड:</label>
+                            <input type="password" 
+                                   class="form-control form-control-user" 
+                                   id="id_password" 
+                                   name="password" 
+                                   placeholder="पासवर्ड प्रविष्ट गर्नुहोस्"
+                                   required>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
+                                <label class="form-check-label" for="remember_me">
+                                    मलाई याद राख्नुहोस्
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-user btn-block w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>लगइन
+                        </button>
+                    </form>
+
+                    <hr>
+                    
+                    <div class="text-center">
+                        <a class="small" href="#">पासवर्ड बिर्सनुभयो?</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3">
+                <p class="text-muted small">
+                    © २०२४ {{ municipality_name }}। सबै अधिकार सुरक्षित।
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+.form-control-user {
+    font-size: 0.9rem;
+    border-radius: 10rem;
+    padding: 1.5rem 1rem;
+}
+
+.btn-user {
+    font-size: 0.9rem;
+    border-radius: 10rem;
+    padding: 0.75rem 1rem;
+}
+
+.card {
+    border: 0;
+    border-radius: 1rem;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+</style>
+{% endblock %}
