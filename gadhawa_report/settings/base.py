@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_spectacular',
+    'ckeditor',
 ]
 
 LOCAL_APPS = [

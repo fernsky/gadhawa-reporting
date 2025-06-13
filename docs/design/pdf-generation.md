@@ -72,7 +72,7 @@ This document outlines the approach for generating beautiful, professional A4 PD
   }
   
   @bottom-center {
-    content: "गधावा नगरपालिका";
+    content: "गढवा नगरपालिका";
     font-size: 8pt;
     color: #666;
     font-family: 'Mukti', serif;

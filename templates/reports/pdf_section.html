@@ -1,0 +1,325 @@
+{% extends 'reports/pdf_base.html' %}
+
+{% block title %}{{ section.title }} - {{ category.title }} - गढवा गाउँपालिका{% endblock %}
+
+{% block chapter_header %}{{ category.title }} - {{ section.title }}{% endblock %}
+
+{% block content %}
+<!-- Cover Page -->
+<div class="cover-page">
+    <div class="cover-title">
+        गढवा गाउँपालिका
+    </div>
+    <div class="cover-subtitle">
+        {{ section.title }}
+    </div>
+    
+    <div style="margin: 1cm 0;">
+        <div style="font-size: 14pt; color: #666;">
+            {{ category.title }}
+        </div>
+    </div>
+    
+    <div style="margin: 2cm 0;">
+        {% if section.description %}
+        <div style="font-size: 12pt; max-width: 80%; margin: 0 auto; text-align: justify;">
+            {{ section.description }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="cover-info">
+        {% if publication_settings %}
+        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}</div>
+        <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
+        {% endif %}
+        
+        <div style="margin-top: 2em; font-size: 10pt;">
+            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+        </div>
+    </div>
+</div>
+
+<!-- Content Overview -->
+{% if section.figures.all or section.tables.all %}
+<div class="toc-page">
+    <h1 class="toc-title">{{ section.title }} - सामग्री सूची</h1>
+    
+    <!-- List figures if any -->
+    {% if section.figures.all %}
+    <div style="margin-bottom: 2em;">
+        <h3>चित्रहरू</h3>
+        {% for figure in section.figures.all %}
+        <div class="list-item">
+            <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title }}</span>
+            <span class="page-number">{{ figure.page_number|default:forloop.counter }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- List tables if any -->
+    {% if section.tables.all %}
+    <div style="margin-bottom: 2em;">
+        <h3>तालिकाहरू</h3>
+        {% for table in section.tables.all %}
+        <div class="list-item">
+            <span class="title">तालिका {{ table.table_number }}: {{ table.title }}</span>
+            <span class="page-number">{{ table.page_number|default:forloop.counter }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Main Content -->
+<div class="section-break">
+    <div class="page-header">
+        <div style="display: flex; justify-content: between; align-items: center;">
+            <span>{{ category.title }}</span>
+            <span>{{ section.title }}</span>
+        </div>
+    </div>
+    
+    <h1>{{ section.title }}</h1>
+    
+    {% if section.description %}
+    <div class="lead">{{ section.description }}</div>
+    {% endif %}
+    
+    {% if section.content %}
+    <div class="content-section">
+        {{ section.content|safe }}
+    </div>
+    {% else %}
+    <div class="note">
+        <p><strong>सूचना:</strong> यस खण्डको विस्तृत सामग्री अझै तयार गरिएको छैन।</p>
+    </div>
+    {% endif %}
+    
+    <!-- Section Figures -->
+    {% if section.figures.all %}
+    <div style="page-break-before: auto; margin-top: 2em;">
+        <h2>चित्रहरू र आंकडाहरू</h2>
+        
+        {% for figure in section.figures.all %}
+        <div class="figure-container">
+            {% if figure.image %}
+            <img src="{{ figure.image.url }}" alt="{{ figure.caption }}">
+            {% endif %}
+            <div class="figure-caption">
+                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title }}
+                {% if figure.caption %}<br>{{ figure.caption }}{% endif %}
+                {% if figure.source %}<br><em>स्रोत: {{ figure.source }}</em>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Section Tables -->
+    {% if section.tables.all %}
+    <div style="page-break-before: auto; margin-top: 2em;">
+        <h2>तालिकाहरू र डेटा</h2>
+        
+        {% for table in section.tables.all %}
+        <div class="table-container">
+            <table>
+                <caption>
+                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title }}
+                    {% if table.caption %}<br>{{ table.caption }}{% endif %}
+                </caption>
+                {% if table.data %}
+                <thead>
+                    <tr>
+                        {% for header in table.data.0 %}
+                        <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table.data|slice:"1:" %}
+                    <tr>
+                        {% for cell in row %}
+                        <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% else %}
+                <tbody>
+                    <tr>
+                        <td colspan="100%" style="text-align: center; color: #666; font-style: italic;">
+                            डेटा उपलब्ध छैन
+                        </td>
+                    </tr>
+                </tbody>
+                {% endif %}
+            </table>
+            {% if table.source %}
+            <div class="small text-muted mt-1">स्रोत: {{ table.source }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Summary Section -->
+<div class="section-break">
+    <h1>सारांश</h1>
+    
+    <div class="important">
+        <h3>मुख्य जानकारी:</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1em; margin: 1em 0;">
+            <div>
+                <strong>विषय:</strong> {{ category.title }}
+            </div>
+            <div>
+                <strong>उप-विषय:</strong> {{ section.title }}
+            </div>
+            {% if section.figures.all %}
+            <div>
+                <strong>चित्रहरू:</strong> {{ section.figures.all|length }} वटा
+            </div>
+            {% endif %}
+            {% if section.tables.all %}
+            <div>
+                <strong>तालिकाहरू:</strong> {{ section.tables.all|length }} वटा
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if section.description %}
+    <div class="note">
+        <h4>विवरण:</h4>
+        <p>{{ section.description }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- Key Statistics if available -->
+    {% if section.figures.all or section.tables.all %}
+    <div class="stats-grid mt-3">
+        {% if section.figures.all %}
+        <div class="stat-item">
+            <span class="stat-value">{{ section.figures.all|length }}</span>
+            <div class="stat-label">चित्रहरू</div>
+        </div>
+        {% endif %}
+        {% if section.tables.all %}
+        <div class="stat-item">
+            <span class="stat-value">{{ section.tables.all|length }}</span>
+            <div class="stat-label">तालिकाहरू</div>
+        </div>
+        {% endif %}
+        <div class="stat-item">
+            <span class="stat-value">{{ section.created_at|date:"Y" }}</span>
+            <div class="stat-label">डेटा वर्ष</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-value">{{ section.updated_at|date:"F j" }}</span>
+            <div class="stat-label">अद्यावधिक</div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Related Information -->
+    <div class="note mt-3">
+        <h4>सम्बन्धित जानकारी:</h4>
+        <p>यो खण्ड <strong>{{ category.title }}</strong> विषयको भाग हो। सम्पूर्ण विषयको जानकारी र अन्य सम्बन्धित खण्डहरूका लागि पूर्ण प्रतिवेदन हेर्नुहोस्।</p>
+        
+        {% if other_sections %}
+        <div style="margin-top: 1em;">
+            <strong>{{ category.title }} का अन्य खण्डहरू:</strong>
+            <ul style="margin-top: 0.5em;">
+                {% for other_section in other_sections %}
+                {% if other_section.id != section.id %}
+                <li>{{ other_section.title }}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Methodology/Notes Section (if content exists) -->
+{% if section.content %}
+<div class="section-break">
+    <h1>पद्धति र टिप्पणीहरू</h1>
+    
+    <div class="warning">
+        <h4>डेटा सम्बन्धी जानकारी:</h4>
+        <ul>
+            <li>यस खण्डमा प्रस्तुत डेटा र जानकारी विश्वसनीय स्रोतहरूबाट संकलन गरिएको छ।</li>
+            <li>सबै तथ्यांकहरू उपलब्ध भएको अवस्थामा सकेसम्म अद्यावधिक राखिएको छ।</li>
+            <li>केही डेटामा अनुमानित मूल्यहरू समावेश छन् जुन उल्लेख गरिएको छ।</li>
+        </ul>
+    </div>
+    
+    {% if section.figures.all %}
+    <div class="important mt-2">
+        <h4>चित्र र आंकडाहरू सम्बन्धी टिप्पणी:</h4>
+        <ul>
+            {% for figure in section.figures.all %}
+            {% if figure.source %}
+            <li><strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.source }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if section.tables.all %}
+    <div class="important mt-2">
+        <h4>तालिका डेटा स्रोतहरू:</h4>
+        <ul>
+            {% for table in section.tables.all %}
+            {% if table.source %}
+            <li><strong>तालिका {{ table.table_number }}:</strong> {{ table.source }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Footer Information -->
+<div class="page-footer">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; padding-top: 1em; border-top: 1px solid #ddd;">
+        <div>
+            <h4>सम्पर्क जानकारी</h4>
+            <p>
+                <strong>गढवा गाउँपालिका</strong><br>
+                {% if publication_settings.contact_email %}
+                इमेल: {{ publication_settings.contact_email }}<br>
+                {% endif %}
+                वेबसाइट: www.gadhawa.gov.np
+            </p>
+        </div>
+        <div>
+            <h4>प्रकाशन जानकारी</h4>
+            <p>
+                {% if publication_settings %}
+                प्रकाशन मिति: {{ publication_settings.publication_date|date:"Y F j" }}<br>
+                संस्करण: {{ publication_settings.version }}<br>
+                {% endif %}
+                विषय: {{ category.title }}<br>
+                खण्ड: {{ section.title }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="text-center mt-2">
+        {% if publication_settings.copyright_notice %}
+        {{ publication_settings.copyright_notice }}
+        {% else %}
+        © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

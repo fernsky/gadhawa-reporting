@@ -1,0 +1,246 @@
+{% extends 'reports/pdf_base.html' %}
+
+{% block title %}गढवा गाउँपालिका - पूर्ण प्रतिवेदन{% endblock %}
+
+{% block content %}
+<!-- Cover Page -->
+<div class="cover-page">
+    <div class="cover-title">
+        गढवा गाउँपालिका
+    </div>
+    <div class="cover-subtitle">
+        डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+    </div>
+    
+    <div style="margin: 3cm 0;">
+        <div style="border: 2px solid #3498db; padding: 2em; display: inline-block;">
+            <div style="font-size: 14pt; margin-bottom: 1em;">
+                <strong>नेपाल सरकार</strong><br>
+                स्थानीय तह
+            </div>
+            <div style="font-size: 16pt; color: #3498db;">
+                <strong>गढवा गाउँपालिका</strong>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cover-info">
+        {% if publication_settings %}
+        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}</div>
+        <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
+        {% if publication_settings.editor_name %}
+        <div><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</div>
+        {% endif %}
+        {% if publication_settings.isbn %}
+        <div><strong>ISBN:</strong> {{ publication_settings.isbn }}</div>
+        {% endif %}
+        {% endif %}
+        
+        <div style="margin-top: 2em; font-size: 10pt;">
+            {% if publication_settings.copyright_notice %}
+            {{ publication_settings.copyright_notice }}
+            {% else %}
+            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc-page">
+    <h1 class="toc-title">सूचीपत्र</h1>
+    
+    <!-- Front Matter -->
+    <div class="toc-item level-1">
+        <span>सूचीपत्र</span>
+        <span class="page-number">i</span>
+    </div>
+    {% if total_figures > 0 %}
+    <div class="toc-item level-1">
+        <span>चित्रहरूको सूची</span>
+        <span class="page-number">ii</span>
+    </div>
+    {% endif %}
+    {% if total_tables > 0 %}
+    <div class="toc-item level-1">
+        <span>तालिकाहरूको सूची</span>
+        <span class="page-number">iii</span>
+    </div>
+    {% endif %}
+    
+    <div style="margin: 1.5em 0; border-bottom: 1px solid #ddd;"></div>
+    
+    <!-- Main Content -->
+    {% for category in categories %}
+    <div class="toc-item level-1">
+        <span>{{ category.order|default:forloop.counter }}. {{ category.title }}</span>
+        <span class="page-number">{{ category.page_number|default:forloop.counter }}</span>
+    </div>
+    {% for section in category.sections.all %}
+    <div class="toc-item level-2">
+        <span>{{ category.order|default:forloop.parentloop.counter }}.{{ section.order|default:forloop.counter }} {{ section.title }}</span>
+        <span class="page-number">{{ section.page_number|default:forloop.parentloop.counter }}.{{ forloop.counter }}</span>
+    </div>
+    {% endfor %}
+    {% endfor %}
+</div>
+
+<!-- List of Figures -->
+{% if figures %}
+<div class="list-page">
+    <h1 class="list-title">चित्रहरूको सूची</h1>
+    {% for figure in figures %}
+    <div class="list-item">
+        <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title }}</span>
+        <span class="page-number">{{ figure.page_number|default:forloop.counter }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- List of Tables -->
+{% if tables %}
+<div class="list-page">
+    <h1 class="list-title">तालिकाहरूको सूची</h1>
+    {% for table in tables %}
+    <div class="list-item">
+        <span class="title">तालिका {{ table.table_number }}: {{ table.title }}</span>
+        <span class="page-number">{{ table.page_number|default:forloop.counter }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Main Content -->
+{% for category in categories %}
+<div class="section-break">
+    <h1>{{ category.order|default:forloop.counter }}. {{ category.title }}</h1>
+    
+    {% if category.description %}
+    <div class="lead">{{ category.description }}</div>
+    {% endif %}
+    
+    {% for section in category.sections.all %}
+    <div class="{% if not forloop.first %}section-break{% endif %}">
+        <h2>{{ category.order|default:forloop.parentloop.counter }}.{{ section.order|default:forloop.counter }} {{ section.title }}</h2>
+        
+        {% if section.description %}
+        <p class="lead">{{ section.description }}</p>
+        {% endif %}
+        
+        {% if section.content %}
+        <div class="content-section">
+            {{ section.content|safe }}
+        </div>
+        {% endif %}
+        
+        <!-- Section Figures -->
+        {% for figure in section.figures.all %}
+        <div class="figure-container">
+            {% if figure.image %}
+            <img src="{{ figure.image.url }}" alt="{{ figure.caption }}" style="max-width: 100%; height: auto;">
+            {% endif %}
+            <div class="figure-caption">
+                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title }}
+                {% if figure.caption %}<br>{{ figure.caption }}{% endif %}
+                {% if figure.source %}<br><em>स्रोत: {{ figure.source }}</em>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        
+        <!-- Section Tables -->
+        {% for table in section.tables.all %}
+        <div class="table-container">
+            <table>
+                <caption>
+                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title }}
+                    {% if table.caption %}<br>{{ table.caption }}{% endif %}
+                </caption>
+                {% if table.data %}
+                <thead>
+                    <tr>
+                        {% for header in table.data.0 %}
+                        <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table.data|slice:"1:" %}
+                    <tr>
+                        {% for cell in row %}
+                        <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endif %}
+            </table>
+            {% if table.source %}
+            <div class="small text-muted mt-1">स्रोत: {{ table.source }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<!-- Back Cover / Additional Information -->
+<div class="section-break">
+    <h1>अतिरिक्त जानकारी</h1>
+    
+    <div class="no-break">
+        <h2>सम्पर्क विवरण</h2>
+        <p>
+            <strong>गढवा गाउँपालिका</strong><br>
+            {% if publication_settings.contact_email %}
+            इमेल: {{ publication_settings.contact_email }}<br>
+            {% endif %}
+            वेबसाइट: www.gadhawa.gov.np
+        </p>
+    </div>
+    
+    {% if publication_settings %}
+    <div class="no-break mt-3">
+        <h2>प्रकाशन जानकारी</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em;">
+            <div>
+                <strong>प्रकाशक:</strong> गढवा गाउँपालिका<br>
+                <strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}<br>
+                <strong>संस्करण:</strong> {{ publication_settings.version }}
+            </div>
+            <div>
+                {% if publication_settings.isbn %}
+                <strong>ISBN:</strong> {{ publication_settings.isbn }}<br>
+                {% endif %}
+                {% if publication_settings.editor_name %}
+                <strong>सम्पादक:</strong> {{ publication_settings.editor_name }}<br>
+                {% endif %}
+                <strong>भाषा:</strong> नेपाली
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="no-break mt-3">
+        <h2>डेटा स्रोतहरू</h2>
+        <ul>
+            <li>राष्ट्रिय जनगणना २०७८</li>
+            <li>गढवा गाउँपालिका कार्यालयका अभिलेखहरू</li>
+            <li>केन्द्रीय तथ्यांक कार्यालय</li>
+            <li>स्थानीय सर्वेक्षण तथा अध्ययनहरू</li>
+        </ul>
+    </div>
+    
+    <div class="page-footer mt-3">
+        <div class="text-center">
+            {% if publication_settings.copyright_notice %}
+            {{ publication_settings.copyright_notice }}
+            {% else %}
+            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

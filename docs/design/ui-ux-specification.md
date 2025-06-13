@@ -118,9 +118,9 @@
 ```html
 <header class="main-header">
   <div class="header-brand">
-    <img src="logo.png" alt="गधावा नगरपालिका" class="logo">
+    <img src="logo.png" alt="गढवा नगरपालिका" class="logo">
     <div class="brand-text">
-      <h1 class="municipality-name nepali-text">गधावा नगरपालिका</h1>
+      <h1 class="municipality-name nepali-text">गढवा नगरपालिका</h1>
       <p class="tagline">डिजिटल प्रोफाइल प्रतिवेदन</p>
     </div>
   </div>
@@ -198,7 +198,7 @@
     margin: 2.5cm 2cm 2cm 2cm;
     
     @top-center {
-      content: "गधावा नगरपालिका - डिजिटल प्रोफाइल प्रतिवेदन";
+      content: "गढवा नगरपालिका - डिजिटल प्रोफाइल प्रतिवेदन";
       font-size: 10pt;
       color: #666;
     }

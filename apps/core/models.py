@@ -62,7 +62,7 @@ class WardModel(BaseModel):
     
     ward_number = models.IntegerField(
         verbose_name=_('वडा नं'),  # Ward Number
-        help_text=_('गधावा गाउँपालिकाको वडा नम्बर (१-८)')  # Ward number of Gadhawa Rural Municipality (1-8)
+        help_text=_('गढवा गाउँपालिकाको वडा नम्बर (१-८)')  # Ward number of Gadhawa Rural Municipality (1-8)
     )
     
     class Meta:

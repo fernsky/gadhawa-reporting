@@ -37,7 +37,10 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
     # Web interface (templates)
-    path('', include('apps.core.web_urls')),
+    path('dashboard/', include('apps.core.web_urls')),
+    
+    # Reports public site (main site at root level)
+    path('', include('apps.reports.urls')),
 ]
 
 # Serve media files in development
@@ -53,6 +56,6 @@ if settings.DEBUG:
         ] + urlpatterns
 
 # Customize admin site
-admin.site.site_header = "गधावा गाउँपालिका - डिजिटल प्रोफाइल प्रतिवेदन"
+admin.site.site_header = "गढवा गाउँपालिका - डिजिटल प्रोफाइल प्रतिवेदन"
 admin.site.site_title = "Gadhawa Report Admin"
 admin.site.index_title = "प्रतिवेदन व्यवस्थापन"

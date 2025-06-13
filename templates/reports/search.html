@@ -1,0 +1,705 @@
+{% extends 'reports/base.html' %}
+{% load static %}
+
+{% block title %}खोज परिणामहरू{% if query %} - "{{ query }}"{% endif %} - गढवा गाउँपालिका{% endblock %}
+
+{% block description %}गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा खोज गर्नुहोस्। सबै विषयहरू, सामग्री र डेटामा खोज सुविधा।{% endblock %}
+
+{% block keywords %}खोज, सर्च, गढवा, गाउँपालिका, प्रतिवेदन{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
+        <li class="breadcrumb-item active">खोज{% if query %} - "{{ query }}"{% endif %}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SearchResultsPage",
+    "name": "खोज परिणामहरू{% if query %} - {{ query }}{% endif %}",
+    "description": "गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा खोज परिणामहरू।",
+    "url": "{{ request.build_absolute_uri }}",
+    "isPartOf": {
+        "@type": "WebSite",
+        "name": "गढवा गाउँपालिका",
+        "url": "{% url 'reports:home' %}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{% url 'reports:search' %}?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    },
+    "publisher": {
+        "@type": "GovernmentOrganization",
+        "name": "गढवा गाउँपालिका"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-search me-3"></i>खोज</h1>
+            {% if query %}
+            <p class="lead text-muted">"{{ query }}" का लागि परिणामहरू</p>
+            {% else %}
+            <p class="lead text-muted">गढवा गाउँपालिका प्रतिवेदनमा खोज्नुहोस्</p>
+            {% endif %}
+        </div>
+        <div class="no-print">
+            {% if results %}
+            <div class="btn-group" role="group">
+                <button onclick="exportSearchResults()" class="btn btn-outline-success">
+                    <i class="fas fa-file-csv me-2"></i>Export
+                </button>
+                <button onclick="printPage()" class="btn btn-outline-secondary">
+                    <i class="fas fa-print me-2"></i>प्रिन्ट
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Search Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{% url 'reports:search' %}" class="search-form">
+            <div class="row align-items-end">
+                <div class="col-md-6">
+                    <label for="searchQuery" class="form-label">खोज्नुहोस्:</label>
+                    <input type="text" 
+                           id="searchQuery" 
+                           name="q" 
+                           class="form-control form-control-lg" 
+                           placeholder="शब्द, वाक्यांश वा विषय खोज्नुहोस्..." 
+                           value="{{ query }}"
+                           autocomplete="off">
+                </div>
+                <div class="col-md-3">
+                    <label for="categoryFilter" class="form-label">विषय:</label>
+                    <select name="category" id="categoryFilter" class="form-select">
+                        <option value="">सबै विषयहरू</option>
+                        {% for category in categories %}
+                        <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>
+                            {{ category.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-search me-2"></i>खोज्नुहोस्
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Advanced Search Options -->
+            <div class="mt-3">
+                <button type="button" class="btn btn-link p-0" onclick="toggleAdvancedSearch()">
+                    <i class="fas fa-cog me-1"></i>उन्नत खोज विकल्पहरू
+                </button>
+            </div>
+            
+            <div id="advancedSearch" class="mt-3 d-none">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">खोजको प्रकार:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="search_type" value="all" id="searchAll" 
+                                   {% if not search_type or search_type == 'all' %}checked{% endif %}>
+                            <label class="form-check-label" for="searchAll">सबै शब्दहरू</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="search_type" value="any" id="searchAny"
+                                   {% if search_type == 'any' %}checked{% endif %}>
+                            <label class="form-check-label" for="searchAny">कुनै पनि शब्द</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="search_type" value="exact" id="searchExact"
+                                   {% if search_type == 'exact' %}checked{% endif %}>
+                            <label class="form-check-label" for="searchExact">ठ्याक्कै वाक्यांश</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">खोज्ने ठाउँ:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="search_in" value="title" id="searchTitle"
+                                   {% if 'title' in search_in or not search_in %}checked{% endif %}>
+                            <label class="form-check-label" for="searchTitle">शीर्षकमा</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="search_in" value="content" id="searchContent"
+                                   {% if 'content' in search_in or not search_in %}checked{% endif %}>
+                            <label class="form-check-label" for="searchContent">सामग्रीमा</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="search_in" value="tables" id="searchTables"
+                                   {% if 'tables' in search_in or not search_in %}checked{% endif %}>
+                            <label class="form-check-label" for="searchTables">तालिकाहरूमा</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="sortBy" class="form-label">क्रमबद्ध गर्नुहोस्:</label>
+                        <select name="sort" id="sortBy" class="form-select">
+                            <option value="relevance" {% if sort_by == 'relevance' %}selected{% endif %}>प्रासंगिकता</option>
+                            <option value="date" {% if sort_by == 'date' %}selected{% endif %}>मिति</option>
+                            <option value="title" {% if sort_by == 'title' %}selected{% endif %}>शीर्षक</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Search Results -->
+{% if query %}
+<div class="search-results">
+    <!-- Results Summary -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    {% if results %}
+                    <h5 class="mb-1">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        {{ total_results }} परिणाम {% if total_results == 1 %}फेला पर्यो{% else %}फेला परे{% endif %}
+                    </h5>
+                    <p class="text-muted mb-0">
+                        "{{ query }}" का लागि {% if selected_category %}{{ selected_category }} विषयमा{% endif %}
+                        ({{ search_time|floatformat:3 }} सेकेन्डमा)
+                    </p>
+                    {% else %}
+                    <h5 class="mb-1">
+                        <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                        कुनै परिणाम फेला परेन
+                    </h5>
+                    <p class="text-muted mb-0">"{{ query }}" का लागि कुनै परिणाम उपलब्ध छैन।</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-end">
+                    {% if results %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-2"></i>फिल्टर
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="filterResults('all')">सबै परिणामहरू</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterResults('sections')">खण्डहरू</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterResults('figures')">चित्रहरू</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterResults('tables')">तालिकाहरू</a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results List -->
+    {% if results %}
+    <div class="results-list">
+        {% for result in results %}
+        <div class="card mb-3 result-item" data-type="{{ result.type }}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title">
+                            <a href="{{ result.url }}" class="text-decoration-none">
+                                {{ result.title|safe }}
+                            </a>
+                        </h5>
+                        <div class="text-muted small mb-2">
+                            <span class="badge bg-primary me-2">{{ result.type_display }}</span>
+                            <i class="fas fa-folder me-1"></i>{{ result.category }}
+                            {% if result.section %}
+                            <i class="fas fa-chevron-right mx-2"></i>
+                            <i class="fas fa-file-alt me-1"></i>{{ result.section }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-muted small">
+                        <i class="fas fa-clock me-1"></i>{{ result.date|date:"Y F j" }}
+                    </div>
+                </div>
+                
+                {% if result.snippet %}
+                <div class="result-snippet mb-3">
+                    <p class="mb-0">{{ result.snippet|safe }}</p>
+                </div>
+                {% endif %}
+                
+                {% if result.highlights %}
+                <div class="highlights mb-2">
+                    <small class="text-muted">मुख्य बिन्दुहरू:</small>
+                    <div class="mt-1">
+                        {% for highlight in result.highlights %}
+                        <span class="badge bg-light text-dark me-1">{{ highlight }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{{ result.url }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye me-1"></i>हेर्नुहोस्
+                        </a>
+                        {% if result.type == 'section' %}
+                        <a href="{% url 'reports:pdf_section' result.category_slug result.section_slug %}" 
+                           class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-file-pdf me-1"></i>PDF
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="result-score">
+                        <small class="text-muted">
+                            प्रासंगिकता: {{ result.score|floatformat:1 }}%
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Search results pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ query_params }}&page={{ page_obj.previous_page_number }}">
+                    <i class="fas fa-chevron-left"></i> अघिल्लो
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ query_params }}&page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ query_params }}&page={{ page_obj.next_page_number }}">
+                    पछिल्लो <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    
+    {% else %}
+    <!-- No Results -->
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">कुनै परिणाम फेला परेन</h4>
+            <p class="text-muted mb-4">"{{ query }}" का लागि कुनै परिणाम उपलब्ध छैन।</p>
+            
+            <div class="suggestions">
+                <h6>सुझावहरू:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i>वर्तनी जाँच गर्नुहोस्</li>
+                    <li><i class="fas fa-check text-success me-2"></i>फरक शब्दहरू प्रयोग गर्नुहोस्</li>
+                    <li><i class="fas fa-check text-success me-2"></i>छोटो वा सामान्य शब्दहरू प्रयोग गर्नुहोस्</li>
+                    <li><i class="fas fa-check text-success me-2"></i>विषय फिल्टर हटाउनुहोस्</li>
+                </ul>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-primary" onclick="clearSearch()">
+                    <i class="fas fa-refresh me-2"></i>नयाँ खोज
+                </button>
+                <a href="{% url 'reports:home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-2"></i>मुख्य पृष्ठ
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+<!-- Search Help -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>खोज सुझावहरू</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>लोकप्रिय खोजहरू:</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="?q=जनसंख्या" class="text-decoration-none"><i class="fas fa-users me-2"></i>जनसंख्या</a></li>
+                            <li><a href="?q=आर्थिक" class="text-decoration-none"><i class="fas fa-chart-line me-2"></i>आर्थिक</a></li>
+                            <li><a href="?q=शिक्षा" class="text-decoration-none"><i class="fas fa-graduation-cap me-2"></i>शिक्षा</a></li>
+                            <li><a href="?q=स्वास्थ्य" class="text-decoration-none"><i class="fas fa-heartbeat me-2"></i>स्वास्थ्य</a></li>
+                            <li><a href="?q=पूर्वाधार" class="text-decoration-none"><i class="fas fa-road me-2"></i>पूर्वाधार</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>खोज टिप्सहरू:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-info-circle text-info me-2"></i>सामान्य शब्दहरू प्रयोग गर्नुहोस्</li>
+                            <li><i class="fas fa-info-circle text-info me-2"></i>एकै पटक धेरै शब्द लेख्न सकिन्छ</li>
+                            <li><i class="fas fa-info-circle text-info me-2"></i>अंग्रेजी र नेपाली दुवै भाषामा खोज्न सकिन्छ</li>
+                            <li><i class="fas fa-info-circle text-info me-2"></i>विषयअनुसार फिल्टर प्रयोग गर्नुहोस्</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tags me-2"></i>मुख्य विषयहरू</h5>
+            </div>
+            <div class="card-body">
+                {% for category in categories %}
+                <a href="?category={{ category.slug }}" class="d-block text-decoration-none py-1">
+                    <i class="fas fa-folder me-2"></i>{{ category.title }}
+                    <span class="badge bg-secondary float-end">{{ category.sections.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let searchTimeout;
+
+function toggleAdvancedSearch() {
+    const advancedSearch = document.getElementById('advancedSearch');
+    advancedSearch.classList.toggle('d-none');
+}
+
+function clearSearch() {
+    document.getElementById('searchQuery').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('searchQuery').focus();
+}
+
+function filterResults(type) {
+    const resultItems = document.querySelectorAll('.result-item');
+    
+    resultItems.forEach(item => {
+        if (type === 'all' || item.dataset.type === type) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function exportSearchResults() {
+    const results = [];
+    const visibleItems = document.querySelectorAll('.result-item:not([style*="display: none"])');
+    
+    visibleItems.forEach(item => {
+        const title = item.querySelector('.card-title a').textContent.trim();
+        const type = item.querySelector('.badge').textContent;
+        const category = item.querySelector('.text-muted .fa-folder').nextSibling.textContent.trim();
+        const snippet = item.querySelector('.result-snippet p')?.textContent.trim() || '';
+        
+        results.push({
+            title: title,
+            type: type,
+            category: category,
+            snippet: snippet
+        });
+    });
+    
+    const csv = 'शीर्षक,प्रकार,विषय,विभाग\n' + 
+                results.map(r => `"${r.title}","${r.type}","${r.category}","${r.snippet}"`).join('\n');
+    
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'search_results_{{ query }}.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Auto-complete functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchQuery');
+    
+    // Add search suggestions
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length > 2) {
+            searchTimeout = setTimeout(() => {
+                fetchSearchSuggestions(query);
+            }, 300);
+        } else {
+            hideSuggestions();
+        }
+    });
+    
+    // Handle keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.closest('form').submit();
+        }
+    });
+    
+    // Focus search input on page load
+    if (!searchInput.value) {
+        searchInput.focus();
+    }
+    
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && !document.activeElement.matches('input, textarea')) {
+            e.preventDefault();
+            searchInput.focus();
+        } else if (e.key === 'Escape') {
+            searchInput.blur();
+            hideSuggestions();
+        }
+    });
+});
+
+function fetchSearchSuggestions(query) {
+    // This would typically fetch from an API endpoint
+    // For now, we'll use static suggestions
+    const suggestions = [
+        'जनसंख्या विवरण',
+        'आर्थिक अवस्था',
+        'सामाजिक संकेतक',
+        'वातावरणीय स्थिति',
+        'पूर्वाधार विकास',
+        'सुशासन',
+        'शिक्षा क्षेत्र',
+        'स्वास्थ्य सेवा'
+    ].filter(s => s.toLowerCase().includes(query.toLowerCase()));
+    
+    showSuggestions(suggestions);
+}
+
+function showSuggestions(suggestions) {
+    hideSuggestions(); // Remove existing suggestions
+    
+    if (suggestions.length === 0) return;
+    
+    const searchInput = document.getElementById('searchQuery');
+    const suggestionsList = document.createElement('div');
+    suggestionsList.className = 'search-suggestions position-absolute bg-white border rounded shadow-sm';
+    suggestionsList.style.cssText = `
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+    `;
+    
+    suggestions.forEach(suggestion => {
+        const item = document.createElement('div');
+        item.className = 'suggestion-item px-3 py-2 cursor-pointer';
+        item.textContent = suggestion;
+        item.style.cursor = 'pointer';
+        
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+        
+        item.addEventListener('click', function() {
+            searchInput.value = suggestion;
+            hideSuggestions();
+            searchInput.closest('form').submit();
+        });
+        
+        suggestionsList.appendChild(item);
+    });
+    
+    const searchContainer = searchInput.closest('.col-md-6');
+    searchContainer.style.position = 'relative';
+    searchContainer.appendChild(suggestionsList);
+}
+
+function hideSuggestions() {
+    const existing = document.querySelector('.search-suggestions');
+    if (existing) {
+        existing.remove();
+    }
+}
+
+// Highlight search terms in results
+function highlightSearchTerms() {
+    const query = '{{ query }}';
+    if (!query) return;
+    
+    const terms = query.split(' ').filter(term => term.length > 2);
+    const resultItems = document.querySelectorAll('.result-item');
+    
+    resultItems.forEach(item => {
+        const title = item.querySelector('.card-title a');
+        const snippet = item.querySelector('.result-snippet p');
+        
+        terms.forEach(term => {
+            if (title) {
+                title.innerHTML = title.innerHTML.replace(
+                    new RegExp(`(${term})`, 'gi'),
+                    '<mark class="bg-warning">$1</mark>'
+                );
+            }
+            
+            if (snippet) {
+                snippet.innerHTML = snippet.innerHTML.replace(
+                    new RegExp(`(${term})`, 'gi'),
+                    '<mark class="bg-warning">$1</mark>'
+                );
+            }
+        });
+    });
+}
+
+// Highlight search terms in results
+function highlightSearchTerms() {
+    const query = '{{ query|escapejs }}';
+    if (!query) return;
+    
+    const terms = query.split(' ').filter(term => term.length > 2);
+    const resultItems = document.querySelectorAll('.result-item');
+    
+    resultItems.forEach(item => {
+        const title = item.querySelector('.card-title a');
+        const snippet = item.querySelector('.result-snippet p');
+        
+        terms.forEach(term => {
+            if (title) {
+                title.innerHTML = title.innerHTML.replace(
+                    new RegExp(`(${term})`, 'gi'),
+                    '<mark class="bg-warning">$1</mark>'
+                );
+            }
+            
+            if (snippet) {
+                snippet.innerHTML = snippet.innerHTML.replace(
+                    new RegExp(`(${term})`, 'gi'),
+                    '<mark class="bg-warning">$1</mark>'
+                );
+            }
+        });
+    });
+}
+
+// Add search analytics
+function trackSearch(query, results_count) {
+    console.log('Search performed:', query, 'Results:', results_count);
+    // You can add analytics tracking here
+}
+
+// Initialize page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize highlighting if we have results
+    const hasResults = {{ results|yesno:"true,false" }};
+    if (hasResults) {
+        highlightSearchTerms();
+    }
+    
+    // Track search if query exists
+    const currentQuery = '{{ query|escapejs }}';
+    const resultCount = {{ total_results|default:0 }};
+    if (currentQuery) {
+        trackSearch(currentQuery, resultCount);
+    }
+});
+
+// Add result click tracking
+document.querySelectorAll('.result-item a').forEach(link => {
+    link.addEventListener('click', function() {
+        console.log('Search result clicked:', this.href);
+        // You can add analytics tracking here
+    });
+});
+
+// Add copy search URL functionality
+function copySearchURL() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        // Show temporary notification
+        const notification = document.createElement('div');
+        notification.className = 'alert alert-success position-fixed';
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999;';
+        notification.textContent = 'खोज URL कपी गरियो!';
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 2000);
+    });
+}
+
+// Add keyboard shortcut info
+document.addEventListener('DOMContentLoaded', function() {
+    // Add subtle keyboard shortcut hint
+    const searchInput = document.getElementById('searchQuery');
+    searchInput.title = 'Press / to focus search, Escape to clear';
+    
+    // Show keyboard shortcuts on Ctrl key press
+    let shortcutTooltip;
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Control' && !shortcutTooltip) {
+            shortcutTooltip = document.createElement('div');
+            shortcutTooltip.className = 'position-fixed bottom-0 end-0 m-3 p-2 bg-dark text-white rounded';
+            shortcutTooltip.innerHTML = `
+                <small>
+                    <strong>Shortcuts:</strong><br>
+                    / : Focus search<br>
+                    Esc : Clear search
+                </small>
+            `;
+            document.body.appendChild(shortcutTooltip);
+            
+            setTimeout(() => {
+                if (shortcutTooltip && document.body.contains(shortcutTooltip)) {
+                    document.body.removeChild(shortcutTooltip);
+                    shortcutTooltip = null;
+                }
+            }, 3000);
+        }
+    });
+});
+</script>
+{% endblock %}

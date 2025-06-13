@@ -1,0 +1,612 @@
+{% extends 'reports/base.html' %}
+{% load static %}
+
+{% block title %}{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका{% endblock %}
+
+{% block description %}{{ section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिकाको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।{% endblock %}
+
+{% block keywords %}{{ section.title_nepali|default:section.title }}, {{ category.name_nepali|default:category.name }}, गढवा, गाउँपालिका, नेपाल, प्रतिवेदन{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'reports:category' category.slug %}">{{ category.name_nepali|default:category.name }}</a></li>
+        <li class="breadcrumb-item active">{{ section.title_nepali|default:section.title }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "{{ section.title }}",
+    "description": "{{ section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title }}",
+    "url": "{{ request.build_absolute_uri }}",
+    "isPartOf": {
+        "@type": "CollectionPage",
+        "name": "{{ category.title }}",
+        "url": "{% url 'reports:category' category.slug %}"
+    },
+    "datePublished": "{{ section.created_at|date:'c' }}",
+    "dateModified": "{{ section.updated_at|date:'c' }}",
+    "publisher": {
+        "@type": "GovernmentOrganization",
+        "name": "गढवा गाउँपालिका"
+    },
+    "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "मुख्य पृष्ठ",
+                "item": "{% url 'reports:home' %}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "{{ category.name_nepali|default:category.name }}",
+                "item": "{% url 'reports:category' category.slug %}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "{{ section.title_nepali|default:section.title }}"
+            }
+        ]
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1>{{ section.title_nepali|default:section.title }}</h1>
+            {% if section.summary_nepali or section.summary %}
+            <p class="lead text-muted">{{ section.summary_nepali|default:section.summary }}</p>
+            {% endif %}
+            <div class="text-muted">
+                <small>
+                    <i class="fas fa-folder me-1"></i>{{ category.name_nepali|default:category.name }} |
+                    <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|date:"Y F j" }}
+                </small>
+            </div>
+        </div>
+        <div class="no-print">
+            <div class="btn-group" role="group">
+                <a href="{% url 'reports:pdf_section' category.slug section.slug %}" class="btn btn-outline-primary">
+                    <i class="fas fa-file-pdf me-2"></i>PDF डाउनलोड
+                </a>
+                <button onclick="printPage()" class="btn btn-outline-secondary">
+                    <i class="fas fa-print me-2"></i>प्रिन्ट
+                </button>
+                <button onclick="shareSection()" class="btn btn-outline-info">
+                    <i class="fas fa-share me-2"></i>साझा गर्नुहोस्
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Table of Contents for this section -->
+{% if section.content_nepali or section.content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <!-- Main content will be here -->
+        <div class="section-content">
+            {% if section.content_nepali %}
+                {{ section.content_nepali|safe }}
+            {% elif section.content %}
+                {{ section.content|safe }}
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">सामग्री उपलब्ध छैन</h5>
+                    <p class="text-muted">यस खण्डको सामग्री अझै थपिएको छैन।</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4 no-print">
+        <div class="card sticky-top" style="top: 100px;">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-list me-2"></i>यस खण्डमा</h6>
+            </div>
+            <div class="card-body">
+                <div id="section-toc" class="nav flex-column">
+                    <!-- TOC will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Main Section Content - No Content Available -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="text-center py-4">
+            <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">सामग्री उपलब्ध छैन</h4>
+            <p class="text-muted">यस खण्डको सामग्री अझै थपिएको छैन।</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Section Figures -->
+{% if section.figures.all %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="mb-0"><i class="fas fa-images me-2"></i>चित्रहरू र आंकडाहरू</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for figure in section.figures.all %}
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    {% if figure.image %}
+                    <div class="position-relative">
+                        <img src="{{ figure.image.url }}" class="card-img-top" alt="{{ figure.caption }}" 
+                             data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}" 
+                             style="cursor: pointer;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</h6>
+                        {% if figure.description_nepali or figure.description %}
+                        <p class="card-text figure-caption">{{ figure.description_nepali|default:figure.description }}</p>
+                        {% endif %}
+                        {% if figure.data_source %}
+                        <p class="card-text"><small class="text-muted">स्रोत: {{ figure.data_source }}</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Figure Modal -->
+                <div class="modal fade" id="figureModal{{ figure.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                {% if figure.image %}
+                                <img src="{{ figure.image.url }}" class="img-fluid" alt="{{ figure.title_nepali|default:figure.title }}">
+                                {% endif %}
+                                {% if figure.description_nepali or figure.description %}
+                                <p class="mt-3 figure-caption">{{ figure.description_nepali|default:figure.description }}</p>
+                                {% endif %}
+                                {% if figure.data_source %}
+                                <p class="text-muted">स्रोत: {{ figure.data_source }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Section Tables -->
+{% if section.tables.all %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="mb-0"><i class="fas fa-table me-2"></i>तालिकाहरू</h4>
+    </div>
+    <div class="card-body">
+        {% for table in section.tables.all %}
+        <div class="table-container mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5>तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}</h5>
+                <div class="btn-group btn-group-sm no-print">
+                    <button class="btn btn-outline-secondary" onclick="exportTableToCSV('table{{ table.id }}', '{{ table.title_nepali|default:table.title }}')">
+                        <i class="fas fa-file-csv me-1"></i>CSV
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="printTable('table{{ table.id }}')">
+                        <i class="fas fa-print me-1"></i>प्रिन्ट
+                    </button>
+                </div>
+            </div>
+            
+            {% if table.description_nepali or table.description %}
+            <p class="text-muted mb-3">{{ table.description_nepali|default:table.description }}</p>
+            {% endif %}
+            
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover" id="table{{ table.id }}">
+                    {% if table.data %}
+                    <thead class="table-dark">
+                        <tr>
+                            {% for header in table.data.0 %}
+                            <th scope="col">{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table.data|slice:"1:" %}
+                        <tr>
+                            {% for cell in row %}
+                            <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+            
+            {% if table.data_source %}
+            <p class="text-muted mt-2"><small>स्रोत: {{ table.data_source }}</small></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Section Navigation -->
+<div class="row mt-4 no-print">
+    {% if prev_section or next_section %}
+    <div class="col-12">
+        <nav aria-label="Section navigation">
+            <ul class="pagination justify-content-between">
+                <li class="page-item {% if not prev_section %}disabled{% endif %}">
+                    {% if prev_section %}
+                    <a class="page-link" href="{% url 'reports:section' category.slug prev_section.slug %}">
+                        <i class="fas fa-chevron-left me-2"></i>{{ prev_section.title_nepali|default:prev_section.title }}
+                    </a>
+                    {% else %}
+                    <span class="page-link">
+                        <i class="fas fa-chevron-left me-2"></i>पहिलो खण्ड
+                    </span>
+                    {% endif %}
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'reports:category' category.slug %}">
+                        <i class="fas fa-folder me-2"></i>{{ category.name_nepali|default:category.name }}
+                    </a>
+                </li>
+                <li class="page-item {% if not next_section %}disabled{% endif %}">
+                    {% if next_section %}
+                    <a class="page-link" href="{% url 'reports:section' category.slug next_section.slug %}">
+                        {{ next_section.title_nepali|default:next_section.title }}<i class="fas fa-chevron-right ms-2"></i>
+                    </a>
+                    {% else %}
+                    <span class="page-link">
+                        अन्तिम खण्ड<i class="fas fa-chevron-right ms-2"></i>
+                    </span>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Related Actions -->
+<div class="row mt-4 no-print">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tools me-2"></i>अन्य कार्यहरू</h5>
+                <div class="btn-group flex-wrap" role="group">
+                    <a href="{% url 'reports:pdf_section' category.slug section.slug %}" class="btn btn-outline-primary">
+                        <i class="fas fa-file-pdf me-2"></i>यस खण्डको PDF
+                    </a>
+                    <a href="{% url 'reports:pdf_category' category.slug %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }} PDF
+                    </a>
+                    <a href="{% url 'reports:search' %}?q={{ section.title_nepali|default:section.title }}" class="btn btn-outline-info">
+                        <i class="fas fa-search me-2"></i>सम्बन्धित खोज्नुहोस्
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Generate table of contents for the section
+document.addEventListener('DOMContentLoaded', function() {
+    generateSectionTOC();
+    addTableSorting();
+    addContentHighlighting();
+});
+
+function generateSectionTOC() {
+    const tocContainer = document.getElementById('section-toc');
+    if (!tocContainer) {
+        console.log('TOC container not found');
+        return;
+    }
+    
+    const contentArea = document.querySelector('.section-content');
+    if (!contentArea) {
+        console.log('Content area not found');
+        return;
+    }
+    
+    // Wait for content to be fully loaded
+    setTimeout(() => {
+        // Find headings in the content
+        const headings = contentArea.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        
+        console.log('Found headings:', headings.length);
+        
+        if (headings.length === 0) {
+            tocContainer.innerHTML = '<p class="text-muted small">कुनै शीर्षकहरू फेला परेनन्</p>';
+            return;
+        }
+        
+        let tocHTML = '';
+        headings.forEach((heading, index) => {
+            const id = heading.id || `heading-${index}`;
+            if (!heading.id) {
+                heading.id = id;
+            }
+            
+            const level = parseInt(heading.tagName.substring(1));
+            const indent = Math.max(0, (level - 1) * 15);
+            const text = heading.textContent.trim();
+            
+            if (text.length > 0) {
+                tocHTML += `
+                    <a href="#${id}" class="nav-link py-2" style="padding-left: ${indent}px; font-size: ${0.95 - (level - 1) * 0.05}rem;">
+                        ${text}
+                    </a>
+                `;
+            }
+        });
+        
+        if (tocHTML.trim()) {
+            tocContainer.innerHTML = tocHTML;
+            console.log('TOC generated successfully with', headings.length, 'headings');
+            
+            // Add smooth scrolling
+            tocContainer.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        // Remove active class from all links
+                        tocContainer.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                        
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        } else {
+            tocContainer.innerHTML = '<p class="text-muted small">शीर्षकहरू प्रशोधन गर्न सकिएन</p>';
+        }
+    }, 200);
+}
+
+function addTableSorting() {
+    document.querySelectorAll('table.table').forEach(table => {
+        const headers = table.querySelectorAll('th');
+        headers.forEach((header, index) => {
+            header.style.cursor = 'pointer';
+            header.title = 'Click to sort';
+            header.innerHTML += ' <i class="fas fa-sort text-muted"></i>';
+            
+            header.addEventListener('click', function() {
+                sortTable(table, index);
+            });
+        });
+    });
+}
+
+function sortTable(table, columnIndex) {
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    // Determine sort direction
+    const currentDirection = table.dataset.sortDirection || 'asc';
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    table.dataset.sortDirection = newDirection;
+    table.dataset.sortColumn = columnIndex;
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        const aValue = a.cells[columnIndex].textContent.trim();
+        const bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Check if values are numeric
+        const aNum = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+        const bNum = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+        
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return newDirection === 'asc' ? aNum - bNum : bNum - aNum;
+        } else {
+            return newDirection === 'asc' 
+                ? aValue.localeCompare(bValue, 'ne')
+                : bValue.localeCompare(aValue, 'ne');
+        }
+    });
+    
+    // Re-append sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+    
+    // Update header indicators
+    table.querySelectorAll('th i').forEach(icon => {
+        icon.className = 'fas fa-sort text-muted';
+    });
+    
+    const header = table.querySelectorAll('th')[columnIndex];
+    const icon = header.querySelector('i');
+    icon.className = newDirection === 'asc' ? 'fas fa-sort-up text-primary' : 'fas fa-sort-down text-primary';
+}
+
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const csv = [];
+    const rows = table.querySelectorAll('tr');
+    
+    rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = [];
+        cols.forEach(col => {
+            rowData.push('"' + col.textContent.trim().replace(/"/g, '""') + '"');
+        });
+        csv.push(rowData.join(','));
+    });
+    
+    const csvContent = csv.join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename + '.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function printTable(tableId) {
+    const table = document.getElementById(tableId);
+    const printWindow = window.open('', '', 'height=600,width=800');
+    
+    printWindow.document.write('<html><head><title>Print Table</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: "Noto Sans Devanagari", sans-serif; }');
+    printWindow.document.write('table { border-collapse: collapse; width: 100%; }');
+    printWindow.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }');
+    printWindow.document.write('th { background-color: #f2f2f2; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write(table.outerHTML);
+    printWindow.document.write('</body></html>');
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
+
+function printPage() {
+    window.print();
+}
+
+function shareSection() {
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: '{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }}',
+            url: window.location.href
+        });
+    } else {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+}
+
+function addContentHighlighting() {
+    // Add highlighting for important content
+    const content = document.querySelector('.section-content');
+    if (!content) return;
+    
+    // Fix any remaining malformed HTML before highlighting
+    let html = content.innerHTML;
+    
+ 
+
+    
+    content.innerHTML = html;
+}
+
+// Add CSS for highlighting
+const style = document.createElement('style');
+style.textContent = `
+    .highlight-number {
+        background-color: #fff3cd;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-weight: 600;
+    }
+    
+    .section-content blockquote {
+        border-left: 4px solid #007bff;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-style: italic;
+    }
+    
+    .section-content .important {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .section-content .note {
+        background-color: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .section-content .warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* TOC Styles */
+    #section-toc .nav-link {
+        color: #495057;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+    
+    #section-toc .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+    }
+    
+    #section-toc .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    /* Responsive TOC */
+    @media (max-width: 991.98px) {
+        .sticky-top {
+            position: relative !important;
+            top: auto !important;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

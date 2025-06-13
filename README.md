@@ -1,7 +1,7 @@
-# गधावा गाउँपालिका डिजिटल प्रोफाइल प्रतिवेदन प्रणाली
+# गढवा गाउँपालिका डिजिटल प्रोफाइल प्रतिवेदन प्रणाली
 # Gadhawa Rural Municipality Digital Profile Report System
 
-A comprehensive Django-based system for creating and managing digital profile reports for Gadhawa Rural Municipality (गधावा गाउँपालिका), Dang District, Lumbini Province, Nepal.
+A comprehensive Django-based system for creating and managing digital profile reports for Gadhawa Rural Municipality (गढवा गाउँपालिका), Dang District, Lumbini Province, Nepal.
 
 ## 🌟 Features
 
@@ -203,5 +203,5 @@ For technical support or questions about the system:
 
 ---
 
-**विकसित**: गधावा गाउँपालिकाको लागि डिजिटल प्रोफाइल प्रतिवेदन प्रणाली  
+**विकसित**: गढवा गाउँपालिकाको लागि डिजिटल प्रोफाइल प्रतिवेदन प्रणाली  
 **Developed**: Digital Profile Report System for Gadhawa Rural Municipality

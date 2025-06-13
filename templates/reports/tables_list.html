@@ -1,0 +1,643 @@
+{% extends 'reports/base.html' %}
+{% load static %}
+
+{% block title %}तालिकाहरूको सूची - गढवा गाउँपालिका{% endblock %}
+
+{% block description %}गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै तालिकाहरूको सूची र डेटा।{% endblock %}
+
+{% block keywords %}तालिकाहरू, डेटा, सांख्यिकी, गढवा, गाउँपालिका, प्रतिवेदन{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
+        <li class="breadcrumb-item active">तालिकाहरूको सूची</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "तालिकाहरूको सूची",
+    "description": "गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै तालिकाहरूको सूची।",
+    "url": "{{ request.build_absolute_uri }}",
+    "isPartOf": {
+        "@type": "WebSite",
+        "name": "गढवा गाउँपालिका",
+        "url": "{% url 'reports:home' %}"
+    },
+    "publisher": {
+        "@type": "GovernmentOrganization",
+        "name": "गढवा गाउँपालिका"
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="fas fa-table me-3"></i>तालिकाहरूको सूची</h1>
+            <p class="lead text-muted">गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
+        </div>
+        <div class="no-print">
+            <div class="btn-group" role="group">
+                <button onclick="exportAllTables()" class="btn btn-outline-success">
+                    <i class="fas fa-file-csv me-2"></i>All CSV
+                </button>
+                <button onclick="printPage()" class="btn btn-outline-secondary">
+                    <i class="fas fa-print me-2"></i>प्रिन्ट
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4 no-print">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <label for="categoryFilter" class="form-label">विषयअनुसार फिल्टर:</label>
+                <select id="categoryFilter" class="form-select" onchange="filterTables()">
+                    <option value="">सबै विषयहरू</option>
+                    {% for category in categories %}
+                    <option value="{{ category.slug }}">{{ category.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="searchTables" class="form-label">खोज्नुहोस्:</label>
+                <input type="text" id="searchTables" class="form-control" placeholder="तालिकाको नाम वा विवरण..." oninput="searchTables()">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">कुल तालिकाहरू:</label>
+                <p class="mb-0"><span class="badge bg-primary fs-6" id="tableCount">{{ tables.count }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables List -->
+<div class="tables-container">
+    {% if tables %}
+    
+    {% for table in tables %}
+    <div class="card mb-4 table-item" data-category="{{ table.section.category.slug }}" data-section="{{ table.section.slug }}">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">तालिका {{ table.table_number }}: {{ table.title }}</h5>
+                    <div class="text-muted small">
+                        <i class="fas fa-folder me-1"></i>
+                        <a href="{% url 'reports:category' table.section.category.slug %}" class="text-decoration-none">
+                            {{ table.section.category.title }}
+                        </a>
+                        <i class="fas fa-chevron-right mx-2"></i>
+                        <i class="fas fa-file-alt me-1"></i>
+                        <a href="{% url 'reports:section' table.section.category.slug table.section.slug %}" class="text-decoration-none">
+                            {{ table.section.title }}
+                        </a>
+                    </div>
+                </div>
+                <div class="no-print">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-outline-primary" onclick="toggleTableView('table{{ table.id }}')">
+                            <i class="fas fa-eye me-1"></i>हेर्नुहोस्
+                        </button>
+                        <button class="btn btn-outline-success" onclick="exportTableToCSV('table{{ table.id }}', '{{ table.title }}')">
+                            <i class="fas fa-file-csv me-1"></i>CSV
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="printTable('table{{ table.id }}')">
+                            <i class="fas fa-print me-1"></i>प्रिन्ट
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            {% if table.caption %}
+            <p class="text-muted mb-3">{{ table.caption }}</p>
+            {% endif %}
+            
+            <div class="table-preview mb-3" id="preview{{ table.id }}">
+                {% if table.data %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover" id="table{{ table.id }}">
+                        <thead class="table-dark">
+                            <tr>
+                                {% for header in table.data.0 %}
+                                <th scope="col">{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table.data|slice:"1:4" %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            {% if table.data|length > 4 %}
+                            <tr class="table-warning">
+                                <td colspan="{{ table.data.0|length }}" class="text-center">
+                                    <i class="fas fa-ellipsis-h"></i> र {{ table.data|length|add:"-4" }} अन्य पंक्तिहरू...
+                                    <button class="btn btn-sm btn-link" onclick="showFullTable('table{{ table.id }}')">
+                                        पूर्ण तालिका हेर्नुहोस्
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>यस तालिकामा डेटा उपलब्ध छैन।
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="full-table-view d-none" id="full{{ table.id }}">
+                {% if table.data %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                {% for header in table.data.0 %}
+                                <th scope="col" onclick="sortTableColumn(this, '{{ forloop.counter0 }}')" style="cursor: pointer;">
+                                    {{ header }} <i class="fas fa-sort text-muted"></i>
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table.data|slice:"1:" %}
+                            <tr>
+                                {% for cell in row %}
+                                <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    {% if table.source %}
+                    <small class="text-muted">स्रोत: {{ table.source }}</small>
+                    {% endif %}
+                </div>
+                <div class="no-print">
+                    <a href="{% url 'reports:section' table.section.category.slug table.section.slug %}#table-{{ table.id }}" 
+                       class="btn btn-sm btn-outline-primary">
+                        सन्दर्भमा हेर्नुहोस्
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-footer text-muted">
+            <div class="row">
+                <div class="col-md-6">
+                    <small>
+                        <i class="fas fa-clock me-1"></i>सिर्जना: {{ table.created_at|date:"Y F j" }}
+                    </small>
+                </div>
+                <div class="col-md-6 text-end">
+                    {% if table.data %}
+                    <small>
+                        <i class="fas fa-table me-1"></i>{{ table.data|length|add:"-1" }} पंक्ति, {{ table.data.0|length }} स्तम्भ
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {% else %}
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-table fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">कुनै तालिकाहरू उपलब्ध छैनन्</h4>
+            <p class="text-muted">अझै कुनै तालिकाहरू थपिएका छैनन्।</p>
+            <a href="{% url 'reports:home' %}" class="btn btn-primary">
+                मुख्य पृष्ठमा फर्कनुहोस्
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Statistics -->
+{% if tables %}
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>तालिकाहरूको वितरण</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="tableDistributionChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>सांख्यिकीय विवरण</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><i class="fas fa-table text-primary me-2"></i>कुल तालिकाहरू:</td>
+                        <td class="fw-bold">{{ tables.count }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-folder text-success me-2"></i>विषयहरू:</td>
+                        <td class="fw-bold">{{ categories.count }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-file-alt text-info me-2"></i>उप-विषयहरू:</td>
+                        <td class="fw-bold">{{ total_sections }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-database text-warning me-2"></i>कुल डेटा पंक्तिहरू:</td>
+                        <td class="fw-bold">{{ total_rows }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>विषयवार तालिका सांख्यिकी</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for category in categories %}
+            {% if category.table_count > 0 %}
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="text-center p-3 bg-light rounded">
+                    <h4 class="text-primary mb-1">{{ category.table_count }}</h4>
+                    <p class="mb-0 small">{{ category.title }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function filterTables() {
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const tableItems = document.querySelectorAll('.table-item');
+    let visibleCount = 0;
+    
+    tableItems.forEach(item => {
+        const category = item.dataset.category;
+        if (categoryFilter === '' || category === categoryFilter) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('tableCount').textContent = visibleCount;
+    updateChart();
+}
+
+function searchTables() {
+    const searchTerm = document.getElementById('searchTables').value.toLowerCase();
+    const tableItems = document.querySelectorAll('.table-item');
+    let visibleCount = 0;
+    
+    tableItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('tableCount').textContent = visibleCount;
+}
+
+function toggleTableView(tableId) {
+    const preview = document.getElementById('preview' + tableId.replace('table', ''));
+    const fullView = document.getElementById('full' + tableId.replace('table', ''));
+    const button = event.target.closest('button');
+    
+    if (fullView.classList.contains('d-none')) {
+        preview.classList.add('d-none');
+        fullView.classList.remove('d-none');
+        button.innerHTML = '<i class="fas fa-eye-slash me-1"></i>लुकाउनुहोस्';
+    } else {
+        fullView.classList.add('d-none');
+        preview.classList.remove('d-none');
+        button.innerHTML = '<i class="fas fa-eye me-1"></i>हेर्नुहोस्';
+    }
+}
+
+function showFullTable(tableId) {
+    toggleTableView(tableId);
+}
+
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const csv = [];
+    const rows = table.querySelectorAll('tr');
+    
+    rows.forEach(row => {
+        if (!row.classList.contains('table-warning')) {
+            const cols = row.querySelectorAll('td, th');
+            const rowData = [];
+            cols.forEach(col => {
+                rowData.push('"' + col.textContent.trim().replace(/"/g, '""') + '"');
+            });
+            csv.push(rowData.join(','));
+        }
+    });
+    
+    const csvContent = csv.join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename + '.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function exportAllTables() {
+    const visibleTables = document.querySelectorAll('.table-item:not([style*="display: none"]) table');
+    let allData = [];
+    
+    visibleTables.forEach((table, index) => {
+        const title = table.closest('.table-item').querySelector('.card-header h5').textContent;
+        allData.push(title);
+        
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (!row.classList.contains('table-warning')) {
+                const cols = row.querySelectorAll('td, th');
+                const rowData = [];
+                cols.forEach(col => {
+                    rowData.push('"' + col.textContent.trim().replace(/"/g, '""') + '"');
+                });
+                allData.push(rowData.join(','));
+            }
+        });
+        allData.push(''); // Empty line between tables
+    });
+    
+    const csvContent = allData.join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'all_tables.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function printTable(tableId) {
+    const tableItem = document.getElementById(tableId).closest('.table-item');
+    const title = tableItem.querySelector('.card-header h5').textContent;
+    const table = document.getElementById(tableId);
+    
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>' + title + '</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: "Noto Sans Devanagari", sans-serif; }');
+    printWindow.document.write('table { border-collapse: collapse; width: 100%; }');
+    printWindow.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }');
+    printWindow.document.write('th { background-color: #f2f2f2; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<h2>' + title + '</h2>');
+    printWindow.document.write(table.outerHTML);
+    printWindow.document.write('</body></html>');
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
+
+function sortTableColumn(header, columnIndex) {
+    const table = header.closest('table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    // Determine sort direction
+    const currentDirection = table.dataset.sortDirection || 'asc';
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    table.dataset.sortDirection = newDirection;
+    table.dataset.sortColumn = columnIndex;
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        const aValue = a.cells[columnIndex].textContent.trim();
+        const bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Check if values are numeric
+        const aNum = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+        const bNum = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+        
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return newDirection === 'asc' ? aNum - bNum : bNum - aNum;
+        } else {
+            return newDirection === 'asc' 
+                ? aValue.localeCompare(bValue, 'ne')
+                : bValue.localeCompare(aValue, 'ne');
+        }
+    });
+    
+    // Re-append sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+    
+    // Update header indicators
+    table.querySelectorAll('th i').forEach(icon => {
+        icon.className = 'fas fa-sort text-muted';
+    });
+    
+    const icon = header.querySelector('i');
+    icon.className = newDirection === 'asc' ? 'fas fa-sort-up text-primary' : 'fas fa-sort-down text-primary';
+}
+
+// Initialize chart
+document.addEventListener('DOMContentLoaded', function() {
+    initializeChart();
+    
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'e' && e.ctrlKey) {
+            e.preventDefault();
+            exportAllTables();
+        } else if (e.key === 'f' && e.ctrlKey) {
+            e.preventDefault();
+            document.getElementById('searchTables').focus();
+        }
+    });
+    
+    // Add table sorting to all visible tables
+    document.querySelectorAll('table th').forEach(header => {
+        header.style.cursor = 'pointer';
+        header.title = 'Click to sort';
+    });
+});
+
+function initializeChart() {
+    const ctx = document.getElementById('tableDistributionChart');
+    if (!ctx) return;
+    
+    // Get category data
+    const categories = {};
+    document.querySelectorAll('.table-item').forEach(item => {
+        const categoryLink = item.querySelector('.card-header a');
+        const categoryName = categoryLink.textContent.trim();
+        categories[categoryName] = (categories[categoryName] || 0) + 1;
+    });
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(categories),
+            datasets: [{
+                label: 'तालिकाहरूको संख्या',
+                data: Object.values(categories),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function updateChart() {
+    const visibleItems = document.querySelectorAll('.table-item:not([style*="display: none"])');
+    const categories = {};
+    
+    visibleItems.forEach(item => {
+        const categoryLink = item.querySelector('.card-header a');
+        const categoryName = categoryLink.textContent.trim();
+        categories[categoryName] = (categories[categoryName] || 0) + 1;
+    });
+    
+    // Update chart data
+    const chart = Chart.getChart('tableDistributionChart');
+    if (chart) {
+        chart.data.labels = Object.keys(categories);
+        chart.data.datasets[0].data = Object.values(categories);
+        chart.update();
+    }
+}
+
+// Add advanced table features
+function addTableFeatures() {
+    document.querySelectorAll('table').forEach(table => {
+        // Add row hover effect
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8f9fa';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+        
+        // Add cell selection
+        const cells = table.querySelectorAll('td, th');
+        cells.forEach(cell => {
+            cell.addEventListener('click', function() {
+                // Remove previous selection
+                table.querySelectorAll('.selected-cell').forEach(c => {
+                    c.classList.remove('selected-cell');
+                });
+                
+                // Add selection to current cell
+                this.classList.add('selected-cell');
+                
+                // Copy cell content to clipboard
+                navigator.clipboard.writeText(this.textContent.trim());
+            });
+        });
+    });
+}
+
+// Add CSS for selected cells
+const style = document.createElement('style');
+style.textContent = `
+    .selected-cell {
+        background-color: #007bff !important;
+        color: white !important;
+    }
+    
+    th {
+        position: relative;
+    }
+    
+    th:hover {
+        background-color: #e9ecef !important;
+    }
+    
+    .table-responsive {
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 0.375rem;
+        overflow: hidden;
+    }
+`;
+document.head.appendChild(style);
+
+// Initialize advanced features
+document.addEventListener('DOMContentLoaded', function() {
+    addTableFeatures();
+});
+</script>
+{% endblock %}

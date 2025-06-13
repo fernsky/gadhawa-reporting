@@ -22,7 +22,7 @@ class HealthCheckView(APIView):
         return Response({
             'status': 'healthy',
             'timestamp': timezone.now(),
-            'municipality': 'गधावा गाउँपालिका',
+            'municipality': 'गढवा गाउँपालिका',
             'municipality_english': 'Gadhawa Rural Municipality',
             'system': 'Digital Profile Report System',
             'version': '1.0.0'
@@ -43,7 +43,7 @@ class SystemInfoView(APIView):
             'time_zone': settings.TIME_ZONE,
             'language_code': settings.LANGUAGE_CODE,
             'municipality': {
-                'name_nepali': 'गधावा गाउँपालिका',
+                'name_nepali': 'गढवा गाउँपालिका',
                 'name_english': 'Gadhawa Rural Municipality',
                 'district': 'कपिलवस्तु',
                 'district_english': 'Kapilvastu',
@@ -64,7 +64,7 @@ class MunicipalityInfoView(APIView):
         """Return municipality information"""
         return Response({
             'municipality': {
-                'name_nepali': 'गधावा गाउँपालिका',
+                'name_nepali': 'गढवा गाउँपालिका',
                 'name_english': 'Gadhawa Rural Municipality',
                 'district_nepali': 'कपिलवस्तु',
                 'district_english': 'Kapilvastu',
@@ -76,7 +76,7 @@ class MunicipalityInfoView(APIView):
                 'contact': {
                     'phone': '+977-76-550123',
                     'email': 'info@gadhawamun.gov.np',
-                    'address_nepali': 'गधावा गाउँपालिका, कपिलवस्तु',
+                    'address_nepali': 'गढवा गाउँपालिका, कपिलवस्तु',
                     'address_english': 'Gadhawa Rural Municipality, Kapilvastu'
                 },
                 'coordinates': {

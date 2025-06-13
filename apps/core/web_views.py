@@ -17,7 +17,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'municipality_name': 'गधावा गाउँपालिका',
+            'municipality_name': 'गढवा गाउँपालिका',
             'municipality_english': 'Gadhawa Rural Municipality',
             'page_title': 'मुख्य ड्यासबोर्ड',  # Main Dashboard
             'user': self.request.user,
@@ -35,7 +35,7 @@ class LoginView(DjangoLoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'municipality_name': 'गधावा गाउँपालिका',
+            'municipality_name': 'गढवा गाउँपालिका',
             'municipality_english': 'Gadhawa Rural Municipality',
             'page_title': 'लगइन',  # Login
         })
@@ -58,7 +58,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'municipality_name': 'गधावा गाउँपालिका',
+            'municipality_name': 'गढवा गाउँपालिका',
             'municipality_english': 'Gadhawa Rural Municipality',
             'page_title': 'प्रोफाइल',  # Profile
             'user': self.request.user,

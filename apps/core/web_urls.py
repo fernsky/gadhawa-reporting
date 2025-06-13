@@ -8,7 +8,7 @@ from . import web_views
 app_name = 'core_web'
 
 urlpatterns = [
-    # Main dashboard
+    # Main dashboard (now at /dashboard/ instead of /)
     path('', web_views.DashboardView.as_view(), name='dashboard'),
     
     # Authentication pages
