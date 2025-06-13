@@ -1,8 +1,8 @@
 {% extends 'reports/pdf_base.html' %}
 
-{% block title %}{{ category.title }} - गढवा गाउँपालिका{% endblock %}
+{% block title %}{{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका{% endblock %}
 
-{% block chapter_header %}{{ category.title }}{% endblock %}
+{% block chapter_header %}{{ category.name_nepali|default:category.name }}{% endblock %}
 
 {% block content %}
 <!-- Cover Page -->
@@ -11,13 +11,13 @@
         गढवा गाउँपालिका
     </div>
     <div class="cover-subtitle">
-        {{ category.title }}
+        {{ category.name_nepali|default:category.name }}
     </div>
     
     <div style="margin: 2cm 0;">
-        {% if category.description %}
+        {% if category.description_nepali or category.description %}
         <div style="font-size: 12pt; max-width: 80%; margin: 0 auto; text-align: justify;">
-            {{ category.description }}
+            {{ category.description_nepali|default:category.description }}
         </div>
         {% endif %}
     </div>
@@ -37,11 +37,11 @@
 <!-- Table of Contents for this Category -->
 {% if category.sections.all %}
 <div class="toc-page">
-    <h1 class="toc-title">{{ category.title }} - सूचीपत्र</h1>
+    <h1 class="toc-title">{{ category.name_nepali|default:category.name }} - सूचीपत्र</h1>
     
     {% for section in category.sections.all %}
     <div class="toc-item level-1">
-        <span>{{ section.order|default:forloop.counter }}. {{ section.title }}</span>
+        <span>{{ section.section_number|default:forloop.counter }}. {{ section.title_nepali|default:section.title }}</span>
         <span class="page-number">{{ forloop.counter }}</span>
     </div>
     {% endfor %}
@@ -52,8 +52,8 @@
         <h3>चित्रहरू</h3>
         {% for figure in category_figures %}
         <div class="list-item">
-            <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title }}</span>
-            <span class="page-number">{{ figure.page_number|default:forloop.counter }}</span>
+            <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</span>
+            <span class="page-number">{{ forloop.counter }}</span>
         </div>
         {% endfor %}
     </div>
@@ -64,8 +64,8 @@
         <h3>तालिकाहरू</h3>
         {% for table in category_tables %}
         <div class="list-item">
-            <span class="title">तालिका {{ table.table_number }}: {{ table.title }}</span>
-            <span class="page-number">{{ table.page_number|default:forloop.counter }}</span>
+            <span class="title">तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}</span>
+            <span class="page-number">{{ forloop.counter }}</span>
         </div>
         {% endfor %}
     </div>
@@ -75,23 +75,60 @@
 
 <!-- Main Content -->
 <div class="section-break">
-    <h1>{{ category.title }}</h1>
+    <h1 class="category-title">{{ category.name_nepali|default:category.name }}</h1>
     
-    {% if category.description %}
-    <div class="lead">{{ category.description }}</div>
+    {% if category.description_nepali or category.description %}
+    <div class="lead">{{ category.description_nepali|default:category.description }}</div>
     {% endif %}
     
     {% for section in category.sections.all %}
-    <div class="{% if not forloop.first %}section-break{% endif %}">
-        <h2>{{ section.order|default:forloop.counter }}. {{ section.title }}</h2>
+    <div class="{% if not forloop.first %}no-break{% endif %}" style="margin-top: 2em;">
+        <h2>{{ section.section_number|default:forloop.counter }}. {{ section.title_nepali|default:section.title }}</h2>
         
-        {% if section.description %}
-        <p class="lead">{{ section.description }}</p>
+        {% if section.summary_nepali or section.summary %}
+        <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
         {% endif %}
         
-        {% if section.content %}
+        {% if section.content_nepali or section.content %}
         <div class="content-section">
-            {{ section.content|safe }}
+            {{ section.content_nepali|default:section.content|safe }}
+        </div>
+        {% else %}
+        <div class="note">
+            <p>यस खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
+            
+            <!-- Add some contextual content based on section title -->
+            {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali %}
+            <div class="important" style="margin-top: 1em;">
+                <h4>जनसंख्या सम्बन्धी मुख्य बिन्दुहरू:</h4>
+                <ul>
+                    <li>कुल जनसंख्या र वितरण</li>
+                    <li>उमेर र लिङ्गको आधारमा वर्गीकरण</li>
+                    <li>जातीय र भाषिक संरचना</li>
+                    <li>शिक्षा र स्वास्थ्य सूचकांक</li>
+                </ul>
+            </div>
+            {% elif 'economic' in section.slug or 'आर्थिक' in section.title_nepali %}
+            <div class="important" style="margin-top: 1em;">
+                <h4>आर्थिक गतिविधि सम्बन्धी मुख्य बिन्दुहरू:</h4>
+                <ul>
+                    <li>मुख्य आर्थिक गतिविधिहरू</li>
+                    <li>रोजगारी र आयका स्रोतहरू</li>
+                    <li>व्यापार र उद्योग</li>
+                    <li>आर्थिक विकासका चुनौतीहरू</li>
+                </ul>
+            </div>
+            {% elif 'infrastructure' in section.slug or 'पूर्वाधार' in section.title_nepali %}
+            <div class="important" style="margin-top: 1em;">
+                <h4>पूर्वाधार सम्बन्धी मुख्य बिन्दुहरू:</h4>
+                <ul>
+                    <li>यातायात र सञ्चार सुविधा</li>
+                    <li>विद्युत् र पानी आपूर्ति</li>
+                    <li>स्वास्थ्य र शिक्षा संस्थान</li>
+                    <li>सूचना प्रविधि पहुँच</li>
+                </ul>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
         
@@ -99,12 +136,13 @@
         {% for figure in section.figures.all %}
         <div class="figure-container">
             {% if figure.image %}
-            <img src="{{ figure.image.url }}" alt="{{ figure.caption }}">
+            <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}">
             {% endif %}
             <div class="figure-caption">
-                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title }}
-                {% if figure.caption %}<br>{{ figure.caption }}{% endif %}
-                {% if figure.source %}<br><em>स्रोत: {{ figure.source }}</em>{% endif %}
+                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title_nepali|default:figure.title }}
+                {% if figure.description_nepali or figure.description %}
+                <br>{{ figure.description_nepali|default:figure.description }}
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -114,40 +152,35 @@
         <div class="table-container">
             <table>
                 <caption>
-                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title }}
-                    {% if table.caption %}<br>{{ table.caption }}{% endif %}
+                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title_nepali|default:table.title }}
                 </caption>
                 {% if table.data %}
+                {{ table.data|safe }}
+                {% else %}
                 <thead>
                     <tr>
-                        {% for header in table.data.0 %}
-                        <th>{{ header }}</th>
-                        {% endfor %}
+                        <th>विवरण</th>
+                        <th>संख्या</th>
+                        <th>प्रतिशत</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in table.data|slice:"1:" %}
                     <tr>
-                        {% for cell in row %}
-                        <td>{{ cell }}</td>
-                        {% endfor %}
+                        <td colspan="3" style="text-align: center; color: #666; font-style: italic;">
+                            डेटा उपलब्ध छैन
+                        </td>
                     </tr>
-                    {% endfor %}
                 </tbody>
                 {% endif %}
             </table>
-            {% if table.source %}
-            <div class="small text-muted mt-1">स्रोत: {{ table.source }}</div>
-            {% endif %}
         </div>
         {% endfor %}
     </div>
     {% empty %}
     <div class="no-break">
         <div style="text-align: center; padding: 3em 0; color: #666;">
-            <div style="font-size: 48pt; margin-bottom: 0.5em;">📁</div>
-            <h3>यस विषयमा सामग्री उपलब्ध छैन</h3>
-            <p>यस विषयको सामग्री अझै तयार गरिएको छैन।</p>
+            <h3>सामग्री तयारी चरणमा</h3>
+            <p>यस विषयका खण्डहरू तयार गरिँदै छ। छिट्टै उपलब्ध गराइनेछ।</p>
         </div>
     </div>
     {% endfor %}
@@ -155,15 +188,20 @@
 
 <!-- Summary/Conclusion for Category -->
 {% if category.sections.all %}
-<div class="section-break">
-    <h1>निष्कर्ष</h1>
+<div style="margin-top: 3em;">
+    <h2>निष्कर्ष</h2>
     
     <div class="important">
-        <h3>मुख्य बिन्दुहरू:</h3>
+        <h3>{{ category.name_nepali|default:category.name }} का मुख्य बिन्दुहरू:</h3>
         <ul>
-            {% for section in category.sections.all %}
-            <li>{{ section.title }} - {{ section.description|default:"विस्तृत जानकारी उपलब्ध छ।"|truncatewords:10 }}</li>
-            {% endfor %}
+            <li>यस विषयमा {{ category.sections.all|length }} वटा मुख्य खण्डहरू छन्</li>
+            {% if category_figures %}
+            <li>कुल {{ category_figures|length }} वटा चित्र र आंकडाहरू समावेश छन्</li>
+            {% endif %}
+            {% if category_tables %}
+            <li>कुल {{ category_tables|length }} वटा तालिकाहरू समावेश छन्</li>
+            {% endif %}
+            <li>यो क्षेत्र गढवा गाउँपालिकाको समग्र विकासमा महत्वपूर्ण छ</li>
         </ul>
     </div>
     
@@ -184,13 +222,13 @@
         {% endif %}
         <div class="stat-item">
             <span class="stat-value">{{ category.sections.all|length }}</span>
-            <div class="stat-label">उप-विषयहरू</div>
+            <div class="stat-label">खण्डहरू</div>
         </div>
     </div>
     {% endif %}
     
     <div class="note mt-3">
-        <p><strong>नोट:</strong> यो विषयको विस्तृत जानकारी गढवा गाउँपालिकाको पूर्ण प्रतिवेदनमा उपलब्ध छ। थप जानकारीका लागि सम्पूर्ण प्रतिवेदन हेर्नुहोस्।</p>
+        <p>{{ category.name_nepali|default:category.name }} विषयक सम्पूर्ण जानकारी यस प्रतिवेदनमा समावेश गरिएको छ। थप विस्तृत जानकारीका लागि सम्बन्धित खण्डहरू हेर्नुहोस्।</p>
     </div>
 </div>
 {% endif %}
@@ -199,33 +237,29 @@
 <div class="page-footer">
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; padding-top: 1em; border-top: 1px solid #ddd;">
         <div>
-            <h4>सम्पर्क जानकारी</h4>
-            <p>
-                <strong>गढवा गाउँपालिका</strong><br>
-                {% if publication_settings.contact_email %}
-                इमेल: {{ publication_settings.contact_email }}<br>
-                {% endif %}
-                वेबसाइट: www.gadhawa.gov.np
+            <h4>सम्पर्क जानकारी:</h4>
+            <p style="font-size: 10pt;">
+                गढवा गाउँपालिका<br>
+                कार्यपालिकाको कार्यालय<br>
+                गढवा, बाँके, नेपाल
             </p>
         </div>
         <div>
-            <h4>प्रकाशन जानकारी</h4>
-            <p>
+            <h4>प्रकाशन जानकारी:</h4>
+            <p style="font-size: 10pt;">
+                प्रकाशन मिति: {{ generated_date|date:"Y F j" }}<br>
                 {% if publication_settings %}
-                प्रकाशन मिति: {{ publication_settings.publication_date|date:"Y F j" }}<br>
                 संस्करण: {{ publication_settings.version }}<br>
                 {% endif %}
-                विषय: {{ category.title }}
+                विषय: {{ category.name_nepali|default:category.name }}
             </p>
         </div>
     </div>
     
     <div class="text-center mt-2">
-        {% if publication_settings.copyright_notice %}
-        {{ publication_settings.copyright_notice }}
-        {% else %}
-        © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
-        {% endif %}
+        <p style="font-size: 9pt; color: #666;">
+            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+        </p>
     </div>
 </div>
 

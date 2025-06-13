@@ -65,10 +65,16 @@
             color: #2c3e50;
         }
         
-        h1 {
+        h1.category-title {
             font-size: 18pt;
             page: chapter;
             page-break-before: right;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 0.5em;
+        }
+        
+        h1 {
+            font-size: 18pt;
             border-bottom: 2px solid #2c3e50;
             padding-bottom: 0.5em;
         }
@@ -225,6 +231,8 @@
             display: flex;
             justify-content: space-between;
             align-items: baseline;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 0.2em;
         }
         
         .toc-item a {
@@ -236,6 +244,9 @@
         .toc-item .page-number {
             margin-left: 1em;
             color: #666;
+            font-weight: bold;
+            min-width: 2em;
+            text-align: right;
         }
         
         .toc-item.level-1 {

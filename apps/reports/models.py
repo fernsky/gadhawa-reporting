@@ -19,6 +19,7 @@ class ReportCategory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200, verbose_name="Category Name")
     name_nepali = models.CharField(max_length=200, verbose_name="Category Name (Nepali)")
+    category_number = models.CharField(max_length=10, blank=True, verbose_name="Category Number (e.g., १)")
     slug = models.SlugField(unique=True, max_length=200)
     description = models.TextField(blank=True, verbose_name="Description")
     description_nepali = models.TextField(blank=True, verbose_name="Description (Nepali)")
