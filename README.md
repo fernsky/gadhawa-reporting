@@ -1,300 +1,207 @@
-# Gadhawa Digital Profile Report System
-## Complete Documentation & Design Specification
+# गधावा गाउँपालिका डिजिटल प्रोफाइल प्रतिवेदन प्रणाली
+# Gadhawa Rural Municipality Digital Profile Report System
 
-## 📋 Project Overview
+A comprehensive Django-based system for creating and managing digital profile reports for Gadhawa Rural Municipality (गधावा गाउँपालिका), Dang District, Lumbini Province, Nepal.
 
-This repository contains the complete documentation and design specifications for the **Gadhawa Digital Profile Report System** - a comprehensive web application for generating beautiful, professional A4 PDF reports for Nepali municipalities.
+## 🌟 Features
 
-### 🎯 Project Goals
-- **Beautiful PDF Reports**: Professional A4 layout optimized for printing
-- **Interactive Web Interface**: Browse and explore municipal data online
-- **Nepali Language Support**: Full Unicode support for Nepali content
-- **Data Visualization**: Charts, graphs, and statistical representations
-- **Government Standards**: Compliance with official report structures
-- **Lightning Fast Development**: MVP in 3-5 days using Django
+### ✅ Phase 1 Complete: Foundation & Authentication
+- **Django 4.2.7** with REST Framework
+- **Custom User Authentication** with JWT tokens
+- **Nepali Language Support** (Unicode Devanagari)
+- **Security Hardening** with proper permissions and session tracking
+- **Beautiful Web Interface** with Bootstrap 5 and Nepali fonts
+- **API Documentation** with Swagger/OpenAPI
+- **Development Environment** with virtual environment setup
 
-### 🏗️ Architecture Overview
-```
-Django + DRF + PostgreSQL + WeasyPrint + Bootstrap + HTMX + Alpine.js
-```
+### 🚧 Phase 2 Upcoming: Data Models
+Based on provided SQL schemas, will implement models for:
+- **Demographics** (जनसंख्या विवरण)
+- **Economics** (आर्थिक अवस्था)
+- **Social** (सामाजिक अवस्था)
+- **Environment** (वातावरणीय स्थिति)
+- **Infrastructure** (पूर्वाधार विकास)
+- **Governance** (सुशासन)
 
-## 📚 Documentation Structure
+### 🎯 Future Phases
+- PDF Report Generation
+- Advanced Analytics & Charts
+- Data Import/Export
+- Multi-ward data management
 
-### 📖 Core Documentation
-- **[Report Structure](docs/report-structure.md)** - Official 13-chapter report format
-- **[Project Overview](docs/project-overview.md)** - Vision, architecture, and technical approach
-- **[Project Structure](docs/project-structure.md)** - Directory layout and organization
-- **[Database Design](docs/database-design.md)** - Complete data models and relationships
-- **[Requirements](docs/requirements.md)** - Dependencies and setup instructions
-- **[Development Roadmap](docs/development-roadmap.md)** - 5-day implementation plan
-
-### 🎨 Design Specifications
-- **[UI/UX Specification](docs/design/ui-ux-specification.md)** - Complete design system
-- **[PDF Generation](docs/design/pdf-generation.md)** - Print-optimized styling and layouts
-
-### 🔌 API Documentation
-- **[API Endpoints](docs/api/endpoints.md)** - Complete REST API specification
-
-## 🚀 Quick Start Guide
+## 🚀 Quick Start
 
 ### Prerequisites
-```bash
-Python 3.11+
-PostgreSQL 13+
-4GB+ RAM
-50GB+ Storage
-```
+- Python 3.11+
+- Git
 
 ### Installation
+
+1. **Clone the repository**
 ```bash
-# Clone repository
 git clone <repository-url>
 cd gadhawa-report
+```
 
-# Create virtual environment
+2. **Set up virtual environment**
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
-pip install -r requirements/development.txt
+# Windows
+venv\Scripts\activate
 
-# Setup environment
+# Linux/Mac
+source venv/bin/activate
+```
+
+3. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Environment setup**
+```bash
+# Copy environment template
 cp .env.example .env
-# Edit .env with your configuration
 
-# Setup database
+# Edit .env file with your settings
+```
+
+5. **Database setup**
+```bash
 python manage.py migrate
 python manage.py createsuperuser
+```
 
-# Run development server
+6. **Run development server**
+```bash
+# Windows
+start-dev.bat
+
+# Linux/Mac
+chmod +x start-dev.sh
+./start-dev.sh
+
+# Or manually
 python manage.py runserver
 ```
 
-## 🏛️ Report Structure
+## 🌐 Access Points
 
-The system generates reports following the official 13-chapter structure:
+- **Main Application**: http://127.0.0.1:8000/
+- **Admin Interface**: http://127.0.0.1:8000/admin/
+- **API Documentation**: http://127.0.0.1:8000/api/docs/
+- **API Schema**: http://127.0.0.1:8000/api/schema/
 
-1. **परिच्छेद – १: परिचय** (Introduction)
-2. **परिच्छेद – २: गाउँ÷नगरपालिकाको चिनारी** (Municipality Profile)
-3. **परिच्छेद – ३: पारिवारिक विवरण तथा जनसंख्याको अवस्था** (Demographics)
-4. **परिच्छेद – ४: आर्थिक अवस्था** (Economic Status)
-5. **परिच्छेद – ५: सामाजिक अवस्था** (Social Status)
-6. **परिच्छेद – ६: वन तथा वातावरणीय स्थिति** (Environment)
-7. **परिच्छेद – ७: भौतिक विकासको अवस्था** (Infrastructure)
-8. **परिच्छेद – ८: संस्थागत तथा सुशासनको स्थिति** (Governance)
+## 👥 User Roles
 
-Plus comprehensive appendices and data tables.
+The system supports the following user roles:
 
-## 🔧 Technical Stack
+- **प्रशासक (Admin)**: Full system access
+- **प्रबन्धक (Manager)**: Manage data and users
+- **डाटा एन्ट्री (Data Entry)**: Input and edit data
+- **वडा अधिकारी (Ward Officer)**: Ward-specific data management
+- **दर्शक (Viewer)**: Read-only access
 
-### Backend
-- **Django 5.0+** - Web framework
-- **Django REST Framework** - API development
-- **PostgreSQL** - Primary database
-- **WeasyPrint** - PDF generation
-- **Celery** - Background tasks
-- **Redis** - Caching and task queue
+## 🏗️ Project Structure
 
-### Frontend
-- **Django Templates** - Server-side rendering
-- **Bootstrap 5** - CSS framework
-- **HTMX** - Dynamic interactions
-- **Alpine.js** - JavaScript reactivity
-- **Chart.js** - Data visualization
-
-### Infrastructure
-- **Gunicorn** - WSGI server
-- **Nginx** - Reverse proxy
-- **Docker** - Containerization
-- **PostgreSQL** - Database
-
-## 📊 Key Features
-
-### 🖨️ PDF Generation
-- Professional A4 layout
-- Nepali Unicode font support
-- Automatic table of contents
-- Page numbering and headers
-- Print-optimized styling
-- Chart rendering in PDF
-
-### 🌐 Web Interface
-- Responsive design
-- Interactive data tables
-- Real-time charts
-- Search and filtering
-- Mobile-friendly
-- Admin interface
-
-### 📈 Data Management
-- Complete CRUD operations
-- Data validation
-- Import/Export tools
-- Audit trails
-- Version control
-- Backup systems
-
-### 🔐 Security & Performance
-- JWT authentication
-- Role-based access
-- Input validation
-- SQL injection protection
-- Caching optimization
-- Query optimization
-
-## 📋 Development Timeline
-
-### Day 1: Foundation
-- ✅ Project setup and configuration
-- ✅ Database models and migrations
-- ✅ Django admin interface
-- ✅ Basic API endpoints
-
-### Day 2: Core Features
-- ✅ Complete data models
-- ✅ API development
-- ✅ Authentication system
-- ✅ Sample data creation
-
-### Day 3: Web Interface
-- ✅ Template system
-- ✅ Dashboard interface
-- ✅ Chart integration
-- ✅ Data tables
-
-### Day 4: PDF Generation
-- ✅ WeasyPrint setup
-- ✅ PDF templates
-- ✅ Report generation
-- ✅ Styling and layout
-
-### Day 5: Production Ready
-- ✅ Testing and QA
-- ✅ Performance optimization
-- ✅ Deployment setup
-- ✅ Documentation
-
-## 🎨 Design System
-
-### Color Palette
-```css
---primary-red: #DC143C;     /* Nepal flag red */
---primary-blue: #003893;    /* Government blue */
---primary-gold: #FFD700;    /* Ceremonial gold */
---success-green: #28a745;
---warning-orange: #fd7e14;
---gray-scale: #212529 to #f8f9fa;
+```
+gadhawa-report/
+├── apps/                      # Django applications
+│   ├── core/                  # Core utilities and base models
+│   ├── users/                 # User management and authentication
+│   ├── demographics/          # Population and demographic data
+│   ├── economics/             # Economic data and statistics
+│   ├── social/                # Social indicators and data
+│   ├── environment/           # Environmental data
+│   ├── infrastructure/        # Infrastructure data
+│   ├── governance/            # Governance and administrative data
+│   └── reports/               # Report generation
+├── docs/                      # Project documentation
+├── gadhawa_report/            # Django project settings
+├── templates/                 # HTML templates
+├── static/                    # Static files (CSS, JS, images)
+├── media/                     # User uploads
+├── venv/                      # Virtual environment
+└── requirements.txt           # Python dependencies
 ```
 
-### Typography
-- **Nepali**: Mukti, Kalimati, Devanagari
-- **English**: Inter, Segoe UI, Roboto
-- **Monospace**: JetBrains Mono, Consolas
+## 🔧 Development
 
-### Components
-- Navigation system
-- Data tables
-- Chart containers
-- Statistics cards
-- Form elements
-- Modal dialogs
+### Settings
+- **Development**: `gadhawa_report.settings.development`
+- **Production**: `gadhawa_report.settings.production`
 
-## 🚀 Deployment
+### Database
+- **Development**: SQLite (db.sqlite3)
+- **Production**: PostgreSQL (recommended)
 
-### Production Requirements
-- 2+ CPU cores, 2.4GHz+
-- 8GB+ RAM
-- 50GB+ SSD storage
-- SSL certificate
-- Domain name
+### Key Dependencies
+- Django 4.2.7
+- Django REST Framework 3.14.0
+- SimpleJWT for authentication
+- drf-spectacular for API docs
+- python-decouple for environment variables
 
-### Deployment Options
-1. **Traditional Server** - Ubuntu/CentOS with Nginx
-2. **Docker Containers** - Docker Compose setup
-3. **Cloud Platforms** - AWS/DigitalOcean/Heroku
-4. **Government Infrastructure** - On-premise deployment
+## 🔐 Security Features
 
-## 📚 API Documentation
+- JWT-based authentication
+- Session tracking for security audits
+- Account lockout after failed login attempts
+- Password validation and policies
+- CORS protection
+- Security headers
+- User permission system
 
-### Authentication
-```http
-POST /api/v1/auth/login/
-POST /api/v1/auth/refresh/
-POST /api/v1/auth/logout/
-```
+## 🌏 Localization
 
-### Core Resources
-```http
-GET /api/v1/municipalities/
-GET /api/v1/demographics/population/
-GET /api/v1/economics/overview/
-GET /api/v1/social/education/
-POST /api/v1/reports/generate/
-```
+The system is primarily designed for Nepali language with:
+- Nepali Unicode (Devanagari) support
+- Localized field names and interface
+- English fallbacks where needed
+- Date/time formatting for Nepal timezone
 
-### Report Generation
-```http
-POST /api/v1/reports/generate/
-{
-  "municipality_id": "uuid",
-  "format": "pdf|html",
-  "chapters": ["demographics", "economics"],
-  "language": "ne|en"
-}
-```
+## 📊 Data Models (Phase 2)
+
+Will implement comprehensive models based on Nepal's rural municipality data standards:
+
+### Demographics
+- Ward-wise population statistics
+- Age and gender distributions
+- Caste and ethnicity data
+- Migration and settlement patterns
+
+### Economics
+- Household economic indicators
+- Agricultural production
+- Employment and occupation data
+- Financial inclusion metrics
+
+### Social
+- Education statistics
+- Health indicators
+- Social services access
+- Infrastructure usage
 
 ## 🤝 Contributing
 
-### Development Setup
 1. Fork the repository
-2. Create feature branch
-3. Install development dependencies
-4. Run tests before committing
-5. Submit pull request
-
-### Code Standards
-- **Python**: PEP 8, Black formatting
-- **JavaScript**: ES6+, Prettier formatting
-- **CSS**: BEM methodology
-- **Templates**: Django best practices
-
-### Testing
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov
-
-# Run specific tests
-pytest apps/core/tests/
-```
-
-## 📞 Support & Contact
-
-### Development Team
-- **Project Lead**: [Contact Information]
-- **Backend Developer**: [Contact Information]
-- **Frontend Developer**: [Contact Information]
-- **DevOps Engineer**: [Contact Information]
-
-### Issues & Bugs
-- Create GitHub issues for bugs
-- Use issue templates
-- Provide detailed reproduction steps
-- Include system information
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is developed for Gadhawa Rural Municipality and follows appropriate licensing for government software projects.
 
-## 🙏 Acknowledgments
+## 📞 Support
 
-- Government of Nepal for report structure guidelines
-- Gadhawa Municipality for requirements and feedback
-- Open source community for excellent tools and libraries
-- Contributors and testers for their valuable input
+For technical support or questions about the system:
+- Email: tech@gadhawa.gov.np
+- Phone: +977-XX-XXXXXX
 
 ---
 
-**Ready to build a beautiful, professional digital profile report system in just 5 days! 🚀**
+**विकसित**: गधावा गाउँपालिकाको लागि डिजिटल प्रोफाइल प्रतिवेदन प्रणाली  
+**Developed**: Digital Profile Report System for Gadhawa Rural Municipality
