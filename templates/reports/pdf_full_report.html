@@ -5,50 +5,91 @@
 
 {% block content %}
 <!-- Cover Page -->
-<div class="cover-page">
-    <div style="text-align: center; margin-bottom: 4cm;">
-        <!-- Logo and Header Section -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2cm;">
-            <div style="width: 80px; height: 80px;">
-                <!-- Nepal Government Logo placeholder -->
-            </div>
-            <div style="flex-grow: 1;">
-                <div style="color: #d32f2f; font-size: 20pt; font-weight: 700; margin-bottom: 0.5em;">
-                    गढवा गाउँपालिका
+<div class="cover-page" style="position: relative; height: 100vh; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    
+    <!-- Decorative Background Elements -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+        <!-- Top geometric pattern -->
+        <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(211,47,47,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+        
+        <!-- Bottom left pattern -->
+        <div style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(25,118,210,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+        
+        <!-- Subtle grid overlay -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.3;"></div>
+    </div>
+    
+    <!-- Main Content Container -->
+    <div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column;">
+        
+        <!-- Header Section -->
+        <div style="flex: 0 0 auto; padding: 2.5cm 2cm 1cm 2cm;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.9); padding: 1.5rem 2rem; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); backdrop-filter: blur(10px);">
+                
+                <!-- Left Logo -->
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(211,47,47,0.3);">
+                    <div style="color: white; font-size: 20pt; font-weight: 700;">ने</div>
                 </div>
-                <div style="color: #d32f2f; font-size: 16pt; font-weight: 600; margin-bottom: 0.5em;">
-                    गाउँकार्यपालिकाको कार्यालय
+                
+                <!-- Center Content -->
+                <div style="flex: 1; text-align: center; margin: 0 2rem;">
+                    <div style="color: #d32f2f; font-size: 20pt; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: 1px;">
+                        गढवा गाउँपालिका
+                    </div>
+                    <div style="color: #d32f2f; font-size: 14pt; font-weight: 500; margin-bottom: 0.3rem;">
+                        गाउँकार्यपालिकाको कार्यालय
+                    </div>
+                    <div style="color: #666; font-size: 11pt; font-weight: 400;">
+                        लुम्बिनी प्रदेश, नेपाल सरकार
+                    </div>
                 </div>
-                <div style="color: #d32f2f; font-size: 12pt; margin-bottom: 0.5em;">
-                    लुम्बिनी प्रदेश ,नेपाल सरकार
+                
+                <!-- Right Logo -->
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(25,118,210,0.3);">
+                    <div style="color: white; font-size: 20pt; font-weight: 700;">ग</div>
                 </div>
-            </div>
-            <div style="width: 80px; height: 80px;">
-                <!-- Municipality Logo placeholder -->
             </div>
         </div>
         
         <!-- Main Title Section -->
-        <div style="background: #d32f2f; color: white; padding: 1.5em; margin: 2cm 0; font-size: 24pt; font-weight: 700;">
-            गाउँपालिका पार्श्वचित्र
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 2cm;">
+            
+            <!-- Secondary Info Card -->
+            <div style="background: rgba(255,255,255,0.95); border: 2px solid #1976d2; border-radius: 15px; padding: 2rem 2.5rem; box-shadow: 0 8px 32px rgba(25,118,210,0.2); backdrop-filter: blur(10px); text-align: center; max-width: 70%;">
+                <div style="color: #1976d2; font-size: 18pt; font-weight: 600; margin-bottom: 0.8rem; letter-spacing: 1px;">
+                    डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+                </div>
+                <div style="color: #555; font-size: 14pt; font-weight: 400;">
+                    सम्पूर्ण प्रतिवेदन २०८१
+                </div>
+            </div>
         </div>
-
+        
         <!-- Bottom Section -->
-        <div style="background: #d32f2f; color: #fdd835; padding: 1em; margin-top: 1cm;">
-            <div style="font-size: 16pt; font-weight: 600;">मस्यौदा प्रतिवेदन</div>
-            <div style="font-size: 18pt; font-weight: 700;">२०८१</div>
+        <div style="flex: 0 0 auto; padding: 1cm 2cm 2.5cm 2cm; text-align: center;">
+            
+            <!-- Status Badge -->
+            <div style="display: inline-block; background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fdd835; padding: 1.2rem 2.5rem; border-radius: 50px; box-shadow: 0 8px 24px rgba(211,47,47,0.4); margin-bottom: 1.5rem;">
+                <div style="font-size: 14pt; font-weight: 600; margin-bottom: 0.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">मस्यौदा प्रतिवेदन</div>
+                <div style="font-size: 18pt; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">२०८१</div>
+            </div>
+            
+            <!-- Decorative Divider -->
+            <div style="width: 200px; height: 1px; background: linear-gradient(90deg, transparent 0%, #d32f2f 20%, #1976d2 50%, #d32f2f 80%, transparent 100%); margin: 1.5rem auto; position: relative;">
+                <div style="position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #1976d2; border-radius: 50%;"></div>
+            </div>
+            
+            <!-- Publication Info -->
+            {% if publication_settings %}
+            <div style="font-size: 10pt; color: #666; line-height: 1.4;">
+                <div style="margin-bottom: 0.3rem;">प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
+                {% if publication_settings.version %}
+                <div>संस्करण: {{ publication_settings.version }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     </div>
-    
-    <!-- Publication Info (if needed) -->
-    {% if publication_settings %}
-    <div style="position: absolute; bottom: 2cm; left: 50%; transform: translateX(-50%); text-align: center; font-size: 10pt; color: #666;">
-        <div>प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
-        {% if publication_settings.version %}
-        <div>संस्करण: {{ publication_settings.version }}</div>
-        {% endif %}
-    </div>
-    {% endif %}
 </div>
 
 <!-- Table of Contents -->
