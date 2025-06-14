@@ -6,39 +6,49 @@
 {% block content %}
 <!-- Cover Page -->
 <div class="cover-page">
-    <div class="cover-title">
-        गढवा गाउँपालिका
-    </div>
-    <div class="cover-subtitle">
-        डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
-    </div>
-    
-    <div style="margin: 3cm 0;">
-        <div style="border: 2px solid #3498db; padding: 2em; display: inline-block;">
-            <h3 style="margin: 0; color: #3498db;">सम्पूर्ण प्रतिवेदन</h3>
-            <p style="margin: 0.5em 0 0 0; font-size: 12pt;">
-                नेपालको संघीय लोकतान्त्रिक गणतन्त्र अन्तर्गत<br>
-                बाँके जिल्ला, लुम्बिनी प्रदेश
-            </p>
+    <div style="text-align: center; margin-bottom: 4cm;">
+        <!-- Logo and Header Section -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2cm;">
+            <div style="width: 80px; height: 80px;">
+                <!-- Nepal Government Logo placeholder -->
+            </div>
+            <div style="flex-grow: 1;">
+                <div style="color: #d32f2f; font-size: 20pt; font-weight: 700; margin-bottom: 0.5em;">
+                    गढवा गाउँपालिका
+                </div>
+                <div style="color: #d32f2f; font-size: 16pt; font-weight: 600; margin-bottom: 0.5em;">
+                    गाउँकार्यपालिकाको कार्यालय
+                </div>
+                <div style="color: #d32f2f; font-size: 12pt; margin-bottom: 0.5em;">
+                    लुम्बिनी प्रदेश ,नेपाल सरकार
+                </div>
+            </div>
+            <div style="width: 80px; height: 80px;">
+                <!-- Municipality Logo placeholder -->
+            </div>
         </div>
-    </div>
-    
-    <div class="cover-info">
-        {% if publication_settings %}
-        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
-        <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
-        {% if publication_settings.editor_name %}
-        <div><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</div>
-        {% endif %}
-        {% if publication_settings.isbn %}
-        <div><strong>ISBN:</strong> {{ publication_settings.isbn }}</div>
-        {% endif %}
-        {% endif %}
         
-        <div style="margin-top: 2em; font-size: 10pt;">
-            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
+        <!-- Main Title Section -->
+        <div style="background: #d32f2f; color: white; padding: 1.5em; margin: 2cm 0; font-size: 24pt; font-weight: 700;">
+            गाउँपालिका पार्श्वचित्र
+        </div>
+
+        <!-- Bottom Section -->
+        <div style="background: #d32f2f; color: #fdd835; padding: 1em; margin-top: 1cm;">
+            <div style="font-size: 16pt; font-weight: 600;">मस्यौदा प्रतिवेदन</div>
+            <div style="font-size: 18pt; font-weight: 700;">२०८१</div>
         </div>
     </div>
+    
+    <!-- Publication Info (if needed) -->
+    {% if publication_settings %}
+    <div style="position: absolute; bottom: 2cm; left: 50%; transform: translateX(-50%); text-align: center; font-size: 10pt; color: #666;">
+        <div>प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
+        {% if publication_settings.version %}
+        <div>संस्करण: {{ publication_settings.version }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 
 <!-- Table of Contents -->
