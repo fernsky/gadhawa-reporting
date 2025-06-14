@@ -137,19 +137,17 @@
 <!-- Main Content -->
 {% for category in categories %}
 <div class="section-break">
-    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">परिच्छेद – {{ category.category_number|nepali_digits }}ः {{ category.name_nepali|default:category.name }}</h1>
-
-    {% for section in category.sections.all %}
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">परिच्छेद – {{ category.category_number|nepali_digits }}ः {{ category.name_nepali|default:category.name }}</h1>    {% for section in category.sections.all %}
     {% with section_parts=section.section_number|split:"." %}
-    <div class="no-break" style="margin-top: {% if section_parts|length == 2 %}2em{% elif section_parts|length == 3 %}1.5em{% else %}1em{% endif %};">
-        {% if</div> section_parts|length == 2 %}
-        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
+    <div class="section-content" style="margin-top: {% if section_parts|length == 2 %}2em{% elif section_parts|length == 3 %}1.5em{% else %}1em{% endif %};">
+        {% if section_parts|length == 2 %}
+        <h2 class="section-header" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
         {% elif section_parts|length == 3 %}
-        <h3 style="color: #2563eb; border-bottom: 1px solid #60a5fa; padding-bottom: 0.2em; font-size: 14pt; margin-left: 1em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h3>
+        <h3 class="section-header" style="color: #2563eb; border-bottom: 1px solid #60a5fa; padding-bottom: 0.2em; font-size: 14pt; margin-left: 1em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h3>
         {% elif section_parts|length == 4 %}
-        <h4 style="color: #3b82f6; font-size: 13pt; margin-left: 2em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h4>
+        <h4 class="section-header" style="color: #3b82f6; font-size: 13pt; margin-left: 2em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h4>
         {% else %}
-        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
+        <h2 class="section-header" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
         {% endif %}
         
         {% if section.content_nepali or section.content %}

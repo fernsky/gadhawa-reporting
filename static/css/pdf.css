@@ -98,7 +98,7 @@ blockquote {
 }
 
 .table-container {
-    page-break-inside: avoid;
+    page-break-inside: auto; /* Allow page breaks within large tables if needed */
     margin: 1em 0 2em 0;
 }
 
@@ -107,6 +107,7 @@ table {
     border-collapse: collapse;
     margin: 0.5em 0 1em 0;
     font-size: 10pt;
+    page-break-inside: auto;
 }
 
 table caption {
@@ -135,7 +136,7 @@ tr:nth-child(even) td {
 }
 
 .figure-container {
-    page-break-inside: avoid;
+    page-break-inside: auto; /* Allow page breaks if figure is very large */
     margin: 1em 0 2em 0;
     text-align: center;
 }
@@ -243,10 +244,6 @@ tr:nth-child(even) td {
 
 .section-break {
     page-break-before: always;
-}
-
-.no-break {
-    page-break-inside: avoid;
 }
 
 .highlight {
@@ -416,4 +413,39 @@ tr:nth-child(even) td {
 
 .content-level-4 {
     margin-left: 2em;
+}
+
+/* Seamless section flow within categories */
+.section-content {
+    page-break-inside: auto;
+    orphans: 2;
+    widows: 2;
+}
+
+.section-content + .section-content {
+    margin-top: 1.5em; /* Consistent spacing between sections */
+}
+
+.section-content h2:first-child,
+.section-content h3:first-child,
+.section-content h4:first-child {
+    margin-top: 0; /* Remove top margin from first heading in section */
+}
+
+/* Prevent breaks between related content */
+.content-section {
+    /* Allow natural page breaks within content sections */
+    page-break-inside: auto;
+}
+
+.content-section h2,
+.content-section h3,
+.content-section h4 {
+    page-break-after: avoid;
+}
+
+.content-section p + h2,
+.content-section p + h3,
+.content-section p + h4 {
+    page-break-before: avoid;
 }
