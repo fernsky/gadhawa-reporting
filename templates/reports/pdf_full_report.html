@@ -5,96 +5,55 @@
 
 {% block content %}
 <!-- Cover Page -->
-<div class="cover-page" style="position: relative; height: 100vh; overflow: hidden; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-    
-    <!-- Decorative Background Elements -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
-        <!-- Top geometric pattern -->
-        <div style="position: absolute; top: -100px; right: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(211,47,47,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
-        
-        <!-- Bottom left pattern -->
-        <div style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(25,118,210,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-        
-        <!-- Subtle grid overlay -->
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.03) 1px, transparent 0); background-size: 40px 40px; opacity: 0.3;"></div>
-    </div>
-    
-    <!-- Main Content Container -->
-    <div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column;">
-        
-        <!-- Header Section -->
-        <div style="flex: 0 0 auto; padding: 2.5cm 2cm 1cm 2cm;">
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.9); padding: 1.5rem 2rem; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); backdrop-filter: blur(10px);">
-                
-                <!-- Left Logo -->
-                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(211,47,47,0.3);">
-                    <div style="color: white; font-size: 20pt; font-weight: 700;">ने</div>
+<div class="cover-page">
+    <div style="text-align: center; margin-bottom: 4cm;">
+        <!-- Logo and Header Section -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2cm;">
+            <div style="width: 80px; height: 80px;">
+                <!-- Nepal Government Logo placeholder -->
+            </div>
+            <div style="flex-grow: 1;">
+                <div style="color: #1e3a8a; font-size: 20pt; font-weight: 700; margin-bottom: 0.5em;">
+                    गढवा गाउँपालिका
                 </div>
-                
-                <!-- Center Content -->
-                <div style="flex: 1; text-align: center; margin: 0 2rem;">
-                    <div style="color: #d32f2f; font-size: 20pt; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: 1px;">
-                        गढवा गाउँपालिका
-                    </div>
-                    <div style="color: #d32f2f; font-size: 14pt; font-weight: 500; margin-bottom: 0.3rem;">
-                        गाउँकार्यपालिकाको कार्यालय
-                    </div>
-                    <div style="color: #666; font-size: 11pt; font-weight: 400;">
-                        लुम्बिनी प्रदेश, नेपाल सरकार
-                    </div>
+                <div style="color: #1e40af; font-size: 16pt; font-weight: 600; margin-bottom: 0.5em;">
+                    गाउँकार्यपालिकाको कार्यालय
                 </div>
-                
-                <!-- Right Logo -->
-                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(25,118,210,0.3);">
-                    <div style="color: white; font-size: 20pt; font-weight: 700;">ग</div>
+                <div style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em;">
+                    लुम्बिनी प्रदेश ,नेपाल सरकार
                 </div>
+            </div>
+            <div style="width: 80px; height: 80px;">
+                <!-- Municipality Logo placeholder -->
             </div>
         </div>
         
         <!-- Main Title Section -->
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 2cm;">
-            
-            <!-- Secondary Info Card -->
-            <div style="background: rgba(255,255,255,0.95); border: 2px solid #1976d2; border-radius: 15px; padding: 2rem 2.5rem; box-shadow: 0 8px 32px rgba(25,118,210,0.2); backdrop-filter: blur(10px); text-align: center; max-width: 70%;">
-                <div style="color: #1976d2; font-size: 18pt; font-weight: 600; margin-bottom: 0.8rem; letter-spacing: 1px;">
-                    डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
-                </div>
-                <div style="color: #555; font-size: 14pt; font-weight: 400;">
-                    सम्पूर्ण प्रतिवेदन २०८१
-                </div>
-            </div>
+        <div style="color: #1e3a8a; padding: 1.5em; margin: 2cm 0; font-size: 24pt; font-weight: 700; ">
+            गाउँपालिका पार्श्वचित्र
         </div>
-        
+
         <!-- Bottom Section -->
-        <div style="flex: 0 0 auto; padding: 1cm 2cm 2.5cm 2cm; text-align: center;">
-            
-            <!-- Status Badge -->
-            <div style="display: inline-block; background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fdd835; padding: 1.2rem 2.5rem; border-radius: 50px; box-shadow: 0 8px 24px rgba(211,47,47,0.4); margin-bottom: 1.5rem;">
-                <div style="font-size: 14pt; font-weight: 600; margin-bottom: 0.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">मस्यौदा प्रतिवेदन</div>
-                <div style="font-size: 18pt; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">२०८१</div>
-            </div>
-            
-            <!-- Decorative Divider -->
-            <div style="width: 200px; height: 1px; background: linear-gradient(90deg, transparent 0%, #d32f2f 20%, #1976d2 50%, #d32f2f 80%, transparent 100%); margin: 1.5rem auto; position: relative;">
-                <div style="position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #1976d2; border-radius: 50%;"></div>
-            </div>
-            
-            <!-- Publication Info -->
-            {% if publication_settings %}
-            <div style="font-size: 10pt; color: #666; line-height: 1.4;">
-                <div style="margin-bottom: 0.3rem;">प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
-                {% if publication_settings.version %}
-                <div>संस्करण: {{ publication_settings.version }}</div>
-                {% endif %}
-            </div>
-            {% endif %}
+        <div style="color: #0f172a; padding: 1em; margin-top: 1cm; ">
+            <div style="font-size: 16pt; font-weight: 600;">मस्यौदा प्रतिवेदन</div>
+            <div style="font-size: 18pt; font-weight: 700;">२०८१</div>
         </div>
     </div>
+    
+    <!-- Publication Info (if needed) -->
+    {% if publication_settings %}
+    <div style="position: absolute; bottom: 2cm; left: 50%; transform: translateX(-50%); text-align: center; font-size: 10pt; color: #64748b;">
+        <div>प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
+        {% if publication_settings.version %}
+        <div>संस्करण: {{ publication_settings.version }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 
 <!-- Table of Contents -->
 <div class="toc-page">
-    <h1 class="toc-title">सूचीपत्र</h1>
+    <h1 class="toc-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">सूचीपत्र</h1>
     
     <!-- Front Matter -->
     <div class="toc-item level-1">
@@ -114,7 +73,7 @@
     </div>
     {% endif %}
     
-    <div style="margin: 1.5em 0; border-bottom: 1px solid #ddd;"></div>
+    <div style="margin: 1.5em 0; border-bottom: 1px solid #e2e8f0;"></div>
     
     <!-- Main Content -->
     {% for category in categories %}
@@ -134,7 +93,7 @@
 <!-- List of Figures -->
 {% if figures %}
 <div class="list-page">
-    <h1 class="list-title">चित्रहरूको सूची</h1>
+    <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">चित्रहरूको सूची</h1>
     {% for figure in figures %}
     <div class="list-item">
         <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
@@ -147,7 +106,7 @@
 <!-- List of Tables -->
 {% if tables %}
 <div class="list-page">
-    <h1 class="list-title">तालिकाहरूको सूची</h1>
+    <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">तालिकाहरूको सूची</h1>
     {% for table in tables %}
     <div class="list-item">
         <span class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</span>
@@ -160,7 +119,7 @@
 <!-- Main Content -->
 {% for category in categories %}
 <div class="section-break">
-    <h1 class="category-title">{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</h1>
+    <h1 class="category-title" style="color: #1e3a8a; background: linear-gradient(90deg, #f1f5f9, #e2e8f0); padding: 0.5em; border-left: 5px solid #0ea5e9;">{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</h1>
     
     {% if category.description_nepali or category.description %}
     <div class="lead">{{ category.description_nepali|default:category.description }}</div>
@@ -168,7 +127,7 @@
     
     {% for section in category.sections.all %}
     <div class="{% if not forloop.first %}no-break{% endif %}" style="margin-top: 2em;">
-        <h2>{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</h2>
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</h2>
         
         {% if section.summary_nepali or section.summary %}
         <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
@@ -179,46 +138,46 @@
             {{ section.content_nepali|default:section.content|safe }}
         </div>
         {% else %}
-        <div class="note">
+        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0;">
             <p>यस खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
             
             <!-- Add contextual sample content -->
             {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali %}
             <div class="table-container">
-                <table>
+                <table style="border: 1px solid #cbd5e1;">
                     <caption><strong>जनसंख्या विवरण (नमूना डेटा)</strong></caption>
-                    <thead>
+                    <thead style="background: #1e3a8a; color: white;">
                         <tr>
-                            <th>वडा नं.</th>
-                            <th>पुरुष</th>
-                            <th>महिला</th>
-                            <th>कुल</th>
+                            <th style="border: 1px solid #475569;">वडा नं.</th>
+                            <th style="border: 1px solid #475569;">पुरुष</th>
+                            <th style="border: 1px solid #475569;">महिला</th>
+                            <th style="border: 1px solid #475569;">कुल</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>१</td><td>१,२५०</td><td>१,१८०</td><td>२,४३०</td></tr>
-                        <tr><td>२</td><td>१,१००</td><td>१,०५०</td><td>२,१५०</td></tr>
-                        <tr><td>३</td><td>९८०</td><td>९४०</td><td>१,९२०</td></tr>
-                        <tr style="font-weight: bold;"><td>कुल</td><td>३,३३०</td><td>३,१७०</td><td>६,५००</td></tr>
+                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">१</td><td style="border: 1px solid #e2e8f0;">१,२५०</td><td style="border: 1px solid #e2e8f0;">१,१८०</td><td style="border: 1px solid #e2e8f0;">२,४३०</td></tr>
+                        <tr><td style="border: 1px solid #e2e8f0;">२</td><td style="border: 1px solid #e2e8f0;">१,१००</td><td style="border: 1px solid #e2e8f0;">१,०५०</td><td style="border: 1px solid #e2e8f0;">२,१५०</td></tr>
+                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">३</td><td style="border: 1px solid #e2e8f0;">९८०</td><td style="border: 1px solid #e2e8f0;">९४०</td><td style="border: 1px solid #e2e8f0;">१,९२०</td></tr>
+                        <tr style="font-weight: bold; background: #e2e8f0;"><td style="border: 1px solid #cbd5e1;">कुल</td><td style="border: 1px solid #cbd5e1;">३,३३०</td><td style="border: 1px solid #cbd5e1;">३,१७०</td><td style="border: 1px solid #cbd5e1;">६,५००</td></tr>
                     </tbody>
                 </table>
             </div>
             {% elif 'economic' in section.slug or 'आर्थिक' in section.title_nepali %}
             <div class="table-container">
-                <table>
+                <table style="border: 1px solid #cbd5e1;">
                     <caption><strong>आर्थिक गतिविधि (नमूना डेटा)</strong></caption>
-                    <thead>
+                    <thead style="background: #1e3a8a; color: white;">
                         <tr>
-                            <th>गतिविधि</th>
-                            <th>घरधुरी संख्या</th>
-                            <th>प्रतिशत</th>
+                            <th style="border: 1px solid #475569;">गतिविधि</th>
+                            <th style="border: 1px solid #475569;">घरधुरी संख्या</th>
+                            <th style="border: 1px solid #475569;">प्रतिशत</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>कृषि</td><td>८५०</td><td>६५%</td></tr>
-                        <tr><td>व्यापार</td><td>२००</td><td>१५%</td></tr>
-                        <tr><td>सेवा</td><td>१५०</td><td>१२%</td></tr>
-                        <tr><td>अन्य</td><td>१००</td><td>८%</td></tr>
+                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">कृषि</td><td style="border: 1px solid #e2e8f0;">८५०</td><td style="border: 1px solid #e2e8f0;">६५%</td></tr>
+                        <tr><td style="border: 1px solid #e2e8f0;">व्यापार</td><td style="border: 1px solid #e2e8f0;">२००</td><td style="border: 1px solid #e2e8f0;">१५%</td></tr>
+                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">सेवा</td><td style="border: 1px solid #e2e8f0;">१५०</td><td style="border: 1px solid #e2e8f0;">१२%</td></tr>
+                        <tr><td style="border: 1px solid #e2e8f0;">अन्य</td><td style="border: 1px solid #e2e8f0;">१००</td><td style="border: 1px solid #e2e8f0;">८%</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -244,23 +203,23 @@
         <!-- Section Tables -->
         {% for table in section.tables.all %}
         <div class="table-container">
-            <table>
+            <table style="border: 1px solid #cbd5e1;">
                 <caption>
                     <strong>तालिका {{ table.table_number }}:</strong> {{ table.title_nepali|default:table.title }}
                 </caption>
                 {% if table.data %}
                 {{ table.data|safe }}
                 {% else %}
-                <thead>
+                <thead style="background: #1e3a8a; color: white;">
                     <tr>
-                        <th>विवरण</th>
-                        <th>संख्या</th>
-                        <th>प्रतिशत</th>
+                        <th style="border: 1px solid #475569;">विवरण</th>
+                        <th style="border: 1px solid #475569;">संख्या</th>
+                        <th style="border: 1px solid #475569;">प्रतिशत</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="3" style="text-align: center; color: #666; font-style: italic;">
+                        <td colspan="3" style="text-align: center; color: #64748b; font-style: italic; border: 1px solid #e2e8f0;">
                             डेटा उपलब्ध छैन
                         </td>
                     </tr>
@@ -276,11 +235,11 @@
 
 <!-- Back Cover / Additional Information -->
 <div class="section-break">
-    <h1>अतिरिक्त जानकारी</h1>
+    <h1 style="color: #1e3a8a; background: linear-gradient(90deg, #f1f5f9, #e2e8f0); padding: 0.5em; border-left: 5px solid #0ea5e9;">अतिरिक्त जानकारी</h1>
     
     <div class="no-break">
-        <h2>गढवा गाउँपालिकाको सम्पर्क विवरण</h2>
-        <div class="important">
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">गढवा गाउँपालिकाको सम्पर्क विवरण</h2>
+        <div class="important" style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 1em; margin: 1em 0;">
             <p><strong>कार्यपालिकाको कार्यालय:</strong><br>
             गढवा गाउँपालिका<br>
             बाँके, लुम्बिनी प्रदेश, नेपाल</p>
@@ -293,8 +252,8 @@
     
     {% if publication_settings %}
     <div class="no-break mt-3">
-        <h2>प्रकाशन सम्बन्धी जानकारी</h2>
-        <div class="note">
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">प्रकाशन सम्बन्धी जानकारी</h2>
+        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0;">
             <p><strong>प्रकाशक:</strong> गढवा गाउँपालिका<br>
             <strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}<br>
             <strong>संस्करण:</strong> {{ publication_settings.version }}</p>
@@ -311,8 +270,8 @@
     {% endif %}
     
     <div class="no-break mt-3">
-        <h2>कानुनी सूचना</h2>
-        <div class="warning">
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">कानुनी सूचना</h2>
+        <div class="warning" style="background: #fef3cd; border-left: 4px solid #f59e0b; padding: 1em; margin: 1em 0;">
             <p>यस प्रतिवेदनमा उल्लेखित सबै तथ्यांक र जानकारीहरू सम्बन्धित निकायबाट प्राप्त भएका हुन्। डेटाको शुद्धताका लागि गढवा गाउँपालिका जिम्मेवार छ।</p>
             
             <p>यस प्रतिवेदनको कुनै पनि भाग गढवा गाउँपालिकाको लिखित अनुमति बिना पुनः प्रकाशन गर्न मिल्दैन।</p>
@@ -325,8 +284,8 @@
                 गढवा गाउँपालिका<br>
                 "समृद्ध गढवा, सुखी नागरिक"
             </p>
-            <p style="font-size: 10pt; color: #666;">
-                यो प्रतिवेदन {{ generated_date|date:"Y F j" }} मा तयार गरिएको हो।
+            <p style="font-size: 10pt; color: #64748b;">
+                यो प्रतिवेदन {{ generated_date|date:"Y F j" }} मा तयार गरिएको हो。
             </p>
         </div>
     </div>

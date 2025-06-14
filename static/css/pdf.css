@@ -2,25 +2,8 @@
     size: A4;
     margin: 2cm 1.5cm;
     
-    @top-left {
-        content: "गढवा गाउँपालिका";
-        font-size: 10pt;
-        color: #666;
-    }
-    
-    @top-right {
-        content: "{{ publication_settings.publication_date|date:'Y F' }}";
-        font-size: 10pt;
-        color: #666;
-    }
-    
-    @bottom-center {
-        content: counter(page);
-        font-size: 10pt;
-    }
-    
     @bottom-right {
-        content: "पृष्ठ " counter(page) " / " counter(pages);
+        content: "गढवा गाउँपालिकाको पार्श्वचित्र";
         font-size: 10pt;
         color: #666;
     }
@@ -33,11 +16,6 @@
     @bottom-right { content: ""; }
 }
 
-@page chapter {
-    @top-left {
-        content: "{% block chapter_header %}{{ current_category.title }}{% endblock %}";
-    }
-}
 
 body {
     font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
