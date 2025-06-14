@@ -111,6 +111,7 @@ li {
 
 .section-content {
     page-break-inside: avoid;
+    break-inside: avoid;
     orphans: 3;
     widows: 3;
     margin-top: 1.5em;
