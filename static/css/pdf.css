@@ -66,8 +66,13 @@ html {
     page: main-content;
 }
 
-/* Page break rules - only break between categories, not sections */
+/* Page break rules - categories break, but sections flow naturally */
 .section-break {
+    page-break-before: auto; /* Changed from always to auto to prevent gaps */
+}
+
+/* Only break before first category to separate from TOC */
+.section-break:first-of-type {
     page-break-before: always;
 }
 
@@ -381,12 +386,6 @@ tr:nth-child(even) td {
     margin-right: 1em;
 }
 
-.toc-item .page-ref {    color: #666;
-    font-weight: bold;
-    min-width: 2em;
-    text-align: right;
-}
-
 .toc-item.level-1 {
     font-weight: 600;
     margin-top: 0.8em;
@@ -411,24 +410,27 @@ tr:nth-child(even) td {
 }
 
 /* Page reference functionality for TOC using target-counter with Nepali numerals */
-.page-ref::after {
-    content: target-counter(attr(data-target), page, nepali-numerals);
+.page-ref {
     color: #666;
     font-weight: bold;
     min-width: 2em;
     text-align: right;
     margin-left: 1em;
+    display: inline-block;
 }
 
-/* For elements in front matter (TOC pages), use different counter */
-.toc-page .page-ref::after,
-.list-page .page-ref::after {
+.page-ref::after {
     content: target-counter(attr(data-target), page, nepali-numerals);
 }
 
-.section-break {
-    page-break-before: always;
+/* Fallback for browsers/versions that don't support custom counter styles */
+@supports not (counter-style: nepali-numerals) {
+    .page-ref::after {
+        content: target-counter(attr(data-target), page, decimal);
+    }
 }
+
+
 
 .highlight {
     background-color: #fff3cd;
@@ -508,13 +510,6 @@ tr:nth-child(even) td {
     color: #333;
     text-decoration: none;
     margin-right: 1em;
-}
-
-.list-item .page-ref {
-    color: #666;
-    font-weight: bold;
-    min-width: 2em;
-    text-align: right;
 }
 
 .important {
@@ -686,10 +681,7 @@ body {
     string-set: section-title content();
 }
 
-/* Page references in TOC */
-.page-ref::after {
-    content: target-counter(attr(href), page);
-}
+/* Page references in TOC - REMOVED DUPLICATE */
 
 .page-ref-roman::after {
     content: target-counter(attr(href), page, lower-roman);
