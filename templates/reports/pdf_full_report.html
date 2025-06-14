@@ -54,168 +54,89 @@
 <div class="toc-page">
     <h1 class="toc-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">विषयसूची</h1>
     
-    <!-- Categories and Sections -->
-    {% for category in categories %}
+    <!-- Hardcoded Introduction Chapter TOC -->
     <div class="toc-item level-1">
-        <span class="toc-link">{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
-        <span class="page-ref"><a href="#category-{{ category.id }}"></a></span>
+        <span class="toc-link">१. परिचय</span>
+        <span class="page-ref"><a href="#category-introduction"></a></span>
     </div>
     
-    {% for section in category.sections.all %}
-    {% with section_parts=section.section_number|split:"." %}
-    {% if section_parts|length == 2 %}
     <div class="toc-item level-2">
-        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
+        <span class="toc-link">१.१ पृष्ठभूमि</span>
+        <span class="page-ref"><a href="#section-background"></a></span>
     </div>
-    {% elif section_parts|length == 3 %}
+    
+    <div class="toc-item level-2">
+        <span class="toc-link">१.२ उद्देश्य</span>
+        <span class="page-ref"><a href="#section-objectives"></a></span>
+    </div>
+    
+    <div class="toc-item level-2">
+        <span class="toc-link">१.३ कानूनी तथा नीतिगत आधारहरू</span>
+        <span class="page-ref"><a href="#section-legal-policy-framework"></a></span>
+    </div>
+    
+    <div class="toc-item level-2">
+        <span class="toc-link">१.४ तयारीका चरणहरू</span>
+        <span class="page-ref"><a href="#section-preparation-phases"></a></span>
+    </div>
+    
     <div class="toc-item level-3">
-        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
+        <span class="toc-link">१.४.१ वस्तुस्थिति विवरण ढाँचा, औजार तथा कार्यविधि तयारी</span>
+        <span class="page-ref"><a href="#section-format-tools-procedure"></a></span>
     </div>
-    {% elif section_parts|length == 4 %}
-    <div class="toc-item level-4">
-        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.२ वस्तुस्थिति विवरण तयारी कार्यशाला</span>
+        <span class="page-ref"><a href="#section-preparation-workshop"></a></span>
     </div>
-    {% else %}
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.३ सहजकर्ता तथा स्वयंसेवी गणक छनौट अभिमुखीकरण र परिचालन</span>
+        <span class="page-ref"><a href="#section-facilitator-volunteer-selection"></a></span>
+    </div>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.४ तथ्याङ्क संकलन</span>
+        <span class="page-ref"><a href="#section-data-collection"></a></span>
+    </div>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.५ तथ्याङ्क प्रशोधन तथा विश्लेषण र स्रोत नक्सा तयारी</span>
+        <span class="page-ref"><a href="#section-data-processing-analysis"></a></span>
+    </div>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.६ वस्तुस्थिति विवरणको मस्यौदा तयारी</span>
+        <span class="page-ref"><a href="#section-draft-report-preparation"></a></span>
+    </div>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.७ वस्तुस्थिति विवरण सुझाव संकलन</span>
+        <span class="page-ref"><a href="#section-feedback-collection"></a></span>
+    </div>
+    
+    <div class="toc-item level-3">
+        <span class="toc-link">१.४.८ गाउँ वस्तुस्थिति विवरण अन्तिम प्रतिवेदन तयारी</span>
+        <span class="page-ref"><a href="#section-final-report-preparation"></a></span>
+    </div>
+    
     <div class="toc-item level-2">
-        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
+        <span class="toc-link">१.५ वस्तुस्थिति विवरणको सीमा</span>
+        <span class="page-ref"><a href="#section-scope-of-report"></a></span>
     </div>
-    {% endif %}
-    {% endwith %}
-    {% endfor %}
-    {% endfor %}
+    
+    <!-- Other categories would go here when added -->
 </div>
 
-<!-- List of Figures -->
-{% if figures %}
-<div class="list-page">
-    <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">चित्रहरूको सूची</h1>
-    {% for figure in figures %}
-    <div class="list-item">
-        <a href="#figure-{{ figure.id }}" class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</a>
-        <span class="page-ref"><a href="#figure-{{ figure.id }}"></a></span>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- List of Tables -->
-{% if tables %}
-<div class="list-page">
-    <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">तालिकाहरूको सूची</h1>
-    {% for table in tables %}
-    <div class="list-item">
-        <a href="#table-{{ table.id }}" class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</a>
-        <span class="page-ref"><a href="#table-{{ table.id }}"></a></span>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+<!-- Note: Lists of figures and tables can be added here when content is available -->
 
 <!-- Main Content Start -->
 <div class="main-content-start">
-{% for category in categories %}
-<div class="section-break" id="category-{{ category.id }}">
-    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
-        परिच्छेद – {{ category.category_number|nepali_digits }}ः {{ category.name_nepali|default:category.name }}
-    </h1>
+    <!-- Include Hardcoded Introduction Chapter -->
+    {% include 'reports/partials/introduction/introduction_complete.html' %}
     
-    {% for section in category.sections.all %}
-    {% with section_parts=section.section_number|split:"." %}
-    <div class="section-content" id="section-{{ section.id }}">
-        
-        <!-- Section Header with proper hierarchy -->
-        {% if section_parts|length == 2 %}
-        <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-            {{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}
-        </h2>
-        {% elif section_parts|length == 3 %}
-        <h3 class="section-header level-3" style="color: #2563eb; border-bottom: 1px solid #60a5fa; padding-bottom: 0.2em; font-size: 14pt; margin-left: 1em; margin-top: 1.5em;">
-            {{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}
-        </h3>
-        {% elif section_parts|length == 4 %}
-        <h4 class="section-header level-4" style="color: #3b82f6; font-size: 13pt; margin-left: 2em; margin-top: 1em;">
-            {{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}
-        </h4>
-        {% else %}
-        <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; margin-top: 2em;">
-            {{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}
-        </h2>
-        {% endif %}
-        
-        <!-- Section Content -->
-        {% if section.content_nepali or section.content %}
-        <div class="content-section" style="margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
-            {{ section.content_nepali|default:section.content|safe }}
-        </div>
-        {% endif %}
-        
-        <!-- Section Figures -->
-        {% for figure in section.figures.all %}
-        <div class="figure-container" id="figure-{{ figure.id }}" style="margin: 1.5em 0; margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
-            {% if figure.image %}
-            <div class="figure-image" style="text-align: center; margin-bottom: 0.5em;">
-                <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}" style="max-width: 100%; height: auto; border: 1px solid #e5e7eb;">
-            </div>
-            {% endif %}
-            <div class="figure-caption" style="font-size: 10pt; color: #4b5563; text-align: center; font-style: italic;">
-                <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
-                {% if figure.description_nepali or figure.description %}
-                <br>{{ figure.description_nepali|default:figure.description }}
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-        
-        <!-- Section Tables -->
-        {% for table in section.tables.all %}
-        <div class="table-container" id="table-{{ table.id }}" style="margin: 1.5em 0; margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
-            <table class="data-table" style="width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 11pt;">
-                <caption style="font-size: 10pt; color: #4b5563; margin-bottom: 0.5em; font-weight: bold;">
-                    <strong>तालिका {{ table.table_number|nepali_digits }}:</strong> {{ table.title_nepali|default:table.title }}
-                </caption>
-                {% if table.data %}
-                <thead>
-                    {% if table.data.0 %}
-                    <tr style="background-color: #f3f4f6;">
-                        {% for header in table.data.0 %}
-                        <th style="border: 1px solid #d1d5db; padding: 0.5em; text-align: left; font-weight: 600;">
-                            {{ header|nepali_digits }}
-                        </th>
-                        {% endfor %}
-                    </tr>
-                    {% endif %}
-                </thead>
-                <tbody>
-                    {% for row in table.data %}
-                    {% if not forloop.first %}
-                    <tr>
-                        {% for cell in row %}
-                        <td style="border: 1px solid #d1d5db; padding: 0.5em;">
-                            {{ cell|nepali_digits }}
-                        </td>
-                        {% endfor %}
-                    </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-                {% endif %}
-            </table>
-            {% if table.description_nepali or table.description %}
-            <div class="table-description" style="font-size: 10pt; color: #6b7280; margin-top: 0.5em; font-style: italic;">
-                {{ table.description_nepali|default:table.description }}
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endwith %}
-    {% endfor %}
-</div>
-{% endfor %}
+    <!-- Placeholder for additional chapters -->
+    <!-- Other chapters would be added here as separate partials -->
 </div>
 
 {% endblock %}

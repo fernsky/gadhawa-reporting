@@ -97,30 +97,16 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         municipality_name = "गधावा गाउँपालिका"
         municipality_name_english = "Gadhawa Rural Municipality"
         
-        # Get all data
+        # Get publication settings (optional)
         publication_settings = self.get_publication_settings()
-        categories = ReportCategory.objects.filter(
-            is_active=True,
-            sections__is_published=True
-        ).distinct().prefetch_related(
-            'sections__figures',
-            'sections__tables'
-        ).order_by('order')
         
-        # Get all figures and tables for lists
-        figures = ReportFigure.objects.select_related('section__category').order_by('figure_number')
-        tables = ReportTable.objects.select_related('section__category').order_by('table_number')
-        
+        # Use hardcoded content instead of database data
         context = {
             'municipality_name': municipality_name,
             'municipality_name_english': municipality_name_english,
             'publication_settings': publication_settings,
-            'categories': categories,
-            'figures': figures,
-            'tables': tables,
-            'total_figures': figures.count(),
-            'total_tables': tables.count(),
             'generated_date': timezone.now(),
+            # No need for categories, figures, tables since we're using hardcoded partials
         }
         
         filename = f"gadhawa_digital_profile_report_{timezone.now().strftime('%Y%m%d')}.pdf"
