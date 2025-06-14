@@ -1,11 +1,20 @@
-/* Custom Nepali counter style - fallback approach */
+/* ========================================
+   GADHAWA MUNICIPALITY PDF REPORT STYLES
+   Clean, consolidated CSS for PDF generation
+   ======================================== */
+
+/* Custom Nepali counter style */
 @counter-style nepali-numerals {
     system: numeric;
     symbols: "०" "१" "२" "३" "४" "५" "६" "७" "८" "९";
     suffix: "";
 }
 
-/* Page Setup with Nepali numerals */
+/* ========================================
+   PAGE SETUP AND COUNTERS
+   ======================================== */
+
+/* Default page setup with Nepali numerals */
 @page {
     size: A4;
     margin: 2cm 1.5cm 3cm 1.5cm;
@@ -18,7 +27,7 @@
     }
 }
 
-/* Cover page - no page number */
+/* Cover page - no page numbers */
 @page :first {
     @top-left { content: ""; }
     @top-right { content: ""; }
@@ -49,48 +58,15 @@
     }
 }
 
-/* Page counter management */
+/* Page counter initialization */
 html {
     counter-reset: front-page content-page;
 }
 
-.cover-page {
-    page-break-after: always;
-}
+/* ========================================
+   BASE TYPOGRAPHY AND LAYOUT
+   ======================================== */
 
-.toc-page, .list-page {
-    page: front-matter;
-}
-
-.main-content-start {
-    page: main-content;
-}
-
-/* Page break rules - categories break, but sections flow naturally */
-.section-break {
-    page-break-before: auto; /* Changed from always to auto to prevent gaps */
-}
-
-/* Only break before first category to separate from TOC */
-.section-break:first-of-type {
-    page-break-before: always;
-}
-
-.section-content {
-    page-break-inside: avoid;
-    orphans: 3;
-    widows: 3;
-}
-
-/* Section headers should not break from content */
-.section-header {
-    page-break-after: avoid;
-    page-break-inside: avoid;
-    margin-top: 1.5em;
-    margin-bottom: 0.75em;
-}
-
-/* Base typography */
 body {
     font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
     font-size: 11pt;
@@ -100,8 +76,81 @@ body {
     padding: 0;
 }
 
-/* Category titles */
-h1.category-title {
+p {
+    margin: 0.5em 0;
+    text-align: justify;
+    orphans: 2;
+    widows: 2;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+h1 { font-size: 18pt; }
+h2 { font-size: 16pt; }
+h3 { font-size: 14pt; }
+h4 { font-size: 12pt; }
+h5, h6 { font-size: 11pt; }
+
+ul, ol {
+    margin: 0.5em 0 1em 0;
+    padding-left: 1.5em;
+}
+
+li {
+    margin-bottom: 0.3em;
+}
+
+/* ========================================
+   PAGE STRUCTURE AND BREAKS
+   ======================================== */
+
+.cover-page {
+    page-break-after: always;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.toc-page, .list-page {
+    page: front-matter;
+    page-break-before: always;
+    page-break-after: always;
+}
+
+.main-content-start {
+    page: main-content;
+    counter-reset: page 1;
+}
+
+/* Category sections - only break before first category */
+.section-break {
+    page-break-before: auto;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+.section-break:first-of-type {
+    page-break-before: always;
+}
+
+.section-content {
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+    margin-top: 1.5em;
+}
+
+/* ========================================
+   CATEGORY AND SECTION STYLING
+   ======================================== */
+
+.category-title {
     font-size: 18pt;
     font-weight: 700;
     text-align: center;
@@ -139,27 +188,132 @@ h1.category-title {
     margin-bottom: 0.5em;
 }
 
-/* Content styling */
 .content-section {
     margin-bottom: 1em;
     text-align: justify;
 }
 
-p {
-    margin: 0.5em 0;
-    text-align: justify;
-    orphans: 2;
-    widows: 2;
+/* ========================================
+   TABLE OF CONTENTS
+   ======================================== */
+
+.toc-title {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #1e3a8a;
+    border-bottom: 3px solid #0ea5e9;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+    text-align: center;
 }
 
-/* Figure and table styling */
+.toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4em;
+    padding: 0.2em 0;
+    border-bottom: 1px dotted #d1d5db;
+    page-break-inside: avoid;
+}
+
+.toc-item .toc-link {
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1;
+    margin-right: 1em;
+}
+
+.toc-item.level-1 {
+    font-weight: 600;
+    font-size: 12pt;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    color: #1e40af;
+}
+
+.toc-item.level-2 {
+    margin-left: 1.5em;
+    font-size: 11pt;
+    color: #2563eb;
+}
+
+.toc-item.level-3 {
+    margin-left: 3em;
+    font-size: 10pt;
+    color: #3b82f6;
+}
+
+.toc-item.level-4 {
+    margin-left: 4.5em;
+    font-size: 10pt;
+    color: #60a5fa;
+}
+
+/* Page reference functionality - FIXED FOR TOC */
+.page-ref {
+    color: #666;
+    font-weight: bold;
+    min-width: 2em;
+    text-align: right;
+    margin-left: 1em;
+    display: inline-block;
+}
+
+.page-ref::after {
+    content: target-counter(attr(data-target), page, nepali-numerals);
+}
+
+/* Fallback for browsers that don't support custom counter styles */
+@supports not (counter-style: nepali-numerals) {
+    .page-ref::after {
+        content: target-counter(attr(data-target), page, decimal);
+    }
+}
+
+/* ========================================
+   LISTS (FIGURES AND TABLES)
+   ======================================== */
+
+.list-title {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #1e3a8a;
+    border-bottom: 3px solid #0ea5e9;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5em;
+    padding: 0.3em 0;
+    border-bottom: 1px solid #e5e7eb;
+    page-break-inside: avoid;
+}
+
+.list-item .title {
+    flex-grow: 1;
+    color: #333;
+    text-decoration: none;
+    margin-right: 1em;
+    font-size: 10pt;
+}
+
+/* ========================================
+   FIGURES AND TABLES
+   ======================================== */
+
 .figure-container {
     margin: 1.5em 0;
     page-break-inside: avoid;
     text-align: center;
 }
 
-.figure-image img {
+.figure-container img {
     max-width: 100%;
     height: auto;
     border: 1px solid #e5e7eb;
@@ -190,11 +344,17 @@ p {
     border: 1px solid #d1d5db;
     padding: 0.5em;
     text-align: left;
+    vertical-align: top;
 }
 
 .data-table th {
     background-color: #f3f4f6;
     font-weight: 600;
+    color: #2c3e50;
+}
+
+.data-table tr:nth-child(even) td {
+    background-color: #f9f9f9;
 }
 
 .data-table caption {
@@ -203,6 +363,7 @@ p {
     font-weight: bold;
     margin-bottom: 0.5em;
     text-align: left;
+    caption-side: top;
 }
 
 .table-description {
@@ -212,247 +373,15 @@ p {
     margin-top: 0.5em;
 }
 
-/* Cover page styling */
-.cover-page {
-    text-align: center;
-    height: 100vh;
-    display: flex;    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
 
-h2 {
-    font-size: 16pt;
-    margin-top: 2em;
-}
-
-h3 {
-    font-size: 14pt;
-}
-
-h4 {
-    font-size: 12pt;
-}
-
-h5, h6 {
-    font-size: 11pt;
-}
-
-p {
-    margin: 0.5em 0 1em 0;
-    text-align: justify;
-    orphans: 2;
-    widows: 2;
-}
-
-.lead {
-    font-size: 13pt;
-    font-weight: 400;
-    color: #555;
-    margin-bottom: 1.5em;
-}
-
-ul, ol {
-    margin: 0.5em 0 1em 0;
-    padding-left: 1.5em;
-}
-
-li {
-    margin-bottom: 0.3em;
-}
-
-blockquote {
-    border-left: 4px solid #3498db;
-    background-color: #f8f9fa;
-    padding: 1em;
-    margin: 1em 0;
-    font-style: italic;
-    page-break-inside: avoid;
-}
-
-.table-container {
-    page-break-inside: auto; /* Allow page breaks within large tables if needed */
-    margin: 1em 0 2em 0;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0.5em 0 1em 0;
-    font-size: 10pt;
-    page-break-inside: auto;
-}
-
-table caption {
-    caption-side: top;
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 0.5em;
-    color: #2c3e50;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 0.4em 0.6em;
-    text-align: left;
-    vertical-align: top;
-}
-
-th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-tr:nth-child(even) td {
-    background-color: #f9f9f9;
-}
-
-.figure-container {
-    page-break-inside: auto; /* Allow page breaks if figure is very large */
-    margin: 1em 0 2em 0;
-    text-align: center;
-}
-
-.figure-container img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    padding: 0.25em;
-}
-
-.figure-caption {
-    margin-top: 0.5em;
-    font-size: 10pt;
-    font-style: italic;
-    color: #666;
-    text-align: center;
-}
-
-.cover-page {
-    page-break-after: always;
-    text-align: center;
-    padding-top: 3cm;
-}
-
-.cover-title {
-    font-size: 24pt;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 1em;
-    line-height: 1.2;
-}
-
-.cover-subtitle {
-    font-size: 18pt;
-    color: #3498db;
-    margin-bottom: 2em;
-}
-
-.cover-info {
-    font-size: 12pt;
-    color: #666;
-    margin-top: 3cm;
-}
-
-.toc-page {
-    page-break-before: right;
-    page-break-after: always;
-}
-
-.toc-title {
-    font-size: 18pt;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 1em;
-    border-bottom: 2px solid #2c3e50;
-    padding-bottom: 0.5em;
-}
-
-.toc-item {
-    margin-bottom: 0.3em;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 1px dotted #ccc;
-    padding-bottom: 0.2em;
-    page-break-inside: avoid;
-}
-
-.toc-item .toc-link {
-    color: #333;
-    text-decoration: none;
-    flex-grow: 1;
-    margin-right: 1em;
-}
-
-.toc-item.level-1 {
-    font-weight: 600;
-    margin-top: 0.8em;
-    margin-bottom: 0.5em;
-}
-
-.toc-item.level-2 {
-    margin-left: 1em;
-    font-size: 10pt;
-}
-
-.toc-item.level-3 {
-    margin-left: 2em;
-    font-size: 9pt;
-    color: #555;
-}
-
-.toc-item.level-4 {
-    margin-left: 3em;
-    font-size: 9pt;
-    color: #666;
-}
-
-/* Page reference functionality for TOC using target-counter with Nepali numerals */
-.page-ref {
-    color: #666;
-    font-weight: bold;
-    min-width: 2em;
-    text-align: right;
-    margin-left: 1em;
-    display: inline-block;
-}
-
-.page-ref::after {
-    content: target-counter(attr(data-target), page, nepali-numerals);
-}
-
-/* Fallback for browsers/versions that don't support custom counter styles */
-@supports not (counter-style: nepali-numerals) {
-    .page-ref::after {
-        content: target-counter(attr(data-target), page, decimal);
-    }
-}
-
-
-
-.highlight {
-    background-color: #fff3cd;
-    padding: 0.1em 0.3em;
-    border-radius: 3px;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-muted {
-    color: #666;
-}
-
-.small {
-    font-size: 9pt;
-}
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: #666; }
+.small { font-size: 9pt; }
+.font-weight-bold { font-weight: 600; }
 
 .mt-1 { margin-top: 0.5em; }
 .mt-2 { margin-top: 1em; }
@@ -461,56 +390,9 @@ tr:nth-child(even) td {
 .mb-2 { margin-bottom: 1em; }
 .mb-3 { margin-bottom: 1.5em; }
 
-.font-weight-bold {
-    font-weight: 600;
-}
-
-.page-header {
-    font-size: 9pt;
-    color: #666;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5em;
-    margin-bottom: 1em;
-}
-
-.page-footer {
-    font-size: 9pt;
-    color: #666;
-    border-top: 1px solid #eee;
-    padding-top: 0.5em;
-    margin-top: 2em;
-}
-
-.list-page {
-    page-break-before: right;
-    page-break-after: always;
-}
-
-.list-title {
-    font-size: 16pt;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 1em;
-    border-bottom: 1px solid #2c3e50;
-    padding-bottom: 0.5em;
-}
-
-.list-item {
-    margin-bottom: 0.5em;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0.3em 0;
-    page-break-inside: avoid;
-}
-
-.list-item .title {
-    flex-grow: 1;
-    color: #333;
-    text-decoration: none;
-    margin-right: 1em;
-}
+/* ========================================
+   SPECIAL CONTENT BLOCKS
+   ======================================== */
 
 .important {
     background-color: #d4edda;
@@ -539,259 +421,25 @@ tr:nth-child(even) td {
     page-break-inside: avoid;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1em;
-    margin: 1em 0;
+.highlight {
+    background-color: #fff3cd;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
 }
 
-.stat-item {
-    text-align: center;
+blockquote {
+    border-left: 4px solid #3498db;
+    background-color: #f8f9fa;
     padding: 1em;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin: 1em 0;
+    font-style: italic;
     page-break-inside: avoid;
 }
 
-.stat-value {
-    font-size: 18pt;
-    font-weight: 600;
-    color: #3498db;
-    display: block;
-}
+/* ========================================
+   PRINT OPTIMIZATION
+   ======================================== */
 
-.stat-label {
-    font-size: 10pt;
-    color: #666;
-    margin-top: 0.5em;
-}
-
-/* Section heading hierarchy colors */
-.section-h2 {
-    color: #1e40af !important;
-    border-bottom: 2px solid #0ea5e9 !important;
-    padding-bottom: 0.3em !important;
-    font-size: 16pt !important;
-}
-
-.section-h3 {
-    color: #2563eb !important;
-    border-bottom: 1px solid #60a5fa !important;
-    padding-bottom: 0.2em !important;
-    font-size: 14pt !important;
-    margin-left: 1em !important;
-}
-
-.section-h4 {
-    color: #3b82f6 !important;
-    font-size: 13pt !important;
-    margin-left: 2em !important;
-}
-
-/* Content indentation for nested sections */
-.content-level-2 {
-    margin-left: 0;
-}
-
-.content-level-3 {
-    margin-left: 1em;
-}
-
-.content-level-4 {
-    margin-left: 2em;
-}
-
-/* Seamless section flow within categories */
-.section-content {
-    page-break-inside: auto;
-    orphans: 2;
-    widows: 2;
-    counter-increment: section;
-}
-
-.section-content h2 {
-    string-set: section-title content();
-}
-
-.section-content + .section-content {
-    margin-top: 1.5em; /* Consistent spacing between sections */
-}
-
-.section-content h2:first-child,
-.section-content h3:first-child,
-.section-content h4:first-child {
-    margin-top: 0; /* Remove top margin from first heading in section */
-}
-
-/* Prevent breaks between related content */
-.content-section {
-    /* Allow natural page breaks within content sections */
-    page-break-inside: auto;
-}
-
-.content-section h2,
-.content-section h3,
-.content-section h4 {
-    page-break-after: avoid;
-}
-
-.content-section p + h2,
-.content-section p + h3,
-.content-section p + h4 {
-    page-break-before: avoid;
-}
-
-/* Page counter management */
-body {
-    counter-reset: page 1 chapter 0;
-}
-
-/* Cover page - no page number */
-.cover-page {
-    page-break-after: always;
-}
-
-/* Table of contents and front matter - Roman numerals */
-.toc-page, .list-page {
-    page: front-matter;
-    page-break-before: right;
-    page-break-after: always;
-}
-
-/* Main content - Arabic numerals, reset counter */
-.main-content-start {
-    page: main-content;
-    counter-reset: page 1;
-}
-
-/* Category pages */
-.category-title {
-    counter-increment: chapter;
-    string-set: chapter-title content();
-    page: category;
-}
-
-/* Section counters for better tracking */
-.section-content {
-    counter-increment: section;
-}
-
-.section-content h2 {
-    string-set: section-title content();
-}
-
-/* Page references in TOC - REMOVED DUPLICATE */
-
-.page-ref-roman::after {
-    content: target-counter(attr(href), page, lower-roman);
-}
-
-/* Table of Contents and Lists */
-.toc-page, .list-page {
-    page-break-before: always;
-    page-break-after: always;
-}
-
-.toc-title, .list-title {
-    font-size: 18pt;
-    font-weight: 700;
-    color: #1e3a8a;
-    border-bottom: 3px solid #0ea5e9;
-    padding-bottom: 0.5em;
-    margin-bottom: 1.5em;
-    text-align: center;
-}
-
-.toc-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.4em;
-    padding: 0.2em 0;
-    border-bottom: 1px dotted #d1d5db;
-    page-break-inside: avoid;
-}
-
-.toc-item.level-1 {
-    font-weight: 600;
-    font-size: 12pt;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    color: #1e40af;
-}
-
-.toc-item.level-2 {
-    margin-left: 1.5em;
-    font-size: 11pt;
-    color: #2563eb;
-}
-
-.toc-item.level-3 {
-    margin-left: 3em;
-    font-size: 10pt;
-    color: #3b82f6;
-}
-
-.toc-item.level-4 {
-    margin-left: 4.5em;
-    font-size: 10pt;
-    color: #60a5fa;
-}
-
-.toc-item span:first-child {
-    flex-grow: 1;
-    margin-right: 1em;
-}
-
-.toc-item .page-number {
-    font-weight: bold;
-    color: #374151;
-    min-width: 2.5em;
-    text-align: right;
-}
-
-.list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.5em;
-    padding: 0.3em 0;
-    border-bottom: 1px solid #e5e7eb;
-    page-break-inside: avoid;
-}
-
-.list-item .title {
-    flex-grow: 1;
-    margin-right: 1em;
-    font-size: 10pt;
-}
-
-.list-item .page-number {
-    font-weight: bold;
-    color: #374151;
-    min-width: 2em;
-    text-align: right;
-    font-size: 10pt;
-}
-
-/* Utility classes */
-.text-center {
-    text-align: center;
-}
-
-.font-weight-bold {
-    font-weight: 600;
-}
-
-.mt-1 { margin-top: 0.5em; }
-.mt-2 { margin-top: 1em; }
-.mt-3 { margin-top: 1.5em; }
-.mb-1 { margin-bottom: 0.5em; }
-.mb-2 { margin-bottom: 1em; }
-.mb-3 { margin-bottom: 1.5em; }
-
-/* Print optimization */
 @media print {
     .no-print {
         display: none !important;
@@ -799,6 +447,6 @@ body {
     
     * {
         -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
