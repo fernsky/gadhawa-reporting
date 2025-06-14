@@ -6,8 +6,7 @@
 {% block content %}
 <!-- Cover Page -->
 <div class="cover-page">
-    <div style="text-align: center; margin-bottom: 4cm;">
-        <!-- Logo and Header Section -->
+    <div style="text-align: center; margin-bottom: 4cm;">            
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2cm;">
             <div style="width: 80px; height: 80px;">
                 <!-- Nepal Government Logo placeholder -->
@@ -53,11 +52,11 @@
 
 <!-- Table of Contents -->
 <div class="toc-page">
-    <h1 class="toc-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">सूचीपत्र</h1>
+    <h1 class="toc-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">विषयसूची</h1>
     
     <!-- Front Matter -->
     <div class="toc-item level-1">
-        <span>सूचीपत्र</span>
+        <span>विषयसूची</span>
         <span class="page-number">i</span>
     </div>
     {% if total_figures > 0 %}
@@ -78,14 +77,33 @@
     <!-- Main Content -->
     {% for category in categories %}
     <div class="toc-item level-1">
-        <span>{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
+        <span>{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
         <span class="page-number">{{ forloop.counter|nepali_digits }}</span>
     </div>
     {% for section in category.sections.all %}
+    {% with section_parts=section.section_number|split:"." %}
+    {% if section_parts|length == 2 %}
     <div class="toc-item level-2">
-        <span>{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</span>
+        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
         <span class="page-number">{{ forloop.parentloop.counter|nepali_digits }}.{{ forloop.counter|nepali_digits }}</span>
     </div>
+    {% elif section_parts|length == 3 %}
+    <div class="toc-item level-3">
+        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-number">{{ forloop.parentloop.counter|nepali_digits }}.{{ forloop.counter|nepali_digits }}</span>
+    </div>
+    {% elif section_parts|length == 4 %}
+    <div class="toc-item level-4">
+        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-number">{{ forloop.parentloop.counter|nepali_digits }}.{{ forloop.counter|nepali_digits }}</span>
+    </div>
+    {% else %}
+    <div class="toc-item level-2">
+        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-number">{{ forloop.parentloop.counter|nepali_digits }}.{{ forloop.counter|nepali_digits }}</span>
+    </div>
+    {% endif %}
+    {% endwith %}
     {% endfor %}
     {% endfor %}
 </div>
@@ -119,77 +137,37 @@
 <!-- Main Content -->
 {% for category in categories %}
 <div class="section-break">
-    <h1 class="category-title" style="color: #1e3a8a; background: linear-gradient(90deg, #f1f5f9, #e2e8f0); padding: 0.5em; border-left: 5px solid #0ea5e9;">{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</h1>
-    
-    {% if category.description_nepali or category.description %}
-    <div class="lead">{{ category.description_nepali|default:category.description }}</div>
-    {% endif %}
-    
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">परिच्छेद – {{ category.category_number|nepali_digits }}ः {{ category.name_nepali|default:category.name }}</h1>
+
     {% for section in category.sections.all %}
-    <div class="{% if not forloop.first %}no-break{% endif %}" style="margin-top: 2em;">
-        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</h2>
-        
-        {% if section.summary_nepali or section.summary %}
-        <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
+    {% with section_parts=section.section_number|split:"." %}
+    <div class="no-break" style="margin-top: {% if section_parts|length == 2 %}2em{% elif section_parts|length == 3 %}1.5em{% else %}1em{% endif %};">
+        {% if</div> section_parts|length == 2 %}
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
+        {% elif section_parts|length == 3 %}
+        <h3 style="color: #2563eb; border-bottom: 1px solid #60a5fa; padding-bottom: 0.2em; font-size: 14pt; margin-left: 1em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h3>
+        {% elif section_parts|length == 4 %}
+        <h4 style="color: #3b82f6; font-size: 13pt; margin-left: 2em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h4>
+        {% else %}
+        <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</h2>
         {% endif %}
         
         {% if section.content_nepali or section.content %}
-        <div class="content-section">
+        <div class="content-section" style="margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
             {{ section.content_nepali|default:section.content|safe }}
         </div>
         {% else %}
-        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0;">
-            <p>यस खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
-            
-            <!-- Add contextual sample content -->
-            {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali %}
-            <div class="table-container">
-                <table style="border: 1px solid #cbd5e1;">
-                    <caption><strong>जनसंख्या विवरण (नमूना डेटा)</strong></caption>
-                    <thead style="background: #1e3a8a; color: white;">
-                        <tr>
-                            <th style="border: 1px solid #475569;">वडा नं.</th>
-                            <th style="border: 1px solid #475569;">पुरुष</th>
-                            <th style="border: 1px solid #475569;">महिला</th>
-                            <th style="border: 1px solid #475569;">कुल</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">१</td><td style="border: 1px solid #e2e8f0;">१,२५०</td><td style="border: 1px solid #e2e8f0;">१,१८०</td><td style="border: 1px solid #e2e8f0;">२,४३०</td></tr>
-                        <tr><td style="border: 1px solid #e2e8f0;">२</td><td style="border: 1px solid #e2e8f0;">१,१००</td><td style="border: 1px solid #e2e8f0;">१,०५०</td><td style="border: 1px solid #e2e8f0;">२,१५०</td></tr>
-                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">३</td><td style="border: 1px solid #e2e8f0;">९८०</td><td style="border: 1px solid #e2e8f0;">९४०</td><td style="border: 1px solid #e2e8f0;">१,९२०</td></tr>
-                        <tr style="font-weight: bold; background: #e2e8f0;"><td style="border: 1px solid #cbd5e1;">कुल</td><td style="border: 1px solid #cbd5e1;">३,३३०</td><td style="border: 1px solid #cbd5e1;">३,१७०</td><td style="border: 1px solid #cbd5e1;">६,५००</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            {% elif 'economic' in section.slug or 'आर्थिक' in section.title_nepali %}
-            <div class="table-container">
-                <table style="border: 1px solid #cbd5e1;">
-                    <caption><strong>आर्थिक गतिविधि (नमूना डेटा)</strong></caption>
-                    <thead style="background: #1e3a8a; color: white;">
-                        <tr>
-                            <th style="border: 1px solid #475569;">गतिविधि</th>
-                            <th style="border: 1px solid #475569;">घरधुरी संख्या</th>
-                            <th style="border: 1px solid #475569;">प्रतिशत</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">कृषि</td><td style="border: 1px solid #e2e8f0;">८५०</td><td style="border: 1px solid #e2e8f0;">६५%</td></tr>
-                        <tr><td style="border: 1px solid #e2e8f0;">व्यापार</td><td style="border: 1px solid #e2e8f0;">२००</td><td style="border: 1px solid #e2e8f0;">१५%</td></tr>
-                        <tr style="background: #f8fafc;"><td style="border: 1px solid #e2e8f0;">सेवा</td><td style="border: 1px solid #e2e8f0;">१५०</td><td style="border: 1px solid #e2e8f0;">१२%</td></tr>
-                        <tr><td style="border: 1px solid #e2e8f0;">अन्य</td><td style="border: 1px solid #e2e8f0;">१००</td><td style="border: 1px solid #e2e8f0;">८%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0; margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
+            <p><strong>सूचना:</strong> यस खण्डको विस्तृत सामग्री अझै तयार गरिएको छैन।</p>
+            <p>यो खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
         </div>
         {% endif %}
         
         <!-- Section Figures -->
         {% for figure in section.figures.all %}
-        <div class="figure-container">
+        <div class="figure-container" style="margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
             {% if figure.image %}
-            <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}">
+            <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}" style="max-width: 100%; height: auto;">
             {% endif %}
             <div class="figure-caption">
                 <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
@@ -202,33 +180,27 @@
         
         <!-- Section Tables -->
         {% for table in section.tables.all %}
-        <div class="table-container">
-            <table style="border: 1px solid #cbd5e1;">
-                <caption>
-                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title_nepali|default:table.title }}
-                </caption>
+        <div class="table-container" style="margin-left: {% if section_parts|length == 3 %}1em{% elif section_parts|length == 4 %}2em{% else %}0{% endif %};">
+            <table>
+                <caption><strong>तालिका {{ table.table_number|nepali_digits }}:</strong> {{ table.title_nepali|default:table.title }}</caption>
                 {% if table.data %}
-                {{ table.data|safe }}
-                {% else %}
-                <thead style="background: #1e3a8a; color: white;">
+                    {% for row in table.data %}
                     <tr>
-                        <th style="border: 1px solid #475569;">विवरण</th>
-                        <th style="border: 1px solid #475569;">संख्या</th>
-                        <th style="border: 1px solid #475569;">प्रतिशत</th>
+                        {% for cell in row %}
+                        <td>{{ cell|nepali_digits }}</td>
+                        {% endfor %}
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #64748b; font-style: italic; border: 1px solid #e2e8f0;">
-                            डेटा उपलब्ध छैन
-                        </td>
-                    </tr>
-                </tbody>
+                    {% endfor %}
                 {% endif %}
             </table>
-        </div>
+            {% if table.description_nepali or table.description %}
+            <div class="table-description" style="font-size: 10pt; color: #666; margin-top: 0.5em;">
+                {{ table.description_nepali|default:table.description }}
+            </div>
+            {% endif %}        </div>
         {% endfor %}
     </div>
+    {% endwith %}
     {% endfor %}
 </div>
 {% endfor %}
@@ -253,9 +225,8 @@
     {% if publication_settings %}
     <div class="no-break mt-3">
         <h2 style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em;">प्रकाशन सम्बन्धी जानकारी</h2>
-        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0;">
-            <p><strong>प्रकाशक:</strong> गढवा गाउँपालिका<br>
-            <strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}<br>
+        <div class="note" style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 1em; margin: 1em 0;">            <p><strong>प्रकाशक:</strong> गढवा गाउँपालिका<br>
+            <strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}<br>
             <strong>संस्करण:</strong> {{ publication_settings.version }}</p>
             
             {% if publication_settings.isbn %}

@@ -78,10 +78,6 @@
 <div class="section-break">    
     <h1>{{ section.title_nepali|default:section.title }}</h1>
     
-    {% if section.summary_nepali or section.summary %}
-    <div class="lead">{{ section.summary_nepali|default:section.summary }}</div>
-    {% endif %}
-    
     {% if section.content_nepali or section.content %}
     <div class="content-section">
         {{ section.content_nepali|default:section.content|safe }}
@@ -90,85 +86,6 @@
     <div class="note">
         <p><strong>सूचना:</strong> यस खण्डको विस्तृत सामग्री अझै तयार गरिएको छैन।</p>
         <p>यो खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
-        
-        <!-- Sample content structure -->
-        <div style="margin-top: 2em; padding: 1em; background: #f8f9fa; border-left: 4px solid #007bff;">
-            <h3>समावेश हुने मुख्य विषयहरू:</h3>
-            <ul>
-                <li>{{ section.title_nepali|default:section.title }}को परिचय र महत्व</li>
-                <li>हालको स्थिति र तथ्यांक</li>
-                <li>मुख्य चुनौतीहरू र समस्याहरू</li>
-                <li>भविष्यका योजना र रणनीति</li>
-                <li>सिफारिस र निष्कर्ष</li>
-            </ul>
-        </div>
-        
-        <!-- Add some sample data based on section -->
-        <div style="margin-top: 2em;">
-            <h3>नमूना डेटा:</h3>
-            {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali %}
-            <div class="table-container">
-                <table>
-                    <caption><strong>जनसंख्या विवरण - नमूना तालिका</strong></caption>
-                    <thead>
-                        <tr>
-                            <th>वडा नं.</th>
-                            <th>पुरुष</th>
-                            <th>महिला</th>
-                            <th>कुल</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>१</td><td>१,२५०</td><td>१,१८०</td><td>२,४३०</td></tr>
-                        <tr><td>२</td><td>१,१००</td><td>१,०५०</td><td>२,१५०</td></tr>
-                        <tr><td>३</td><td>९८०</td><td>९४०</td><td>१,९२०</td></tr>
-                        <tr style="font-weight: bold;"><td>कुल</td><td>३,३३०</td><td>३,१७०</td><td>६,५००</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            {% elif 'economic' in section.slug or 'आर्थिक' in section.title_nepali %}
-            <div class="table-container">
-                <table>
-                    <caption><strong>आर्थिक गतिविधि - नमूना तालिका</strong></caption>
-                    <thead>
-                        <tr>
-                            <th>गतिविधि</th>
-                            <th>घरधुरी संख्या</th>
-                            <th>प्रतिशत</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>कृषि</td><td>८५०</td><td>६५%</td></tr>
-                        <tr><td>व्यापार</td><td>२००</td><td>१५%</td></tr>
-                        <tr><td>सेवा</td><td>१५०</td><td>१२%</td></tr>
-                        <tr><td>अन्य</td><td>१००</td><td>८%</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            {% elif 'education' in section.slug or 'शिक्षा' in section.title_nepali %}
-            <div class="table-container">
-                <table>
-                    <caption><strong>शैक्षिक संस्था - नमूना तालिका</strong></caption>
-                    <thead>
-                        <tr>
-                            <th>शिक्षा तह</th>
-                            <th>संस्था संख्या</th>
-                            <th>विद्यार्थी संख्या</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>प्राथमिक</td><td>१२</td><td>८५०</td></tr>
-                        <tr><td>माध्यमिक</td><td>६</td><td>४५०</td></tr>
-                        <tr><td>उच्च माध्यमिक</td><td>२</td><td>२५०</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="important">
-                <p>यस खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी मुख्य तथ्यांक र विश्लेषण समावेश गरिनेछ।</p>
-            </div>
-            {% endif %}
-        </div>
     </div>
     {% endif %}
     
@@ -242,85 +159,6 @@
         {% endfor %}
     </div>
     {% endif %}
-</div>
-
-<!-- Summary Section -->
-<div style="margin-top: 3em;">
-    <h2>सारांश</h2>
-    
-    <div class="important">
-        <h3>मुख्य बिन्दुहरू:</h3>
-        <ul>
-            <li>{{ section.title_nepali|default:section.title }} गढवा गाउँपालिकाको महत्वपूर्ण क्षेत्र हो</li>
-            {% if section.figures.all %}
-            <li>यस खण्डमा {{ section.figures.all|length }} वटा चित्र/आंकडा समावेश छ</li>
-            {% endif %}
-            {% if section.tables.all %}
-            <li>यस खण्डमा {{ section.tables.all|length }} वटा तालिका समावेश छ</li>
-            {% endif %}
-            <li>यस क्षेत्रमा थप अनुसन्धान र विकास आवश्यक छ</li>
-        </ul>
-    </div>
-    
-    {% if section.summary_nepali or section.summary %}
-    <div class="note mt-3">
-        <h4>निष्कर्ष:</h4>
-        <p>{{ section.summary_nepali|default:section.summary }}</p>
-    </div>
-    {% endif %}
-</div>
-
-<!-- Methodology/Notes Section -->
-<div style="margin-top: 2em;">
-    <h2>पद्धति र टिप्पणीहरू</h2>
-    
-    <div class="warning">
-        <p><strong>महत्वपूर्ण सूचना:</strong> यस प्रतिवेदनमा उल्लेखित तथ्यांक र जानकारीहरू सम्बन्धित निकायबाट प्राप्त भएका हुन्। सबै डेटा र विश्लेषण गढवा गाउँपालिकाको आधिकारिक रेकर्डमा आधारित छन्।</p>
-    </div>
-    
-    {% if section.figures.all %}
-    <div class="important mt-2">
-        <h4>चित्र र आंकडाहरूको बारेमा:</h4>
-        <p>यस खण्डमा प्रस्तुत गरिएका सबै चित्र र आंकडाहरू प्रामाणिक स्रोतबाट लिइएका छन्। डेटाको शुद्धताका लागि सम्बन्धित विभागहरूसँग सम्पर्क गर्न सकिन्छ।</p>
-    </div>
-    {% endif %}
-    
-    {% if section.tables.all %}
-    <div class="important mt-2">
-        <h4>तालिकाहरूको बारेमा:</h4>
-        <p>यस खण्डमा प्रस्तुत गरिएका तालिकाहरू नवीनतम उपलब्ध डेटामा आधारित छन्। डेटा अद्यावधिक गर्न नियमित प्रयास गरिन्छ।</p>
-    </div>
-    {% endif %}
-</div>
-
-<!-- Footer Information -->
-<div class="page-footer">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; padding-top: 1em; border-top: 1px solid #ddd;">
-        <div>
-            <h4>सम्पर्क जानकारी:</h4>
-            <p style="font-size: 10pt;">
-                गढवा गाउँपालिका<br>
-                कार्यपालिकाको कार्यालय<br>
-                गढवा, बाँके, नेपाल
-            </p>
-        </div>
-        <div>
-            <h4>प्रकाशन जानकारी:</h4>
-            <p style="font-size: 10pt;">
-                प्रकाशन मिति: {{ generated_date|date:"Y F j" }}<br>
-                {% if publication_settings %}
-                संस्करण: {{ publication_settings.version }}<br>
-                {% endif %}
-                प्रकाशक: गढवा गाउँपालिका
-            </p>
-        </div>
-    </div>
-    
-    <div class="text-center mt-2">
-        <p style="font-size: 9pt; color: #666;">
-            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित। यस प्रतिवेदनको कुनै पनि भाग गढवा गाउँपालिकाको लिखित अनुमति बिना पुनः प्रकाशन गर्न मिल्दैन।
-        </p>
-    </div>
 </div>
 
 {% endblock %}

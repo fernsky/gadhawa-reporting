@@ -225,3 +225,11 @@ def category_title_with_number(category):
         return f"परिच्छेद – {number}ः {name}"
     else:
         return category.name_nepali or category.name
+
+
+@register.filter
+def split(value, delimiter='.'):
+    """Split string by delimiter for template use"""
+    if not value:
+        return []
+    return str(value).split(delimiter)
