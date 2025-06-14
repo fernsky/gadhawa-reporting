@@ -1,10 +1,17 @@
-/* Page Setup */
+/* Custom Nepali counter style - fallback approach */
+@counter-style nepali-numerals {
+    system: numeric;
+    symbols: "०" "१" "२" "३" "४" "५" "६" "७" "८" "९";
+    suffix: "";
+}
+
+/* Page Setup with Nepali numerals */
 @page {
     size: A4;
     margin: 2cm 1.5cm 3cm 1.5cm;
     
     @bottom-right {
-        content: counter(page) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+        content: counter(page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
         font-size: 9pt;
         color: #666;
         font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
@@ -19,7 +26,7 @@
     @bottom-right { content: ""; }
 }
 
-/* Front matter pages (TOC, figures, tables) */
+/* Front matter pages (TOC, figures, tables) with Roman numerals */
 @page front-matter {
     counter-increment: front-page;
     @bottom-right {
@@ -30,12 +37,12 @@
     }
 }
 
-/* Main content pages with Arabic numerals */
+/* Main content pages with Nepali numerals */
 @page main-content {
     counter-increment: content-page;
     counter-reset: front-page;
     @bottom-right {
-        content: counter(content-page) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+        content: counter(content-page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
         font-size: 9pt;
         color: #666;
         font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
@@ -48,7 +55,7 @@ html {
 }
 
 .cover-page {
-    page: :first;
+    page-break-after: always;
 }
 
 .toc-page, .list-page {
@@ -57,6 +64,8 @@ html {
 
 .main-content-start {
     page: main-content;
+}
+
 /* Page break rules - only break between categories, not sections */
 .section-break {
     page-break-before: always;
@@ -202,12 +211,9 @@ p {
 .cover-page {
     text-align: center;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: flex;    flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-    padding-bottom: 0.5em;
 }
 
 h2 {
@@ -365,17 +371,17 @@ tr:nth-child(even) td {
     align-items: baseline;
     border-bottom: 1px dotted #ccc;
     padding-bottom: 0.2em;
+    page-break-inside: avoid;
 }
 
-.toc-item a {
+.toc-item .toc-link {
     color: #333;
     text-decoration: none;
     flex-grow: 1;
+    margin-right: 1em;
 }
 
-.toc-item .page-number {
-    margin-left: 1em;
-    color: #666;
+.toc-item .page-ref {    color: #666;
     font-weight: bold;
     min-width: 2em;
     text-align: right;
@@ -402,6 +408,22 @@ tr:nth-child(even) td {
     margin-left: 3em;
     font-size: 9pt;
     color: #666;
+}
+
+/* Page reference functionality for TOC using target-counter with Nepali numerals */
+.page-ref::after {
+    content: target-counter(attr(data-target), page, nepali-numerals);
+    color: #666;
+    font-weight: bold;
+    min-width: 2em;
+    text-align: right;
+    margin-left: 1em;
+}
+
+/* For elements in front matter (TOC pages), use different counter */
+.toc-page .page-ref::after,
+.list-page .page-ref::after {
+    content: target-counter(attr(data-target), page, nepali-numerals);
 }
 
 .section-break {
@@ -476,15 +498,23 @@ tr:nth-child(even) td {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.3em 0;
+    page-break-inside: avoid;
 }
 
 .list-item .title {
     flex-grow: 1;
+    color: #333;
+    text-decoration: none;
+    margin-right: 1em;
 }
 
-.list-item .page-number {
-    margin-left: 1em;
+.list-item .page-ref {
     color: #666;
+    font-weight: bold;
+    min-width: 2em;
+    text-align: right;
 }
 
 .important {
@@ -624,7 +654,6 @@ body {
 
 /* Cover page - no page number */
 .cover-page {
-    page: :first;
     page-break-after: always;
 }
 

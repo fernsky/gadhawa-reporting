@@ -57,31 +57,31 @@
     <!-- Categories and Sections -->
     {% for category in categories %}
     <div class="toc-item level-1">
-        <span>{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
-        <span class="page-number">{{ page_numbers.categories|get_item:category.id|get_page_number_nepali|default:forloop.counter|nepali_digits }}</span>
+        <a href="#category-{{ category.id }}" class="toc-link">{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</a>
+        <span class="page-ref" data-target="category-{{ category.id }}"></span>
     </div>
     
     {% for section in category.sections.all %}
     {% with section_parts=section.section_number|split:"." %}
     {% if section_parts|length == 2 %}
     <div class="toc-item level-2">
-        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-number">{{ page_numbers.sections|get_item:section.id|get_page_number_nepali|default:forloop.parentloop.counter|nepali_digits }}</span>
+        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
+        <span class="page-ref" data-target="section-{{ section.id }}"></span>
     </div>
     {% elif section_parts|length == 3 %}
     <div class="toc-item level-3">
-        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-number">{{ page_numbers.sections|get_item:section.id|get_page_number_nepali|default:forloop.parentloop.counter|nepali_digits }}</span>
+        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
+        <span class="page-ref" data-target="section-{{ section.id }}"></span>
     </div>
     {% elif section_parts|length == 4 %}
     <div class="toc-item level-4">
-        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-number">{{ page_numbers.sections|get_item:section.id|get_page_number_nepali|default:forloop.parentloop.counter|nepali_digits }}</span>
+        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
+        <span class="page-ref" data-target="section-{{ section.id }}"></span>
     </div>
     {% else %}
     <div class="toc-item level-2">
-        <span>{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-number">{{ page_numbers.sections|get_item:section.id|get_page_number_nepali|default:forloop.parentloop.counter|nepali_digits }}</span>
+        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
+        <span class="page-ref" data-target="section-{{ section.id }}"></span>
     </div>
     {% endif %}
     {% endwith %}
@@ -95,8 +95,8 @@
     <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">चित्रहरूको सूची</h1>
     {% for figure in figures %}
     <div class="list-item">
-        <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
-        <span class="page-number">{{ page_numbers.figures|get_item:figure.id|get_page_number_nepali|default:forloop.counter|nepali_digits }}</span>
+        <a href="#figure-{{ figure.id }}" class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</a>
+        <span class="page-ref" data-target="figure-{{ figure.id }}"></span>
     </div>
     {% endfor %}
 </div>
@@ -108,8 +108,8 @@
     <h1 class="list-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">तालिकाहरूको सूची</h1>
     {% for table in tables %}
     <div class="list-item">
-        <span class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</span>
-        <span class="page-number">{{ page_numbers.tables|get_item:table.id|get_page_number_nepali|default:forloop.counter|nepali_digits }}</span>
+        <a href="#table-{{ table.id }}" class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</a>
+        <span class="page-ref" data-target="table-{{ table.id }}"></span>
     </div>
     {% endfor %}
 </div>
