@@ -33,35 +33,11 @@
             @top-right { content: ""; }
             @bottom-center { content: ""; }
             @bottom-right { content: ""; }
-        }
+        }        /* Front matter pages (TOC, figures, tables) - removed complex page rules */
+        
+        /* Main content pages - removed complex page rules */
 
-        /* Front matter pages (TOC, figures, tables) with Roman numerals */
-        @page front-matter {
-            counter-increment: front-page;
-            @bottom-right {
-                content: counter(front-page, lower-roman) " | गढवा गाउँपालिकाको पार्श्वचित्र";
-                font-size: 9pt;
-                color: #666;
-                font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
-            }
-        }
-
-        /* Main content pages with Nepali numerals */
-        @page main-content {
-            counter-increment: content-page;
-            counter-reset: front-page;
-            @bottom-right {
-                content: counter(content-page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
-                font-size: 9pt;
-                color: #666;
-                font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
-            }
-        }
-
-        /* Page counter initialization */
-        html {
-            counter-reset: front-page content-page;
-        }
+        /* Page counter initialization - simplified */
 
         /* Base typography and layout */
         body {
@@ -109,17 +85,13 @@
             justify-content: center;
             align-items: center;
             min-height: 70vh;
-        }
-
-        .toc-page, .list-page {
-            page: front-matter;
+        }        .toc-page, .list-page {
             page-break-before: always;
             page-break-after: always;
         }
 
         .main-content-start {
-            page: main-content;
-            counter-reset: page 1;
+            page-break-before: always;
         }
 
         /* Category sections - only break before first category */
@@ -236,32 +208,24 @@
             margin-left: 4.5em;
             font-size: 10pt;
             color: #60a5fa;
-        }
-
-        /* Page reference functionality - FIXED FOR TOC */
-        .page-ref {
+        }        /* Page reference functionality - FIXED FOR TOC */        .page-ref {
             color: #666;
             font-weight: bold;
             min-width: 2em;
             text-align: right;
             margin-left: 1em;
             display: inline-block;
-        }
-
-        /* For TOC items with anchor links */
-        .page-ref a.page-link {
-            color: inherit;
-            text-decoration: none;
-            font-weight: inherit;
-        }
-
-        .page-ref a.page-link::after {
+        }        /* For page references using anchor links */
+        .page-ref a::after {
             content: target-counter(attr(href), page, nepali-numerals);
+            color: #666;
+            font-weight: bold;
         }
-
-        /* For list items with data-target attribute */
-        .page-ref::after {
-            content: target-counter(attr(data-target), page, nepali-numerals);
+        
+        /* Hide the actual link text */
+        .page-ref a {
+            color: #666;
+            text-decoration: none;
         }
 
         /* Lists (figures and tables) */

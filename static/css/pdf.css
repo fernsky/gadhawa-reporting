@@ -14,7 +14,7 @@
    PAGE SETUP AND COUNTERS
    ======================================== */
 
-/* Default page setup with Nepali numerals */
+/* Simplified page setup with consistent Nepali numerals for target-counter compatibility */
 @page {
     size: A4;
     margin: 2cm 1.5cm 3cm 1.5cm;
@@ -33,34 +33,6 @@
     @top-right { content: ""; }
     @bottom-center { content: ""; }
     @bottom-right { content: ""; }
-}
-
-/* Front matter pages (TOC, figures, tables) with Roman numerals */
-@page front-matter {
-    counter-increment: front-page;
-    @bottom-right {
-        content: counter(front-page, lower-roman) " | गढवा गाउँपालिकाको पार्श्वचित्र";
-        font-size: 9pt;
-        color: #666;
-        font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
-    }
-}
-
-/* Main content pages with Nepali numerals */
-@page main-content {
-    counter-increment: content-page;
-    counter-reset: front-page;
-    @bottom-right {
-        content: counter(content-page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
-        font-size: 9pt;
-        color: #666;
-        font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
-    }
-}
-
-/* Page counter initialization */
-html {
-    counter-reset: front-page content-page;
 }
 
 /* ========================================
@@ -118,14 +90,12 @@ li {
 }
 
 .toc-page, .list-page {
-    page: front-matter;
     page-break-before: always;
     page-break-after: always;
 }
 
 .main-content-start {
-    page: main-content;
-    counter-reset: page 1;
+    page-break-before: always;
 }
 
 /* Category sections - only break before first category */
@@ -250,7 +220,7 @@ li {
     color: #60a5fa;
 }
 
-/* Page reference functionality - FIXED FOR TOC */
+/* Page reference functionality - USING ANCHOR LINKS */
 .page-ref {
     color: #666;
     font-weight: bold;
@@ -260,30 +230,25 @@ li {
     display: inline-block;
 }
 
-/* For TOC items with anchor links */
-.page-ref a.page-link {
-    color: inherit;
+/* Hide the actual link text and show page number */
+.page-ref a {
+    color: transparent;
     text-decoration: none;
-    font-weight: inherit;
 }
 
-.page-ref a.page-link::after {
+/* Use href attribute for target-counter */
+.page-ref a::after {
     content: target-counter(attr(href), page, nepali-numerals);
-}
-
-/* For list items with data-target attribute */
-.page-ref::after {
-    content: target-counter(attr(data-target), page, nepali-numerals);
+    color: #666;
+    font-weight: bold;
 }
 
 /* Fallback for browsers that don't support custom counter styles */
 @supports not (counter-style: nepali-numerals) {
-    .page-ref a.page-link::after {
+    .page-ref a::after {
         content: target-counter(attr(href), page, decimal);
-    }
-    
-    .page-ref::after {
-        content: target-counter(attr(data-target), page, decimal);
+        color: #666;
+        font-weight: bold;
     }
 }
 

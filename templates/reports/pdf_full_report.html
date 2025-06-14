@@ -58,7 +58,7 @@
     {% for category in categories %}
     <div class="toc-item level-1">
         <span class="toc-link">{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
-        <span class="page-ref" data-target="#category-{{ category.id }}"></span>
+        <span class="page-ref"><a href="#category-{{ category.id }}"></a></span>
     </div>
     
     {% for section in category.sections.all %}
@@ -66,22 +66,22 @@
     {% if section_parts|length == 2 %}
     <div class="toc-item level-2">
         <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
+        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
     </div>
     {% elif section_parts|length == 3 %}
     <div class="toc-item level-3">
         <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
+        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
     </div>
     {% elif section_parts|length == 4 %}
     <div class="toc-item level-4">
         <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
+        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
     </div>
     {% else %}
     <div class="toc-item level-2">
         <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
+        <span class="page-ref"><a href="#section-{{ section.id }}"></a></span>
     </div>
     {% endif %}
     {% endwith %}
@@ -96,7 +96,7 @@
     {% for figure in figures %}
     <div class="list-item">
         <a href="#figure-{{ figure.id }}" class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</a>
-        <span class="page-ref" data-target="figure-{{ figure.id }}"></span>
+        <span class="page-ref"><a href="#figure-{{ figure.id }}"></a></span>
     </div>
     {% endfor %}
 </div>
@@ -109,7 +109,7 @@
     {% for table in tables %}
     <div class="list-item">
         <a href="#table-{{ table.id }}" class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</a>
-        <span class="page-ref" data-target="table-{{ table.id }}"></span>
+        <span class="page-ref"><a href="#table-{{ table.id }}"></a></span>
     </div>
     {% endfor %}
 </div>
