@@ -12,6 +12,7 @@ from weasyprint import HTML
 
 from .base import track_download
 from ..models import ReportCategory, ReportSection, ReportFigure, ReportTable, PublicationSettings
+from ..utils.page_calculator import calculate_pdf_page_numbers, format_nepali_page_number
 
 
 class PDFGeneratorMixin:
@@ -111,6 +112,9 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         figures = ReportFigure.objects.select_related('section__category').order_by('figure_number')
         tables = ReportTable.objects.select_related('section__category').order_by('table_number')
         
+        # Calculate page numbers
+        page_numbers = calculate_pdf_page_numbers(categories, figures, tables)
+        
         context = {
             'municipality_name': municipality_name,
             'municipality_name_english': municipality_name_english,
@@ -120,6 +124,8 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
             'tables': tables,
             'total_figures': figures.count(),
             'total_tables': tables.count(),
+            'page_numbers': page_numbers,
+            'format_nepali_page': format_nepali_page_number,
             'generated_date': timezone.now(),
         }
         

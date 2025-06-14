@@ -1,14 +1,17 @@
+/* Page Setup */
 @page {
     size: A4;
-    margin: 2cm 1.5cm;
+    margin: 2cm 1.5cm 3cm 1.5cm;
     
     @bottom-right {
-        content: "गढवा गाउँपालिकाको पार्श्वचित्र";
-        font-size: 10pt;
+        content: counter(page) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+        font-size: 9pt;
         color: #666;
+        font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
     }
 }
 
+/* Cover page - no page number */
 @page :first {
     @top-left { content: ""; }
     @top-right { content: ""; }
@@ -16,7 +19,64 @@
     @bottom-right { content: ""; }
 }
 
+/* Front matter pages (TOC, figures, tables) */
+@page front-matter {
+    counter-increment: front-page;
+    @bottom-right {
+        content: counter(front-page, lower-roman) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+        font-size: 9pt;
+        color: #666;
+        font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
+    }
+}
 
+/* Main content pages with Arabic numerals */
+@page main-content {
+    counter-increment: content-page;
+    counter-reset: front-page;
+    @bottom-right {
+        content: counter(content-page) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+        font-size: 9pt;
+        color: #666;
+        font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
+    }
+}
+
+/* Page counter management */
+html {
+    counter-reset: front-page content-page;
+}
+
+.cover-page {
+    page: :first;
+}
+
+.toc-page, .list-page {
+    page: front-matter;
+}
+
+.main-content-start {
+    page: main-content;
+/* Page break rules - only break between categories, not sections */
+.section-break {
+    page-break-before: always;
+}
+
+.section-content {
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+}
+
+/* Section headers should not break from content */
+.section-header {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+/* Base typography */
 body {
     font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
     font-size: 11pt;
@@ -26,25 +86,127 @@ body {
     padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    page-break-after: avoid;
-    color: #2c3e50;
-}
-
+/* Category titles */
 h1.category-title {
     font-size: 18pt;
-    page: chapter;
-    page-break-before: right;
-    border-bottom: 2px solid #2c3e50;
-    padding-bottom: 0.5em;
+    font-weight: 700;
+    text-align: center;
+    color: #dc2626;
+    margin: 2em 0 1em 0;
+    padding: 0.5em;
+    page-break-after: avoid;
 }
 
-h1 {
-    font-size: 18pt;
-    border-bottom: 2px solid #2c3e50;
+/* Section hierarchy */
+.section-header.level-2 {
+    font-size: 16pt;
+    color: #1e40af;
+    border-bottom: 2px solid #0ea5e9;
+    padding-bottom: 0.3em;
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.section-header.level-3 {
+    font-size: 14pt;
+    color: #2563eb;
+    border-bottom: 1px solid #60a5fa;
+    padding-bottom: 0.2em;
+    margin-left: 1em;
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+}
+
+.section-header.level-4 {
+    font-size: 13pt;
+    color: #3b82f6;
+    margin-left: 2em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+/* Content styling */
+.content-section {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+p {
+    margin: 0.5em 0;
+    text-align: justify;
+    orphans: 2;
+    widows: 2;
+}
+
+/* Figure and table styling */
+.figure-container {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+    text-align: center;
+}
+
+.figure-image img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e5e7eb;
+}
+
+.figure-caption {
+    font-size: 10pt;
+    color: #4b5563;
+    font-style: italic;
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+.table-container {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 10pt;
+}
+
+.data-table th,
+.data-table td {
+    border: 1px solid #d1d5db;
+    padding: 0.5em;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+.data-table caption {
+    font-size: 10pt;
+    color: #4b5563;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: left;
+}
+
+.table-description {
+    font-size: 10pt;
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 0.5em;
+}
+
+/* Cover page styling */
+.cover-page {
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
     padding-bottom: 0.5em;
 }
 
@@ -420,6 +582,11 @@ tr:nth-child(even) td {
     page-break-inside: auto;
     orphans: 2;
     widows: 2;
+    counter-increment: section;
+}
+
+.section-content h2 {
+    string-set: section-title content();
 }
 
 .section-content + .section-content {
@@ -448,4 +615,169 @@ tr:nth-child(even) td {
 .content-section p + h3,
 .content-section p + h4 {
     page-break-before: avoid;
+}
+
+/* Page counter management */
+body {
+    counter-reset: page 1 chapter 0;
+}
+
+/* Cover page - no page number */
+.cover-page {
+    page: :first;
+    page-break-after: always;
+}
+
+/* Table of contents and front matter - Roman numerals */
+.toc-page, .list-page {
+    page: front-matter;
+    page-break-before: right;
+    page-break-after: always;
+}
+
+/* Main content - Arabic numerals, reset counter */
+.main-content-start {
+    page: main-content;
+    counter-reset: page 1;
+}
+
+/* Category pages */
+.category-title {
+    counter-increment: chapter;
+    string-set: chapter-title content();
+    page: category;
+}
+
+/* Section counters for better tracking */
+.section-content {
+    counter-increment: section;
+}
+
+.section-content h2 {
+    string-set: section-title content();
+}
+
+/* Page references in TOC */
+.page-ref::after {
+    content: target-counter(attr(href), page);
+}
+
+.page-ref-roman::after {
+    content: target-counter(attr(href), page, lower-roman);
+}
+
+/* Table of Contents and Lists */
+.toc-page, .list-page {
+    page-break-before: always;
+    page-break-after: always;
+}
+
+.toc-title, .list-title {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #1e3a8a;
+    border-bottom: 3px solid #0ea5e9;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+
+.toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4em;
+    padding: 0.2em 0;
+    border-bottom: 1px dotted #d1d5db;
+    page-break-inside: avoid;
+}
+
+.toc-item.level-1 {
+    font-weight: 600;
+    font-size: 12pt;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    color: #1e40af;
+}
+
+.toc-item.level-2 {
+    margin-left: 1.5em;
+    font-size: 11pt;
+    color: #2563eb;
+}
+
+.toc-item.level-3 {
+    margin-left: 3em;
+    font-size: 10pt;
+    color: #3b82f6;
+}
+
+.toc-item.level-4 {
+    margin-left: 4.5em;
+    font-size: 10pt;
+    color: #60a5fa;
+}
+
+.toc-item span:first-child {
+    flex-grow: 1;
+    margin-right: 1em;
+}
+
+.toc-item .page-number {
+    font-weight: bold;
+    color: #374151;
+    min-width: 2.5em;
+    text-align: right;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5em;
+    padding: 0.3em 0;
+    border-bottom: 1px solid #e5e7eb;
+    page-break-inside: avoid;
+}
+
+.list-item .title {
+    flex-grow: 1;
+    margin-right: 1em;
+    font-size: 10pt;
+}
+
+.list-item .page-number {
+    font-weight: bold;
+    color: #374151;
+    min-width: 2em;
+    text-align: right;
+    font-size: 10pt;
+}
+
+/* Utility classes */
+.text-center {
+    text-align: center;
+}
+
+.font-weight-bold {
+    font-weight: 600;
+}
+
+.mt-1 { margin-top: 0.5em; }
+.mt-2 { margin-top: 1em; }
+.mt-3 { margin-top: 1.5em; }
+.mb-1 { margin-bottom: 0.5em; }
+.mb-2 { margin-bottom: 1em; }
+.mb-3 { margin-bottom: 1.5em; }
+
+/* Print optimization */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
 }

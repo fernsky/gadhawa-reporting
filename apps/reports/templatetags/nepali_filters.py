@@ -205,31 +205,57 @@ def nepali_page_info(page_obj):
 
 
 @register.filter
-def nepali_section_number(value):
-    """Format section numbers in Nepali while preserving dots"""
-    if not value:
-        return value
-    
-    # Handle section numbers like "1.1", "1.2.1", etc.
-    parts = str(value).split('.')
-    nepali_parts = [to_nepali_digits(part) for part in parts]
-    return '.'.join(nepali_parts)
-
-
-@register.simple_tag
-def category_title_with_number(category):
-    """Generate category title with dynamic परिच्छेद number"""
-    if hasattr(category, 'category_number') and category.category_number:
-        number = to_nepali_digits(category.category_number)
-        name = category.name_nepali or category.name
-        return f"परिच्छेद – {number}ः {name}"
-    else:
-        return category.name_nepali or category.name
+def get_item(dictionary, key):
+    """Get item from dictionary by key"""
+    if not dictionary or not isinstance(dictionary, dict):
+        return None
+    return dictionary.get(key)
 
 
 @register.filter
-def split(value, delimiter='.'):
-    """Split string by delimiter for template use"""
+def get_page_number_nepali(page_num):
+    """Format page number in Nepali digits"""
+    if not page_num:
+        return ""
+    
+    # Convert to Nepali digits
+    nepali_digits = {
+        '0': '०', '1': '१', '2': '२', '3': '३', '4': '४',
+        '5': '५', '6': '६', '7': '७', '8': '८', '9': '९'
+    }
+    
+    nepali_num = ''
+    for digit in str(page_num):
+        nepali_num += nepali_digits.get(digit, digit)
+    
+    return nepali_num
+
+
+@register.filter
+def nepali_section_number(section_number):
+    """Convert section number to Nepali digits"""
+    if not section_number:
+        return ""
+    
+    # Convert dots and numbers
+    nepali_digits = {
+        '0': '०', '1': '१', '2': '२', '3': '३', '4': '४',
+        '5': '५', '6': '६', '7': '७', '8': '८', '9': '९'
+    }
+    
+    result = ''
+    for char in str(section_number):
+        if char in nepali_digits:
+            result += nepali_digits[char]
+        else:
+            result += char
+    
+    return result
+
+
+@register.filter
+def split(value, delimiter):
+    """Split string by delimiter"""
     if not value:
         return []
     return str(value).split(delimiter)
