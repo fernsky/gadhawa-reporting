@@ -57,31 +57,31 @@
     <!-- Categories and Sections -->
     {% for category in categories %}
     <div class="toc-item level-1">
-        <a href="#category-{{ category.id }}" class="toc-link">{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</a>
-        <span class="page-ref" data-target="category-{{ category.id }}"></span>
+        <span class="toc-link">{{ category.category_number|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
+        <span class="page-ref" data-target="#category-{{ category.id }}"></span>
     </div>
     
     {% for section in category.sections.all %}
     {% with section_parts=section.section_number|split:"." %}
     {% if section_parts|length == 2 %}
     <div class="toc-item level-2">
-        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
-        <span class="page-ref" data-target="section-{{ section.id }}"></span>
+        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
     </div>
     {% elif section_parts|length == 3 %}
     <div class="toc-item level-3">
-        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
-        <span class="page-ref" data-target="section-{{ section.id }}"></span>
+        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
     </div>
     {% elif section_parts|length == 4 %}
     <div class="toc-item level-4">
-        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
-        <span class="page-ref" data-target="section-{{ section.id }}"></span>
+        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
     </div>
     {% else %}
     <div class="toc-item level-2">
-        <a href="#section-{{ section.id }}" class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</a>
-        <span class="page-ref" data-target="section-{{ section.id }}"></span>
+        <span class="toc-link">{{ section.section_number|nepali_section_number }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-ref" data-target="#section-{{ section.id }}"></span>
     </div>
     {% endif %}
     {% endwith %}

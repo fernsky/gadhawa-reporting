@@ -260,12 +260,28 @@ li {
     display: inline-block;
 }
 
+/* For TOC items with anchor links */
+.page-ref a.page-link {
+    color: inherit;
+    text-decoration: none;
+    font-weight: inherit;
+}
+
+.page-ref a.page-link::after {
+    content: target-counter(attr(href), page, nepali-numerals);
+}
+
+/* For list items with data-target attribute */
 .page-ref::after {
     content: target-counter(attr(data-target), page, nepali-numerals);
 }
 
 /* Fallback for browsers that don't support custom counter styles */
 @supports not (counter-style: nepali-numerals) {
+    .page-ref a.page-link::after {
+        content: target-counter(attr(href), page, decimal);
+    }
+    
     .page-ref::after {
         content: target-counter(attr(data-target), page, decimal);
     }
