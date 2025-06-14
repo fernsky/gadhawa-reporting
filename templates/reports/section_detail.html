@@ -1,5 +1,6 @@
 {% extends 'reports/base.html' %}
 {% load static %}
+{% load nepali_filters %}
 
 {% block title %}{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका{% endblock %}
 
@@ -73,7 +74,7 @@
             <div class="text-muted">
                 <small>
                     <i class="fas fa-folder me-1"></i>{{ category.name_nepali|default:category.name }} |
-                    <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|date:"Y F j" }}
+                    <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|nepali_date:"Y F j" }}
                 </small>
             </div>
         </div>
@@ -162,7 +163,7 @@
                     </div>
                     {% endif %}
                     <div class="card-body">
-                        <h6 class="card-title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</h6>
+                        <h6 class="card-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</h6>
                         {% if figure.description_nepali or figure.description %}
                         <p class="card-text figure-caption">{{ figure.description_nepali|default:figure.description }}</p>
                         {% endif %}
@@ -177,7 +178,7 @@
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</h5>
+                                <h5 class="modal-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body text-center">

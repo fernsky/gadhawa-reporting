@@ -1,5 +1,6 @@
 {% extends 'reports/base.html' %}
 {% load static %}
+{% load nepali_filters %}
 
 {% block title %}सूचीपत्र - गढवा गाउँपालिका{% endblock %}
 
@@ -71,7 +72,7 @@
                     </tr>
                     <tr>
                         <td class="fw-bold">प्रकाशन मिति:</td>
-                        <td>{{ publication_settings.publication_date|date:"Y F j" }}</td>
+                        <td>{{ publication_settings.publication_date|nepali_date:"Y F j" }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">संस्करण:</td>
@@ -145,7 +146,7 @@
                                 चित्रहरूको सूची
                             </a>
                         </td>
-                        <td class="text-center">{{ total_figures }}</td>
+                        <td class="text-center">{{ total_figures|nepali_digits }}</td>
                         <td class="text-center no-print">
                             <a href="{% url 'reports:figures' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
                         </td>
@@ -157,7 +158,7 @@
                                 तालिकाहरूको सूची
                             </a>
                         </td>
-                        <td class="text-center">{{ total_tables }}</td>
+                        <td class="text-center">{{ total_tables|nepali_digits }}</td>
                         <td class="text-center no-print">
                             <a href="{% url 'reports:tables' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
                         </td>
@@ -172,7 +173,7 @@
                     
                     {% for category in categories %}
                     <tr>
-                        <td class="fw-bold">{{ category.order|default:forloop.counter }}</td>
+                        <td class="fw-bold">{{ category.order|default:forloop.counter|nepali_digits }}</td>
                         <td>
                             <a href="{% url 'reports:category' category.slug %}" class="text-decoration-none fw-bold">
                                 {{ category.name_nepali|default:category.name }}
@@ -182,7 +183,7 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-secondary">{{ category.sections.count }}</span>
+                            <span class="badge bg-secondary">{{ category.sections.count|nepali_digits }}</span>
                         </td>
                         <td class="text-center no-print">
                             <div class="btn-group btn-group-sm" role="group">
@@ -194,7 +195,7 @@
                     
                     {% for section in category.sections.all %}
                     <tr>
-                        <td class="ps-4">{{ category.order|default:forloop.parentloop.counter }}.{{ section.order|default:forloop.counter }}</td>
+                        <td class="ps-4">{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }}</td>
                         <td class="ps-4">
                             <a href="{% url 'reports:section' category.slug section.slug %}" class="text-decoration-none">
                                 {{ section.title_nepali|default:section.title }}
@@ -206,9 +207,9 @@
                         <td class="text-center">
                             {% if section.figures.count or section.tables.count %}
                             <small class="text-muted">
-                                {% if section.figures.count %}{{ section.figures.count }} चित्र{% endif %}
+                                {% if section.figures.count %}{{ section.figures.count|nepali_digits }} चित्र{% endif %}
                                 {% if section.figures.count and section.tables.count %}, {% endif %}
-                                {% if section.tables.count %}{{ section.tables.count }} तालिका{% endif %}
+                                {% if section.tables.count %}{{ section.tables.count|nepali_digits }} तालिका{% endif %}
                             </small>
                             {% else %}
                             -
@@ -240,19 +241,19 @@
                 <table class="table table-borderless">
                     <tr>
                         <td><i class="fas fa-folder text-primary me-2"></i>कुल विषयहरू:</td>
-                        <td class="fw-bold">{{ categories.count }}</td>
+                        <td class="fw-bold">{{ categories.count|nepali_digits }}</td>
                     </tr>
                     <tr>
                         <td><i class="fas fa-file-alt text-success me-2"></i>कुल उप-विषयहरू:</td>
-                        <td class="fw-bold">{{ total_sections }}</td>
+                        <td class="fw-bold">{{ total_sections|nepali_digits }}</td>
                     </tr>
                     <tr>
                         <td><i class="fas fa-images text-info me-2"></i>कुल चित्रहरू:</td>
-                        <td class="fw-bold">{{ total_figures }}</td>
+                        <td class="fw-bold">{{ total_figures|nepali_digits }}</td>
                     </tr>
                     <tr>
                         <td><i class="fas fa-table text-warning me-2"></i>कुल तालिकाहरू:</td>
-                        <td class="fw-bold">{{ total_tables }}</td>
+                        <td class="fw-bold">{{ total_tables|nepali_digits }}</td>
                     </tr>
                 </table>
             </div>

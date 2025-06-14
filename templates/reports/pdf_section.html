@@ -1,4 +1,5 @@
 {% extends 'reports/pdf_base.html' %}
+{% load nepali_filters %}
 
 {% block title %}{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका{% endblock %}
 
@@ -30,7 +31,7 @@
     
     <div class="cover-info">
         {% if publication_settings %}
-        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}</div>
+        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
         <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
         {% endif %}
         
@@ -51,7 +52,7 @@
         <h3>चित्रहरू</h3>
         {% for figure in section.figures.all %}
         <div class="list-item">
-            <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</span>
+            <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
             <span class="page-number">{{ forloop.counter }}</span>
         </div>
         {% endfor %}
@@ -183,7 +184,7 @@
                  style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 0.25em;">
             {% endif %}
             <div class="figure-caption">
-                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title_nepali|default:figure.title }}
+                <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
                 {% if figure.description_nepali or figure.description %}
                 <br>{{ figure.description_nepali|default:figure.description }}
                 {% endif %}

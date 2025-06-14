@@ -1,0 +1,456 @@
+{% load nepali_filters %}
+
+{% if page_obj.has_other_pages %}
+<div class="enterprise-pagination-wrapper">
+    <!-- Pagination Summary -->
+    <div class="pagination-summary">
+        <span class="summary-text">
+            <span class="current-range">
+                {{ page_obj.start_index|nepali_digits }}-{{ page_obj.end_index|nepali_digits }}
+            </span>
+            <span class="total-count">{{ page_obj.paginator.count|nepali_digits }} मध्ये</span>
+        </span>
+    </div>
+    
+    <!-- Pagination Controls -->
+    <nav aria-label="पृष्ठ नेभिगेसन" class="enterprise-pagination">
+        <div class="pagination-controls">
+            <!-- Items per page -->
+            <div class="pagination-options">
+                <label for="items-per-page" class="items-label">प्रति पृष्ठ:</label>
+                <select id="items-per-page" class="items-select" onchange="changeItemsPerPage(this.value)">
+                    <option value="10" {% if page_obj.paginator.per_page == 10 %}selected{% endif %}>१०</option>
+                    <option value="25" {% if page_obj.paginator.per_page == 25 %}selected{% endif %}>२५</option>
+                    <option value="50" {% if page_obj.paginator.per_page == 50 %}selected{% endif %}>५०</option>
+                    <option value="100" {% if page_obj.paginator.per_page == 100 %}selected{% endif %}>१००</option>
+                </select>
+            </div>
+            
+            <!-- Page Navigation -->
+            <div class="page-navigation">
+                <!-- First Page -->
+                {% if page_obj.number > 3 %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page=1" 
+                       class="nav-btn first-btn" 
+                       aria-label="पहिलो पृष्ठमा जानुहोस्"
+                       title="पहिलो पृष्ठ">
+                        <svg class="icon-double-left" viewBox="0 0 24 24">
+                            <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"/>
+                        </svg>
+                    </a>
+                {% endif %}
+                
+                <!-- Previous Page -->
+                {% if page_obj.has_previous %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.previous_page_number }}" 
+                       class="nav-btn prev-btn" 
+                       aria-label="अघिल्लो पृष्ठमा जानुहोस्"
+                       title="अघिल्लो पृष्ठ">
+                        <svg class="icon-left" viewBox="0 0 24 24">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </a>
+                {% else %}
+                    <button class="nav-btn prev-btn disabled" disabled aria-label="अघिल्लो पृष्ठ उपलब्ध छैन">
+                        <svg class="icon-left" viewBox="0 0 24 24">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </button>
+                {% endif %}
+                
+                <!-- Page Numbers -->
+                <div class="page-numbers">
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="page-number current" aria-current="page" aria-label="हालको पृष्ठ, पृष्ठ {{ num|nepali_digits }}">
+                                {{ num|nepali_digits }}
+                            </span>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ num }}" 
+                               class="page-number" 
+                               aria-label="पृष्ठ {{ num|nepali_digits }} मा जानुहोस्">
+                                {{ num|nepali_digits }}
+                            </a>
+                        {% elif num == 1 or num == page_obj.paginator.num_pages %}
+                            <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ num }}" 
+                               class="page-number" 
+                               aria-label="पृष्ठ {{ num|nepali_digits }} मा जानुहोस्">
+                                {{ num|nepali_digits }}
+                            </a>
+                        {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+                            <span class="page-ellipsis" aria-label="थप पृष्ठहरू">⋯</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <!-- Next Page -->
+                {% if page_obj.has_next %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.next_page_number }}" 
+                       class="nav-btn next-btn" 
+                       aria-label="अर्को पृष्ठमा जानुहोस्"
+                       title="अर्को पृष्ठ">
+                        <svg class="icon-right" viewBox="0 0 24 24">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </a>
+                {% else %}
+                    <button class="nav-btn next-btn disabled" disabled aria-label="अर्को पृष्ठ उपलब्ध छैन">
+                        <svg class="icon-right" viewBox="0 0 24 24">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
+                {% endif %}
+                
+                <!-- Last Page -->
+                {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.paginator.num_pages }}" 
+                       class="nav-btn last-btn" 
+                       aria-label="अन्तिम पृष्ठमा जानुहोस्"
+                       title="अन्तिम पृष्ठ">
+                        <svg class="icon-double-right" viewBox="0 0 24 24">
+                            <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"/>
+                        </svg>
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Quick Jump -->
+            <div class="quick-jump">
+                <span class="jump-label">जानुहोस्:</span>
+                <input type="number" 
+                       id="jump-to-page" 
+                       class="jump-input" 
+                       min="1" 
+                       max="{{ page_obj.paginator.num_pages }}" 
+                       value="{{ page_obj.number }}"
+                       aria-label="पृष्ठ नम्बर प्रविष्ट गर्नुहोस्">
+                <button type="button" 
+                        class="jump-btn" 
+                        onclick="jumpToPage()"
+                        aria-label="निर्दिष्ट पृष्ठमा जानुहोस्">
+                    <svg class="icon-go" viewBox="0 0 24 24">
+                        <path d="M9 5v4h2V5h4v4h2V5c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2zm-2 8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-2H7v2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<style>
+.enterprise-pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 2rem;
+}
+
+.pagination-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #525252;
+}
+
+.summary-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.current-range {
+    font-weight: 600;
+    color: #161616;
+}
+
+.total-count {
+    color: #6f6f6f;
+}
+
+.enterprise-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.pagination-options {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.items-label {
+    font-size: 0.875rem;
+    color: #525252;
+    font-weight: 500;
+}
+
+.items-select {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 0.875rem;
+    color: #161616;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.items-select:hover {
+    border-color: #0f62fe;
+}
+
+.items-select:focus {
+    outline: 2px solid #0f62fe;
+    outline-offset: -2px;
+    border-color: #0f62fe;
+}
+
+.page-navigation {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #161616;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-btn:hover:not(.disabled) {
+    background: #f4f4f4;
+    border-color: #a8a8a8;
+    color: #161616;
+}
+
+.nav-btn:focus:not(.disabled) {
+    outline: 2px solid #0f62fe;
+    outline-offset: -2px;
+}
+
+.nav-btn.disabled {
+    background: #f4f4f4;
+    color: #c6c6c6;
+    cursor: not-allowed;
+    border-color: #e0e0e0;
+}
+
+.nav-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0.5rem;
+}
+
+.page-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #161616;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.page-number:hover {
+    background: #f4f4f4;
+    border-color: #a8a8a8;
+    color: #161616;
+}
+
+.page-number:focus {
+    outline: 2px solid #0f62fe;
+    outline-offset: -2px;
+}
+
+.page-number.current {
+    background: #0f62fe;
+    border-color: #0f62fe;
+    color: #ffffff;
+    cursor: default;
+}
+
+.page-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #6f6f6f;
+    font-size: 1rem;
+}
+
+.quick-jump {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jump-label {
+    font-size: 0.875rem;
+    color: #525252;
+    font-weight: 500;
+}
+
+.jump-input {
+    width: 4rem;
+    padding: 0.375rem 0.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 0.875rem;
+    color: #161616;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.jump-input:hover {
+    border-color: #0f62fe;
+}
+
+.jump-input:focus {
+    outline: 2px solid #0f62fe;
+    outline-offset: -2px;
+    border-color: #0f62fe;
+}
+
+.jump-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #0f62fe;
+    border-radius: 4px;
+    background: #0f62fe;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.jump-btn:hover {
+    background: #0043ce;
+    border-color: #0043ce;
+}
+
+.jump-btn:focus {
+    outline: 2px solid #0f62fe;
+    outline-offset: 2px;
+}
+
+.jump-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pagination-controls {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .page-navigation {
+        justify-content: center;
+    }
+    
+    .pagination-options,
+    .quick-jump {
+        justify-content: center;
+    }
+    
+    .page-numbers {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-btn,
+    .page-number {
+        min-width: 2rem;
+        height: 2rem;
+        font-size: 0.75rem;
+    }
+    
+    .nav-btn svg {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+    
+    .page-numbers {
+        gap: 0.125rem;
+    }
+}
+</style>
+
+<script>
+function changeItemsPerPage(value) {
+    const url = new URL(window.location);
+    url.searchParams.set('per_page', value);
+    url.searchParams.delete('page'); // Reset to first page
+    window.location.href = url.toString();
+}
+
+function jumpToPage() {
+    const pageInput = document.getElementById('jump-to-page');
+    const pageNumber = parseInt(pageInput.value);
+    const maxPages = parseInt('{{ page_obj.paginator.num_pages }}');
+    
+    if (pageNumber >= 1 && pageNumber <= maxPages) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', pageNumber);
+        window.location.href = url.toString();
+    } else {
+        pageInput.value = parseInt('{{ page_obj.number }}');
+        alert('कृपया १ देखि ' + maxPages + ' सम्मको वैध पृष्ठ नम्बर प्रविष्ट गर्नुहोस्।');
+    }
+}
+
+// Handle Enter key in jump input
+document.addEventListener('DOMContentLoaded', function() {
+    const jumpInput = document.getElementById('jump-to-page');
+    if (jumpInput) {
+        jumpInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                jumpToPage();
+            }
+        });
+    }
+});
+</script>
+{% endif %}

@@ -1,5 +1,6 @@
 {% extends 'reports/base.html' %}
 {% load static %}
+{% load nepali_filters %}
 
 {% block title %}{{ category.name_nepali|default:category.name }} - {{ municipality_name|default:"गधावा गाउँपालिका" }}{% endblock %}
 
@@ -75,10 +76,10 @@
                     <div class="col-md-6 mb-2">
                         <div class="toc-item">
                             <a href="{% url 'reports:section' category.slug section.slug %}" class="toc-link">
-                                <i class="fas fa-chevron-right me-2"></i>{{ section.title }}
+                                <i class="fas fa-chevron-right me-2"></i>{{ section.title_nepali|default:section.title }}
                             </a>
-                            {% if section.description %}
-                            <small class="d-block text-muted mt-1">{{ section.description|truncatewords:15 }}</small>
+                            {% if section.summary_nepali or section.summary %}
+                            <small class="d-block text-muted mt-1">{{ section.summary_nepali|default:section.summary|truncatewords:15 }}</small>
                             {% endif %}
                         </div>
                     </div>
@@ -94,7 +95,7 @@
 {% for section in category.sections.all %}
 <div class="card mb-4" id="section-{{ section.slug }}">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="mb-0">{{ section.title }}</h3>
+        <h3 class="mb-0">{{ section.title_nepali|default:section.title }}</h3>
         <div class="no-print">
             <a href="{% url 'reports:section' category.slug section.slug %}" class="btn btn-sm btn-outline-primary">
                 विस्तार हेर्नुहोस्
@@ -102,8 +103,8 @@
         </div>
     </div>
     <div class="card-body">
-        {% if section.description %}
-        <p class="lead">{{ section.description }}</p>
+        {% if section.summary_nepali or section.summary %}
+        <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
         {% endif %}
         
         {% if section.content %}
@@ -124,7 +125,7 @@
                         <img src="{{ figure.image.url }}" class="card-img-top" alt="{{ figure.caption }}">
                         {% endif %}
                         <div class="card-body">
-                            <h6 class="card-title">चित्र {{ figure.figure_number }}: {{ figure.title }}</h6>
+                            <h6 class="card-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}</h6>
                             {% if figure.caption %}
                             <p class="card-text figure-caption">{{ figure.caption }}</p>
                             {% endif %}
@@ -144,7 +145,7 @@
             <div class="table-responsive mb-4">
                 <table class="table table-bordered table-striped">
                     <caption class="caption-top">
-                        <strong>तालिका {{ table.table_number }}: {{ table.title }}</strong>
+                        <strong>तालिका {{ table.table_number|nepali_digits }}: {{ table.title }}</strong>
                         {% if table.caption %}
                         <br><small class="text-muted">{{ table.caption }}</small>
                         {% endif %}
@@ -175,7 +176,7 @@
         
         <div class="d-flex justify-content-between align-items-center mt-3 no-print">
             <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|date:"Y F j" }}
+                <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|nepali_date:"Y F j" }}
             </small>
             <div>
                 <a href="{% url 'reports:section' category.slug section.slug %}" class="btn btn-sm btn-primary">

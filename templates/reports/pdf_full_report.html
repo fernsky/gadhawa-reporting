@@ -1,4 +1,5 @@
 {% extends 'reports/pdf_base.html' %}
+{% load nepali_filters %}
 
 {% block title %}गढवा गाउँपालिका - पूर्ण प्रतिवेदन{% endblock %}
 
@@ -24,7 +25,7 @@
     
     <div class="cover-info">
         {% if publication_settings %}
-        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|date:"Y F j" }}</div>
+        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
         <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
         {% if publication_settings.editor_name %}
         <div><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</div>
@@ -67,13 +68,13 @@
     <!-- Main Content -->
     {% for category in categories %}
     <div class="toc-item level-1">
-        <span>{{ category.order|default:forloop.counter }}. {{ category.name_nepali|default:category.name }}</span>
-        <span class="page-number">{{ forloop.counter }}</span>
+        <span>{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</span>
+        <span class="page-number">{{ forloop.counter|nepali_digits }}</span>
     </div>
     {% for section in category.sections.all %}
     <div class="toc-item level-2">
-        <span>{{ category.order|default:forloop.parentloop.counter }}.{{ section.order|default:forloop.counter }} {{ section.title_nepali|default:section.title }}</span>
-        <span class="page-number">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
+        <span>{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</span>
+        <span class="page-number">{{ forloop.parentloop.counter|nepali_digits }}.{{ forloop.counter|nepali_digits }}</span>
     </div>
     {% endfor %}
     {% endfor %}
@@ -85,8 +86,8 @@
     <h1 class="list-title">चित्रहरूको सूची</h1>
     {% for figure in figures %}
     <div class="list-item">
-        <span class="title">चित्र {{ figure.figure_number }}: {{ figure.title_nepali|default:figure.title }}</span>
-        <span class="page-number">{{ forloop.counter }}</span>
+        <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
+        <span class="page-number">{{ forloop.counter|nepali_digits }}</span>
     </div>
     {% endfor %}
 </div>
@@ -98,8 +99,8 @@
     <h1 class="list-title">तालिकाहरूको सूची</h1>
     {% for table in tables %}
     <div class="list-item">
-        <span class="title">तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}</span>
-        <span class="page-number">{{ forloop.counter }}</span>
+        <span class="title">तालिका {{ table.table_number|nepali_digits }}: {{ table.title_nepali|default:table.title }}</span>
+        <span class="page-number">{{ forloop.counter|nepali_digits }}</span>
     </div>
     {% endfor %}
 </div>
@@ -108,7 +109,7 @@
 <!-- Main Content -->
 {% for category in categories %}
 <div class="section-break">
-    <h1 class="category-title">{{ category.order|default:forloop.counter }}. {{ category.name_nepali|default:category.name }}</h1>
+    <h1 class="category-title">{{ category.order|default:forloop.counter|nepali_digits }}. {{ category.name_nepali|default:category.name }}</h1>
     
     {% if category.description_nepali or category.description %}
     <div class="lead">{{ category.description_nepali|default:category.description }}</div>
@@ -116,7 +117,7 @@
     
     {% for section in category.sections.all %}
     <div class="{% if not forloop.first %}no-break{% endif %}" style="margin-top: 2em;">
-        <h2>{{ category.order|default:forloop.parentloop.counter }}.{{ section.order|default:forloop.counter }} {{ section.title_nepali|default:section.title }}</h2>
+        <h2>{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }} {{ section.title_nepali|default:section.title }}</h2>
         
         {% if section.summary_nepali or section.summary %}
         <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
@@ -181,7 +182,7 @@
             <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}">
             {% endif %}
             <div class="figure-caption">
-                <strong>चित्र {{ figure.figure_number }}:</strong> {{ figure.title_nepali|default:figure.title }}
+                <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
                 {% if figure.description_nepali or figure.description %}
                 <br>{{ figure.description_nepali|default:figure.description }}
                 {% endif %}

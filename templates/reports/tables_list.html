@@ -1,5 +1,6 @@
 {% extends 'reports/base.html' %}
 {% load static %}
+{% load nepali_filters %}
 
 {% block title %}तालिकाहरूको सूची - गढवा गाउँपालिका{% endblock %}
 
@@ -91,7 +92,7 @@
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="mb-1">तालिका {{ table.table_number }}: {{ table.title }}</h5>
+                    <h5 class="mb-1">तालिका {{ table.table_number|nepali_digits }}: {{ table.title }}</h5>
                     <div class="text-muted small">
                         <i class="fas fa-folder me-1"></i>
                         <a href="{% url 'reports:category' table.section.category.slug %}" class="text-decoration-none">
@@ -210,7 +211,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <small>
-                        <i class="fas fa-clock me-1"></i>सिर्जना: {{ table.created_at|date:"Y F j" }}
+                        <i class="fas fa-clock me-1"></i>सिर्जना: {{ table.created_at|nepali_date:"Y F j" }}
                     </small>
                 </div>
                 <div class="col-md-6 text-end">

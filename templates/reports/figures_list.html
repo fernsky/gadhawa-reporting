@@ -1,5 +1,6 @@
 {% extends 'reports/base.html' %}
 {% load static %}
+{% load nepali_filters %}
 
 {% block title %}चित्रहरूको सूची - गढवा गाउँपालिका{% endblock %}
 
@@ -105,7 +106,7 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title">चित्र {{ figure.figure_number }}: {{ figure.title }}</h5>
+                            <h5 class="card-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}</h5>
                             <span class="badge bg-secondary">{{ figure.section.category.title }}</span>
                         </div>
                         
@@ -140,7 +141,7 @@
                                 </a>
                             </div>
                             <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i>{{ figure.created_at|date:"Y F j" }}
+                                <i class="fas fa-clock me-1"></i>{{ figure.created_at|nepali_date:"Y F j" }}
                             </small>
                         </div>
                     </div>
@@ -153,7 +154,7 @@
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">चित्र {{ figure.figure_number }}: {{ figure.title }}</h5>
+                        <h5 class="modal-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body text-center">
@@ -172,7 +173,7 @@
                                 {% if figure.source %}
                                 <strong>स्रोत:</strong> {{ figure.source }}<br>
                                 {% endif %}
-                                <strong>मिति:</strong> {{ figure.created_at|date:"Y F j" }}
+                                <strong>मिति:</strong> {{ figure.created_at|nepali_date:"Y F j" }}
                             </div>
                         </div>
                     </div>
@@ -201,7 +202,7 @@
                              style="height: 200px; object-fit: cover; cursor: pointer;" 
                              data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
                         <div class="position-absolute top-0 start-0 m-2">
-                            <span class="badge bg-primary">{{ figure.figure_number }}</span>
+                            <span class="badge bg-primary">{{ figure.figure_number|nepali_digits }}</span>
                         </div>
                         <div class="position-absolute top-0 end-0 m-2">
                             <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
@@ -280,7 +281,7 @@
                     </tr>
                     <tr>
                         <td><i class="fas fa-clock text-warning me-2"></i>अन्तिम अद्यावधिक:</td>
-                        <td class="fw-bold">{{ latest_figure.created_at|date:"Y F j" }}</td>
+                        <td class="fw-bold">{{ latest_figure.created_at|nepali_date:"Y F j" }}</td>
                     </tr>
                 </table>
             </div>
