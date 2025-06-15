@@ -1,3 +1,3 @@
 """
-Apps package for Gadhawa Report System
+Apps package for lungri Report System
 """

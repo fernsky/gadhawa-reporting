@@ -10,7 +10,7 @@ import django
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Set up Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
 django.setup()
 
 from apps.reports.utils.nepali_numbers import (

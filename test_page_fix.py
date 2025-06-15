@@ -9,7 +9,7 @@ import sys
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
 
 import django
 django.setup()

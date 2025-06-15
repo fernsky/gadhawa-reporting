@@ -13,7 +13,7 @@ project_dir = Path(__file__).parent
 sys.path.insert(0, str(project_dir))
 
 # Set Django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
 
 # Initialize Django
 django.setup()
@@ -86,7 +86,7 @@ def test_toc_and_page_breaks():
     # Create context
     context = {
         'municipality_name': "गधावा गाउँपालिका",
-        'municipality_name_english': "Gadhawa Rural Municipality",
+        'municipality_name_english': "lungri Rural Municipality",
         'publication_settings': None,
         'categories': categories,
         'figures': figures,

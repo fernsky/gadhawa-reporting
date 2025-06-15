@@ -10,7 +10,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
 django.setup()
 
 from apps.reports.models import ReportCategory, ReportSection, ReportFigure, ReportTable

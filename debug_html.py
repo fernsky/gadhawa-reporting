@@ -5,11 +5,12 @@ to verify the data-target attributes and CSS are correct
 """
 import os
 import sys
-
+# गाउँ कार्यपालिकाको कार्यालय, वडाचौर, रोल्पा, लुम्बिनी प्रदेश
+# पूर्वाधार, कृषि र पर्यटनः समृद्ध लुङ्ग्रीको मुख्य साधन
 # Add the project root to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
 
 import django
 django.setup()
