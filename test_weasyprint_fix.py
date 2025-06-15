@@ -8,52 +8,62 @@ import django
 
 # Setup Django
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lungri_report.settings.development")
 django.setup()
 
 from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
-from apps.reports.models import ReportCategory, ReportFigure, ReportTable, PublicationSettings
+from apps.reports.models import (
+    ReportCategory,
+    ReportFigure,
+    ReportTable,
+    PublicationSettings,
+)
+
 
 def test_toc_page_numbers():
     print("🎯 WeasyPrint CSS Fix & TOC Page Numbers Test")
     print("=" * 55)
-    
+
     # Get data
     try:
         publication_settings = PublicationSettings.objects.first()
     except:
         publication_settings = None
-        
-    categories = ReportCategory.objects.filter(
-        is_active=True,
-        sections__is_published=True
-    ).distinct().prefetch_related(
-        'sections__figures',
-        'sections__tables'
-    ).order_by('order')
-    
-    figures = ReportFigure.objects.select_related('section__category').order_by('figure_number')
-    tables = ReportTable.objects.select_related('section__category').order_by('table_number')
-    
+
+    categories = (
+        ReportCategory.objects.filter(is_active=True, sections__is_published=True)
+        .distinct()
+        .prefetch_related("sections__figures", "sections__tables")
+        .order_by("order")
+    )
+
+    figures = ReportFigure.objects.select_related("section__category").order_by(
+        "figure_number"
+    )
+    tables = ReportTable.objects.select_related("section__category").order_by(
+        "table_number"
+    )
+
     context = {
-        'municipality_name': 'गधावा गाउँपालिका',
-        'municipality_name_english': 'Gadhawa Rural Municipality',
-        'publication_settings': publication_settings,
-        'categories': categories,
-        'figures': figures,
-        'tables': tables,
-        'total_figures': figures.count(),
-        'total_tables': tables.count(),
+        "municipality_name": "गधावा गाउँपालिका",
+        "municipality_name_english": "lungri Rural Municipality",
+        "publication_settings": publication_settings,
+        "categories": categories,
+        "figures": figures,
+        "tables": tables,
+        "total_figures": figures.count(),
+        "total_tables": tables.count(),
     }
-    
+
     # Create a simple HTML template without Django static tags
-    html_template = """
+    html_template = (
+        """
 <!DOCTYPE html>
 <html lang="ne">
 <head>
     <meta charset="UTF-8">
-    <title>गढवा गाउँपालिकाको पार्श्वचित्र</title>
+    <title>लुङ्ग्री गाउँपालिकाको पार्श्वचित्र</title>
     <style>
         /* Custom Nepali counter style */
         @counter-style nepali-numerals {
@@ -68,7 +78,7 @@ def test_toc_page_numbers():
             margin: 2cm 1.5cm 3cm 1.5cm;
             
             @bottom-right {
-                content: counter(page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+                content: counter(page, nepali-numerals) " | लुङ्ग्री गाउँपालिकाको पार्श्वचित्र";
                 font-size: 9pt;
                 color: #666;
                 font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
@@ -213,19 +223,29 @@ def test_toc_page_numbers():
     <div class="toc-page">
         <h1 class="toc-title">विषयसूची</h1>
         
-        """ + "".join([f"""
+        """
+        + "".join(
+            [
+                f"""
         <div class="toc-item level-1">
             <span class="toc-link">{category.category_number}. {category.name_nepali or category.name}</span>
             <span class="page-ref">
                 <a href="#category-{category.id}"></a>
             </span>
         </div>
-        """ for category in categories]) + """
+        """
+                for category in categories
+            ]
+        )
+        + """
     </div>
 
     <!-- Main Content -->
     <div class="main-content-start">
-        """ + "".join([f"""
+        """
+        + "".join(
+            [
+                f"""
         <div class="section-break" id="category-{category.id}">
             <h1 class="category-title">
                 परिच्छेद – {category.category_number}ः {category.name_nepali or category.name}
@@ -234,35 +254,42 @@ def test_toc_page_numbers():
             <p>lorem ipsum content to fill the page and create multiple pages for proper testing.</p>
             <p>More content here to ensure we have enough text to span multiple pages and test the page numbering system.</p>
         </div>
-        """ for category in categories]) + """
+        """
+                for category in categories
+            ]
+        )
+        + """
     </div>
 </body>
 </html>
     """
-    
+    )
+
     print(f"📊 Categories found: {categories.count()}")
     print(f"📊 Figures found: {figures.count()}")
     print(f"📊 Tables found: {tables.count()}")
-    
+
     try:
         # Generate PDF
         html_doc = HTML(string=html_template)
         pdf_content = html_doc.write_pdf()
-        
+
         # Save PDF
         filename = "test_toc_fix.pdf"
-        with open(filename, 'wb') as f:
+        with open(filename, "wb") as f:
             f.write(pdf_content)
-        
+
         print(f"✅ Test PDF generated successfully!")
         print(f"📄 Size: {len(pdf_content)} bytes")
         print(f"📄 Saved as: {filename}")
         print(f"🔍 Check if TOC page numbers are showing in Nepali digits")
-        
+
     except Exception as e:
         print(f"❌ Error generating PDF: {e}")
         import traceback
+
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     test_toc_page_numbers()

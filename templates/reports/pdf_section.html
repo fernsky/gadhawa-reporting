@@ -1,164 +1,193 @@
-{% extends 'reports/pdf_base.html' %}
-{% load nepali_filters %}
-
-{% block title %}{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका{% endblock %}
-
-{% block chapter_header %}{{ category.name_nepali|default:category.name }} - {{ section.title_nepali|default:section.title }}{% endblock %}
-
-{% block content %}
+{% extends 'reports/pdf_base.html' %} {% load nepali_filters %} {% block title
+%}{{ section.title_nepali|default:section.title }} - {{
+category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका{% endblock
+%} {% block chapter_header %}{{ category.name_nepali|default:category.name }} -
+{{ section.title_nepali|default:section.title }}{% endblock %} {% block content
+%}
 <!-- Cover Page -->
 <div class="cover-page">
-    <div class="cover-title">
-        गढवा गाउँपालिका
+  <div class="cover-title">लुङ्ग्री गाउँपालिका</div>
+  <div class="cover-subtitle">
+    {{ section.title_nepali|default:section.title }}
+  </div>
+
+  <div style="margin: 1cm 0">
+    <div style="font-size: 14pt; color: #666">
+      {{ category.name_nepali|default:category.name }}
     </div>
-    <div class="cover-subtitle">
-        {{ section.title_nepali|default:section.title }}
+  </div>
+
+  <div style="margin: 2cm 0">
+    {% if section.summary_nepali or section.summary %}
+    <div
+      style="
+        font-size: 12pt;
+        max-width: 80%;
+        margin: 0 auto;
+        text-align: justify;
+      "
+    >
+      {{ section.summary_nepali|default:section.summary }}
     </div>
-    
-    <div style="margin: 1cm 0;">
-        <div style="font-size: 14pt; color: #666;">
-            {{ category.name_nepali|default:category.name }}
-        </div>
+    {% endif %}
+  </div>
+
+  <div class="cover-info">
+    {% if publication_settings %}
+    <div>
+      <strong>प्रकाशन मिति:</strong> {{
+      publication_settings.publication_date|nepali_date:"Y F j" }}
     </div>
-    
-    <div style="margin: 2cm 0;">
-        {% if section.summary_nepali or section.summary %}
-        <div style="font-size: 12pt; max-width: 80%; margin: 0 auto; text-align: justify;">
-            {{ section.summary_nepali|default:section.summary }}
-        </div>
-        {% endif %}
+    <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
+    {% endif %}
+
+    <div style="margin-top: 2em; font-size: 10pt">
+      © {% now "Y" %} लुङ्ग्री गाउँपालिका। सबै अधिकार सुरक्षित।
     </div>
-    
-    <div class="cover-info">
-        {% if publication_settings %}
-        <div><strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
-        <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
-        {% endif %}
-        
-        <div style="margin-top: 2em; font-size: 10pt;">
-            © {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Content Overview -->
 {% if section.figures.all or section.tables.all %}
 <div class="toc-page">
-    <h1 class="toc-title">{{ section.title_nepali|default:section.title }} - सामग्री सूची</h1>
-    
-    <!-- List figures if any -->
-    {% if section.figures.all %}
-    <div style="margin-bottom: 2em;">
-        <h3>चित्रहरू</h3>
-        {% for figure in section.figures.all %}
-        <div class="list-item">
-            <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
-            <span class="page-number">{{ forloop.counter }}</span>
-        </div>
-        {% endfor %}
+  <h1 class="toc-title">
+    {{ section.title_nepali|default:section.title }} - सामग्री सूची
+  </h1>
+
+  <!-- List figures if any -->
+  {% if section.figures.all %}
+  <div style="margin-bottom: 2em">
+    <h3>चित्रहरू</h3>
+    {% for figure in section.figures.all %}
+    <div class="list-item">
+      <span class="title"
+        >चित्र {{ figure.figure_number|nepali_digits }}: {{
+        figure.title_nepali|default:figure.title }}</span
+      >
+      <span class="page-number">{{ forloop.counter }}</span>
     </div>
-    {% endif %}
-    
-    <!-- List tables if any -->
-    {% if section.tables.all %}
-    <div style="margin-bottom: 2em;">
-        <h3>तालिकाहरू</h3>
-        {% for table in section.tables.all %}
-        <div class="list-item">
-            <span class="title">तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}</span>
-            <span class="page-number">{{ forloop.counter }}</span>
-        </div>
-        {% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- List tables if any -->
+  {% if section.tables.all %}
+  <div style="margin-bottom: 2em">
+    <h3>तालिकाहरू</h3>
+    {% for table in section.tables.all %}
+    <div class="list-item">
+      <span class="title"
+        >तालिका {{ table.table_number }}: {{
+        table.title_nepali|default:table.title }}</span
+      >
+      <span class="page-number">{{ forloop.counter }}</span>
     </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
 </div>
 {% endif %}
 
 <!-- Main Content -->
-<div class="section-break">    
-    <h1>{{ section.title_nepali|default:section.title }}</h1>
-    
-    {% if section.content_nepali or section.content %}
-    <div class="content-section">
-        {{ section.content_nepali|default:section.content|safe }}
+<div class="section-break">
+  <h1>{{ section.title_nepali|default:section.title }}</h1>
+
+  {% if section.content_nepali or section.content %}
+  <div class="content-section">
+    {{ section.content_nepali|default:section.content|safe }}
+  </div>
+  {% else %}
+  <div class="note">
+    <p>
+      <strong>सूचना:</strong> यस खण्डको विस्तृत सामग्री अझै तयार गरिएको छैन।
+    </p>
+    <p>
+      यो खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी
+      विस्तृत जानकारी समावेश गरिनेछ।
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- Section Figures -->
+  {% if section.figures.all %}
+  <div style="margin-top: 2em">
+    <h2>चित्रहरू र आंकडाहरू</h2>
+
+    {% for figure in section.figures.all %}
+    <div class="figure-container">
+      {% if figure.image %}
+      <img
+        src="{{ figure.image.url }}"
+        alt="{{ figure.title_nepali|default:figure.title }}"
+        style="
+          max-width: 100%;
+          height: auto;
+          border: 1px solid #ddd;
+          padding: 0.25em;
+        "
+      />
+      {% endif %}
+      <div class="figure-caption">
+        <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{
+        figure.title_nepali|default:figure.title }} {% if
+        figure.description_nepali or figure.description %} <br />{{
+        figure.description_nepali|default:figure.description }} {% endif %} {%
+        if figure.source_nepali or figure.source %} <br /><em
+          >स्रोत: {{ figure.source_nepali|default:figure.source }}</em
+        >
+        {% endif %}
+      </div>
     </div>
-    {% else %}
-    <div class="note">
-        <p><strong>सूचना:</strong> यस खण्डको विस्तृत सामग्री अझै तयार गरिएको छैन।</p>
-        <p>यो खण्डमा {{ section.title_nepali|default:section.title }} सम्बन्धी विस्तृत जानकारी समावेश गरिनेछ।</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Section Tables -->
+  {% if section.tables.all %}
+  <div style="margin-top: 2em">
+    <h2>तालिकाहरू र डेटा</h2>
+
+    {% for table in section.tables.all %}
+    <div class="table-container">
+      <table>
+        <caption>
+          <strong>तालिका {{ table.table_number }}:</strong>
+          {{ table.title_nepali|default:table.title }}
+        </caption>
+        {% if table.data %} {{ table.data|safe }} {% else %}
+        <thead>
+          <tr>
+            <th>विवरण</th>
+            <th>संख्या</th>
+            <th>प्रतिशत</th>
+            <th>टिप्पणी</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td
+              colspan="4"
+              style="text-align: center; color: #666; font-style: italic"
+            >
+              डेटा उपलब्ध छैन
+            </td>
+          </tr>
+        </tbody>
+        {% endif %}
+      </table>
+      {% if table.description_nepali or table.description %}
+      <div style="font-size: 10pt; color: #666; margin-top: 0.5em">
+        {{ table.description_nepali|default:table.description }}
+      </div>
+      {% endif %} {% if table.source_nepali or table.source %}
+      <div style="font-size: 10pt; color: #666; margin-top: 0.25em">
+        <em>स्रोत: {{ table.source_nepali|default:table.source }}</em>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
-    
-    <!-- Section Figures -->
-    {% if section.figures.all %}
-    <div style="margin-top: 2em;">
-        <h2>चित्रहरू र आंकडाहरू</h2>
-        
-        {% for figure in section.figures.all %}
-        <div class="figure-container">
-            {% if figure.image %}
-            <img src="{{ figure.image.url }}" alt="{{ figure.title_nepali|default:figure.title }}" 
-                 style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 0.25em;">
-            {% endif %}
-            <div class="figure-caption">
-                <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
-                {% if figure.description_nepali or figure.description %}
-                <br>{{ figure.description_nepali|default:figure.description }}
-                {% endif %}
-                {% if figure.source_nepali or figure.source %}
-                <br><em>स्रोत: {{ figure.source_nepali|default:figure.source }}</em>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    <!-- Section Tables -->
-    {% if section.tables.all %}
-    <div style="margin-top: 2em;">
-        <h2>तालिकाहरू र डेटा</h2>
-        
-        {% for table in section.tables.all %}
-        <div class="table-container">
-            <table>
-                <caption>
-                    <strong>तालिका {{ table.table_number }}:</strong> {{ table.title_nepali|default:table.title }}
-                </caption>
-                {% if table.data %}
-                {{ table.data|safe }}
-                {% else %}
-                <thead>
-                    <tr>
-                        <th>विवरण</th>
-                        <th>संख्या</th>
-                        <th>प्रतिशत</th>
-                        <th>टिप्पणी</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: #666; font-style: italic;">
-                            डेटा उपलब्ध छैन
-                        </td>
-                    </tr>
-                </tbody>
-                {% endif %}
-            </table>
-            {% if table.description_nepali or table.description %}
-            <div style="font-size: 10pt; color: #666; margin-top: 0.5em;">
-                {{ table.description_nepali|default:table.description }}
-            </div>
-            {% endif %}
-            {% if table.source_nepali or table.source %}
-            <div style="font-size: 10pt; color: #666; margin-top: 0.25em;">
-                <em>स्रोत: {{ table.source_nepali|default:table.source }}</em>
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
 </div>
 
 {% endblock %}

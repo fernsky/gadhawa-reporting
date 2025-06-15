@@ -1,12 +1,12 @@
 # API Documentation Specification
 
 ## Overview
-The Gadhawa Digital Profile Report API provides comprehensive access to municipality data, report generation, and administrative functions. The API follows RESTful principles and returns JSON responses.
+The lungri Digital Profile Report API provides comprehensive access to municipality data, report generation, and administrative functions. The API follows RESTful principles and returns JSON responses.
 
 ## Base URL
 ```
 Development: http://localhost:8000/api/v1/
-Production: https://gadhawa-report.gov.np/api/v1/
+Production: https://lungri-report.gov.np/api/v1/
 ```
 
 ## Authentication

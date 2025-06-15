@@ -1,8 +1,8 @@
-# Gadhawa Digital Profile Report System
+# lungri Digital Profile Report System
 ## Project Overview & Architecture Design
 
 ### Project Vision
-A comprehensive digital profile report system for Gadhawa Municipality that generates beautiful, professional A4 PDF reports in Nepali language with interactive web documentation interface.
+A comprehensive digital profile report system for lungri Municipality that generates beautiful, professional A4 PDF reports in Nepali language with interactive web documentation interface.
 
 ### Key Features
 - **Beautiful A4 PDF Generation**: Professional report layout optimized for printing

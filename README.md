@@ -1,11 +1,13 @@
-# गढवा गाउँपालिका डिजिटल प्रोफाइल प्रतिवेदन प्रणाली
-# Gadhawa Rural Municipality Digital Profile Report System
+# लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल प्रतिवेदन प्रणाली
 
-A comprehensive Django-based system for creating and managing digital profile reports for Gadhawa Rural Municipality (गढवा गाउँपालिका), Dang District, Lumbini Province, Nepal.
+# lungri Rural Municipality Digital Profile Report System
+
+A comprehensive Django-based system for creating and managing digital profile reports for lungri Rural Municipality (लुङ्ग्री गाउँपालिका), Dang District, Lumbini Province, Nepal.
 
 ## 🌟 Features
 
 ### ✅ Phase 1 Complete: Foundation & Authentication
+
 - **Django 4.2.7** with REST Framework
 - **Custom User Authentication** with JWT tokens
 - **Nepali Language Support** (Unicode Devanagari)
@@ -15,7 +17,9 @@ A comprehensive Django-based system for creating and managing digital profile re
 - **Development Environment** with virtual environment setup
 
 ### 🚧 Phase 2 Upcoming: Data Models
+
 Based on provided SQL schemas, will implement models for:
+
 - **Demographics** (जनसंख्या विवरण)
 - **Economics** (आर्थिक अवस्था)
 - **Social** (सामाजिक अवस्था)
@@ -24,6 +28,7 @@ Based on provided SQL schemas, will implement models for:
 - **Governance** (सुशासन)
 
 ### 🎯 Future Phases
+
 - PDF Report Generation
 - Advanced Analytics & Charts
 - Data Import/Export
@@ -32,18 +37,21 @@ Based on provided SQL schemas, will implement models for:
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.11+
 - Git
 
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone <repository-url>
-cd gadhawa-report
+cd lungri-report
 ```
 
 2. **Set up virtual environment**
+
 ```bash
 python -m venv venv
 
@@ -55,11 +63,13 @@ source venv/bin/activate
 ```
 
 3. **Install dependencies**
+
 ```bash
 pip install -r requirements.txt
 ```
 
 4. **Environment setup**
+
 ```bash
 # Copy environment template
 cp .env.example .env
@@ -68,12 +78,14 @@ cp .env.example .env
 ```
 
 5. **Database setup**
+
 ```bash
 python manage.py migrate
 python manage.py createsuperuser
 ```
 
 6. **Run development server**
+
 ```bash
 # Windows
 start-dev.bat
@@ -106,7 +118,7 @@ The system supports the following user roles:
 ## 🏗️ Project Structure
 
 ```
-gadhawa-report/
+lungri-report/
 ├── apps/                      # Django applications
 │   ├── core/                  # Core utilities and base models
 │   ├── users/                 # User management and authentication
@@ -118,7 +130,7 @@ gadhawa-report/
 │   ├── governance/            # Governance and administrative data
 │   └── reports/               # Report generation
 ├── docs/                      # Project documentation
-├── gadhawa_report/            # Django project settings
+├── lungri_report/            # Django project settings
 ├── templates/                 # HTML templates
 ├── static/                    # Static files (CSS, JS, images)
 ├── media/                     # User uploads
@@ -129,14 +141,17 @@ gadhawa-report/
 ## 🔧 Development
 
 ### Settings
-- **Development**: `gadhawa_report.settings.development`
-- **Production**: `gadhawa_report.settings.production`
+
+- **Development**: `lungri_report.settings.development`
+- **Production**: `lungri_report.settings.production`
 
 ### Database
+
 - **Development**: SQLite (db.sqlite3)
 - **Production**: PostgreSQL (recommended)
 
 ### Key Dependencies
+
 - Django 4.2.7
 - Django REST Framework 3.14.0
 - SimpleJWT for authentication
@@ -156,6 +171,7 @@ gadhawa-report/
 ## 🌏 Localization
 
 The system is primarily designed for Nepali language with:
+
 - Nepali Unicode (Devanagari) support
 - Localized field names and interface
 - English fallbacks where needed
@@ -166,18 +182,21 @@ The system is primarily designed for Nepali language with:
 Will implement comprehensive models based on Nepal's rural municipality data standards:
 
 ### Demographics
+
 - Ward-wise population statistics
 - Age and gender distributions
 - Caste and ethnicity data
 - Migration and settlement patterns
 
 ### Economics
+
 - Household economic indicators
 - Agricultural production
 - Employment and occupation data
 - Financial inclusion metrics
 
 ### Social
+
 - Education statistics
 - Health indicators
 - Social services access
@@ -193,15 +212,16 @@ Will implement comprehensive models based on Nepal's rural municipality data sta
 
 ## 📄 License
 
-This project is developed for Gadhawa Rural Municipality and follows appropriate licensing for government software projects.
+This project is developed for lungri Rural Municipality and follows appropriate licensing for government software projects.
 
 ## 📞 Support
 
 For technical support or questions about the system:
-- Email: tech@gadhawa.gov.np
+
+- Email: tech@lungri.gov.np
 - Phone: +977-XX-XXXXXX
 
 ---
 
-**विकसित**: गढवा गाउँपालिकाको लागि डिजिटल प्रोफाइल प्रतिवेदन प्रणाली  
-**Developed**: Digital Profile Report System for Gadhawa Rural Municipality
+**विकसित**: लुङ्ग्री गाउँपालिकाको लागि डिजिटल प्रोफाइल प्रतिवेदन प्रणाली  
+**Developed**: Digital Profile Report System for lungri Rural Municipality

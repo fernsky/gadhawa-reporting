@@ -1,517 +1,622 @@
-{% load static %}
-{% load nepali_filters %}
+{% load static %} {% load nepali_filters %}
 <!DOCTYPE html>
 <html lang="ne">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ page_title|default:"गढवा गाउँपालिका" }}{% endblock %}</title>
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}{{ page_title|default:"लुङ्ग्री गाउँपालिका" }}{% endblock
+      %}
+    </title>
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="{% block description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}गढवा, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल{% endblock %}">
-    <meta name="author" content="गढवा गाउँपालिका">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
-    
+    <meta
+      name="description"
+      content="{% block description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+    />
+    <meta
+      name="keywords"
+      content="{% block keywords %}लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल{% endblock %}"
+    />
+    <meta name="author" content="लुङ्ग्री गाउँपालिका" />
+    <meta name="robots" content="index, follow" />
+    <link
+      rel="canonical"
+      href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}"
+    />
+
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="{% block og_title %}{{ page_title|default:'गढवा गाउँपालिका' }}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}">
-    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:site_name" content="गढवा गाउँपालिका">
-    <meta property="og:locale" content="ne_NP">
-    
+    <meta
+      property="og:title"
+      content="{% block og_title %}{{ page_title|default:'लुङ्ग्री गाउँपालिका' }}{% endblock %}"
+    />
+    <meta
+      property="og:description"
+      content="{% block og_description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+    />
+    <meta
+      property="og:type"
+      content="{% block og_type %}website{% endblock %}"
+    />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:site_name" content="लुङ्ग्री गाउँपालिका" />
+    <meta property="og:locale" content="ne_NP" />
+
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}{{ page_title|default:'गढवा गाउँपालिका' }}{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}">
-    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="{% block twitter_title %}{{ page_title|default:'लुङ्ग्री गाउँपालिका' }}{% endblock %}"
+    />
+    <meta
+      name="twitter:description"
+      content="{% block twitter_description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+    />
+
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <!-- Nepali Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Custom Report CSS -->
-    <link href="{% static 'css/report.css' %}" rel="stylesheet">
-    
+    <link href="{% static 'css/report.css' %}" rel="stylesheet" />
+
     {% block extra_css %}{% endblock %}
-    
+
     <!-- JSON-LD Structured Data -->
     {% block structured_data %}
     <script type="application/ld+json">
-    {
+      {
         "@context": "https://schema.org",
         "@type": "GovernmentOrganization",
-        "name": "गढवा गाउँपालिका",
-        "alternateName": "Gadhawa Rural Municipality",
-        "description": "गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
+        "name": "लुङ्ग्री गाउँपालिका",
+        "alternateName": "lungri Rural Municipality",
+        "description": "लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
         "url": "{{ request.build_absolute_uri }}",
         "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "NP",
-            "addressLocality": "गढवा"
+          "@type": "PostalAddress",
+          "addressCountry": "NP",
+          "addressLocality": "लुङ्ग्री"
         }
-    }
+      }
     </script>
     {% endblock %}
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'reports:home' %}">
-                <i class="fas fa-city me-2"></i>
-                गढवा गाउँपालिका
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:home' %}">
-                            <i class="fas fa-home me-1"></i>मुख्य पृष्ठ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:toc' %}">
-                            <i class="fas fa-list me-1"></i>सूचीपत्र
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:figures' %}">
-                            <i class="fas fa-images me-1"></i>चित्रहरू
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:tables' %}">
-                            <i class="fas fa-table me-1"></i>तालिकाहरू
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'reports:search' %}">
-                            <i class="fas fa-search me-1"></i>खोज्नुहोस्
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="downloadDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-download me-1"></i>डाउनलोड
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'reports:pdf_full' %}">
-                                <i class="fas fa-file-pdf me-2"></i>पूर्ण प्रतिवेदन (PDF)
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            {% for category in categories %}
-                            <li><a class="dropdown-item" href="{% url 'reports:pdf_category' category.slug %}">
-                                <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }}
-                            </a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'reports:home' %}">
+          <i class="fas fa-city me-2"></i>
+          लुङ्ग्री गाउँपालिका
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports:home' %}">
+                <i class="fas fa-home me-1"></i>मुख्य पृष्ठ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports:toc' %}">
+                <i class="fas fa-list me-1"></i>सूचीपत्र
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports:figures' %}">
+                <i class="fas fa-images me-1"></i>चित्रहरू
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports:tables' %}">
+                <i class="fas fa-table me-1"></i>तालिकाहरू
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'reports:search' %}">
+                <i class="fas fa-search me-1"></i>खोज्नुहोस्
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="downloadDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <i class="fas fa-download me-1"></i>डाउनलोड
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'reports:pdf_full' %}">
+                    <i class="fas fa-file-pdf me-2"></i>पूर्ण प्रतिवेदन (PDF)
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                {% for category in categories %}
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'reports:pdf_category' category.slug %}"
+                  >
+                    <i class="fas fa-file-pdf me-2"></i>{{
+                    category.name_nepali|default:category.name }}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container-fluid px-0">
-        <div class="row gx-0">
-            <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
-                <div class="position-sticky">
-                    <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-                        <h6 class="mb-0">विषयसूची</h6>
-                        <button class="btn btn-sm d-md-none" type="button" onclick="toggleSidebar()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <ul class="nav flex-column">
-                        {% for category in categories %}
-                        <li class="nav-item" data-category="{{ category.slug }}">
-                            <div class="d-flex align-items-center category-container">
-                                <a class="nav-link category-link flex-grow-1 {% if current_category.slug == category.slug %}active{% endif %}" 
-                                   href="{% url 'reports:category' category.slug %}">
-                                    <i class="fas fa-folder{% if current_category.slug == category.slug %}-open{% endif %} me-2"></i>
-                                    {{ category.name_nepali|default:category.name }}
-                                </a>
-                                
-                                {% if category.sections.all %}
-                                <button class="btn btn-sm btn-link p-0 me-2 toggle-btn" 
-                                        onclick="toggleCategorySections('{{ category.slug }}')"
-                                        data-category="{{ category.slug }}">
-                                    <i class="fas fa-chevron-{% if current_category.slug == category.slug %}down{% else %}right{% endif %} fa-sm"></i>
-                                </button>
-                                {% endif %}
-                            </div>
-                            
-                            {% if category.sections.all %}
-                            <ul class="nav flex-column ms-3 sections-list" 
-                                id="sections-{{ category.slug }}"
-                                style="{% if current_category.slug == category.slug %}display: block;{% else %}display: none;{% endif %}">
-                                {% for section in category.sections.all %}
-                                <li class="nav-item">
-                                    <a class="nav-link section-link {% if current_section.slug == section.slug %}active{% endif %}" 
-                                       href="{% url 'reports:section' category.slug section.slug %}">
-                                        <i class="fas fa-file-alt me-2"></i>
-                                        <span class="section-title">{{ section.title_nepali|default:section.title }}</span>
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    
-                    <!-- Sidebar Footer -->
-                    <div class="sidebar-footer p-3 border-top mt-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">
-                                {{ categories|length }} श्रेणीहरू<br>
-                                {% with total_sections=categories|length %}{{ total_sections }}{% endwith %} खण्डहरू
-                            </small>
-                            <button class="btn btn-sm btn-outline-secondary" 
-                                    onclick="collapseAllSections()"
-                                    title="सबै बन्द गर्नुहोस्">
-                                <i class="fas fa-compress-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+      <div class="row gx-0">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar" id="sidebar">
+          <div class="position-sticky">
+            <div
+              class="d-flex align-items-center justify-content-between p-3 border-bottom"
+            >
+              <h6 class="mb-0">विषयसूची</h6>
+              <button
+                class="btn btn-sm d-md-none"
+                type="button"
+                onclick="toggleSidebar()"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <ul class="nav flex-column">
+              {% for category in categories %}
+              <li class="nav-item" data-category="{{ category.slug }}">
+                <div class="d-flex align-items-center category-container">
+                  <a
+                    class="nav-link category-link flex-grow-1 {% if current_category.slug == category.slug %}active{% endif %}"
+                    href="{% url 'reports:category' category.slug %}"
+                  >
+                    <i
+                      class="fas fa-folder{% if current_category.slug == category.slug %}-open{% endif %} me-2"
+                    ></i>
+                    {{ category.name_nepali|default:category.name }}
+                  </a>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 main-content py-4 px-4">
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    {% endfor %}
+                  {% if category.sections.all %}
+                  <button
+                    class="btn btn-sm btn-link p-0 me-2 toggle-btn"
+                    onclick="toggleCategorySections('{{ category.slug }}')"
+                    data-category="{{ category.slug }}"
+                  >
+                    <i
+                      class="fas fa-chevron-{% if current_category.slug == category.slug %}down{% else %}right{% endif %} fa-sm"
+                    ></i>
+                  </button>
+                  {% endif %}
+                </div>
+
+                {% if category.sections.all %}
+                <ul
+                  class="nav flex-column ms-3 sections-list"
+                  id="sections-{{ category.slug }}"
+                  style="{% if current_category.slug == category.slug %}display: block;{% else %}display: none;{% endif %}"
+                >
+                  {% for section in category.sections.all %}
+                  <li class="nav-item">
+                    <a
+                      class="nav-link section-link {% if current_section.slug == section.slug %}active{% endif %}"
+                      href="{% url 'reports:section' category.slug section.slug %}"
+                    >
+                      <i class="fas fa-file-alt me-2"></i>
+                      <span class="section-title"
+                        >{{ section.title_nepali|default:section.title }}</span
+                      >
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
                 {% endif %}
-                
-                {% block breadcrumb %}
-                {% if breadcrumbs %}
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
-                        {% for crumb in breadcrumbs %}
-                        {% if crumb.url %}
-                        <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.title }}</a></li>
-                        {% else %}
-                        <li class="breadcrumb-item active">{{ crumb.title }}</li>
-                        {% endif %}
-                        {% endfor %}
-                    </ol>
-                </nav>
-                {% endif %}
-                {% endblock %}
-                
-                {% block content %}
-                {% endblock %}
-            </main>
-        </div>
+              </li>
+              {% endfor %}
+            </ul>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer p-3 border-top mt-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                  {{ categories|length }} श्रेणीहरू<br />
+                  {% with total_sections=categories|length %}{{ total_sections
+                  }}{% endwith %} खण्डहरू
+                </small>
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  onclick="collapseAllSections()"
+                  title="सबै बन्द गर्नुहोस्"
+                >
+                  <i class="fas fa-compress-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 main-content py-4 px-4">
+          {% if messages %} {% for message in messages %}
+          <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+          {% endfor %} {% endif %} {% block breadcrumb %} {% if breadcrumbs %}
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a>
+              </li>
+              {% for crumb in breadcrumbs %} {% if crumb.url %}
+              <li class="breadcrumb-item">
+                <a href="{{ crumb.url }}">{{ crumb.title }}</a>
+              </li>
+              {% else %}
+              <li class="breadcrumb-item active">{{ crumb.title }}</li>
+              {% endif %} {% endfor %}
+            </ol>
+          </nav>
+          {% endif %} {% endblock %} {% block content %} {% endblock %}
+        </main>
+      </div>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>गढवा गाउँपालिका</h5>
-                    <p>डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p>&copy; {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।</p>
-                    <p class="small">
-                        <a href="{% url 'reports:sitemap' %}" class="text-light">साइटम्याप</a> |
-                        <a href="{% url 'reports:robots' %}" class="text-light">रोबोट्स</a>
-                    </p>
-                </div>
-            </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>लुङ्ग्री गाउँपालिका</h5>
+            <p>डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p>
+              &copy; {% now "Y" %} लुङ्ग्री गाउँपालिका। सबै अधिकार सुरक्षित।
+            </p>
+            <p class="small">
+              <a href="{% url 'reports:sitemap' %}" class="text-light"
+                >साइटम्याप</a
+              >
+              |
+              <a href="{% url 'reports:robots' %}" class="text-light"
+                >रोबोट्स</a
+              >
+            </p>
+          </div>
         </div>
+      </div>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
-        // Sidebar state management
-        let sidebarState = {
-            expandedCategories: new Set(),
-            currentCategory: '{{ current_category.slug|default:"" }}',
-            currentSection: '{{ current_section.slug|default:"" }}'
-        };
-        
-        // Initialize sidebar on load
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeSidebar();
-            loadSidebarState();
-        });
-        
-        function initializeSidebar() {
-            // Expand current category by default
-            if (sidebarState.currentCategory) {
-                sidebarState.expandedCategories.add(sidebarState.currentCategory);
-                updateCategoryDisplay(sidebarState.currentCategory);
-            }
+      // Sidebar state management
+      let sidebarState = {
+        expandedCategories: new Set(),
+        currentCategory: '{{ current_category.slug|default:"" }}',
+        currentSection: '{{ current_section.slug|default:"" }}',
+      };
+
+      // Initialize sidebar on load
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeSidebar();
+        loadSidebarState();
+      });
+
+      function initializeSidebar() {
+        // Expand current category by default
+        if (sidebarState.currentCategory) {
+          sidebarState.expandedCategories.add(sidebarState.currentCategory);
+          updateCategoryDisplay(sidebarState.currentCategory);
         }
-        
-        function toggleCategorySections(categorySlug) {
-            const isExpanded = sidebarState.expandedCategories.has(categorySlug);
-            
-            if (isExpanded) {
-                sidebarState.expandedCategories.delete(categorySlug);
-            } else {
-                sidebarState.expandedCategories.add(categorySlug);
-            }
-            
+      }
+
+      function toggleCategorySections(categorySlug) {
+        const isExpanded = sidebarState.expandedCategories.has(categorySlug);
+
+        if (isExpanded) {
+          sidebarState.expandedCategories.delete(categorySlug);
+        } else {
+          sidebarState.expandedCategories.add(categorySlug);
+        }
+
+        updateCategoryDisplay(categorySlug);
+        saveSidebarState();
+      }
+
+      function updateCategoryDisplay(categorySlug) {
+        const sectionsList = document.getElementById(
+          `sections-${categorySlug}`
+        );
+        const toggleBtn = document.querySelector(
+          `[data-category="${categorySlug}"]`
+        );
+        const categoryLink = document.querySelector(
+          `[data-category="${categorySlug}"] .category-link`
+        );
+
+        if (!sectionsList || !toggleBtn) return;
+
+        const isExpanded = sidebarState.expandedCategories.has(categorySlug);
+
+        // Update sections visibility
+        sectionsList.style.display = isExpanded ? "block" : "none";
+
+        // Update toggle button icon
+        const icon = toggleBtn.querySelector("i");
+        if (icon) {
+          icon.className = isExpanded
+            ? "fas fa-chevron-down fa-sm"
+            : "fas fa-chevron-right fa-sm";
+        }
+
+        // Update folder icon
+        if (categoryLink) {
+          const folderIcon = categoryLink.querySelector(
+            ".fa-folder, .fa-folder-open"
+          );
+          if (folderIcon) {
+            folderIcon.className = isExpanded
+              ? "fas fa-folder-open me-2"
+              : "fas fa-folder me-2";
+          }
+        }
+      }
+
+      function collapseAllSections() {
+        // Clear all expanded categories except current
+        sidebarState.expandedCategories.clear();
+
+        // Keep current category expanded
+        if (sidebarState.currentCategory) {
+          sidebarState.expandedCategories.add(sidebarState.currentCategory);
+        }
+
+        // Update all category displays
+        document.querySelectorAll("[data-category]").forEach((element) => {
+          const categorySlug = element.getAttribute("data-category");
+          if (categorySlug) {
             updateCategoryDisplay(categorySlug);
-            saveSidebarState();
-        }
-        
-        function updateCategoryDisplay(categorySlug) {
-            const sectionsList = document.getElementById(`sections-${categorySlug}`);
-            const toggleBtn = document.querySelector(`[data-category="${categorySlug}"]`);
-            const categoryLink = document.querySelector(`[data-category="${categorySlug}"] .category-link`);
-            
-            if (!sectionsList || !toggleBtn) return;
-            
-            const isExpanded = sidebarState.expandedCategories.has(categorySlug);
-            
-            // Update sections visibility
-            sectionsList.style.display = isExpanded ? 'block' : 'none';
-            
-            // Update toggle button icon
-            const icon = toggleBtn.querySelector('i');
-            if (icon) {
-                icon.className = isExpanded ? 'fas fa-chevron-down fa-sm' : 'fas fa-chevron-right fa-sm';
-            }
-            
-            // Update folder icon
-            if (categoryLink) {
-                const folderIcon = categoryLink.querySelector('.fa-folder, .fa-folder-open');
-                if (folderIcon) {
-                    folderIcon.className = isExpanded ? 'fas fa-folder-open me-2' : 'fas fa-folder me-2';
-                }
-            }
-        }
-        
-        function collapseAllSections() {
-            // Clear all expanded categories except current
-            sidebarState.expandedCategories.clear();
-            
-            // Keep current category expanded
-            if (sidebarState.currentCategory) {
-                sidebarState.expandedCategories.add(sidebarState.currentCategory);
-            }
-            
-            // Update all category displays
-            document.querySelectorAll('[data-category]').forEach(element => {
-                const categorySlug = element.getAttribute('data-category');
-                if (categorySlug) {
-                    updateCategoryDisplay(categorySlug);
-                }
-            });
-            
-            saveSidebarState();
-        }
-        
-        function saveSidebarState() {
-            try {
-                const state = {
-                    expandedCategories: Array.from(sidebarState.expandedCategories),
-                    currentCategory: sidebarState.currentCategory,
-                    currentSection: sidebarState.currentSection
-                };
-                localStorage.setItem('gadhawa_sidebar_state', JSON.stringify(state));
-            } catch (e) {
-                console.log('Could not save sidebar state:', e);
-            }
-        }
-        
-        function loadSidebarState() {
-            try {
-                const saved = localStorage.getItem('gadhawa_sidebar_state');
-                if (saved) {
-                    const state = JSON.parse(saved);
-                    if (state.expandedCategories && Array.isArray(state.expandedCategories)) {
-                        state.expandedCategories.forEach(categorySlug => {
-                            sidebarState.expandedCategories.add(categorySlug);
-                            updateCategoryDisplay(categorySlug);
-                        });
-                    }
-                }
-            } catch (e) {
-                console.log('Could not load sidebar state:', e);
-            }
-        }
-        
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('show');
-        }
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const isClickInsideSidebar = sidebar.contains(event.target);
-            const isClickOnToggle = event.target.closest('[data-bs-toggle="collapse"]');
-            
-            if (!isClickInsideSidebar && !isClickOnToggle && window.innerWidth <= 768) {
-                sidebar.classList.remove('show');
-            }
+          }
         });
-        
-        // Print functionality
-        function printPage() {
-            window.print();
+
+        saveSidebarState();
+      }
+
+      function saveSidebarState() {
+        try {
+          const state = {
+            expandedCategories: Array.from(sidebarState.expandedCategories),
+            currentCategory: sidebarState.currentCategory,
+            currentSection: sidebarState.currentSection,
+          };
+          localStorage.setItem("lungri_sidebar_state", JSON.stringify(state));
+        } catch (e) {
+          console.log("Could not save sidebar state:", e);
         }
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+      }
+
+      function loadSidebarState() {
+        try {
+          const saved = localStorage.getItem("lungri_sidebar_state");
+          if (saved) {
+            const state = JSON.parse(saved);
+            if (
+              state.expandedCategories &&
+              Array.isArray(state.expandedCategories)
+            ) {
+              state.expandedCategories.forEach((categorySlug) => {
+                sidebarState.expandedCategories.add(categorySlug);
+                updateCategoryDisplay(categorySlug);
+              });
+            }
+          }
+        } catch (e) {
+          console.log("Could not load sidebar state:", e);
+        }
+      }
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("show");
+      }
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", function (event) {
+        const sidebar = document.getElementById("sidebar");
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnToggle = event.target.closest(
+          '[data-bs-toggle="collapse"]'
+        );
+
+        if (
+          !isClickInsideSidebar &&
+          !isClickOnToggle &&
+          window.innerWidth <= 768
+        ) {
+          sidebar.classList.remove("show");
+        }
+      });
+
+      // Print functionality
+      function printPage() {
+        window.print();
+      }
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
             });
+          }
         });
+      });
     </script>
-    
+
     <style>
+      .sidebar {
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+      }
+
+      .sidebar .nav-link {
+        color: #495057;
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .sidebar .nav-link.active {
+        background-color: #007bff;
+        color: white !important;
+        font-weight: 500;
+      }
+
+      .sidebar .category-link {
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .sidebar .section-link {
+        font-size: 0.85rem;
+        padding-left: 1rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+      }
+
+      .sidebar .category-container {
+        border-radius: 4px;
+        margin-bottom: 2px;
+      }
+
+      .sidebar .category-container:hover {
+        background-color: #f1f3f4;
+      }
+
+      .sidebar .toggle-btn {
+        color: #6c757d;
+        border: none;
+        background: none;
+        padding: 0.25rem;
+        width: 24px;
+        height: 24px;
+      }
+
+      .sidebar .toggle-btn:hover {
+        color: #007bff;
+        background-color: #e9ecef;
+        border-radius: 50%;
+      }
+
+      .sidebar .sections-list {
+        border-left: 2px solid #e9ecef;
+        margin-left: 1rem;
+        padding-left: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar .section-title {
+        line-height: 1.3;
+        display: block;
+      }
+
+      .sidebar-footer {
+        background-color: #f1f3f4;
+        font-size: 0.8rem;
+      }
+
+      /* Mobile Sidebar */
+      @media (max-width: 767.98px) {
         .sidebar {
-            height: calc(100vh - 60px);
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-right: 1px solid #dee2e6;
+          position: fixed;
+          top: 60px;
+          left: -100%;
+          width: 280px;
+          z-index: 1050;
+          transition: left 0.3s ease;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         }
-        
-        .sidebar .nav-link {
-            color: #495057;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
+
+        .sidebar.show {
+          left: 0;
         }
-        
-        .sidebar .nav-link:hover {
-            background-color: #e9ecef;
-            color: #007bff;
-            text-decoration: none;
-        }
-        
-        .sidebar .nav-link.active {
-            background-color: #007bff;
-            color: white !important;
-            font-weight: 500;
-        }
-        
-        .sidebar .category-link {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        
-        .sidebar .section-link {
-            font-size: 0.85rem;
-            padding-left: 1rem;
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
-        }
-        
-        .sidebar .category-container {
-            border-radius: 4px;
-            margin-bottom: 2px;
-        }
-        
-        .sidebar .category-container:hover {
-            background-color: #f1f3f4;
-        }
-        
-        .sidebar .toggle-btn {
-            color: #6c757d;
-            border: none;
-            background: none;
-            padding: 0.25rem;
-            width: 24px;
-            height: 24px;
-        }
-        
-        .sidebar .toggle-btn:hover {
-            color: #007bff;
-            background-color: #e9ecef;
-            border-radius: 50%;
-        }
-        
-        .sidebar .sections-list {
-            border-left: 2px solid #e9ecef;
-            margin-left: 1rem;
-            padding-left: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar .section-title {
-            line-height: 1.3;
-            display: block;
-        }
-        
-        .sidebar-footer {
-            background-color: #f1f3f4;
-            font-size: 0.8rem;
-        }
-        
-        /* Mobile Sidebar */
-        @media (max-width: 767.98px) {
-            .sidebar {
-                position: fixed;
-                top: 60px;
-                left: -100%;
-                width: 280px;
-                z-index: 1050;
-                transition: left 0.3s ease;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            }
-            
-            .sidebar.show {
-                left: 0;
-            }
-        }
-        
-        /* Active state indicators */
-        .sidebar .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 60%;
-            background-color: #007bff;
-            border-radius: 0 2px 2px 0;
-        }
-        
-        .sidebar .category-link.active {
-            position: relative;
-        }
-        
-        .sidebar .section-link.active {
-            position: relative;
-            background-color: rgba(0, 123, 255, 0.1);
-            border-left: 3px solid #007bff;
-            margin-left: -3px;
-            padding-left: calc(1rem + 3px);
-        }
+      }
+
+      /* Active state indicators */
+      .sidebar .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        background-color: #007bff;
+        border-radius: 0 2px 2px 0;
+      }
+
+      .sidebar .category-link.active {
+        position: relative;
+      }
+
+      .sidebar .section-link.active {
+        position: relative;
+        background-color: rgba(0, 123, 255, 0.1);
+        border-left: 3px solid #007bff;
+        margin-left: -3px;
+        padding-left: calc(1rem + 3px);
+      }
     </style>
-    
+
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

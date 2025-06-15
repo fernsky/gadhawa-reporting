@@ -7,17 +7,18 @@ import os
 import tempfile
 from weasyprint import HTML, CSS
 
+
 def test_full_report_structure():
     """Test TOC page numbering with exact PDF report structure"""
     print("🔍 Testing full report structure with TOC page numbering...")
-    
+
     # Create HTML content that exactly matches pdf_full_report.html structure
     html_content = """
     <!DOCTYPE html>
     <html lang="ne">
     <head>
         <meta charset="UTF-8">
-        <title>गढवा गाउँपालिका - पूर्ण प्रतिवेदन</title>
+        <title>लुङ्ग्री गाउँपालिका - पूर्ण प्रतिवेदन</title>
         
         <style>
             /* Custom Nepali counter style */
@@ -33,7 +34,7 @@ def test_full_report_structure():
                 margin: 2cm 1.5cm 3cm 1.5cm;
                 
                 @bottom-right {
-                    content: counter(page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+                    content: counter(page, nepali-numerals) " | लुङ्ग्री गाउँपालिकाको पार्श्वचित्र";
                     font-size: 9pt;
                     color: #666;
                     font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
@@ -192,7 +193,7 @@ def test_full_report_structure():
                     </div>
                     <div style="flex-grow: 1;">
                         <div style="color: #1e3a8a; font-size: 20pt; font-weight: 700; margin-bottom: 0.5em;">
-                            गढवा गाउँपालिका
+                            लुङ्ग्री गाउँपालिका
                         </div>
                         <div style="color: #1e40af; font-size: 16pt; font-weight: 600; margin-bottom: 0.5em;">
                             गाउँकार्यपालिकाको कार्यालय
@@ -278,7 +279,7 @@ def test_full_report_structure():
                     </h2>
                     
                     <div class="content-section" style="margin-left: 0;">
-                        <p>गढवा गाउँपालिकाको कुल जनसंख्या २०७८ को जनगणना अनुसार ३२,४५६ रहेको छ।</p>
+                        <p>लुङ्ग्री गाउँपालिकाको कुल जनसंख्या २०७८ को जनगणना अनुसार ३२,४५६ रहेको छ।</p>
                         <p>यो संख्यामा पुरुष १६,२३४ र महिला १६,२२२ रहेका छन्।</p>
                     </div>
                 </div>
@@ -343,25 +344,25 @@ def test_full_report_structure():
     </body>
     </html>
     """
-    
+
     try:
         # Generate PDF
         html_doc = HTML(string=html_content)
         pdf_bytes = html_doc.write_pdf()
-        
+
         # Save to file
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as f:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
             f.write(pdf_bytes)
             temp_path = f.name
-        
+
         print(f"✅ Full report test PDF generated: {temp_path}")
         print(f"📏 PDF size: {len(pdf_bytes)} bytes")
-        
+
         # Open PDF
         abs_path = os.path.abspath(temp_path)
-        if os.name == 'nt':  # Windows
+        if os.name == "nt":  # Windows
             os.startfile(abs_path)
-        
+
         print("📖 Please verify TOC page numbers:")
         print("   - Cover page: No page number")
         print("   - TOC page: Should show page २ (2)")
@@ -373,14 +374,16 @@ def test_full_report_structure():
         print("   - Section 2.2: Should show page ४ (4) in TOC")
         print("   - Category 3: Should show page ५ (5) in TOC")
         print("   - Section 3.1: Should show page ५ (5) in TOC")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_full_report_structure()

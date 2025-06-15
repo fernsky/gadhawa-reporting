@@ -2,13 +2,13 @@
 
 ## Directory Structure
 ```
-gadhawa-report/
+lungri-report/
 ├── docs/                           # Documentation
 │   ├── api/                        # API Documentation
 │   ├── design/                     # Design Specifications
 │   ├── project-overview.md
 │   └── report-structure.md
-├── gadhawa_report/                 # Django Project Root
+├── lungri_report/                 # Django Project Root
 │   ├── settings/                   # Environment-specific settings
 │   │   ├── __init__.py
 │   │   ├── base.py                # Common settings

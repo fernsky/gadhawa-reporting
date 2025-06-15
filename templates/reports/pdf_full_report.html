@@ -1,142 +1,201 @@
-{% extends 'reports/pdf_base.html' %}
-{% load nepali_filters %}
-
-{% block title %}गढवा गाउँपालिका - पूर्ण प्रतिवेदन{% endblock %}
-
-{% block content %}
+{% extends 'reports/pdf_base.html' %} {% load nepali_filters %} {% block title
+%}लुङ्ग्री गाउँपालिका - पूर्ण प्रतिवेदन{% endblock %} {% block content %}
 <!-- Cover Page -->
 <div class="cover-page">
-    <div style="text-align: center; margin-bottom: 4cm;">            
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2cm;">
-            <div style="width: 80px; height: 80px;">
-                <!-- Nepal Government Logo placeholder -->
-            </div>
-            <div style="flex-grow: 1;">
-                <div style="color: #1e3a8a; font-size: 20pt; font-weight: 700; margin-bottom: 0.5em;">
-                    गढवा गाउँपालिका
-                </div>
-                <div style="color: #1e40af; font-size: 16pt; font-weight: 600; margin-bottom: 0.5em;">
-                    गाउँकार्यपालिकाको कार्यालय
-                </div>
-                <div style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em;">
-                    लुम्बिनी प्रदेश, नेपाल सरकार
-                </div>
-            </div>
-            <div style="width: 80px; height: 80px;">
-                <!-- Municipality Logo placeholder -->
-            </div>
+  <div style="text-align: center; margin-bottom: 4cm">
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2cm;
+      "
+    >
+      <div style="width: 80px; height: 80px">
+        <!-- Nepal Government Logo placeholder -->
+      </div>
+      <div style="flex-grow: 1">
+        <div
+          style="
+            color: #1e3a8a;
+            font-size: 20pt;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+          "
+        >
+          लुङ्ग्री गाउँपालिका
         </div>
-        
-        <!-- Main Title Section -->
-        <div style="color: #dc2626; padding: 1.5em; margin: 2cm 0; font-size: 24pt; font-weight: 700;">
-            गाउँपालिका पार्श्वचित्र
+        <div
+          style="
+            color: #1e40af;
+            font-size: 16pt;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+          "
+        >
+          गाउँकार्यपालिकाको कार्यालय
         </div>
+        <div style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em">
+          लुम्बिनी प्रदेश, नेपाल सरकार
+        </div>
+      </div>
+      <div style="width: 80px; height: 80px">
+        <!-- Municipality Logo placeholder -->
+      </div>
+    </div>
 
-        <!-- Bottom Section -->
-        <div style="color: #0f172a; padding: 1em; margin-top: 1cm;">
-            <div style="font-size: 16pt; font-weight: 600;">मस्यौदा प्रतिवेदन</div>
-            <div style="font-size: 18pt; font-weight: 700;">२०८१</div>
-        </div>
+    <!-- Main Title Section -->
+    <div
+      style="
+        color: #dc2626;
+        padding: 1.5em;
+        margin: 2cm 0;
+        font-size: 24pt;
+        font-weight: 700;
+      "
+    >
+      गाउँपालिका पार्श्वचित्र
     </div>
-    
-    <!-- Publication Info -->
-    {% if publication_settings %}
-    <div style="position: absolute; bottom: 2cm; left: 50%; transform: translateX(-50%); text-align: center; font-size: 10pt; color: #64748b;">
-        <div>प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j" }}</div>
-        {% if publication_settings.version %}
-        <div>संस्करण: {{ publication_settings.version }}</div>
-        {% endif %}
+
+    <!-- Bottom Section -->
+    <div style="color: #0f172a; padding: 1em; margin-top: 1cm">
+      <div style="font-size: 16pt; font-weight: 600">मस्यौदा प्रतिवेदन</div>
+      <div style="font-size: 18pt; font-weight: 700">२०८१</div>
     </div>
+  </div>
+
+  <!-- Publication Info -->
+  {% if publication_settings %}
+  <div
+    style="
+      position: absolute;
+      bottom: 2cm;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 10pt;
+      color: #64748b;
+    "
+  >
+    <div>
+      प्रकाशन मिति: {{ publication_settings.publication_date|nepali_date:"Y F j"
+      }}
+    </div>
+    {% if publication_settings.version %}
+    <div>संस्करण: {{ publication_settings.version }}</div>
     {% endif %}
+  </div>
+  {% endif %}
 </div>
 
 <!-- Table of Contents -->
 <div class="toc-page">
-    <h1 class="toc-title" style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9;">विषयसूची</h1>
-    
-    <!-- Hardcoded Introduction Chapter TOC -->
-    <div class="toc-item level-1">
-        <span class="toc-link">१. परिचय</span>
-        <span class="page-ref"><a href="#category-introduction"></a></span>
-    </div>
-    
-    <div class="toc-item level-2">
-        <span class="toc-link">१.१ पृष्ठभूमि</span>
-        <span class="page-ref"><a href="#section-background"></a></span>
-    </div>
-    
-    <div class="toc-item level-2">
-        <span class="toc-link">१.२ उद्देश्य</span>
-        <span class="page-ref"><a href="#section-objectives"></a></span>
-    </div>
-    
-    <div class="toc-item level-2">
-        <span class="toc-link">१.३ कानूनी तथा नीतिगत आधारहरू</span>
-        <span class="page-ref"><a href="#section-legal-policy-framework"></a></span>
-    </div>
-    
-    <div class="toc-item level-2">
-        <span class="toc-link">१.४ तयारीका चरणहरू</span>
-        <span class="page-ref"><a href="#section-preparation-phases"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.१ वस्तुस्थिति विवरण ढाँचा, औजार तथा कार्यविधि तयारी</span>
-        <span class="page-ref"><a href="#section-format-tools-procedure"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.२ वस्तुस्थिति विवरण तयारी कार्यशाला</span>
-        <span class="page-ref"><a href="#section-preparation-workshop"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.३ सहजकर्ता तथा स्वयंसेवी गणक छनौट अभिमुखीकरण र परिचालन</span>
-        <span class="page-ref"><a href="#section-facilitator-volunteer-selection"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.४ तथ्याङ्क संकलन</span>
-        <span class="page-ref"><a href="#section-data-collection"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.५ तथ्याङ्क प्रशोधन तथा विश्लेषण र स्रोत नक्सा तयारी</span>
-        <span class="page-ref"><a href="#section-data-processing-analysis"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.६ वस्तुस्थिति विवरणको मस्यौदा तयारी</span>
-        <span class="page-ref"><a href="#section-draft-report-preparation"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.७ वस्तुस्थिति विवरण सुझाव संकलन</span>
-        <span class="page-ref"><a href="#section-feedback-collection"></a></span>
-    </div>
-    
-    <div class="toc-item level-3">
-        <span class="toc-link">१.४.८ गाउँ वस्तुस्थिति विवरण अन्तिम प्रतिवेदन तयारी</span>
-        <span class="page-ref"><a href="#section-final-report-preparation"></a></span>
-    </div>
-    
-    <div class="toc-item level-2">
-        <span class="toc-link">१.५ वस्तुस्थिति विवरणको सीमा</span>
-        <span class="page-ref"><a href="#section-scope-of-report"></a></span>
-    </div>
-    
-    <!-- Other categories would go here when added -->
+  <h1
+    class="toc-title"
+    style="color: #1e3a8a; border-bottom: 3px solid #0ea5e9"
+  >
+    विषयसूची
+  </h1>
+
+  <!-- Hardcoded Introduction Chapter TOC -->
+  <div class="toc-item level-1">
+    <span class="toc-link">१. परिचय</span>
+    <span class="page-ref"><a href="#category-introduction"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">१.१ पृष्ठभूमि</span>
+    <span class="page-ref"><a href="#section-background"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">१.२ उद्देश्य</span>
+    <span class="page-ref"><a href="#section-objectives"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">१.३ कानूनी तथा नीतिगत आधारहरू</span>
+    <span class="page-ref"><a href="#section-legal-policy-framework"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">१.४ तयारीका चरणहरू</span>
+    <span class="page-ref"><a href="#section-preparation-phases"></a></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link"
+      >१.४.१ वस्तुस्थिति विवरण ढाँचा, औजार तथा कार्यविधि तयारी</span
+    >
+    <span class="page-ref"><a href="#section-format-tools-procedure"></a></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link">१.४.२ वस्तुस्थिति विवरण तयारी कार्यशाला</span>
+    <span class="page-ref"><a href="#section-preparation-workshop"></a></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link"
+      >१.४.३ सहजकर्ता तथा स्वयंसेवी गणक छनौट अभिमुखीकरण र परिचालन</span
+    >
+    <span class="page-ref"
+      ><a href="#section-facilitator-volunteer-selection"></a
+    ></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link">१.४.४ तथ्याङ्क संकलन</span>
+    <span class="page-ref"><a href="#section-data-collection"></a></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link"
+      >१.४.५ तथ्याङ्क प्रशोधन तथा विश्लेषण र स्रोत नक्सा तयारी</span
+    >
+    <span class="page-ref"
+      ><a href="#section-data-processing-analysis"></a
+    ></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link">१.४.६ वस्तुस्थिति विवरणको मस्यौदा तयारी</span>
+    <span class="page-ref"
+      ><a href="#section-draft-report-preparation"></a
+    ></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link">१.४.७ वस्तुस्थिति विवरण सुझाव संकलन</span>
+    <span class="page-ref"><a href="#section-feedback-collection"></a></span>
+  </div>
+
+  <div class="toc-item level-3">
+    <span class="toc-link"
+      >१.४.८ गाउँ वस्तुस्थिति विवरण अन्तिम प्रतिवेदन तयारी</span
+    >
+    <span class="page-ref"
+      ><a href="#section-final-report-preparation"></a
+    ></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">१.५ वस्तुस्थिति विवरणको सीमा</span>
+    <span class="page-ref"><a href="#section-scope-of-report"></a></span>
+  </div>
+
+  <!-- Other categories would go here when added -->
 </div>
 
 <!-- Note: Lists of figures and tables can be added here when content is available -->
 
 <!-- Main Content Start -->
 <div class="main-content-start">
-    <!-- Include Hardcoded Introduction Chapter -->
-    {% include 'reports/partials/introduction/introduction_complete.html' %}
-    
-    <!-- Placeholder for additional chapters -->
-    <!-- Other chapters would be added here as separate partials -->
+  <!-- Include Hardcoded Introduction Chapter -->
+  {% include 'reports/partials/introduction/introduction_complete.html' %}
+
+  <!-- Placeholder for additional chapters -->
+  <!-- Other chapters would be added here as separate partials -->
 </div>
 
 {% endblock %}

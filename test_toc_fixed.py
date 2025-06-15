@@ -6,10 +6,11 @@ import os
 import tempfile
 from weasyprint import HTML, CSS
 
+
 def test_toc_page_numbering():
     """Test if TOC page numbering works with the fixed CSS"""
     print("🔍 Testing TOC page numbering with fixed CSS...")
-    
+
     # Create HTML content similar to your PDF report structure
     html_content = """
     <!DOCTYPE html>
@@ -30,7 +31,7 @@ def test_toc_page_numbering():
                 margin: 2cm 1.5cm 3cm 1.5cm;
                 
                 @bottom-right {
-                    content: counter(page, nepali-numerals) " | गढवा गाउँपालिकाको पार्श्वचित्र";
+                    content: counter(page, nepali-numerals) " | लुङ्ग्री गाउँपालिकाको पार्श्वचित्र";
                     font-size: 9pt;
                     color: #666;
                     font-family: 'Noto Sans Devanagari', 'DejaVu Sans', sans-serif;
@@ -162,7 +163,7 @@ def test_toc_page_numbering():
         <!-- Cover Page -->
         <div class="cover-page">
             <div style="color: #dc2626; font-size: 24pt; font-weight: 700;">
-                गढवा गाउँपालिका
+                लुङ्ग्री गाउँपालिका
             </div>
             <div style="color: #1e40af; font-size: 18pt; margin-top: 1em;">
                 पार्श्वचित्र प्रतिवेदन
@@ -204,7 +205,7 @@ def test_toc_page_numbering():
             <div class="section-break" id="category-1">
                 <h1 class="category-title">परिच्छेद – १ः जनसांख्यिकीय विवरण</h1>
                 <div class="content-section">
-                    <p>गढवा गाउँपालिकाको जनसांख्यिकीय विवरणमा कुल जनसंख्या, घरधुरी संख्या, शिक्षा दर, र अन्य महत्वपूर्ण तथ्याङ्कहरू समावेश छन्।</p>
+                    <p>लुङ्ग्री गाउँपालिकाको जनसांख्यिकीय विवरणमा कुल जनसंख्या, घरधुरी संख्या, शिक्षा दर, र अन्य महत्वपूर्ण तथ्याङ्कहरू समावेश छन्।</p>
                     <p>यस क्षेत्रमा पुरुष र महिलाको अनुपात, उमेर समूह अनुसारको विभाजन, र जातीय संरचनाको विस्तृत विश्लेषण प्रस्तुत गरिएको छ।</p>
                 </div>
             </div>
@@ -244,39 +245,41 @@ def test_toc_page_numbering():
     </body>
     </html>
     """
-    
+
     try:
         # Generate PDF
         html_doc = HTML(string=html_content)
         pdf_bytes = html_doc.write_pdf()
-        
+
         # Save to file
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as f:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
             f.write(pdf_bytes)
             temp_path = f.name
-        
+
         print(f"✅ Test PDF generated: {temp_path}")
         print(f"📏 PDF size: {len(pdf_bytes)} bytes")
-        
+
         # Open PDF
         abs_path = os.path.abspath(temp_path)
-        if os.name == 'nt':  # Windows
+        if os.name == "nt":  # Windows
             os.startfile(abs_path)
-        
+
         print("📖 Please check if the TOC shows correct page numbers:")
         print("   - Category 1 should be on page ३ (3)")
         print("   - Category 2 should be on page ४ (4)")
         print("   - Category 3 should be on page ५ (5)")
         print("   - Category 4 should be on page ६ (6)")
         print("   - Category 5 should be on page ७ (7)")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     test_toc_page_numbering()

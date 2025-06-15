@@ -1,26 +1,22 @@
-{% extends 'reports/base.html' %}
-{% load static %}
-{% load nepali_filters %}
-
-{% block title %}गढवा गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन{% endblock %}
-
-{% block description %}गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन। जनसंख्या, आर्थिक, सामाजिक, वातावरणीय र पूर्वाधार विकासका विस्तृत तथ्यांक र विश्लेषण।{% endblock %}
-
-{% block keywords %}गढवा, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल, जनसंख्या, आर्थिक अवस्था, सामाजिक संकेतक, वातावरण, पूर्वाधार, सुशासन{% endblock %}
-
-{% block structured_data %}
+{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
+block title %}लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन{%
+endblock %} {% block description %}लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल
+र वार्षिक प्रतिवेदन। जनसंख्या, आर्थिक, सामाजिक, वातावरणीय र पूर्वाधार विकासका
+विस्तृत तथ्यांक र विश्लेषण।{% endblock %} {% block keywords %}लुङ्ग्री,
+गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल, जनसंख्या, आर्थिक अवस्था, सामाजिक
+संकेतक, वातावरण, पूर्वाधार, सुशासन{% endblock %} {% block structured_data %}
 <script type="application/ld+json">
-{
+  {
     "@context": "https://schema.org",
     "@type": "GovernmentOrganization",
-    "name": "गढवा गाउँपालिका",
-    "alternateName": "Gadhawa Rural Municipality",
-    "description": "गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
+    "name": "लुङ्ग्री गाउँपालिका",
+    "alternateName": "lungri Rural Municipality",
+    "description": "लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
     "url": "{{ request.build_absolute_uri }}",
     "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "NP",
-        "addressLocality": "गढवा"
+      "@type": "PostalAddress",
+      "addressCountry": "NP",
+      "addressLocality": "लुङ्ग्री"
     },
     "sameAs": [],
     "publishingPrinciples": "{{ request.build_absolute_uri }}",
@@ -28,217 +24,247 @@
     "datePublished": "{{ publication_settings.publication_date|date:'c' }}",
     "dateModified": "{{ publication_settings.last_updated|date:'c' }}",
     "publisher": {
-        "@type": "GovernmentOrganization",
-        "name": "गढवा गाउँपालिका"
+      "@type": "GovernmentOrganization",
+      "name": "लुङ्ग्री गाउँपालिका"
     }
-}
+  }
 </script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <!-- Hero Section -->
 <section class="content-header text-center mb-5">
-    <h1 class="display-4 mb-3">गढवा गाउँपालिका</h1>
-    <p class="lead text-muted mb-4">डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
-    
-    {% if publication_settings %}
-    <div class="row justify-content-center mb-4">
-        <div class="col-md-8">
-            <div class="bg-light rounded-3 p-4 mb-3">
-                <div class="row text-center">
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
-                        <h6>प्रकाशन मिति</h6>
-                        <p class="mb-0">{{ publication_settings.publication_date|nepali_date:"Y F j" }}</p>
-                    </div>
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <i class="fas fa-edit fa-2x text-success mb-2"></i>
-                        <h6>अन्तिम अद्यावधिक</h6>
-                        <p class="mb-0">{{ publication_settings.last_updated|nepali_date:"Y F j" }}</p>
-                    </div>
-                    <div class="col-md-4">
-                        <i class="fas fa-file-pdf fa-2x text-danger mb-2"></i>
-                        <h6>संस्करण</h6>
-                        <p class="mb-0">{{ publication_settings.version }}</p>
-                    </div>
-                </div>
-            </div>
+  <h1 class="display-4 mb-3">लुङ्ग्री गाउँपालिका</h1>
+  <p class="lead text-muted mb-4">डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
+
+  {% if publication_settings %}
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <div class="bg-light rounded-3 p-4 mb-3">
+        <div class="row text-center">
+          <div class="col-md-4 mb-3 mb-md-0">
+            <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
+            <h6>प्रकाशन मिति</h6>
+            <p class="mb-0">
+              {{ publication_settings.publication_date|nepali_date:"Y F j" }}
+            </p>
+          </div>
+          <div class="col-md-4 mb-3 mb-md-0">
+            <i class="fas fa-edit fa-2x text-success mb-2"></i>
+            <h6>अन्तिम अद्यावधिक</h6>
+            <p class="mb-0">
+              {{ publication_settings.last_updated|nepali_date:"Y F j" }}
+            </p>
+          </div>
+          <div class="col-md-4">
+            <i class="fas fa-file-pdf fa-2x text-danger mb-2"></i>
+            <h6>संस्करण</h6>
+            <p class="mb-0">{{ publication_settings.version }}</p>
+          </div>
         </div>
+      </div>
     </div>
-    {% endif %}
-    
-    <div class="d-flex justify-content-center gap-3 mb-4">
-        <a href="{% url 'reports:toc' %}" class="btn btn-primary btn-lg">
-            <i class="fas fa-list me-2"></i>सूचीपत्र हेर्नुहोस्
-        </a>
-        <a href="{% url 'reports:pdf_full' %}" class="btn btn-outline-primary btn-lg">
-            <i class="fas fa-download me-2"></i>PDF डाउनलोड
-        </a>
-    </div>
+  </div>
+  {% endif %}
+
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <a href="{% url 'reports:toc' %}" class="btn btn-primary btn-lg">
+      <i class="fas fa-list me-2"></i>सूचीपत्र हेर्नुहोस्
+    </a>
+    <a
+      href="{% url 'reports:pdf_full' %}"
+      class="btn btn-outline-primary btn-lg"
+    >
+      <i class="fas fa-download me-2"></i>PDF डाउनलोड
+    </a>
+  </div>
 </section>
 
 <!-- Quick Stats -->
 {% if stats %}
 <section class="mb-5">
-    <h2 class="h4 mb-4 text-center">मुख्य सांख्यिकीय विवरण</h2>
-    <div class="row g-4 justify-content-center">
-        {% for stat in stats %}
-        <div class="col-md-3 col-sm-6 mb-4">
-            <article class="text-center p-4 bg-light rounded-3 h-100">
-                <i class="{{ stat.icon }} fa-3x text-primary mb-3"></i>
-                <h3 class="h2 text-primary mb-2">{{ stat.value }}</h3>
-                <p class="mb-0">{{ stat.label }}</p>
-            </article>
-        </div>
-        {% endfor %}
+  <h2 class="h4 mb-4 text-center">मुख्य सांख्यिकीय विवरण</h2>
+  <div class="row g-4 justify-content-center">
+    {% for stat in stats %}
+    <div class="col-md-3 col-sm-6 mb-4">
+      <article class="text-center p-4 bg-light rounded-3 h-100">
+        <i class="{{ stat.icon }} fa-3x text-primary mb-3"></i>
+        <h3 class="h2 text-primary mb-2">{{ stat.value }}</h3>
+        <p class="mb-0">{{ stat.label }}</p>
+      </article>
     </div>
+    {% endfor %}
+  </div>
 </section>
 {% endif %}
 
 <!-- Categories Overview -->
 <section class="mb-5">
-    <h2 class="h4 mb-4">प्रतिवेदनका मुख्य विषयहरू</h2>
-    <div class="row g-4">
-        {% for category in categories %}
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <article class="bg-white rounded-3 shadow-sm p-4 h-100">
-                <header class="d-flex align-items-center mb-3">
-                    <i class="{{ category.icon|default:'fas fa-folder-open' }} me-2"></i>
-                    <h5 class="mb-0">{{ category.name_nepali|default:category.name }}</h5>
-                </header>
-                {% if category.description_nepali or category.description %}
-                <p class="text-muted mb-3">{{ category.description_nepali|default:category.description|truncatewords:20 }}</p>
-                {% endif %}
-                {% if category.sections.all %}
-                <div class="mb-3">
-                    <small class="text-muted">उप-विषयहरू:</small>
-                    <ul class="list-unstyled mt-2 mb-0">
-                        {% for section in category.sections.all|slice:":3" %}
-                        <li><i class="fas fa-chevron-right text-primary me-2"></i>{{ section.title_nepali }}</li>
-                        {% endfor %}
-                        {% if category.sections.all|length > 3 %}
-                        <li class="text-muted"><i>र {{ category.sections.all|length|add:"-3" }} अन्य...</i></li>
-                        {% endif %}
-                    </ul>
-                </div>
-                {% endif %}
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        {% if category.sections.all %}
-                        <small class="text-muted">
-                            <i class="fas fa-file-alt me-1"></i>{{ category.sections.all|length }} उप-विषय
-                        </small>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <a href="{% url 'reports:category' category.slug %}" class="btn btn-outline-primary btn-sm">
-                            विस्तार हेर्नुहोस्
-                        </a>
-                    </div>
-                </div>
-            </article>
+  <h2 class="h4 mb-4">प्रतिवेदनका मुख्य विषयहरू</h2>
+  <div class="row g-4">
+    {% for category in categories %}
+    <div class="col-lg-6 col-xl-4 mb-4">
+      <article class="bg-white rounded-3 shadow-sm p-4 h-100">
+        <header class="d-flex align-items-center mb-3">
+          <i class="{{ category.icon|default:'fas fa-folder-open' }} me-2"></i>
+          <h5 class="mb-0">{{ category.name_nepali|default:category.name }}</h5>
+        </header>
+        {% if category.description_nepali or category.description %}
+        <p class="text-muted mb-3">
+          {{
+          category.description_nepali|default:category.description|truncatewords:20
+          }}
+        </p>
+        {% endif %} {% if category.sections.all %}
+        <div class="mb-3">
+          <small class="text-muted">उप-विषयहरू:</small>
+          <ul class="list-unstyled mt-2 mb-0">
+            {% for section in category.sections.all|slice:":3" %}
+            <li>
+              <i class="fas fa-chevron-right text-primary me-2"></i>{{
+              section.title_nepali }}
+            </li>
+            {% endfor %} {% if category.sections.all|length > 3 %}
+            <li class="text-muted">
+              <i>र {{ category.sections.all|length|add:"-3" }} अन्य...</i>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-        {% endfor %}
+        {% endif %}
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            {% if category.sections.all %}
+            <small class="text-muted">
+              <i class="fas fa-file-alt me-1"></i>{{
+              category.sections.all|length }} उप-विषय
+            </small>
+            {% endif %}
+          </div>
+          <div>
+            <a
+              href="{% url 'reports:category' category.slug %}"
+              class="btn btn-outline-primary btn-sm"
+            >
+              विस्तार हेर्नुहोस्
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
+    {% endfor %}
+  </div>
 </section>
 
 <!-- Quick Actions -->
 <section class="mt-5 mb-5">
-    <div class="row g-4">
-        <div class="col-md-3 col-sm-6 mb-3">
-            <a href="{% url 'reports:search' %}" class="btn btn-outline-secondary w-100 py-3">
-                <i class="fas fa-search fa-2x mb-2 d-block"></i>
-                सामग्री खोज्नुहोस्
-            </a>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <a href="{% url 'reports:figures' %}" class="btn btn-outline-secondary w-100 py-3">
-                <i class="fas fa-images fa-2x mb-2 d-block"></i>
-                चित्रहरूको सूची
-            </a>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <a href="{% url 'reports:tables' %}" class="btn btn-outline-secondary w-100 py-3">
-                <i class="fas fa-table fa-2x mb-2 d-block"></i>
-                तालिकाहरूको सूची
-            </a>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <a href="{% url 'reports:pdf_full' %}" class="btn btn-outline-secondary w-100 py-3">
-                <i class="fas fa-file-pdf fa-2x mb-2 d-block"></i>
-                पूर्ण PDF
-            </a>
-        </div>
+  <div class="row g-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <a
+        href="{% url 'reports:search' %}"
+        class="btn btn-outline-secondary w-100 py-3"
+      >
+        <i class="fas fa-search fa-2x mb-2 d-block"></i>
+        सामग्री खोज्नुहोस्
+      </a>
     </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <a
+        href="{% url 'reports:figures' %}"
+        class="btn btn-outline-secondary w-100 py-3"
+      >
+        <i class="fas fa-images fa-2x mb-2 d-block"></i>
+        चित्रहरूको सूची
+      </a>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <a
+        href="{% url 'reports:tables' %}"
+        class="btn btn-outline-secondary w-100 py-3"
+      >
+        <i class="fas fa-table fa-2x mb-2 d-block"></i>
+        तालिकाहरूको सूची
+      </a>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <a
+        href="{% url 'reports:pdf_full' %}"
+        class="btn btn-outline-secondary w-100 py-3"
+      >
+        <i class="fas fa-file-pdf fa-2x mb-2 d-block"></i>
+        पूर्ण PDF
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- Publication Information -->
 {% if publication_settings %}
 <section class="mt-4 mb-5">
-    <div class="bg-white rounded-3 shadow-sm p-4">
-        <header class="mb-3">
-            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>प्रकाशन जानकारी</h5>
-        </header>
-        <div class="row">
-            <div class="col-md-6">
-                {% if publication_settings.editor_name %}
-                <p><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</p>
-                {% endif %}
-                {% if publication_settings.contact_email %}
-                <p><strong>सम्पर्क इमेल:</strong> 
-                    <a href="mailto:{{ publication_settings.contact_email }}">{{ publication_settings.contact_email }}</a>
-                </p>
-                {% endif %}
-            </div>
-            <div class="col-md-6">
-                {% if publication_settings.isbn %}
-                <p><strong>ISBN:</strong> {{ publication_settings.isbn }}</p>
-                {% endif %}
-                <p><strong>भाषा:</strong> नेपाली</p>
-                <p><strong>प्रकार:</strong> डिजिटल प्रतिवेदन</p>
-            </div>
-        </div>
-        {% if publication_settings.copyright_notice %}
-        <hr>
-        <p class="text-muted mb-0">
-            <i class="fas fa-copyright me-2"></i>{{ publication_settings.copyright_notice }}
+  <div class="bg-white rounded-3 shadow-sm p-4">
+    <header class="mb-3">
+      <h5 class="mb-0">
+        <i class="fas fa-info-circle me-2"></i>प्रकाशन जानकारी
+      </h5>
+    </header>
+    <div class="row">
+      <div class="col-md-6">
+        {% if publication_settings.editor_name %}
+        <p><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</p>
+        {% endif %} {% if publication_settings.contact_email %}
+        <p>
+          <strong>सम्पर्क इमेल:</strong>
+          <a href="mailto:{{ publication_settings.contact_email }}"
+            >{{ publication_settings.contact_email }}</a
+          >
         </p>
         {% endif %}
+      </div>
+      <div class="col-md-6">
+        {% if publication_settings.isbn %}
+        <p><strong>ISBN:</strong> {{ publication_settings.isbn }}</p>
+        {% endif %}
+        <p><strong>भाषा:</strong> नेपाली</p>
+        <p><strong>प्रकार:</strong> डिजिटल प्रतिवेदन</p>
+      </div>
     </div>
+    {% if publication_settings.copyright_notice %}
+    <hr />
+    <p class="text-muted mb-0">
+      <i class="fas fa-copyright me-2"></i>{{
+      publication_settings.copyright_notice }}
+    </p>
+    {% endif %}
+  </div>
 </section>
-{% endif %}
-{% endblock %}
-
-{% block extra_js %}
+{% endif %} {% endblock %} {% block extra_js %}
 <script>
-// Add animation to articles on scroll
-const observerOptions = {
+  // Add animation to articles on scroll
+  const observerOptions = {
     threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+    rootMargin: "0px 0px -50px 0px",
+  };
 
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = "1";
+        entry.target.style.transform = "translateY(0)";
+      }
     });
-}, observerOptions);
+  }, observerOptions);
 
-// Observe articles
-document.querySelectorAll('article').forEach(article => {
-    article.style.opacity = '0';
-    article.style.transform = 'translateY(20px)';
-    article.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  // Observe articles
+  document.querySelectorAll("article").forEach((article) => {
+    article.style.opacity = "0";
+    article.style.transform = "translateY(20px)";
+    article.style.transition = "opacity 0.6s ease, transform 0.6s ease";
     observer.observe(article);
-});
+  });
 
-// Track PDF downloads
-document.querySelectorAll('a[href*="pdf"]').forEach(link => {
-    link.addEventListener('click', function() {
-        console.log('PDF download initiated:', this.href);
+  // Track PDF downloads
+  document.querySelectorAll('a[href*="pdf"]').forEach((link) => {
+    link.addEventListener("click", function () {
+      console.log("PDF download initiated:", this.href);
     });
-});
+  });
 </script>
 {% endblock %}

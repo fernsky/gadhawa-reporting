@@ -1,433 +1,537 @@
-{% extends 'reports/base.html' %}
-{% load static %}
-{% load nepali_filters %}
-
-{% block title %}सूचीपत्र - गढवा गाउँपालिका{% endblock %}
-
-{% block description %}गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र। सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।{% endblock %}
-
-{% block keywords %}सूचीपत्र, विषयसूची, गढवा, गाउँपालिका, प्रतिवेदन{% endblock %}
-
-{% block breadcrumb %}
+{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
+block title %}सूचीपत्र - लुङ्ग्री गाउँपालिका{% endblock %} {% block description
+%}लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।
+सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।{% endblock %} {% block keywords
+%}सूचीपत्र, विषयसूची, लुङ्ग्री, गाउँपालिका, प्रतिवेदन{% endblock %} {% block
+breadcrumb %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
-        <li class="breadcrumb-item active">सूचीपत्र</li>
-    </ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a>
+    </li>
+    <li class="breadcrumb-item active">सूचीपत्र</li>
+  </ol>
 </nav>
-{% endblock %}
-
-{% block structured_data %}
+{% endblock %} {% block structured_data %}
 <script type="application/ld+json">
-{
+  {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "सूचीपत्र",
-    "description": "गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।",
+    "description": "लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।",
     "url": "{{ request.build_absolute_uri }}",
     "isPartOf": {
-        "@type": "WebSite",
-        "name": "गढवा गाउँपालिका",
-        "url": "{% url 'reports:home' %}"
+      "@type": "WebSite",
+      "name": "लुङ्ग्री गाउँपालिका",
+      "url": "{% url 'reports:home' %}"
     },
     "publisher": {
-        "@type": "GovernmentOrganization",
-        "name": "गढवा गाउँपालिका"
+      "@type": "GovernmentOrganization",
+      "name": "लुङ्ग्री गाउँपालिका"
     }
-}
+  }
 </script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="content-header">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h1><i class="fas fa-list me-3"></i>सूचीपत्र</h1>
-            <p class="lead text-muted">गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
-        </div>
-        <div class="no-print">
-            <div class="btn-group" role="group">
-                <a href="{% url 'reports:pdf_full' %}" class="btn btn-outline-primary">
-                    <i class="fas fa-file-pdf me-2"></i>पूर्ण PDF डाउनलोड
-                </a>
-                <button onclick="printPage()" class="btn btn-outline-secondary">
-                    <i class="fas fa-print me-2"></i>प्रिन्ट
-                </button>
-            </div>
-        </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1><i class="fas fa-list me-3"></i>सूचीपत्र</h1>
+      <p class="lead text-muted">
+        लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+      </p>
     </div>
+    <div class="no-print">
+      <div class="btn-group" role="group">
+        <a href="{% url 'reports:pdf_full' %}" class="btn btn-outline-primary">
+          <i class="fas fa-file-pdf me-2"></i>पूर्ण PDF डाउनलोड
+        </a>
+        <button onclick="printPage()" class="btn btn-outline-secondary">
+          <i class="fas fa-print me-2"></i>प्रिन्ट
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Publication Information -->
 {% if publication_settings %}
 <div class="card mb-4">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-8">
-                <h2 class="h4 mb-3">प्रकाशन विवरण</h2>
-                <table class="table table-borderless">
-                    <tr>
-                        <td class="fw-bold">शीर्षक:</td>
-                        <td>गढवा गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">प्रकाशन मिति:</td>
-                        <td>{{ publication_settings.publication_date|nepali_date:"Y F j" }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">संस्करण:</td>
-                        <td>{{ publication_settings.version }}</td>
-                    </tr>
-                    {% if publication_settings.editor_name %}
-                    <tr>
-                        <td class="fw-bold">सम्पादक:</td>
-                        <td>{{ publication_settings.editor_name }}</td>
-                    </tr>
-                    {% endif %}
-                    {% if publication_settings.isbn %}
-                    <tr>
-                        <td class="fw-bold">ISBN:</td>
-                        <td>{{ publication_settings.isbn }}</td>
-                    </tr>
-                    {% endif %}
-                </table>
-            </div>
-            <div class="col-md-4 text-center">
-                <div class="p-4 bg-light rounded">
-                    <i class="fas fa-city fa-4x text-primary mb-3"></i>
-                    <h5>गढवा गाउँपालिका</h5>
-                    <p class="text-muted">नेपाल सरकार<br>स्थानीय तह</p>
-                </div>
-            </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-8">
+        <h2 class="h4 mb-3">प्रकाशन विवरण</h2>
+        <table class="table table-borderless">
+          <tr>
+            <td class="fw-bold">शीर्षक:</td>
+            <td>लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</td>
+          </tr>
+          <tr>
+            <td class="fw-bold">प्रकाशन मिति:</td>
+            <td>
+              {{ publication_settings.publication_date|nepali_date:"Y F j" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="fw-bold">संस्करण:</td>
+            <td>{{ publication_settings.version }}</td>
+          </tr>
+          {% if publication_settings.editor_name %}
+          <tr>
+            <td class="fw-bold">सम्पादक:</td>
+            <td>{{ publication_settings.editor_name }}</td>
+          </tr>
+          {% endif %} {% if publication_settings.isbn %}
+          <tr>
+            <td class="fw-bold">ISBN:</td>
+            <td>{{ publication_settings.isbn }}</td>
+          </tr>
+          {% endif %}
+        </table>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="p-4 bg-light rounded">
+          <i class="fas fa-city fa-4x text-primary mb-3"></i>
+          <h5>लुङ्ग्री गाउँपालिका</h5>
+          <p class="text-muted">नेपाल सरकार<br />स्थानीय तह</p>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endif %}
 
 <!-- Table of Contents -->
 <div class="card">
-    <div class="card-header bg-primary text-white">
-        <h3 class="mb-0"><i class="fas fa-list-ul me-2"></i>विषयसूची</h3>
+  <div class="card-header bg-primary text-white">
+    <h3 class="mb-0"><i class="fas fa-list-ul me-2"></i>विषयसूची</h3>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th width="60">क्र.सं.</th>
+            <th>विषय</th>
+            <th width="120" class="text-center">उप-विषयहरू</th>
+            <th width="150" class="text-center no-print">कार्यहरू</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Front Matter -->
+          <tr class="table-info">
+            <td colspan="4" class="fw-bold">
+              <i class="fas fa-file-alt me-2"></i>प्रारम्भिक पृष्ठहरू
+            </td>
+          </tr>
+          <tr>
+            <td>i</td>
+            <td>
+              <a href="{% url 'reports:toc' %}" class="text-decoration-none">
+                सूचीपत्र
+              </a>
+            </td>
+            <td class="text-center">-</td>
+            <td class="text-center no-print">
+              <a
+                href="{% url 'reports:toc' %}"
+                class="btn btn-sm btn-outline-primary"
+                >हेर्नुहोस्</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>ii</td>
+            <td>
+              <a
+                href="{% url 'reports:figures' %}"
+                class="text-decoration-none"
+              >
+                चित्रहरूको सूची
+              </a>
+            </td>
+            <td class="text-center">{{ total_figures|nepali_digits }}</td>
+            <td class="text-center no-print">
+              <a
+                href="{% url 'reports:figures' %}"
+                class="btn btn-sm btn-outline-primary"
+                >हेर्नुहोस्</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>iii</td>
+            <td>
+              <a href="{% url 'reports:tables' %}" class="text-decoration-none">
+                तालिकाहरूको सूची
+              </a>
+            </td>
+            <td class="text-center">{{ total_tables|nepali_digits }}</td>
+            <td class="text-center no-print">
+              <a
+                href="{% url 'reports:tables' %}"
+                class="btn btn-sm btn-outline-primary"
+                >हेर्नुहोस्</a
+              >
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr class="table-success">
+            <td colspan="4" class="fw-bold">
+              <i class="fas fa-book me-2"></i>मुख्य सामग्री
+            </td>
+          </tr>
+
+          {% for category in categories %}
+          <tr>
+            <td class="fw-bold">
+              {{ category.order|default:forloop.counter|nepali_digits }}
+            </td>
+            <td>
+              <a
+                href="{% url 'reports:category' category.slug %}"
+                class="text-decoration-none fw-bold"
+              >
+                {{ category.name_nepali|default:category.name }}
+              </a>
+              {% if category.description_nepali or category.description %}
+              <br /><small class="text-muted"
+                >{{
+                category.description_nepali|default:category.description|truncatewords:20
+                }}</small
+              >
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <span class="badge bg-secondary"
+                >{{ category.sections.count|nepali_digits }}</span
+              >
+            </td>
+            <td class="text-center no-print">
+              <div class="btn-group btn-group-sm" role="group">
+                <a
+                  href="{% url 'reports:category' category.slug %}"
+                  class="btn btn-outline-primary"
+                  >हेर्नुहोस्</a
+                >
+                <a
+                  href="{% url 'reports:pdf_category' category.slug %}"
+                  class="btn btn-outline-secondary"
+                  >PDF</a
+                >
+              </div>
+            </td>
+          </tr>
+
+          {% for section in category.sections.all %}
+          <tr>
+            <td class="ps-4">
+              {{ category.order|default:forloop.parentloop.counter|nepali_digits
+              }}.{{ section.order|default:forloop.counter|nepali_digits }}
+            </td>
+            <td class="ps-4">
+              <a
+                href="{% url 'reports:section' category.slug section.slug %}"
+                class="text-decoration-none"
+              >
+                {{ section.title_nepali|default:section.title }}
+              </a>
+              {% if section.summary_nepali or section.summary %}
+              <br /><small class="text-muted"
+                >{{
+                section.summary_nepali|default:section.summary|truncatewords:15
+                }}</small
+              >
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if section.figures.count or section.tables.count %}
+              <small class="text-muted">
+                {% if section.figures.count %}{{
+                section.figures.count|nepali_digits }} चित्र{% endif %} {% if
+                section.figures.count and section.tables.count %}, {% endif %}
+                {% if section.tables.count %}{{
+                section.tables.count|nepali_digits }} तालिका{% endif %}
+              </small>
+              {% else %} - {% endif %}
+            </td>
+            <td class="text-center no-print">
+              <div class="btn-group btn-group-sm" role="group">
+                <a
+                  href="{% url 'reports:section' category.slug section.slug %}"
+                  class="btn btn-outline-primary"
+                  >हेर्नुहोस्</a
+                >
+                <a
+                  href="{% url 'reports:pdf_section' category.slug section.slug %}"
+                  class="btn btn-outline-secondary"
+                  >PDF</a
+                >
+              </div>
+            </td>
+          </tr>
+          {% endfor %} {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th width="60">क्र.सं.</th>
-                        <th>विषय</th>
-                        <th width="120" class="text-center">उप-विषयहरू</th>
-                        <th width="150" class="text-center no-print">कार्यहरू</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Front Matter -->
-                    <tr class="table-info">
-                        <td colspan="4" class="fw-bold">
-                            <i class="fas fa-file-alt me-2"></i>प्रारम्भिक पृष्ठहरू
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>i</td>
-                        <td>
-                            <a href="{% url 'reports:toc' %}" class="text-decoration-none">
-                                सूचीपत्र
-                            </a>
-                        </td>
-                        <td class="text-center">-</td>
-                        <td class="text-center no-print">
-                            <a href="{% url 'reports:toc' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>ii</td>
-                        <td>
-                            <a href="{% url 'reports:figures' %}" class="text-decoration-none">
-                                चित्रहरूको सूची
-                            </a>
-                        </td>
-                        <td class="text-center">{{ total_figures|nepali_digits }}</td>
-                        <td class="text-center no-print">
-                            <a href="{% url 'reports:figures' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>iii</td>
-                        <td>
-                            <a href="{% url 'reports:tables' %}" class="text-decoration-none">
-                                तालिकाहरूको सूची
-                            </a>
-                        </td>
-                        <td class="text-center">{{ total_tables|nepali_digits }}</td>
-                        <td class="text-center no-print">
-                            <a href="{% url 'reports:tables' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
-                        </td>
-                    </tr>
-                    
-                    <!-- Main Content -->
-                    <tr class="table-success">
-                        <td colspan="4" class="fw-bold">
-                            <i class="fas fa-book me-2"></i>मुख्य सामग्री
-                        </td>
-                    </tr>
-                    
-                    {% for category in categories %}
-                    <tr>
-                        <td class="fw-bold">{{ category.order|default:forloop.counter|nepali_digits }}</td>
-                        <td>
-                            <a href="{% url 'reports:category' category.slug %}" class="text-decoration-none fw-bold">
-                                {{ category.name_nepali|default:category.name }}
-                            </a>
-                            {% if category.description_nepali or category.description %}
-                            <br><small class="text-muted">{{ category.description_nepali|default:category.description|truncatewords:20 }}</small>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            <span class="badge bg-secondary">{{ category.sections.count|nepali_digits }}</span>
-                        </td>
-                        <td class="text-center no-print">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{% url 'reports:category' category.slug %}" class="btn btn-outline-primary">हेर्नुहोस्</a>
-                                <a href="{% url 'reports:pdf_category' category.slug %}" class="btn btn-outline-secondary">PDF</a>
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    {% for section in category.sections.all %}
-                    <tr>
-                        <td class="ps-4">{{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }}</td>
-                        <td class="ps-4">
-                            <a href="{% url 'reports:section' category.slug section.slug %}" class="text-decoration-none">
-                                {{ section.title_nepali|default:section.title }}
-                            </a>
-                            {% if section.summary_nepali or section.summary %}
-                            <br><small class="text-muted">{{ section.summary_nepali|default:section.summary|truncatewords:15 }}</small>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if section.figures.count or section.tables.count %}
-                            <small class="text-muted">
-                                {% if section.figures.count %}{{ section.figures.count|nepali_digits }} चित्र{% endif %}
-                                {% if section.figures.count and section.tables.count %}, {% endif %}
-                                {% if section.tables.count %}{{ section.tables.count|nepali_digits }} तालिका{% endif %}
-                            </small>
-                            {% else %}
-                            -
-                            {% endif %}
-                        </td>
-                        <td class="text-center no-print">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{% url 'reports:section' category.slug section.slug %}" class="btn btn-outline-primary">हेर्नुहोस्</a>
-                                <a href="{% url 'reports:pdf_section' category.slug section.slug %}" class="btn btn-outline-secondary">PDF</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Statistics Summary -->
 <div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>सामग्री सांख्यिकी</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <td><i class="fas fa-folder text-primary me-2"></i>कुल विषयहरू:</td>
-                        <td class="fw-bold">{{ categories.count|nepali_digits }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-file-alt text-success me-2"></i>कुल उप-विषयहरू:</td>
-                        <td class="fw-bold">{{ total_sections|nepali_digits }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-images text-info me-2"></i>कुल चित्रहरू:</td>
-                        <td class="fw-bold">{{ total_figures|nepali_digits }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-table text-warning me-2"></i>कुल तालिकाहरू:</td>
-                        <td class="fw-bold">{{ total_tables|nepali_digits }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-chart-bar me-2"></i>सामग्री सांख्यिकी
+        </h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <td><i class="fas fa-folder text-primary me-2"></i>कुल विषयहरू:</td>
+            <td class="fw-bold">{{ categories.count|nepali_digits }}</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="fas fa-file-alt text-success me-2"></i>कुल उप-विषयहरू:
+            </td>
+            <td class="fw-bold">{{ total_sections|nepali_digits }}</td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-images text-info me-2"></i>कुल चित्रहरू:</td>
+            <td class="fw-bold">{{ total_figures|nepali_digits }}</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="fas fa-table text-warning me-2"></i>कुल तालिकाहरू:
+            </td>
+            <td class="fw-bold">{{ total_tables|nepali_digits }}</td>
+          </tr>
+        </table>
+      </div>
     </div>
-    
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-download me-2"></i>डाउनलोड विकल्पहरू</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="{% url 'reports:pdf_full' %}" class="btn btn-primary">
-                        <i class="fas fa-file-pdf me-2"></i>पूर्ण प्रतिवेदन PDF
-                    </a>
-                    <hr>
-                    <h6>विषयवार PDF:</h6>
-                    {% for category in categories %}
-                    <a href="{% url 'reports:pdf_category' category.slug %}" class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }}
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-download me-2"></i>डाउनलोड विकल्पहरू
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <a href="{% url 'reports:pdf_full' %}" class="btn btn-primary">
+            <i class="fas fa-file-pdf me-2"></i>पूर्ण प्रतिवेदन PDF
+          </a>
+          <hr />
+          <h6>विषयवार PDF:</h6>
+          {% for category in categories %}
+          <a
+            href="{% url 'reports:pdf_category' category.slug %}"
+            class="btn btn-outline-secondary btn-sm"
+          >
+            <i class="fas fa-file-pdf me-2"></i>{{
+            category.name_nepali|default:category.name }}
+          </a>
+          {% endfor %}
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Navigation Helper -->
 <div class="card mt-4 bg-light no-print">
-    <div class="card-body">
-        <h5 class="card-title"><i class="fas fa-compass me-2"></i>नेभिगेसन सहायता</h5>
-        <div class="row">
-            <div class="col-md-4">
-                <h6>द्रुत पहुँच:</h6>
-                <ul class="list-unstyled">
-                    <li><a href="{% url 'reports:home' %}"><i class="fas fa-home me-2"></i>मुख्य पृष्ठ</a></li>
-                    <li><a href="{% url 'reports:search' %}"><i class="fas fa-search me-2"></i>खोज्नुहोस्</a></li>
-                    <li><a href="{% url 'reports:figures' %}"><i class="fas fa-images me-2"></i>चित्रहरू</a></li>
-                    <li><a href="{% url 'reports:tables' %}"><i class="fas fa-table me-2"></i>तालिकाहरू</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h6>मुख्य विषयहरू:</h6>
-                <ul class="list-unstyled">
-                    {% for category in categories|slice:":4" %}
-                    <li><a href="{% url 'reports:category' category.slug %}"><i class="fas fa-chevron-right me-2"></i>{{ category.name_nepali|default:category.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h6>प्रयोगी लिंकहरू:</h6>
-                <ul class="list-unstyled">
-                    <li><a href="#" onclick="window.print()"><i class="fas fa-print me-2"></i>यो पृष्ठ प्रिन्ट गर्नुहोस्</a></li>
-                    <li><a href="{% url 'reports:sitemap' %}"><i class="fas fa-sitemap me-2"></i>साइटम्याप</a></li>
-                    <li><a href="mailto:info@gadhawa.gov.np"><i class="fas fa-envelope me-2"></i>सम्पर्क</a></li>
-                </ul>
-            </div>
-        </div>
+  <div class="card-body">
+    <h5 class="card-title">
+      <i class="fas fa-compass me-2"></i>नेभिगेसन सहायता
+    </h5>
+    <div class="row">
+      <div class="col-md-4">
+        <h6>द्रुत पहुँच:</h6>
+        <ul class="list-unstyled">
+          <li>
+            <a href="{% url 'reports:home' %}"
+              ><i class="fas fa-home me-2"></i>मुख्य पृष्ठ</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'reports:search' %}"
+              ><i class="fas fa-search me-2"></i>खोज्नुहोस्</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'reports:figures' %}"
+              ><i class="fas fa-images me-2"></i>चित्रहरू</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'reports:tables' %}"
+              ><i class="fas fa-table me-2"></i>तालिकाहरू</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h6>मुख्य विषयहरू:</h6>
+        <ul class="list-unstyled">
+          {% for category in categories|slice:":4" %}
+          <li>
+            <a href="{% url 'reports:category' category.slug %}"
+              ><i class="fas fa-chevron-right me-2"></i>{{
+              category.name_nepali|default:category.name }}</a
+            >
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h6>प्रयोगी लिंकहरू:</h6>
+        <ul class="list-unstyled">
+          <li>
+            <a href="#" onclick="window.print()"
+              ><i class="fas fa-print me-2"></i>यो पृष्ठ प्रिन्ट गर्नुहोस्</a
+            >
+          </li>
+          <li>
+            <a href="{% url 'reports:sitemap' %}"
+              ><i class="fas fa-sitemap me-2"></i>साइटम्याप</a
+            >
+          </li>
+          <li>
+            <a href="mailto:info@lungri.gov.np"
+              ><i class="fas fa-envelope me-2"></i>सम्पर्क</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-// Add smooth scrolling to table of contents
-document.addEventListener('DOMContentLoaded', function() {
+  // Add smooth scrolling to table of contents
+  document.addEventListener("DOMContentLoaded", function () {
     // Add click tracking for analytics
-    document.querySelectorAll('a[href*="category"], a[href*="section"]').forEach(link => {
-        link.addEventListener('click', function() {
-            console.log('TOC Navigation:', this.href);
+    document
+      .querySelectorAll('a[href*="category"], a[href*="section"]')
+      .forEach((link) => {
+        link.addEventListener("click", function () {
+          console.log("TOC Navigation:", this.href);
         });
-    });
-    
+      });
+
     // Add hover effects for better UX
-    document.querySelectorAll('.table tbody tr').forEach(row => {
-        row.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#f8f9fa';
-        });
-        
-        row.addEventListener('mouseleave', function() {
-            this.style.backgroundColor = '';
-        });
+    document.querySelectorAll(".table tbody tr").forEach((row) => {
+      row.addEventListener("mouseenter", function () {
+        this.style.backgroundColor = "#f8f9fa";
+      });
+
+      row.addEventListener("mouseleave", function () {
+        this.style.backgroundColor = "";
+      });
     });
-    
+
     // Add expandable sections for better mobile experience
     if (window.innerWidth <= 768) {
-        addMobileToC();
+      addMobileToC();
     }
-});
+  });
 
-function addMobileToC() {
-    const tableRows = document.querySelectorAll('.table tbody tr');
-    
-    tableRows.forEach(row => {
-        const titleCell = row.querySelector('td:nth-child(2)');
-        if (titleCell && titleCell.innerHTML.includes('badge')) {
-            const toggle = document.createElement('button');
-            toggle.className = 'btn btn-sm btn-outline-secondary ms-2';
-            toggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
-            toggle.onclick = function(e) {
-                e.preventDefault();
-                toggleSubSections(row);
-            };
-            titleCell.appendChild(toggle);
-        }
+  function addMobileToC() {
+    const tableRows = document.querySelectorAll(".table tbody tr");
+
+    tableRows.forEach((row) => {
+      const titleCell = row.querySelector("td:nth-child(2)");
+      if (titleCell && titleCell.innerHTML.includes("badge")) {
+        const toggle = document.createElement("button");
+        toggle.className = "btn btn-sm btn-outline-secondary ms-2";
+        toggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+        toggle.onclick = function (e) {
+          e.preventDefault();
+          toggleSubSections(row);
+        };
+        titleCell.appendChild(toggle);
+      }
     });
-}
+  }
 
-function toggleSubSections(categoryRow) {
+  function toggleSubSections(categoryRow) {
     let nextRow = categoryRow.nextElementSibling;
-    let isExpanded = categoryRow.dataset.expanded === 'true';
-    
+    let isExpanded = categoryRow.dataset.expanded === "true";
+
     // Find all sub-sections
     const subSectionRows = [];
-    while (nextRow && nextRow.querySelector('td:first-child').classList.contains('ps-4')) {
-        subSectionRows.push(nextRow);
-        nextRow = nextRow.nextElementSibling;
+    while (
+      nextRow &&
+      nextRow.querySelector("td:first-child").classList.contains("ps-4")
+    ) {
+      subSectionRows.push(nextRow);
+      nextRow = nextRow.nextElementSibling;
     }
-    
-    // Toggle visibility
-    subSectionRows.forEach(row => {
-        row.style.display = isExpanded ? 'none' : 'table-row';
-    });
-    
-    // Update button
-    const button = categoryRow.querySelector('button i');
-    button.className = isExpanded ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
-    categoryRow.dataset.expanded = !isExpanded;
-}
 
-// Print functionality
-function printTOC() {
-    const printContent = document.querySelector('.content-header').innerHTML + 
-                        document.querySelector('.card').outerHTML;
-    
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>सूचीपत्र</title>');
-    printWindow.document.write('<style>');
-    printWindow.document.write('body { font-family: "Noto Sans Devanagari", sans-serif; }');
-    printWindow.document.write('table { border-collapse: collapse; width: 100%; }');
-    printWindow.document.write('th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }');
-    printWindow.document.write('th { background-color: #f2f2f2; }');
-    printWindow.document.write('.no-print { display: none; }');
-    printWindow.document.write('</style></head><body>');
+    // Toggle visibility
+    subSectionRows.forEach((row) => {
+      row.style.display = isExpanded ? "none" : "table-row";
+    });
+
+    // Update button
+    const button = categoryRow.querySelector("button i");
+    button.className = isExpanded ? "fas fa-chevron-down" : "fas fa-chevron-up";
+    categoryRow.dataset.expanded = !isExpanded;
+  }
+
+  // Print functionality
+  function printTOC() {
+    const printContent =
+      document.querySelector(".content-header").innerHTML +
+      document.querySelector(".card").outerHTML;
+
+    const printWindow = window.open("", "", "height=600,width=800");
+    printWindow.document.write("<html><head><title>सूचीपत्र</title>");
+    printWindow.document.write("<style>");
+    printWindow.document.write(
+      'body { font-family: "Noto Sans Devanagari", sans-serif; }'
+    );
+    printWindow.document.write(
+      "table { border-collapse: collapse; width: 100%; }"
+    );
+    printWindow.document.write(
+      "th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }"
+    );
+    printWindow.document.write("th { background-color: #f2f2f2; }");
+    printWindow.document.write(".no-print { display: none; }");
+    printWindow.document.write("</style></head><body>");
     printWindow.document.write(printContent);
-    printWindow.document.write('</body></html>');
-    
+    printWindow.document.write("</body></html>");
+
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
-}
+  }
 
-// Search functionality within TOC
-function searchTOC(query) {
-    const rows = document.querySelectorAll('.table tbody tr');
+  // Search functionality within TOC
+  function searchTOC(query) {
+    const rows = document.querySelectorAll(".table tbody tr");
     const searchTerm = query.toLowerCase();
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm) || searchTerm === '') {
-            row.style.display = 'table-row';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
 
-// Add search box if needed
-if (document.querySelector('.table tbody tr').length > 20) {
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'mb-3';
+    rows.forEach((row) => {
+      const text = row.textContent.toLowerCase();
+      if (text.includes(searchTerm) || searchTerm === "") {
+        row.style.display = "table-row";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  // Add search box if needed
+  if (document.querySelector(".table tbody tr").length > 20) {
+    const searchContainer = document.createElement("div");
+    searchContainer.className = "mb-3";
     searchContainer.innerHTML = `
         <div class="input-group">
             <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -435,9 +539,9 @@ if (document.querySelector('.table tbody tr').length > 20) {
                    oninput="searchTOC(this.value)">
         </div>
     `;
-    
-    const cardBody = document.querySelector('.card-body');
+
+    const cardBody = document.querySelector(".card-body");
     cardBody.insertBefore(searchContainer, cardBody.firstChild);
-}
+  }
 </script>
 {% endblock %}

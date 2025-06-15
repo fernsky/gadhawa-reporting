@@ -10,8 +10,8 @@ This test validates that:
 4. Page numbers in footer are in Nepali digits
 5. All anchor targets are properly linked
 
-This represents the completed implementation of the robust PDF report 
-generation system for Gadhawa Municipality.
+This represents the completed implementation of the robust PDF report
+generation system for lungri Municipality.
 """
 import os
 import sys
@@ -19,80 +19,90 @@ import django
 
 # Setup Django
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lungri_report.settings.development")
 django.setup()
 
 from django.template.loader import render_to_string
 from weasyprint import HTML
-from apps.reports.models import ReportCategory, ReportFigure, ReportTable, PublicationSettings
+from apps.reports.models import (
+    ReportCategory,
+    ReportFigure,
+    ReportTable,
+    PublicationSettings,
+)
+
 
 def final_validation_test():
     print("🎯 FINAL VALIDATION TEST - Nepali PDF Report Generation")
     print("=" * 60)
-    
+
     # Get data
     try:
         publication_settings = PublicationSettings.objects.first()
     except:
         publication_settings = None
-        
-    categories = ReportCategory.objects.filter(
-        is_active=True,
-        sections__is_published=True
-    ).distinct().prefetch_related(
-        'sections__figures',
-        'sections__tables'
-    ).order_by('order')
-    
-    figures = ReportFigure.objects.select_related('section__category').order_by('figure_number')
-    tables = ReportTable.objects.select_related('section__category').order_by('table_number')
-    
+
+    categories = (
+        ReportCategory.objects.filter(is_active=True, sections__is_published=True)
+        .distinct()
+        .prefetch_related("sections__figures", "sections__tables")
+        .order_by("order")
+    )
+
+    figures = ReportFigure.objects.select_related("section__category").order_by(
+        "figure_number"
+    )
+    tables = ReportTable.objects.select_related("section__category").order_by(
+        "table_number"
+    )
+
     context = {
-        'municipality_name': 'गधावा गाउँपालिका',
-        'municipality_name_english': 'Gadhawa Rural Municipality',
-        'publication_settings': publication_settings,
-        'categories': categories,
-        'figures': figures,
-        'tables': tables,
-        'total_figures': figures.count(),
-        'total_tables': tables.count(),
+        "municipality_name": "गधावा गाउँपालिका",
+        "municipality_name_english": "LungriRural Municipality",
+        "publication_settings": publication_settings,
+        "categories": categories,
+        "figures": figures,
+        "tables": tables,
+        "total_figures": figures.count(),
+        "total_tables": tables.count(),
     }
-    
+
     print(f"📊 Data Summary:")
     print(f"   • Categories: {categories.count()}")
     print(f"   • Figures: {figures.count()}")
     print(f"   • Tables: {tables.count()}")
     print(f"   • Publication Settings: {'✓' if publication_settings else '✗'}")
     print()
-    
+
     # Generate HTML content
     try:
-        html_content = render_to_string('reports/pdf_full_report.html', context)
+        html_content = render_to_string("reports/pdf_full_report.html", context)
         print("✅ HTML template rendered successfully")
     except Exception as e:
         print(f"❌ HTML template rendering failed: {e}")
         return False
-    
+
     # Generate PDF
     try:
         html_doc = HTML(string=html_content)
         pdf_content = html_doc.write_pdf()
-        
-        filename = "FINAL_GADHAWA_REPORT.pdf"
-        with open(filename, 'wb') as f:
+
+        filename = "FINAL_lungri_REPORT.pdf"
+        with open(filename, "wb") as f:
             f.write(pdf_content)
-        
+
         print("✅ PDF generated successfully!")
         print(f"📄 Size: {len(pdf_content):,} bytes")
         print(f"📄 Saved as: {filename}")
         print()
-        
+
     except Exception as e:
         print(f"❌ PDF generation failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
-    
+
     # Success summary
     print("🎉 IMPLEMENTATION COMPLETED SUCCESSFULLY!")
     print("=" * 60)
@@ -124,8 +134,9 @@ def final_validation_test():
     print("   3. Check that all sections are properly linked")
     print("   4. Validate professional PDF layout and styling")
     print()
-    
+
     return True
+
 
 if __name__ == "__main__":
     final_validation_test()

@@ -177,9 +177,9 @@ django-selenium>=0.9.8
 ### Optional Node.js Dependencies (package.json)
 ```json
 {
-  "name": "gadhawa-report-frontend",
+  "name": "lungri-report-frontend",
   "version": "1.0.0",
-  "description": "Frontend assets for Gadhawa Report System",
+  "description": "Frontend assets for lungri Report System",
   "scripts": {
     "build": "webpack --mode=production",
     "dev": "webpack --mode=development --watch",
@@ -231,12 +231,12 @@ Fallbacks:
 ### PostgreSQL Configuration
 ```sql
 -- Create database
-CREATE DATABASE gadhawa_report;
-CREATE USER gadhawa_user WITH PASSWORD 'your_secure_password';
-GRANT ALL PRIVILEGES ON DATABASE gadhawa_report TO gadhawa_user;
+CREATE DATABASE lungri_report;
+CREATE USER lungri_user WITH PASSWORD 'your_secure_password';
+GRANT ALL PRIVILEGES ON DATABASE lungri_report TO lungri_user;
 
 -- Extensions
-\c gadhawa_report
+\c lungri_report
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For text search
 ```
@@ -247,8 +247,8 @@ CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For text search
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME', default='gadhawa_report'),
-        'USER': env('DB_USER', default='gadhawa_user'),
+        'NAME': env('DB_NAME', default='lungri_report'),
+        'USER': env('DB_USER', default='lungri_user'),
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST', default='localhost'),
         'PORT': env('DB_PORT', default='5432'),
@@ -269,8 +269,8 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
 # Database
-DB_NAME=gadhawa_report
-DB_USER=gadhawa_user
+DB_NAME=lungri_report
+DB_USER=lungri_user
 DB_PASSWORD=your_secure_password
 DB_HOST=localhost
 DB_PORT=5432
@@ -313,7 +313,7 @@ SENTRY_DSN=your-sentry-dsn-here
 ```python
 #!/usr/bin/env python3
 """
-Gadhawa Report System Setup Script
+lungri Report System Setup Script
 """
 import os
 import subprocess
@@ -392,7 +392,7 @@ def load_sample_data():
 
 def main():
     """Main setup function"""
-    print("Gadhawa Report System Setup")
+    print("lungri Report System Setup")
     print("=" * 30)
     
     setup_virtual_environment()
@@ -411,7 +411,7 @@ if __name__ == "__main__":
 ### requirements-install.ps1 (Windows PowerShell)
 ```powershell
 # Windows Installation Script
-Write-Host "Gadhawa Report System - Windows Setup" -ForegroundColor Green
+Write-Host "lungri Report System - Windows Setup" -ForegroundColor Green
 
 # Check Python version
 $pythonVersion = python --version 2>&1
@@ -457,7 +457,7 @@ Write-Host "3. Run: python manage.py runserver" -ForegroundColor White
 #!/bin/bash
 # Linux/macOS Installation Script
 
-echo "Gadhawa Report System - Linux/macOS Setup"
+echo "lungri Report System - Linux/macOS Setup"
 echo "=========================================="
 
 # Check Python version
@@ -540,7 +540,7 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Run server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gadhawa_report.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "lungri_report.wsgi:application"]
 ```
 
 ### docker-compose.yml
@@ -553,8 +553,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_DB: gadhawa_report
-      POSTGRES_USER: gadhawa_user
+      POSTGRES_DB: lungri_report
+      POSTGRES_USER: lungri_user
       POSTGRES_PASSWORD: your_secure_password
 
   redis:
@@ -578,4 +578,4 @@ volumes:
   postgres_data:
 ```
 
-This comprehensive requirements specification provides everything needed to set up and run the Gadhawa Digital Profile Report system across different environments and platforms.
+This comprehensive requirements specification provides everything needed to set up and run the lungri Digital Profile Report system across different environments and platforms.

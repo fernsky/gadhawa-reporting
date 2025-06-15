@@ -1,7 +1,7 @@
 #!/bin/bash
-# Development server startup script for Gadhawa Report System
+# Development server startup script for lungri Report System
 
-echo "Starting Gadhawa Digital Profile Report System..."
+echo "Starting lungri Digital Profile Report System..."
 echo
 
 # Activate virtual environment

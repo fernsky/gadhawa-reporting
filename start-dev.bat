@@ -1,7 +1,7 @@
 @echo off
-REM Development server startup script for Gadhawa Report System
+REM Development server startup script for lungri Report System
 
-echo Starting Gadhawa Digital Profile Report System...
+echo Starting lungri Digital Profile Report System...
 echo.
 
 REM Activate virtual environment

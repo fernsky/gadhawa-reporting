@@ -1,5 +1,5 @@
 """
-Development settings for Gadhawa Report System.
+Development settings for lungri Report System.
 """
 
 from .base import *
@@ -58,7 +58,7 @@ CACHES = {
 
 # Logging for development
 LOGGING['handlers']['console']['level'] = 'DEBUG'
-LOGGING['loggers']['gadhawa_report']['level'] = 'DEBUG'
+LOGGING['loggers']['lungri_report']['level'] = 'DEBUG'
 
 # Create logs directory if it doesn't exist
 import os

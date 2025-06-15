@@ -1,5 +1,5 @@
 """
-Production settings for Gadhawa Report System.
+Production settings for lungri Report System.
 """
 
 import os
@@ -14,8 +14,8 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'gadhawa_report'),
-        'USER': os.environ.get('DB_USER', 'gadhawa_user'),
+        'NAME': os.environ.get('DB_NAME', 'lungri_report'),
+        'USER': os.environ.get('DB_USER', 'lungri_user'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
@@ -60,7 +60,7 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@gadhawa.gov.np')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@lungri.gov.np')
 
 # Cache for production - Redis
 CACHES = {
@@ -104,6 +104,6 @@ if SENTRY_DSN:
     )
 
 # Logging for production
-LOGGING['handlers']['file']['filename'] = '/var/log/gadhawa_report/gadhawa_report.log'
+LOGGING['handlers']['file']['filename'] = '/var/log/lungri_report/lungri_report.log'
 LOGGING['handlers']['console']['level'] = 'INFO'
-LOGGING['loggers']['gadhawa_report']['level'] = 'INFO'
+LOGGING['loggers']['lungri_report']['level'] = 'INFO'

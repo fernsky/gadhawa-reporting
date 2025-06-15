@@ -1,519 +1,630 @@
-{% extends 'reports/base.html' %}
-{% load static %}
-{% load nepali_filters %}
-
-{% block title %}चित्रहरूको सूची - गढवा गाउँपालिका{% endblock %}
-
-{% block description %}गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै चित्रहरू, आंकडाहरू र ग्राफहरूको सूची।{% endblock %}
-
-{% block keywords %}चित्रहरू, आंकडाहरू, ग्राफ, गढवा, गाउँपालिका, प्रतिवेदन{% endblock %}
-
-{% block breadcrumb %}
+{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
+block title %}चित्रहरूको सूची - लुङ्ग्री गाउँपालिका{% endblock %} {% block
+description %}लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग
+गरिएका सबै चित्रहरू, आंकडाहरू र ग्राफहरूको सूची।{% endblock %} {% block keywords
+%}चित्रहरू, आंकडाहरू, ग्राफ, लुङ्ग्री, गाउँपालिका, प्रतिवेदन{% endblock %} {%
+block breadcrumb %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
-        <li class="breadcrumb-item active">चित्रहरूको सूची</li>
-    </ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a>
+    </li>
+    <li class="breadcrumb-item active">चित्रहरूको सूची</li>
+  </ol>
 </nav>
-{% endblock %}
-
-{% block structured_data %}
+{% endblock %} {% block structured_data %}
 <script type="application/ld+json">
-{
+  {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "चित्रहरूको सूची",
-    "description": "गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै चित्रहरूको सूची।",
+    "description": "लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै चित्रहरूको सूची।",
     "url": "{{ request.build_absolute_uri }}",
     "isPartOf": {
-        "@type": "WebSite",
-        "name": "गढवा गाउँपालिका",
-        "url": "{% url 'reports:home' %}"
+      "@type": "WebSite",
+      "name": "लुङ्ग्री गाउँपालिका",
+      "url": "{% url 'reports:home' %}"
     },
     "publisher": {
-        "@type": "GovernmentOrganization",
-        "name": "गढवा गाउँपालिका"
+      "@type": "GovernmentOrganization",
+      "name": "लुङ्ग्री गाउँपालिका"
     }
-}
+  }
 </script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="content-header">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h1><i class="fas fa-images me-3"></i>चित्रहरूको सूची</h1>
-            <p class="lead text-muted">गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
-        </div>
-        <div class="no-print">
-            <div class="btn-group" role="group">
-                <button onclick="toggleView()" class="btn btn-outline-primary" id="viewToggle">
-                    <i class="fas fa-th-large me-2"></i>Grid View
-                </button>
-                <button onclick="printPage()" class="btn btn-outline-secondary">
-                    <i class="fas fa-print me-2"></i>प्रिन्ट
-                </button>
-            </div>
-        </div>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1><i class="fas fa-images me-3"></i>चित्रहरूको सूची</h1>
+      <p class="lead text-muted">
+        लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+      </p>
     </div>
+    <div class="no-print">
+      <div class="btn-group" role="group">
+        <button
+          onclick="toggleView()"
+          class="btn btn-outline-primary"
+          id="viewToggle"
+        >
+          <i class="fas fa-th-large me-2"></i>Grid View
+        </button>
+        <button onclick="printPage()" class="btn btn-outline-secondary">
+          <i class="fas fa-print me-2"></i>प्रिन्ट
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Filters -->
 <div class="card mb-4 no-print">
-    <div class="card-body">
-        <div class="row align-items-center">
-            <div class="col-md-4">
-                <label for="categoryFilter" class="form-label">विषयअनुसार फिल्टर:</label>
-                <select id="categoryFilter" class="form-select" onchange="filterFigures()">
-                    <option value="">सबै विषयहरू</option>
-                    {% for category in categories %}
-                    <option value="{{ category.slug }}">{{ category.title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="searchFigures" class="form-label">खोज्नुहोस्:</label>
-                <input type="text" id="searchFigures" class="form-control" placeholder="चित्रको नाम वा विवरण..." oninput="searchFigures()">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">कुल चित्रहरू:</label>
-                <p class="mb-0"><span class="badge bg-primary fs-6" id="figureCount">{{ figures.count }}</span></p>
-            </div>
-        </div>
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <label for="categoryFilter" class="form-label"
+          >विषयअनुसार फिल्टर:</label
+        >
+        <select
+          id="categoryFilter"
+          class="form-select"
+          onchange="filterFigures()"
+        >
+          <option value="">सबै विषयहरू</option>
+          {% for category in categories %}
+          <option value="{{ category.slug }}">{{ category.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="searchFigures" class="form-label">खोज्नुहोस्:</label>
+        <input
+          type="text"
+          id="searchFigures"
+          class="form-control"
+          placeholder="चित्रको नाम वा विवरण..."
+          oninput="searchFigures()"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">कुल चित्रहरू:</label>
+        <p class="mb-0">
+          <span class="badge bg-primary fs-6" id="figureCount"
+            >{{ figures.count }}</span
+          >
+        </p>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Figures List -->
 <div class="figures-container">
-    {% if figures %}
-    
-    <!-- List View (Default) -->
-    <div id="listView" class="figures-list">
-        {% for figure in figures %}
-        <div class="card mb-4 figure-item" data-category="{{ figure.section.category.slug }}" data-section="{{ figure.section.slug }}">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    {% if figure.image %}
-                    <img src="{{ figure.image.url }}" class="img-fluid rounded-start h-100" alt="{{ figure.caption }}" 
-                         style="object-fit: cover; cursor: pointer;" 
-                         data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
-                    {% else %}
-                    <div class="d-flex align-items-center justify-content-center h-100 bg-light rounded-start">
-                        <i class="fas fa-image fa-4x text-muted"></i>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}</h5>
-                            <span class="badge bg-secondary">{{ figure.section.category.title }}</span>
-                        </div>
-                        
-                        {% if figure.caption %}
-                        <p class="card-text">{{ figure.caption }}</p>
-                        {% endif %}
-                        
-                        <div class="row text-muted small">
-                            <div class="col-md-6">
-                                <i class="fas fa-folder me-1"></i>
-                                <a href="{% url 'reports:category' figure.section.category.slug %}" class="text-decoration-none">
-                                    {{ figure.section.category.title }}
-                                </a>
-                            </div>
-                            <div class="col-md-6">
-                                <i class="fas fa-file-alt me-1"></i>
-                                <a href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}" class="text-decoration-none">
-                                    {{ figure.section.title }}
-                                </a>
-                            </div>
-                        </div>
-                        
-                        {% if figure.source %}
-                        <p class="card-text mt-2"><small class="text-muted">स्रोत: {{ figure.source }}</small></p>
-                        {% endif %}
-                        
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="no-print">
-                                <a href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}" 
-                                   class="btn btn-sm btn-outline-primary">
-                                    सन्दर्भमा हेर्नुहोस्
-                                </a>
-                            </div>
-                            <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i>{{ figure.created_at|nepali_date:"Y F j" }}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  {% if figures %}
+
+  <!-- List View (Default) -->
+  <div id="listView" class="figures-list">
+    {% for figure in figures %}
+    <div
+      class="card mb-4 figure-item"
+      data-category="{{ figure.section.category.slug }}"
+      data-section="{{ figure.section.slug }}"
+    >
+      <div class="row g-0">
+        <div class="col-md-4">
+          {% if figure.image %}
+          <img
+            src="{{ figure.image.url }}"
+            class="img-fluid rounded-start h-100"
+            alt="{{ figure.caption }}"
+            style="object-fit: cover; cursor: pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#figureModal{{ figure.id }}"
+          />
+          {% else %}
+          <div
+            class="d-flex align-items-center justify-content-center h-100 bg-light rounded-start"
+          >
+            <i class="fas fa-image fa-4x text-muted"></i>
+          </div>
+          {% endif %}
         </div>
-        
-        <!-- Figure Modal -->
-        <div class="modal fade" id="figureModal{{ figure.id }}" tabindex="-1">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        {% if figure.image %}
-                        <img src="{{ figure.image.url }}" class="img-fluid mb-3" alt="{{ figure.caption }}">
-                        {% endif %}
-                        {% if figure.caption %}
-                        <p class="lead">{{ figure.caption }}</p>
-                        {% endif %}
-                        <div class="row text-start">
-                            <div class="col-md-6">
-                                <strong>विषय:</strong> {{ figure.section.category.title }}<br>
-                                <strong>उप-विषय:</strong> {{ figure.section.title }}
-                            </div>
-                            <div class="col-md-6">
-                                {% if figure.source %}
-                                <strong>स्रोत:</strong> {{ figure.source }}<br>
-                                {% endif %}
-                                <strong>मिति:</strong> {{ figure.created_at|nepali_date:"Y F j" }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}" 
-                           class="btn btn-primary">
-                            सन्दर्भमा हेर्नुहोस्
-                        </a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">बन्द गर्नुहोस्</button>
-                    </div>
-                </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title">
+                चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title
+                }}
+              </h5>
+              <span class="badge bg-secondary"
+                >{{ figure.section.category.title }}</span
+              >
             </div>
+
+            {% if figure.caption %}
+            <p class="card-text">{{ figure.caption }}</p>
+            {% endif %}
+
+            <div class="row text-muted small">
+              <div class="col-md-6">
+                <i class="fas fa-folder me-1"></i>
+                <a
+                  href="{% url 'reports:category' figure.section.category.slug %}"
+                  class="text-decoration-none"
+                >
+                  {{ figure.section.category.title }}
+                </a>
+              </div>
+              <div class="col-md-6">
+                <i class="fas fa-file-alt me-1"></i>
+                <a
+                  href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}"
+                  class="text-decoration-none"
+                >
+                  {{ figure.section.title }}
+                </a>
+              </div>
+            </div>
+
+            {% if figure.source %}
+            <p class="card-text mt-2">
+              <small class="text-muted">स्रोत: {{ figure.source }}</small>
+            </p>
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="no-print">
+                <a
+                  href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  सन्दर्भमा हेर्नुहोस्
+                </a>
+              </div>
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i>{{
+                figure.created_at|nepali_date:"Y F j" }}
+              </small>
+            </div>
+          </div>
         </div>
-        {% endfor %}
+      </div>
     </div>
-    
-    <!-- Grid View -->
-    <div id="gridView" class="figures-grid d-none">
-        <div class="row">
-            {% for figure in figures %}
-            <div class="col-lg-4 col-md-6 mb-4 figure-item" data-category="{{ figure.section.category.slug }}" data-section="{{ figure.section.slug }}">
-                <div class="card h-100">
-                    {% if figure.image %}
-                    <div class="position-relative">
-                        <img src="{{ figure.image.url }}" class="card-img-top" alt="{{ figure.caption }}" 
-                             style="height: 200px; object-fit: cover; cursor: pointer;" 
-                             data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
-                        <div class="position-absolute top-0 start-0 m-2">
-                            <span class="badge bg-primary">{{ figure.figure_number|nepali_digits }}</span>
-                        </div>
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#figureModal{{ figure.id }}">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                        <i class="fas fa-image fa-4x text-muted"></i>
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h6 class="card-title">{{ figure.title }}</h6>
-                        {% if figure.caption %}
-                        <p class="card-text small">{{ figure.caption|truncatewords:15 }}</p>
-                        {% endif %}
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">{{ figure.section.category.title }}</small>
-                            <a href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}" 
-                               class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
-                        </div>
-                    </div>
-                </div>
+
+    <!-- Figure Modal -->
+    <div class="modal fade" id="figureModal{{ figure.id }}" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            {% if figure.image %}
+            <img
+              src="{{ figure.image.url }}"
+              class="img-fluid mb-3"
+              alt="{{ figure.caption }}"
+            />
+            {% endif %} {% if figure.caption %}
+            <p class="lead">{{ figure.caption }}</p>
+            {% endif %}
+            <div class="row text-start">
+              <div class="col-md-6">
+                <strong>विषय:</strong> {{ figure.section.category.title }}<br />
+                <strong>उप-विषय:</strong> {{ figure.section.title }}
+              </div>
+              <div class="col-md-6">
+                {% if figure.source %}
+                <strong>स्रोत:</strong> {{ figure.source }}<br />
+                {% endif %}
+                <strong>मिति:</strong> {{ figure.created_at|nepali_date:"Y F j"
+                }}
+              </div>
             </div>
-            {% endfor %}
-        </div>
-    </div>
-    
-    {% else %}
-    <div class="card">
-        <div class="card-body text-center py-5">
-            <i class="fas fa-images fa-4x text-muted mb-3"></i>
-            <h4 class="text-muted">कुनै चित्रहरू उपलब्ध छैनन्</h4>
-            <p class="text-muted">अझै कुनै चित्रहरू अपलोड गरिएका छैनन्।</p>
-            <a href="{% url 'reports:home' %}" class="btn btn-primary">
-                मुख्य पृष्ठमा फर्कनुहोस्
+          </div>
+          <div class="modal-footer">
+            <a
+              href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}"
+              class="btn btn-primary"
+            >
+              सन्दर्भमा हेर्नुहोस्
             </a>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              बन्द गर्नुहोस्
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Grid View -->
+  <div id="gridView" class="figures-grid d-none">
+    <div class="row">
+      {% for figure in figures %}
+      <div
+        class="col-lg-4 col-md-6 mb-4 figure-item"
+        data-category="{{ figure.section.category.slug }}"
+        data-section="{{ figure.section.slug }}"
+      >
+        <div class="card h-100">
+          {% if figure.image %}
+          <div class="position-relative">
+            <img
+              src="{{ figure.image.url }}"
+              class="card-img-top"
+              alt="{{ figure.caption }}"
+              style="height: 200px; object-fit: cover; cursor: pointer"
+              data-bs-toggle="modal"
+              data-bs-target="#figureModal{{ figure.id }}"
+            />
+            <div class="position-absolute top-0 start-0 m-2">
+              <span class="badge bg-primary"
+                >{{ figure.figure_number|nepali_digits }}</span
+              >
+            </div>
+            <div class="position-absolute top-0 end-0 m-2">
+              <button
+                class="btn btn-sm btn-light"
+                data-bs-toggle="modal"
+                data-bs-target="#figureModal{{ figure.id }}"
+              >
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+          </div>
+          {% else %}
+          <div
+            class="card-img-top d-flex align-items-center justify-content-center bg-light"
+            style="height: 200px"
+          >
+            <i class="fas fa-image fa-4x text-muted"></i>
+          </div>
+          {% endif %}
+          <div class="card-body">
+            <h6 class="card-title">{{ figure.title }}</h6>
+            {% if figure.caption %}
+            <p class="card-text small">{{ figure.caption|truncatewords:15 }}</p>
+            {% endif %}
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted"
+                >{{ figure.section.category.title }}</small
+              >
+              <a
+                href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}"
+                class="btn btn-sm btn-outline-primary"
+                >हेर्नुहोस्</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% else %}
+  <div class="card">
+    <div class="card-body text-center py-5">
+      <i class="fas fa-images fa-4x text-muted mb-3"></i>
+      <h4 class="text-muted">कुनै चित्रहरू उपलब्ध छैनन्</h4>
+      <p class="text-muted">अझै कुनै चित्रहरू अपलोड गरिएका छैनन्।</p>
+      <a href="{% url 'reports:home' %}" class="btn btn-primary">
+        मुख्य पृष्ठमा फर्कनुहोस्
+      </a>
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 <!-- Statistics -->
 {% if figures %}
 <div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>चित्रहरूको वितरण</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="figureDistributionChart" width="400" height="200"></canvas>
-            </div>
-        </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-chart-pie me-2"></i>चित्रहरूको वितरण
+        </h5>
+      </div>
+      <div class="card-body">
+        <canvas id="figureDistributionChart" width="400" height="200"></canvas>
+      </div>
     </div>
-    
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>सांख्यिकीय विवरण</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <td><i class="fas fa-images text-primary me-2"></i>कुल चित्रहरू:</td>
-                        <td class="fw-bold">{{ figures.count }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-folder text-success me-2"></i>विषयहरू:</td>
-                        <td class="fw-bold">{{ categories.count }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-file-alt text-info me-2"></i>उप-विषयहरू:</td>
-                        <td class="fw-bold">{{ total_sections }}</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fas fa-clock text-warning me-2"></i>अन्तिम अद्यावधिक:</td>
-                        <td class="fw-bold">{{ latest_figure.created_at|nepali_date:"Y F j" }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">
+          <i class="fas fa-info-circle me-2"></i>सांख्यिकीय विवरण
+        </h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <td>
+              <i class="fas fa-images text-primary me-2"></i>कुल चित्रहरू:
+            </td>
+            <td class="fw-bold">{{ figures.count }}</td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-folder text-success me-2"></i>विषयहरू:</td>
+            <td class="fw-bold">{{ categories.count }}</td>
+          </tr>
+          <tr>
+            <td><i class="fas fa-file-alt text-info me-2"></i>उप-विषयहरू:</td>
+            <td class="fw-bold">{{ total_sections }}</td>
+          </tr>
+          <tr>
+            <td>
+              <i class="fas fa-clock text-warning me-2"></i>अन्तिम अद्यावधिक:
+            </td>
+            <td class="fw-bold">
+              {{ latest_figure.created_at|nepali_date:"Y F j" }}
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
-{% endif %}
-
-{% endblock %}
-
-{% block extra_js %}
+{% endif %} {% endblock %} {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-let currentView = 'list';
+  let currentView = "list";
 
-function toggleView() {
-    const listView = document.getElementById('listView');
-    const gridView = document.getElementById('gridView');
-    const toggleBtn = document.getElementById('viewToggle');
-    
-    if (currentView === 'list') {
-        listView.classList.add('d-none');
-        gridView.classList.remove('d-none');
-        toggleBtn.innerHTML = '<i class="fas fa-list me-2"></i>List View';
-        currentView = 'grid';
+  function toggleView() {
+    const listView = document.getElementById("listView");
+    const gridView = document.getElementById("gridView");
+    const toggleBtn = document.getElementById("viewToggle");
+
+    if (currentView === "list") {
+      listView.classList.add("d-none");
+      gridView.classList.remove("d-none");
+      toggleBtn.innerHTML = '<i class="fas fa-list me-2"></i>List View';
+      currentView = "grid";
     } else {
-        gridView.classList.add('d-none');
-        listView.classList.remove('d-none');
-        toggleBtn.innerHTML = '<i class="fas fa-th-large me-2"></i>Grid View';
-        currentView = 'list';
+      gridView.classList.add("d-none");
+      listView.classList.remove("d-none");
+      toggleBtn.innerHTML = '<i class="fas fa-th-large me-2"></i>Grid View';
+      currentView = "list";
     }
-}
+  }
 
-function filterFigures() {
-    const categoryFilter = document.getElementById('categoryFilter').value;
-    const figureItems = document.querySelectorAll('.figure-item');
+  function filterFigures() {
+    const categoryFilter = document.getElementById("categoryFilter").value;
+    const figureItems = document.querySelectorAll(".figure-item");
     let visibleCount = 0;
-    
-    figureItems.forEach(item => {
-        const category = item.dataset.category;
-        if (categoryFilter === '' || category === categoryFilter) {
-            item.style.display = 'block';
-            visibleCount++;
-        } else {
-            item.style.display = 'none';
-        }
+
+    figureItems.forEach((item) => {
+      const category = item.dataset.category;
+      if (categoryFilter === "" || category === categoryFilter) {
+        item.style.display = "block";
+        visibleCount++;
+      } else {
+        item.style.display = "none";
+      }
     });
-    
-    document.getElementById('figureCount').textContent = visibleCount;
+
+    document.getElementById("figureCount").textContent = visibleCount;
     updateChart();
-}
+  }
 
-function searchFigures() {
-    const searchTerm = document.getElementById('searchFigures').value.toLowerCase();
-    const figureItems = document.querySelectorAll('.figure-item');
+  function searchFigures() {
+    const searchTerm = document
+      .getElementById("searchFigures")
+      .value.toLowerCase();
+    const figureItems = document.querySelectorAll(".figure-item");
     let visibleCount = 0;
-    
-    figureItems.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            item.style.display = 'block';
-            visibleCount++;
-        } else {
-            item.style.display = 'none';
-        }
-    });
-    
-    document.getElementById('figureCount').textContent = visibleCount;
-}
 
-// Initialize chart
-document.addEventListener('DOMContentLoaded', function() {
+    figureItems.forEach((item) => {
+      const text = item.textContent.toLowerCase();
+      if (text.includes(searchTerm)) {
+        item.style.display = "block";
+        visibleCount++;
+      } else {
+        item.style.display = "none";
+      }
+    });
+
+    document.getElementById("figureCount").textContent = visibleCount;
+  }
+
+  // Initialize chart
+  document.addEventListener("DOMContentLoaded", function () {
     initializeChart();
-    
-    // Add lazy loading for images
-    const images = document.querySelectorAll('img[data-src]');
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-                observer.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-    
-    // Add keyboard navigation
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'g' && e.ctrlKey) {
-            e.preventDefault();
-            toggleView();
-        } else if (e.key === 'f' && e.ctrlKey) {
-            e.preventDefault();
-            document.getElementById('searchFigures').focus();
-        }
-    });
-});
 
-function initializeChart() {
-    const ctx = document.getElementById('figureDistributionChart');
+    // Add lazy loading for images
+    const images = document.querySelectorAll("img[data-src]");
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+          observer.unobserve(img);
+        }
+      });
+    });
+
+    images.forEach((img) => imageObserver.observe(img));
+
+    // Add keyboard navigation
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "g" && e.ctrlKey) {
+        e.preventDefault();
+        toggleView();
+      } else if (e.key === "f" && e.ctrlKey) {
+        e.preventDefault();
+        document.getElementById("searchFigures").focus();
+      }
+    });
+  });
+
+  function initializeChart() {
+    const ctx = document.getElementById("figureDistributionChart");
     if (!ctx) return;
-    
+
     // Get category data
     const categories = {};
-    document.querySelectorAll('.figure-item').forEach(item => {
-        const category = item.dataset.category;
-        const categoryName = item.querySelector('.badge').textContent;
-        categories[categoryName] = (categories[categoryName] || 0) + 1;
+    document.querySelectorAll(".figure-item").forEach((item) => {
+      const category = item.dataset.category;
+      const categoryName = item.querySelector(".badge").textContent;
+      categories[categoryName] = (categories[categoryName] || 0) + 1;
     });
-    
+
     new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(categories),
-            datasets: [{
-                data: Object.values(categories),
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF',
-                    '#FF9F40',
-                    '#FF6384',
-                    '#C9CBCF'
-                ]
-            }]
+      type: "doughnut",
+      data: {
+        labels: Object.keys(categories),
+        datasets: [
+          {
+            data: Object.values(categories),
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#4BC0C0",
+              "#9966FF",
+              "#FF9F40",
+              "#FF6384",
+              "#C9CBCF",
+            ],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
+      },
     });
-}
+  }
 
-function updateChart() {
+  function updateChart() {
     // Update chart based on filtered data
-    const visibleItems = document.querySelectorAll('.figure-item:not([style*="display: none"])');
+    const visibleItems = document.querySelectorAll(
+      '.figure-item:not([style*="display: none"])'
+    );
     const categories = {};
-    
-    visibleItems.forEach(item => {
-        const categoryName = item.querySelector('.badge').textContent;
-        categories[categoryName] = (categories[categoryName] || 0) + 1;
-    });
-    
-    // Update chart data
-    const chart = Chart.getChart('figureDistributionChart');
-    if (chart) {
-        chart.data.labels = Object.keys(categories);
-        chart.data.datasets[0].data = Object.values(categories);
-        chart.update();
-    }
-}
 
-// Print specific figures
-function printFigures() {
-    const visibleItems = document.querySelectorAll('.figure-item:not([style*="display: none"])');
-    let printContent = '<h1>चित्रहरूको सूची</h1>';
-    
-    visibleItems.forEach(item => {
-        const title = item.querySelector('.card-title').textContent;
-        const caption = item.querySelector('.card-text')?.textContent || '';
-        const img = item.querySelector('img');
-        
-        printContent += `
+    visibleItems.forEach((item) => {
+      const categoryName = item.querySelector(".badge").textContent;
+      categories[categoryName] = (categories[categoryName] || 0) + 1;
+    });
+
+    // Update chart data
+    const chart = Chart.getChart("figureDistributionChart");
+    if (chart) {
+      chart.data.labels = Object.keys(categories);
+      chart.data.datasets[0].data = Object.values(categories);
+      chart.update();
+    }
+  }
+
+  // Print specific figures
+  function printFigures() {
+    const visibleItems = document.querySelectorAll(
+      '.figure-item:not([style*="display: none"])'
+    );
+    let printContent = "<h1>चित्रहरूको सूची</h1>";
+
+    visibleItems.forEach((item) => {
+      const title = item.querySelector(".card-title").textContent;
+      const caption = item.querySelector(".card-text")?.textContent || "";
+      const img = item.querySelector("img");
+
+      printContent += `
             <div style="page-break-inside: avoid; margin-bottom: 20px;">
                 <h3>${title}</h3>
-                ${img ? `<img src="${img.src}" style="max-width: 100%; height: auto;">` : ''}
+                ${
+                  img
+                    ? `<img src="${img.src}" style="max-width: 100%; height: auto;">`
+                    : ""
+                }
                 <p>${caption}</p>
             </div>
         `;
     });
-    
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>चित्रहरूको सूची</title>');
-    printWindow.document.write('<style>');
-    printWindow.document.write('body { font-family: "Noto Sans Devanagari", sans-serif; }');
-    printWindow.document.write('img { max-width: 100%; height: auto; }');
-    printWindow.document.write('</style></head><body>');
+
+    const printWindow = window.open("", "", "height=600,width=800");
+    printWindow.document.write("<html><head><title>चित्रहरूको सूची</title>");
+    printWindow.document.write("<style>");
+    printWindow.document.write(
+      'body { font-family: "Noto Sans Devanagari", sans-serif; }'
+    );
+    printWindow.document.write("img { max-width: 100%; height: auto; }");
+    printWindow.document.write("</style></head><body>");
     printWindow.document.write(printContent);
-    printWindow.document.write('</body></html>');
-    
+    printWindow.document.write("</body></html>");
+
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
-}
+  }
 
-// Export figures list
-function exportFiguresList() {
+  // Export figures list
+  function exportFiguresList() {
     const figures = [];
-    const visibleItems = document.querySelectorAll('.figure-item:not([style*="display: none"])');
-    
-    visibleItems.forEach(item => {
-        const title = item.querySelector('.card-title').textContent;
-        const caption = item.querySelector('.card-text')?.textContent || '';
-        const category = item.querySelector('.badge').textContent;
-        
-        figures.push({
-            title: title,
-            caption: caption,
-            category: category
-        });
+    const visibleItems = document.querySelectorAll(
+      '.figure-item:not([style*="display: none"])'
+    );
+
+    visibleItems.forEach((item) => {
+      const title = item.querySelector(".card-title").textContent;
+      const caption = item.querySelector(".card-text")?.textContent || "";
+      const category = item.querySelector(".badge").textContent;
+
+      figures.push({
+        title: title,
+        caption: caption,
+        category: category,
+      });
     });
-    
-    const csv = 'चित्रको नाम,विवरण,विषय\n' + 
-                figures.map(f => `"${f.title}","${f.caption}","${f.category}"`).join('\n');
-    
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+
+    const csv =
+      "चित्रको नाम,विवरण,विषय\n" +
+      figures
+        .map((f) => `"${f.title}","${f.caption}","${f.category}"`)
+        .join("\n");
+
+    const blob = new Blob(["\ufeff" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'figures_list.csv');
-    link.style.visibility = 'hidden';
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", "figures_list.csv");
+    link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-}
+  }
 
-// Keyboard shortcuts info
-document.addEventListener('DOMContentLoaded', function() {
+  // Keyboard shortcuts info
+  document.addEventListener("DOMContentLoaded", function () {
     // Add keyboard shortcuts tooltip
-    const tooltip = document.createElement('div');
-    tooltip.className = 'position-fixed bottom-0 end-0 m-3 p-2 bg-dark text-white rounded d-none';
+    const tooltip = document.createElement("div");
+    tooltip.className =
+      "position-fixed bottom-0 end-0 m-3 p-2 bg-dark text-white rounded d-none";
     tooltip.innerHTML = `
         <small>
             <strong>Keyboard Shortcuts:</strong><br>
@@ -522,18 +633,18 @@ document.addEventListener('DOMContentLoaded', function() {
         </small>
     `;
     document.body.appendChild(tooltip);
-    
+
     // Show/hide tooltip
     let tooltipTimeout;
-    document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey) {
-            clearTimeout(tooltipTimeout);
-            tooltip.classList.remove('d-none');
-            tooltipTimeout = setTimeout(() => {
-                tooltip.classList.add('d-none');
-            }, 3000);
-        }
+    document.addEventListener("keydown", function (e) {
+      if (e.ctrlKey) {
+        clearTimeout(tooltipTimeout);
+        tooltip.classList.remove("d-none");
+        tooltipTimeout = setTimeout(() => {
+          tooltip.classList.add("d-none");
+        }, 3000);
+      }
     });
-});
+  });
 </script>
 {% endblock %}
