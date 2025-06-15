@@ -5,8 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {% block title %}{{ page_title|default:"लुङ्ग्री गाउँपालिका" }}{% endblock
-      %}
+      {% block title %}{{ page_title|default:"लुङ्ग्री गाउँपालिका" }}{% endblock %}
     </title>
 
     <!-- SEO Meta Tags -->
@@ -290,7 +289,7 @@
               {% endif %} {% endfor %}
             </ol>
           </nav>
-          {% endif %} {% endblock %} {% block content %} {% endblock %}
+          {% endif %} {% endblock %} {% block content %}{% endblock %}
         </main>
       </div>
     </div>
@@ -386,15 +385,7 @@
         }
 
         // Update folder icon
-        if (categoryLink) {
-          const folderIcon = categoryLink.querySelector(
-            ".fa-folder, .fa-folder-open"
-          );
-          if (folderIcon) {
-            folderIcon.className = isExpanded
-              ? "fas fa-folder-open me-2"
-              : "fas fa-folder me-2";
-          }
+        if
         }
       }
 

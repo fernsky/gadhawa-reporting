@@ -109,7 +109,7 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         track_download(request, "full_report")
 
         # Municipality name - make dynamic
-        municipality_name = "गधावा गाउँपालिका"
+        municipality_name = "गढवा गाउँपालिका"
         municipality_name_english = "lungri Rural Municipality"
 
         # Get publication settings (optional)
@@ -140,7 +140,7 @@ class GenerateCategoryPDFView(PDFGeneratorMixin, TemplateView):
         track_download(request, "pdf")
 
         # Municipality name - make dynamic
-        municipality_name = "गधावा गाउँपालिका"
+        municipality_name = "गढवा गाउँपालिका"
         municipality_name_english = "LungriRural Municipality"
 
         publication_settings = self.get_publication_settings()
@@ -184,7 +184,7 @@ class GenerateSectionPDFView(PDFGeneratorMixin, TemplateView):
         track_download(request, "section", section)
 
         # Municipality name - make dynamic
-        municipality_name = "गधावा गाउँपालिका"
+        municipality_name = "गढवा गाउँपालिका"
         municipality_name_english = "LungriRural Municipality"
 
         publication_settings = self.get_publication_settings()

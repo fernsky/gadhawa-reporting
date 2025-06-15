@@ -11,7 +11,7 @@ class ReportSitemapView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Municipality name - make dynamic
-        municipality_name = "गधावा गाउँपालिका"
+        municipality_name = "गढवा गाउँपालिका"
         municipality_name_english = "Lungri Rural Municipality"
 
         # Get all published content

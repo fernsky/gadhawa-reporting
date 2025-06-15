@@ -46,7 +46,7 @@ def test_toc_page_numbers():
     )
 
     context = {
-        "municipality_name": "गधावा गाउँपालिका",
+        "municipality_name": "गढवा गाउँपालिका",
         "municipality_name_english": "lungri Rural Municipality",
         "publication_settings": publication_settings,
         "categories": categories,

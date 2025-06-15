@@ -57,7 +57,7 @@ def final_validation_test():
     )
 
     context = {
-        "municipality_name": "गधावा गाउँपालिका",
+        "municipality_name": "गढवा गाउँपालिका",
         "municipality_name_english": "LungriRural Municipality",
         "publication_settings": publication_settings,
         "categories": categories,
