@@ -1,29 +1,36 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}{{ section.title_nepali|default:section.title }} - {{
-category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका{% endblock
-%} {% block description %}{{
-section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title
-}} - {{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिकाको
-डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।{% endblock %} {% block keywords %}{{
-section.title_nepali|default:section.title }}, {{
-category.name_nepali|default:category.name }}, लुङ्ग्री, गाउँपालिका, नेपाल,
-प्रतिवेदन{% endblock %} {% block breadcrumb %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका
+{% endblock %}
+
+{% block description %}
+{{ section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिकाको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।
+{% endblock %}
+
+{% block keywords %}
+{{ section.title_nepali|default:section.title }}, {{ category.name_nepali|default:category.name }}, लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन
+{% endblock %}
+
+{% block breadcrumb %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
       <a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="{% url 'reports:category' category.slug %}"
-        >{{ category.name_nepali|default:category.name }}</a
-      >
+      <a href="{% url 'reports:category' category.slug %}">{{ category.name_nepali|default:category.name }}</a>
     </li>
     <li class="breadcrumb-item active">
       {{ section.title_nepali|default:section.title }}
     </li>
   </ol>
 </nav>
-{% endblock %} {% block structured_data %}
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -66,7 +73,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="content-header">
   <div class="d-flex justify-content-between align-items-center">
     <div>
@@ -78,10 +87,8 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
       {% endif %}
       <div class="text-muted">
         <small>
-          <i class="fas fa-folder me-1"></i>{{
-          category.name_nepali|default:category.name }} |
-          <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{
-          section.updated_at|nepali_date:"Y F j" }}
+          <i class="fas fa-folder me-1"></i>{{ category.name_nepali|default:category.name }} |
+          <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|nepali_date:"Y F j" }}
         </small>
       </div>
     </div>
@@ -110,8 +117,11 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
   <div class="col-lg-8">
     <!-- Main content will be here -->
     <div class="section-content">
-      {% if section.content_nepali %} {{ section.content_nepali|safe }} {% elif
-      section.content %} {{ section.content|safe }} {% else %}
+      {% if section.content_nepali %}
+      {{ section.content_nepali|safe }}
+      {% elif section.content %}
+      {{ section.content|safe }}
+      {% else %}
       <div class="text-center py-4">
         <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
         <h5 class="text-muted">सामग्री उपलब्ध छैन</h5>
@@ -180,14 +190,15 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
           {% endif %}
           <div class="card-body">
             <h6 class="card-title">
-              चित्र {{ figure.figure_number|nepali_digits }}: {{
-              figure.title_nepali|default:figure.title }}
+              चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}
             </h6>
             {% if figure.description_nepali or figure.description %}
             <p class="card-text figure-caption">
               {{ figure.description_nepali|default:figure.description }}
             </p>
-            {% endif %} {% if figure.data_source %}
+            {% endif %}
+            
+            {% if figure.data_source %}
             <p class="card-text">
               <small class="text-muted">स्रोत: {{ figure.data_source }}</small>
             </p>
@@ -201,8 +212,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">
-                  चित्र {{ figure.figure_number|nepali_digits }}: {{
-                  figure.title_nepali|default:figure.title }}
+                  चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}
                 </h5>
                 <button
                   type="button"
@@ -217,12 +227,15 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
                   class="img-fluid"
                   alt="{{ figure.title_nepali|default:figure.title }}"
                 />
-                {% endif %} {% if figure.description_nepali or
-                figure.description %}
+                {% endif %}
+                
+                {% if figure.description_nepali or figure.description %}
                 <p class="mt-3 figure-caption">
                   {{ figure.description_nepali|default:figure.description }}
                 </p>
-                {% endif %} {% if figure.data_source %}
+                {% endif %}
+                
+                {% if figure.data_source %}
                 <p class="text-muted">स्रोत: {{ figure.data_source }}</p>
                 {% endif %}
               </div>
@@ -247,8 +260,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
     <div class="table-container mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <h5>
-          तालिका {{ table.table_number }}: {{
-          table.title_nepali|default:table.title }}
+          तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}
         </h5>
         <div class="btn-group btn-group-sm no-print">
           <button
@@ -321,8 +333,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             class="page-link"
             href="{% url 'reports:section' category.slug prev_section.slug %}"
           >
-            <i class="fas fa-chevron-left me-2"></i>{{
-            prev_section.title_nepali|default:prev_section.title }}
+            <i class="fas fa-chevron-left me-2"></i>{{ prev_section.title_nepali|default:prev_section.title }}
           </a>
           {% else %}
           <span class="page-link">
@@ -335,8 +346,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             class="page-link"
             href="{% url 'reports:category' category.slug %}"
           >
-            <i class="fas fa-folder me-2"></i>{{
-            category.name_nepali|default:category.name }}
+            <i class="fas fa-folder me-2"></i>{{ category.name_nepali|default:category.name }}
           </a>
         </li>
         <li class="page-item {% if not next_section %}disabled{% endif %}">
@@ -345,9 +355,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             class="page-link"
             href="{% url 'reports:section' category.slug next_section.slug %}"
           >
-            {{ next_section.title_nepali|default:next_section.title }}<i
-              class="fas fa-chevron-right ms-2"
-            ></i>
+            {{ next_section.title_nepali|default:next_section.title }}<i class="fas fa-chevron-right ms-2"></i>
           </a>
           {% else %}
           <span class="page-link">
@@ -380,8 +388,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             href="{% url 'reports:pdf_category' category.slug %}"
             class="btn btn-outline-secondary"
           >
-            <i class="fas fa-file-pdf me-2"></i>{{
-            category.name_nepali|default:category.name }} PDF
+            <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }} PDF
           </a>
           <a
             href="{% url 'reports:search' %}?q={{ section.title_nepali|default:section.title }}"
@@ -395,7 +402,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
   </div>
 </div>
 
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
   // Generate table of contents for the section
   document.addEventListener("DOMContentLoaded", function () {

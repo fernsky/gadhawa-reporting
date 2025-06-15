@@ -1,9 +1,20 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}तालिकाहरूको सूची - लुङ्ग्री गाउँपालिका{% endblock %} {% block
-description %}लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग
-गरिएका सबै तालिकाहरूको सूची र डेटा।{% endblock %} {% block keywords %}तालिकाहरू,
-डेटा, सांख्यिकी, लुङ्ग्री, गाउँपालिका, प्रतिवेदन{% endblock %} {% block
-breadcrumb %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+तालिकाहरूको सूची - लुङ्ग्री गाउँपालिका
+{% endblock %}
+
+{% block description %}
+लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै तालिकाहरूको सूची र डेटा।
+{% endblock %}
+
+{% block keywords %}
+तालिकाहरू, डेटा, सांख्यिकी, लुङ्ग्री, गाउँपालिका, प्रतिवेदन
+{% endblock %}
+
+{% block breadcrumb %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -12,7 +23,9 @@ breadcrumb %}
     <li class="breadcrumb-item active">तालिकाहरूको सूची</li>
   </ol>
 </nav>
-{% endblock %} {% block structured_data %}
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -31,7 +44,9 @@ breadcrumb %}
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="content-header">
   <div class="d-flex justify-content-between align-items-center">
     <div>
@@ -85,9 +100,7 @@ breadcrumb %}
       <div class="col-md-4">
         <label class="form-label">कुल तालिकाहरू:</label>
         <p class="mb-0">
-          <span class="badge bg-primary fs-6" id="tableCount"
-            >{{ tables.count }}</span
-          >
+          <span class="badge bg-primary fs-6" id="tableCount">{{ tables.count }}</span>
         </p>
       </div>
     </div>
@@ -180,8 +193,7 @@ breadcrumb %}
               {% endfor %} {% if table.data|length > 4 %}
               <tr class="table-warning">
                 <td colspan="{{ table.data.0|length }}" class="text-center">
-                  <i class="fas fa-ellipsis-h"></i> र {{
-                  table.data|length|add:"-4" }} अन्य पंक्तिहरू...
+                  <i class="fas fa-ellipsis-h"></i> र {{ table.data|length|add:"-4" }} अन्य पंक्तिहरू...
                   <button
                     class="btn btn-sm btn-link"
                     onclick="showFullTable('table{{ table.id }}')"

@@ -1,12 +1,20 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}{{ category.name_nepali|default:category.name }} - {{
-municipality_name|default:"लुङ्ग्री गाउँपालिका" }}{% endblock %} {% block
-description %}{{
-category.description_nepali|default:category.description|default:category.name_nepali
-}} - {{ municipality_name|default:"लुङ्ग्री गाउँपालिका" }}को डिजिटल प्रोफाइल र
-वार्षिक प्रतिवेदन।{% endblock %} {% block keywords %}{{
-category.name_nepali|default:category.name }}, लुङ्ग्री, गाउँपालिका, नेपाल,
-प्रतिवेदन{% endblock %} {% block breadcrumb %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+{{ category.name_nepali|default:category.name }} - {{ municipality_name|default:"लुङ्ग्री गाउँपालिका" }}
+{% endblock %}
+
+{% block description %}
+{{ category.description_nepali|default:category.description|default:category.name_nepali }} - {{ municipality_name|default:"लुङ्ग्री गाउँपालिका" }}को डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।
+{% endblock %}
+
+{% block keywords %}
+{{ category.name_nepali|default:category.name }}, लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन
+{% endblock %}
+
+{% block breadcrumb %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -17,7 +25,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
     </li>
   </ol>
 </nav>
-{% endblock %} {% block structured_data %}
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -38,7 +48,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="content-header">
   <div class="d-flex justify-content-between align-items-center">
     <div>
@@ -82,15 +94,12 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
                 href="{% url 'reports:section' category.slug section.slug %}"
                 class="toc-link"
               >
-                <i class="fas fa-chevron-right me-2"></i>{{
-                section.title_nepali|default:section.title }}
+                <i class="fas fa-chevron-right me-2"></i>{{ section.title_nepali|default:section.title }}
               </a>
               {% if section.summary_nepali or section.summary %}
-              <small class="d-block text-muted mt-1"
-                >{{
-                section.summary_nepali|default:section.summary|truncatewords:15
-                }}</small
-              >
+              <small class="d-block text-muted mt-1">
+                {{ section.summary_nepali|default:section.summary|truncatewords:15 }}
+              </small>
               {% endif %}
             </div>
           </div>
@@ -119,7 +128,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
   <div class="card-body">
     {% if section.summary_nepali or section.summary %}
     <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
-    {% endif %} {% if section.content %}
+    {% endif %}
+    
+    {% if section.content %}
     <div class="content-section">{{ section.content|safe }}</div>
     {% endif %}
 
@@ -140,8 +151,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             {% endif %}
             <div class="card-body">
               <h6 class="card-title">
-                चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title
-                }}
+                चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}
               </h6>
               {% if figure.caption %}
               <p class="card-text figure-caption">{{ figure.caption }}</p>
@@ -162,10 +172,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
       <div class="table-responsive mb-4">
         <table class="table table-bordered table-striped">
           <caption class="caption-top">
-            <strong
-              >तालिका {{ table.table_number|nepali_digits }}: {{ table.title
-              }}</strong
-            >
+            <strong>तालिका {{ table.table_number|nepali_digits }}: {{ table.title }}</strong>
             {% if table.caption %}
             <br /><small class="text-muted">{{ table.caption }}</small>
             {% endif %}
@@ -194,12 +201,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
     </div>
     {% endif %}
 
-    <div
-      class="d-flex justify-content-between align-items-center mt-3 no-print"
-    >
+    <div class="d-flex justify-content-between align-items-center mt-3 no-print">
       <small class="text-muted">
-        <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{
-        section.updated_at|nepali_date:"Y F j" }}
+        <i class="fas fa-clock me-1"></i>अन्तिम अद्यावधिक: {{ section.updated_at|nepali_date:"Y F j" }}
       </small>
       <div>
         <a
@@ -237,8 +241,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             class="page-link"
             href="{% url 'reports:category' prev_category.slug %}"
           >
-            <i class="fas fa-chevron-left me-2"></i>{{
-            prev_category.name_nepali|default:prev_category.name }}
+            <i class="fas fa-chevron-left me-2"></i>{{ prev_category.name_nepali|default:prev_category.name }}
           </a>
           {% else %}
           <span class="page-link">
@@ -252,9 +255,7 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
             class="page-link"
             href="{% url 'reports:category' next_category.slug %}"
           >
-            {{ next_category.name_nepali|default:next_category.name }}<i
-              class="fas fa-chevron-right ms-2"
-            ></i>
+            {{ next_category.name_nepali|default:next_category.name }}<i class="fas fa-chevron-right ms-2"></i>
           </a>
           {% else %}
           <span class="page-link">
@@ -295,7 +296,9 @@ category.name_nepali|default:category.name }}, लुङ्ग्री, गा�
   </div>
 </div>
 
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
   // Smooth scrolling to sections
   function scrollToSection(sectionId) {

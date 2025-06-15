@@ -594,36 +594,6 @@ function highlightSearchTerms() {
     });
 }
 
-// Highlight search terms in results
-function highlightSearchTerms() {
-    const query = '{{ query|escapejs }}';
-    if (!query) return;
-    
-    const terms = query.split(' ').filter(term => term.length > 2);
-    const resultItems = document.querySelectorAll('.result-item');
-    
-    resultItems.forEach(item => {
-        const title = item.querySelector('.card-title a');
-        const snippet = item.querySelector('.result-snippet p');
-        
-        terms.forEach(term => {
-            if (title) {
-                title.innerHTML = title.innerHTML.replace(
-                    new RegExp(`(${term})`, 'gi'),
-                    '<mark class="bg-warning">$1</mark>'
-                );
-            }
-            
-            if (snippet) {
-                snippet.innerHTML = snippet.innerHTML.replace(
-                    new RegExp(`(${term})`, 'gi'),
-                    '<mark class="bg-warning">$1</mark>'
-                );
-            }
-        });
-    });
-}
-
 // Add search analytics
 function trackSearch(query, results_count) {
     console.log('Search performed:', query, 'Results:', results_count);
@@ -633,14 +603,14 @@ function trackSearch(query, results_count) {
 // Initialize page functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize highlighting if we have results
-    const hasResults = {{ results|yesno:"true,false" }};
+    var hasResults = {% if results %}true{% else %}false{% endif %};
     if (hasResults) {
         highlightSearchTerms();
     }
     
     // Track search if query exists
-    const currentQuery = '{{ query|escapejs }}';
-    const resultCount = {{ total_results|default:0 }};
+    var currentQuery = '{{ query|escapejs }}';
+    var resultCount = {{ total_results|default:0 }};
     if (currentQuery) {
         trackSearch(currentQuery, resultCount);
     }

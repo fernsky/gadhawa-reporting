@@ -1,9 +1,20 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}चित्रहरूको सूची - लुङ्ग्री गाउँपालिका{% endblock %} {% block
-description %}लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग
-गरिएका सबै चित्रहरू, आंकडाहरू र ग्राफहरूको सूची।{% endblock %} {% block keywords
-%}चित्रहरू, आंकडाहरू, ग्राफ, लुङ्ग्री, गाउँपालिका, प्रतिवेदन{% endblock %} {%
-block breadcrumb %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+चित्रहरूको सूची - लुङ्ग्री गाउँपालिका
+{% endblock %}
+
+{% block description %}
+लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनमा प्रयोग गरिएका सबै चित्रहरू, आंकडाहरू र ग्राफहरूको सूची।
+{% endblock %}
+
+{% block keywords %}
+चित्रहरू, आंकडाहरू, ग्राफ, लुङ्ग्री, गाउँपालिका, प्रतिवेदन
+{% endblock %}
+
+{% block breadcrumb %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -12,7 +23,9 @@ block breadcrumb %}
     <li class="breadcrumb-item active">चित्रहरूको सूची</li>
   </ol>
 </nav>
-{% endblock %} {% block structured_data %}
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -31,7 +44,9 @@ block breadcrumb %}
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="content-header">
   <div class="d-flex justify-content-between align-items-center">
     <div>
@@ -62,14 +77,8 @@ block breadcrumb %}
   <div class="card-body">
     <div class="row align-items-center">
       <div class="col-md-4">
-        <label for="categoryFilter" class="form-label"
-          >विषयअनुसार फिल्टर:</label
-        >
-        <select
-          id="categoryFilter"
-          class="form-select"
-          onchange="filterFigures()"
-        >
+        <label for="categoryFilter" class="form-label">विषयअनुसार फिल्टर:</label>
+        <select id="categoryFilter" class="form-select" onchange="filterFigures()">
           <option value="">सबै विषयहरू</option>
           {% for category in categories %}
           <option value="{{ category.slug }}">{{ category.title }}</option>
@@ -89,9 +98,7 @@ block breadcrumb %}
       <div class="col-md-4">
         <label class="form-label">कुल चित्रहरू:</label>
         <p class="mb-0">
-          <span class="badge bg-primary fs-6" id="figureCount"
-            >{{ figures.count }}</span
-          >
+          <span class="badge bg-primary fs-6" id="figureCount">{{ figures.count }}</span>
         </p>
       </div>
     </div>
@@ -133,12 +140,9 @@ block breadcrumb %}
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title">
-                चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title
-                }}
+                चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title }}
               </h5>
-              <span class="badge bg-secondary"
-                >{{ figure.section.category.title }}</span
-              >
+              <span class="badge bg-secondary">{{ figure.section.category.title }}</span>
             </div>
 
             {% if figure.caption %}
@@ -182,8 +186,7 @@ block breadcrumb %}
                 </a>
               </div>
               <small class="text-muted">
-                <i class="fas fa-clock me-1"></i>{{
-                figure.created_at|nepali_date:"Y F j" }}
+                <i class="fas fa-clock me-1"></i>{{ figure.created_at|nepali_date:"Y F j" }}
               </small>
             </div>
           </div>
@@ -212,7 +215,9 @@ block breadcrumb %}
               class="img-fluid mb-3"
               alt="{{ figure.caption }}"
             />
-            {% endif %} {% if figure.caption %}
+            {% endif %}
+            
+            {% if figure.caption %}
             <p class="lead">{{ figure.caption }}</p>
             {% endif %}
             <div class="row text-start">
@@ -224,8 +229,7 @@ block breadcrumb %}
                 {% if figure.source %}
                 <strong>स्रोत:</strong> {{ figure.source }}<br />
                 {% endif %}
-                <strong>मिति:</strong> {{ figure.created_at|nepali_date:"Y F j"
-                }}
+                <strong>मिति:</strong> {{ figure.created_at|nepali_date:"Y F j" }}
               </div>
             </div>
           </div>
@@ -271,9 +275,7 @@ block breadcrumb %}
               data-bs-target="#figureModal{{ figure.id }}"
             />
             <div class="position-absolute top-0 start-0 m-2">
-              <span class="badge bg-primary"
-                >{{ figure.figure_number|nepali_digits }}</span
-              >
+              <span class="badge bg-primary">{{ figure.figure_number|nepali_digits }}</span>
             </div>
             <div class="position-absolute top-0 end-0 m-2">
               <button
@@ -299,14 +301,11 @@ block breadcrumb %}
             <p class="card-text small">{{ figure.caption|truncatewords:15 }}</p>
             {% endif %}
             <div class="d-flex justify-content-between align-items-center">
-              <small class="text-muted"
-                >{{ figure.section.category.title }}</small
-              >
+              <small class="text-muted">{{ figure.section.category.title }}</small>
               <a
                 href="{% url 'reports:section' figure.section.category.slug figure.section.slug %}#figure-{{ figure.id }}"
                 class="btn btn-sm btn-outline-primary"
-                >हेर्नुहोस्</a
-              >
+              >हेर्नुहोस्</a>
             </div>
           </div>
         </div>
@@ -381,7 +380,11 @@ block breadcrumb %}
     </div>
   </div>
 </div>
-{% endif %} {% endblock %} {% block extra_js %}
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   let currentView = "list";

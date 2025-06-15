@@ -1,9 +1,20 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}सूचीपत्र - लुङ्ग्री गाउँपालिका{% endblock %} {% block description
-%}लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।
-सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।{% endblock %} {% block keywords
-%}सूचीपत्र, विषयसूची, लुङ्ग्री, गाउँपालिका, प्रतिवेदन{% endblock %} {% block
-breadcrumb %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+सूचीपत्र - लुङ्ग्री गाउँपालिका
+{% endblock %}
+
+{% block description %}
+लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र। सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।
+{% endblock %}
+
+{% block keywords %}
+सूचीपत्र, विषयसूची, लुङ्ग्री, गाउँपालिका, प्रतिवेदन
+{% endblock %}
+
+{% block breadcrumb %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -12,7 +23,9 @@ breadcrumb %}
     <li class="breadcrumb-item active">सूचीपत्र</li>
   </ol>
 </nav>
-{% endblock %} {% block structured_data %}
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -31,7 +44,9 @@ breadcrumb %}
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <div class="content-header">
   <div class="d-flex justify-content-between align-items-center">
     <div>
@@ -80,7 +95,9 @@ breadcrumb %}
             <td class="fw-bold">सम्पादक:</td>
             <td>{{ publication_settings.editor_name }}</td>
           </tr>
-          {% endif %} {% if publication_settings.isbn %}
+          {% endif %}
+          
+          {% if publication_settings.isbn %}
           <tr>
             <td class="fw-bold">ISBN:</td>
             <td>{{ publication_settings.isbn }}</td>
@@ -132,30 +149,19 @@ breadcrumb %}
             </td>
             <td class="text-center">-</td>
             <td class="text-center no-print">
-              <a
-                href="{% url 'reports:toc' %}"
-                class="btn btn-sm btn-outline-primary"
-                >हेर्नुहोस्</a
-              >
+              <a href="{% url 'reports:toc' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
             </td>
           </tr>
           <tr>
             <td>ii</td>
             <td>
-              <a
-                href="{% url 'reports:figures' %}"
-                class="text-decoration-none"
-              >
+              <a href="{% url 'reports:figures' %}" class="text-decoration-none">
                 चित्रहरूको सूची
               </a>
             </td>
             <td class="text-center">{{ total_figures|nepali_digits }}</td>
             <td class="text-center no-print">
-              <a
-                href="{% url 'reports:figures' %}"
-                class="btn btn-sm btn-outline-primary"
-                >हेर्नुहोस्</a
-              >
+              <a href="{% url 'reports:figures' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
             </td>
           </tr>
           <tr>
@@ -167,11 +173,7 @@ breadcrumb %}
             </td>
             <td class="text-center">{{ total_tables|nepali_digits }}</td>
             <td class="text-center no-print">
-              <a
-                href="{% url 'reports:tables' %}"
-                class="btn btn-sm btn-outline-primary"
-                >हेर्नुहोस्</a
-              >
+              <a href="{% url 'reports:tables' %}" class="btn btn-sm btn-outline-primary">हेर्नुहोस्</a>
             </td>
           </tr>
 
@@ -188,37 +190,20 @@ breadcrumb %}
               {{ category.order|default:forloop.counter|nepali_digits }}
             </td>
             <td>
-              <a
-                href="{% url 'reports:category' category.slug %}"
-                class="text-decoration-none fw-bold"
-              >
+              <a href="{% url 'reports:category' category.slug %}" class="text-decoration-none fw-bold">
                 {{ category.name_nepali|default:category.name }}
               </a>
               {% if category.description_nepali or category.description %}
-              <br /><small class="text-muted"
-                >{{
-                category.description_nepali|default:category.description|truncatewords:20
-                }}</small
-              >
+              <br /><small class="text-muted">{{ category.description_nepali|default:category.description|truncatewords:20 }}</small>
               {% endif %}
             </td>
             <td class="text-center">
-              <span class="badge bg-secondary"
-                >{{ category.sections.count|nepali_digits }}</span
-              >
+              <span class="badge bg-secondary">{{ category.sections.count|nepali_digits }}</span>
             </td>
             <td class="text-center no-print">
               <div class="btn-group btn-group-sm" role="group">
-                <a
-                  href="{% url 'reports:category' category.slug %}"
-                  class="btn btn-outline-primary"
-                  >हेर्नुहोस्</a
-                >
-                <a
-                  href="{% url 'reports:pdf_category' category.slug %}"
-                  class="btn btn-outline-secondary"
-                  >PDF</a
-                >
+                <a href="{% url 'reports:category' category.slug %}" class="btn btn-outline-primary">हेर्नुहोस्</a>
+                <a href="{% url 'reports:pdf_category' category.slug %}" class="btn btn-outline-secondary">PDF</a>
               </div>
             </td>
           </tr>
@@ -226,51 +211,36 @@ breadcrumb %}
           {% for section in category.sections.all %}
           <tr>
             <td class="ps-4">
-              {{ category.order|default:forloop.parentloop.counter|nepali_digits
-              }}.{{ section.order|default:forloop.counter|nepali_digits }}
+              {{ category.order|default:forloop.parentloop.counter|nepali_digits }}.{{ section.order|default:forloop.counter|nepali_digits }}
             </td>
             <td class="ps-4">
-              <a
-                href="{% url 'reports:section' category.slug section.slug %}"
-                class="text-decoration-none"
-              >
+              <a href="{% url 'reports:section' category.slug section.slug %}" class="text-decoration-none">
                 {{ section.title_nepali|default:section.title }}
               </a>
               {% if section.summary_nepali or section.summary %}
-              <br /><small class="text-muted"
-                >{{
-                section.summary_nepali|default:section.summary|truncatewords:15
-                }}</small
-              >
+              <br /><small class="text-muted">{{ section.summary_nepali|default:section.summary|truncatewords:15 }}</small>
               {% endif %}
             </td>
             <td class="text-center">
               {% if section.figures.count or section.tables.count %}
               <small class="text-muted">
-                {% if section.figures.count %}{{
-                section.figures.count|nepali_digits }} चित्र{% endif %} {% if
-                section.figures.count and section.tables.count %}, {% endif %}
-                {% if section.tables.count %}{{
-                section.tables.count|nepali_digits }} तालिका{% endif %}
+                {% if section.figures.count %}{{ section.figures.count|nepali_digits }} चित्र{% endif %}
+                {% if section.figures.count and section.tables.count %}, {% endif %}
+                {% if section.tables.count %}{{ section.tables.count|nepali_digits }} तालिका{% endif %}
               </small>
-              {% else %} - {% endif %}
+              {% else %}
+              -
+              {% endif %}
             </td>
             <td class="text-center no-print">
               <div class="btn-group btn-group-sm" role="group">
-                <a
-                  href="{% url 'reports:section' category.slug section.slug %}"
-                  class="btn btn-outline-primary"
-                  >हेर्नुहोस्</a
-                >
-                <a
-                  href="{% url 'reports:pdf_section' category.slug section.slug %}"
-                  class="btn btn-outline-secondary"
-                  >PDF</a
-                >
+                <a href="{% url 'reports:section' category.slug section.slug %}" class="btn btn-outline-primary">हेर्नुहोस्</a>
+                <a href="{% url 'reports:pdf_section' category.slug section.slug %}" class="btn btn-outline-secondary">PDF</a>
               </div>
             </td>
           </tr>
-          {% endfor %} {% endfor %}
+          {% endfor %}
+          {% endfor %}
         </tbody>
       </table>
     </div>
@@ -328,12 +298,8 @@ breadcrumb %}
           <hr />
           <h6>विषयवार PDF:</h6>
           {% for category in categories %}
-          <a
-            href="{% url 'reports:pdf_category' category.slug %}"
-            class="btn btn-outline-secondary btn-sm"
-          >
-            <i class="fas fa-file-pdf me-2"></i>{{
-            category.name_nepali|default:category.name }}
+          <a href="{% url 'reports:pdf_category' category.slug %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }}
           </a>
           {% endfor %}
         </div>
@@ -353,24 +319,16 @@ breadcrumb %}
         <h6>द्रुत पहुँच:</h6>
         <ul class="list-unstyled">
           <li>
-            <a href="{% url 'reports:home' %}"
-              ><i class="fas fa-home me-2"></i>मुख्य पृष्ठ</a
-            >
+            <a href="{% url 'reports:home' %}"><i class="fas fa-home me-2"></i>मुख्य पृष्ठ</a>
           </li>
           <li>
-            <a href="{% url 'reports:search' %}"
-              ><i class="fas fa-search me-2"></i>खोज्नुहोस्</a
-            >
+            <a href="{% url 'reports:search' %}"><i class="fas fa-search me-2"></i>खोज्नुहोस्</a>
           </li>
           <li>
-            <a href="{% url 'reports:figures' %}"
-              ><i class="fas fa-images me-2"></i>चित्रहरू</a
-            >
+            <a href="{% url 'reports:figures' %}"><i class="fas fa-images me-2"></i>चित्रहरू</a>
           </li>
           <li>
-            <a href="{% url 'reports:tables' %}"
-              ><i class="fas fa-table me-2"></i>तालिकाहरू</a
-            >
+            <a href="{% url 'reports:tables' %}"><i class="fas fa-table me-2"></i>तालिकाहरू</a>
           </li>
         </ul>
       </div>
@@ -379,10 +337,7 @@ breadcrumb %}
         <ul class="list-unstyled">
           {% for category in categories|slice:":4" %}
           <li>
-            <a href="{% url 'reports:category' category.slug %}"
-              ><i class="fas fa-chevron-right me-2"></i>{{
-              category.name_nepali|default:category.name }}</a
-            >
+            <a href="{% url 'reports:category' category.slug %}"><i class="fas fa-chevron-right me-2"></i>{{ category.name_nepali|default:category.name }}</a>
           </li>
           {% endfor %}
         </ul>
@@ -391,19 +346,13 @@ breadcrumb %}
         <h6>प्रयोगी लिंकहरू:</h6>
         <ul class="list-unstyled">
           <li>
-            <a href="#" onclick="window.print()"
-              ><i class="fas fa-print me-2"></i>यो पृष्ठ प्रिन्ट गर्नुहोस्</a
-            >
+            <a href="#" onclick="window.print()"><i class="fas fa-print me-2"></i>यो पृष्ठ प्रिन्ट गर्नुहोस्</a>
           </li>
           <li>
-            <a href="{% url 'reports:sitemap' %}"
-              ><i class="fas fa-sitemap me-2"></i>साइटम्याप</a
-            >
+            <a href="{% url 'reports:sitemap' %}"><i class="fas fa-sitemap me-2"></i>साइटम्याप</a>
           </li>
           <li>
-            <a href="mailto:info@lungri.gov.np"
-              ><i class="fas fa-envelope me-2"></i>सम्पर्क</a
-            >
+            <a href="mailto:info@lungri.gov.np"><i class="fas fa-envelope me-2"></i>सम्पर्क</a>
           </li>
         </ul>
       </div>
@@ -411,7 +360,9 @@ breadcrumb %}
   </div>
 </div>
 
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
   // Add smooth scrolling to table of contents
   document.addEventListener("DOMContentLoaded", function () {

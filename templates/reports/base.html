@@ -159,8 +159,7 @@
                     class="dropdown-item"
                     href="{% url 'reports:pdf_category' category.slug %}"
                   >
-                    <i class="fas fa-file-pdf me-2"></i>{{
-                    category.name_nepali|default:category.name }}
+                    <i class="fas fa-file-pdf me-2"></i>{{ category.name_nepali|default:category.name }}
                   </a>
                 </li>
                 {% endfor %}
@@ -228,9 +227,7 @@
                       href="{% url 'reports:section' category.slug section.slug %}"
                     >
                       <i class="fas fa-file-alt me-2"></i>
-                      <span class="section-title"
-                        >{{ section.title_nepali|default:section.title }}</span
-                      >
+                      <span class="section-title">{{ section.title_nepali|default:section.title }}</span>
                     </a>
                   </li>
                   {% endfor %}
@@ -385,7 +382,13 @@
         }
 
         // Update folder icon
-        if
+        if (categoryLink) {
+          const folderIcon = categoryLink.querySelector("i");
+          if (folderIcon) {
+            folderIcon.className = isExpanded 
+              ? "fas fa-folder-open me-2" 
+              : "fas fa-folder me-2";
+          }
         }
       }
 

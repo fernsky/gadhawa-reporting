@@ -1,7 +1,15 @@
-{% extends 'reports/pdf_base.html' %} {% load nepali_filters %} {% block title
-%}{{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका{%
-endblock %} {% block chapter_header %}{{
-category.name_nepali|default:category.name }}{% endblock %} {% block content %}
+{% extends 'reports/pdf_base.html' %}
+{% load nepali_filters %}
+
+{% block title %}
+{{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका
+{% endblock %}
+
+{% block chapter_header %}
+{{ category.name_nepali|default:category.name }}
+{% endblock %}
+
+{% block content %}
 <!-- Cover Page -->
 <div class="cover-page">
   <div class="cover-title">लुङ्ग्री गाउँपालिका</div>
@@ -27,8 +35,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
   <div class="cover-info">
     {% if publication_settings %}
     <div>
-      <strong>प्रकाशन मिति:</strong> {{
-      publication_settings.publication_date|nepali_date:"Y F j" }}
+      <strong>प्रकाशन मिति:</strong> {{ publication_settings.publication_date|nepali_date:"Y F j" }}
     </div>
     <div><strong>संस्करण:</strong> {{ publication_settings.version }}</div>
     {% endif %}
@@ -48,10 +55,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
 
   {% for section in category.sections.all %}
   <div class="toc-item level-1">
-    <span
-      >{{ section.section_number|default:forloop.counter|nepali_digits }}. {{
-      section.title_nepali|default:section.title }}</span
-    >
+    <span>{{ section.section_number|default:forloop.counter|nepali_digits }}. {{ section.title_nepali|default:section.title }}</span>
     <span class="page-number">{{ forloop.counter }}</span>
   </div>
   {% endfor %}
@@ -62,10 +66,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
     <h3>चित्रहरू</h3>
     {% for figure in category_figures %}
     <div class="list-item">
-      <span class="title"
-        >चित्र {{ figure.figure_number|nepali_digits }}: {{
-        figure.title_nepali|default:figure.title }}</span
-      >
+      <span class="title">चित्र {{ figure.figure_number|nepali_digits }}: {{ figure.title_nepali|default:figure.title }}</span>
       <span class="page-number">{{ forloop.counter }}</span>
     </div>
     {% endfor %}
@@ -75,10 +76,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
     <h3>तालिकाहरू</h3>
     {% for table in category_tables %}
     <div class="list-item">
-      <span class="title"
-        >तालिका {{ table.table_number }}: {{
-        table.title_nepali|default:table.title }}</span
-      >
+      <span class="title">तालिका {{ table.table_number }}: {{ table.title_nepali|default:table.title }}</span>
       <span class="page-number">{{ forloop.counter }}</span>
     </div>
     {% endfor %}
@@ -97,19 +95,22 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
   <div class="lead">
     {{ category.description_nepali|default:category.description }}
   </div>
-  {% endif %} {% for section in category.sections.all %}
+  {% endif %}
+  
+  {% for section in category.sections.all %}
   <div
     class="{% if not forloop.first %}no-break{% endif %}"
     style="margin-top: 2em"
   >
     <h2>
-      {{ section.section_number|default:forloop.counter|nepali_digits }}. {{
-      section.title_nepali|default:section.title }}
+      {{ section.section_number|default:forloop.counter|nepali_digits }}. {{ section.title_nepali|default:section.title }}
     </h2>
 
     {% if section.summary_nepali or section.summary %}
     <p class="lead">{{ section.summary_nepali|default:section.summary }}</p>
-    {% endif %} {% if section.content_nepali or section.content %}
+    {% endif %}
+    
+    {% if section.content_nepali or section.content %}
     <div class="content-section">
       {{ section.content_nepali|default:section.content|safe }}
     </div>
@@ -121,8 +122,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
       </p>
 
       <!-- Add some contextual content based on section title -->
-      {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali
-      %}
+      {% if 'demographic' in section.slug or 'जनसंख्या' in section.title_nepali %}
       <div class="important" style="margin-top: 1em">
         <h4>जनसंख्या सम्बन्धी मुख्य बिन्दुहरू:</h4>
         <ul>
@@ -142,8 +142,7 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
           <li>आर्थिक विकासका चुनौतीहरू</li>
         </ul>
       </div>
-      {% elif 'infrastructure' in section.slug or 'पूर्वाधार' in
-      section.title_nepali %}
+      {% elif 'infrastructure' in section.slug or 'पूर्वाधार' in section.title_nepali %}
       <div class="important" style="margin-top: 1em">
         <h4>पूर्वाधार सम्बन्धी मुख्य बिन्दुहरू:</h4>
         <ul>
@@ -167,10 +166,10 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
       />
       {% endif %}
       <div class="figure-caption">
-        <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{
-        figure.title_nepali|default:figure.title }} {% if
-        figure.description_nepali or figure.description %} <br />{{
-        figure.description_nepali|default:figure.description }} {% endif %}
+        <strong>चित्र {{ figure.figure_number|nepali_digits }}:</strong> {{ figure.title_nepali|default:figure.title }}
+        {% if figure.description_nepali or figure.description %}
+        <br />{{ figure.description_nepali|default:figure.description }}
+        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -183,7 +182,9 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
           <strong>तालिका {{ table.table_number }}:</strong>
           {{ table.title_nepali|default:table.title }}
         </caption>
-        {% if table.data %} {{ table.data|safe }} {% else %}
+        {% if table.data %}
+        {{ table.data|safe }}
+        {% else %}
         <thead>
           <tr>
             <th>विवरण</th>
@@ -231,7 +232,9 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
       </li>
       {% if category_figures %}
       <li>कुल {{ category_figures|length }} वटा चित्र र आंकडाहरू समावेश छन्</li>
-      {% endif %} {% if category_tables %}
+      {% endif %}
+      
+      {% if category_tables %}
       <li>कुल {{ category_tables|length }} वटा तालिकाहरू समावेश छन्</li>
       {% endif %}
       <li>यो क्षेत्र लुङ्ग्री गाउँपालिकाको समग्र विकासमा महत्वपूर्ण छ</li>
@@ -246,7 +249,9 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
       <span class="stat-value">{{ category_figures|length }}</span>
       <div class="stat-label">चित्रहरू</div>
     </div>
-    {% endif %} {% if category_tables %}
+    {% endif %}
+    
+    {% if category_tables %}
     <div class="stat-item">
       <span class="stat-value">{{ category_tables|length }}</span>
       <div class="stat-label">तालिकाहरू</div>
@@ -292,9 +297,10 @@ category.name_nepali|default:category.name }}{% endblock %} {% block content %}
       <h4>प्रकाशन जानकारी:</h4>
       <p style="font-size: 10pt">
         प्रकाशन मिति: {{ generated_date|date:"Y F j" }}<br />
-        {% if publication_settings %} संस्करण: {{ publication_settings.version
-        }}<br />
-        {% endif %} विषय: {{ category.name_nepali|default:category.name }}
+        {% if publication_settings %}
+        संस्करण: {{ publication_settings.version }}<br />
+        {% endif %}
+        विषय: {{ category.name_nepali|default:category.name }}
       </p>
     </div>
   </div>

@@ -1,10 +1,20 @@
-{% extends 'reports/base.html' %} {% load static %} {% load nepali_filters %} {%
-block title %}लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन{%
-endblock %} {% block description %}लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल
-र वार्षिक प्रतिवेदन। जनसंख्या, आर्थिक, सामाजिक, वातावरणीय र पूर्वाधार विकासका
-विस्तृत तथ्यांक र विश्लेषण।{% endblock %} {% block keywords %}लुङ्ग्री,
-गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल, जनसंख्या, आर्थिक अवस्था, सामाजिक
-संकेतक, वातावरण, पूर्वाधार, सुशासन{% endblock %} {% block structured_data %}
+{% extends 'reports/base.html' %}
+{% load static %}
+{% load nepali_filters %}
+
+{% block title %}
+लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+{% endblock %}
+
+{% block description %}
+लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन। जनसंख्या, आर्थिक, सामाजिक, वातावरणीय र पूर्वाधार विकासका विस्तृत तथ्यांक र विश्लेषण।
+{% endblock %}
+
+{% block keywords %}
+लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल, जनसंख्या, आर्थिक अवस्था, सामाजिक संकेतक, वातावरण, पूर्वाधार, सुशासन
+{% endblock %}
+
+{% block structured_data %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -29,7 +39,9 @@ endblock %} {% block description %}लुङ्ग्री गाउँपा�
     }
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <!-- Hero Section -->
 <section class="content-header text-center mb-5">
   <h1 class="display-4 mb-3">लुङ्ग्री गाउँपालिका</h1>
@@ -109,20 +121,21 @@ endblock %} {% block description %}लुङ्ग्री गाउँपा�
         </header>
         {% if category.description_nepali or category.description %}
         <p class="text-muted mb-3">
-          {{
-          category.description_nepali|default:category.description|truncatewords:20
-          }}
+          {{ category.description_nepali|default:category.description|truncatewords:20 }}
         </p>
-        {% endif %} {% if category.sections.all %}
+        {% endif %}
+        
+        {% if category.sections.all %}
         <div class="mb-3">
           <small class="text-muted">उप-विषयहरू:</small>
           <ul class="list-unstyled mt-2 mb-0">
             {% for section in category.sections.all|slice:":3" %}
             <li>
-              <i class="fas fa-chevron-right text-primary me-2"></i>{{
-              section.title_nepali }}
+              <i class="fas fa-chevron-right text-primary me-2"></i>{{ section.title_nepali }}
             </li>
-            {% endfor %} {% if category.sections.all|length > 3 %}
+            {% endfor %}
+            
+            {% if category.sections.all|length > 3 %}
             <li class="text-muted">
               <i>र {{ category.sections.all|length|add:"-3" }} अन्य...</i>
             </li>
@@ -134,8 +147,7 @@ endblock %} {% block description %}लुङ्ग्री गाउँपा�
           <div>
             {% if category.sections.all %}
             <small class="text-muted">
-              <i class="fas fa-file-alt me-1"></i>{{
-              category.sections.all|length }} उप-विषय
+              <i class="fas fa-file-alt me-1"></i>{{ category.sections.all|length }} उप-विषय
             </small>
             {% endif %}
           </div>
@@ -209,12 +221,12 @@ endblock %} {% block description %}लुङ्ग्री गाउँपा�
       <div class="col-md-6">
         {% if publication_settings.editor_name %}
         <p><strong>सम्पादक:</strong> {{ publication_settings.editor_name }}</p>
-        {% endif %} {% if publication_settings.contact_email %}
+        {% endif %}
+        
+        {% if publication_settings.contact_email %}
         <p>
           <strong>सम्पर्क इमेल:</strong>
-          <a href="mailto:{{ publication_settings.contact_email }}"
-            >{{ publication_settings.contact_email }}</a
-          >
+          <a href="mailto:{{ publication_settings.contact_email }}">{{ publication_settings.contact_email }}</a>
         </p>
         {% endif %}
       </div>
@@ -229,13 +241,16 @@ endblock %} {% block description %}लुङ्ग्री गाउँपा�
     {% if publication_settings.copyright_notice %}
     <hr />
     <p class="text-muted mb-0">
-      <i class="fas fa-copyright me-2"></i>{{
-      publication_settings.copyright_notice }}
+      <i class="fas fa-copyright me-2"></i>{{ publication_settings.copyright_notice }}
     </p>
     {% endif %}
   </div>
 </section>
-{% endif %} {% endblock %} {% block extra_js %}
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
 <script>
   // Add animation to articles on scroll
   const observerOptions = {
