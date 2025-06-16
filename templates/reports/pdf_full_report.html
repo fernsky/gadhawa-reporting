@@ -182,10 +182,20 @@
       ><a href="#section-final-report-preparation"></a
     ></span>
   </div>
-
   <div class="toc-item level-2">
     <span class="toc-link">१.५ वस्तुस्थिति विवरणको सीमा</span>
     <span class="page-ref"><a href="#section-scope-of-report"></a></span>
+  </div>
+
+  <!-- Demographics Chapter TOC -->
+  <div class="toc-item level-1">
+    <span class="toc-link">३. पारिवारिक विवरण तथा जनसंख्याको अवस्था</span>
+    <span class="page-ref"><a href="#category-demographics"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">३.५ धर्म अनुसार जनसंख्याको वडागत विवरण</span>
+    <span class="page-ref"><a href="#section-religion-demographics"></a></span>
   </div>
 
   <!-- Other categories would go here when added -->
@@ -197,6 +207,16 @@
 <div class="main-content-start">
   <!-- Include Hardcoded Introduction Chapter -->
   {% include 'reports/partials/introduction/introduction_complete.html' %}
+
+  <!-- Demographics Chapter -->
+  <div class="section-break" id="category-demographics">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+      परिच्छेद – ३ः पारिवारिक विवरण तथा जनसंख्याको अवस्था
+    </h1>
+    
+    <!-- Religion Demographics Section -->
+    {% include 'demographics/religion/religion_report_partial.html' %}
+  </div>
 
   <!-- Placeholder for additional chapters -->
   <!-- Other chapters would be added here as separate partials -->

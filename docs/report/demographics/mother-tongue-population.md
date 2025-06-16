@@ -1,25 +1,24 @@
-# mother tongue population
 
-g]kfn Ps ax'–hflt, ax'–efiff / ax'–;fF:s[lts ljz]iftf af]s]sf] /fi6« xf] . o; dxfgu/kflnsfdf klg
-eflifs ljljwtf /x]sf] b]lvG5 . dxfgu/kflnsfdf /x]sf s'n %,@!,!*) hg;+Vof dWo] ;a}eGbf a9L
-$,^*,^#( cyf{t *(=(@ k|ltztn] g]kfnL efiff af]N5g eg] @),$&$ cyf{t #=(# k|ltztn] u'?ª
-efiff, (,$)$ cyf{t !=* k|ltztn du/ efiff, ^,(*# cyf{t !=#$ k|ltztn] g]jf/L efiff / afFsL
-cGo gu0o ;+Vofn] tfdfª, ef]hk'/L, yf?, ysfnL, d}ynL, /fO{ nufotsf efiff af]N5g . ;+ljwfgsf]
-wf/f #@ df efiff tyf ;+:s[ltsf] xsnfO{ df}lns xssf] ?kdf :yflkt u/]sf] / wf/f #! sf] lzIff;DaGwL
-xssf] pkwf/f % adf]lhd æg]kfndf a;f]af; ug]{ k|To]s g]kfnL ;d'bfonfO{ sfg'g adf]lhd cfˆgf]
-dft[efiffdf lzIff kfpg] / To;sf nflu ljBfno tyf z}lIfs ;+:yf vf]Ng] / ;+rfng ug]{ xs x'g]5 .Æ
-egL :ki6 ls6fg u/]sf] 5 . cfkm\gf] dft[efiffdf k9\g rfxg] ljBfyL{x¿nfO{ dxfgu/kflnsfn] ljz]if
-Joj:yf ug{ ;Sg] k|fjwfg /x]sf] 5 . j8f cg';f/ dft[efiffsf] lj:t[t ljj/0f tflnsfdf pNn]v ul/Psf]
-5 .
+नेपाल एक बहु–जाति, बहु–भाषा र बहु–साँस्कृतिक विशेषता बोकेको राष्ट्र हो । यस महानगरपालिकामा पनि
+भाषिक विविधता रहेको देखिन्छ । महानगरपालिकामा रहेका कुल ५,२१,१८० जनसंख्या मध्ये सबैभन्दा बढी
+४,६८,६३९ अर्थात ८९.९२ प्रतिशतले नेपाली भाषा बोल्छन भने २०,४७४ अर्थात ३.९३ प्रतिशतले गुरुङ
+भाषा, ९,४०४ अर्थात १.८ प्रतिशतल मगर भाषा, ६,९८३ अर्थात १.३४ प्रतिशतले नेवारी भाषा र बाँकी
+अन्य नगण्य संख्याले तामाङ, भोजपुरी, थारु, थकाली, मैथली, राई लगायतका भाषा बोल्छन । संविधानको
+धारा ३२ मा भाषा तथा संस्कृतिको हकलाई मौलिक हकको रुपमा स्थापित गरेको र धारा ३१ को शिक्षासम्बन्धी
+हकको उपधारा ५ बमोजिम “नेपालमा बसोबास गर्ने प्रत्येक नेपाली समुदायलाई कानुन बमोजिम आफ्नो
+मातृभाषामा शिक्षा पाउने र त्यसका लागि विद्यालय तथा शैक्षिक संस्था खोल्ने र संचालन गर्ने हक हुनेछ ।”
+भनी स्पष्ट किटान गरेको छ । आफ्नो मातृभाषामा पढ्न चाहने विद्यार्थीहरूलाई महानगरपालिकाले विशेष
+व्यवस्था गर्न सक्ने प्रावधान रहेको छ । वडा अनुसार मातृभाषाको विस्तृत विवरण तालिकामा उल्लेख गरिएको
+छ ।
 
--s_ cflbaf;L
-cflbjf;L÷hghftL pTyfg /fli6«o k|lti7fg P]g, @)%* cg';f/ cflbjf;L hghftL eGgfn] cfkm\gf]
-dft[efiff / k/Dk/fut /Lltl/jfh, 5'§} ;fF:s[lts klxrfg, 5'§} ;fdflhs ;+/rgf / lnlvt jf clnlvt
-Oltxf; ePsf %* hflt jf ;d'bfonfO{ a'lemG5 .
-o; dxfgu/kflnsfsf] s'n hg;+Vof %,@!,!*) dWo] &*,*!@ hgf cyf{t !%=!@ k|ltzt u'?ª, !)=!^
-k|ltzt -%@(%( hgf_ du/ ;d'bfo a;f]af; ub{5g\ . o;}u/L dxfgu/kflnsfdf s'n hg;+Vofsf]
-$=%^ k|ltzt g]jf/ / @=#$ k|ltzt tfdfª ;d'bfosf JotmLx? /x]sf 5g\ . oL ;d'bfoåf/f
-dxfgu/kflnsfsf] df}lns ;+:s[ltnfO{ hLjGt /fVg ;xof]u k'u]sf] 5 . dxfgu/kflnsfsf] ljsf;sf]
-nflu of] ;d'bfonfO{ clxn]sf] cj:yfaf6 dfly p7fpg Ifdtf ljsf;, ;zlQms/0f h:tf ljz]if
-sfo{qmdx¿ ;~rfng ug'{kg]{ b]lvG5 . 
+(क) आदिबासी
+आदिवासी/जनजाती उत्थान राष्ट्रिय प्रतिष्ठान ऐन, २०५८ अनुसार आदिवासी जनजाती भन्नाले आफ्नो
+मातृभाषा र परम्परागत रीतिरिवाज, छुट्टै साँस्कृतिक पहिचान, छुट्टै सामाजिक संरचना र लिखित वा अलिखित
+इतिहास भएका ५८ जाति वा समुदायलाई बुझिन्छ ।
+यस महानगरपालिकाको कुल जनसंख्या ५,२१,१८० मध्ये ७८,८१२ जना अर्थात १५.१२ प्रतिशत गुरुङ, १०.१६
+प्रतिशत (५२९५९ जना) मगर समुदाय बसोबास गर्दछन् । यसैगरी महानगरपालिकामा कुल जनसंख्याको
+४.५६ प्रतिशत नेवार र २.३४ प्रतिशत तामाङ समुदायका व्यतmीहरु रहेका छन् । यी समुदायद्वारा
+महानगरपालिकाको मौलिक संस्कृतिलाई जीवन्त राख्न सहयोग पुगेको छ । महानगरपालिकाको विकासको
+लागि यो समुदायलाई अहिलेको अवस्थाबाट माथि उठाउन क्षमता विकास, सशक्तिकरण जस्ता विशेष
+कार्यक्रमहरू सञ्चालन गर्नुपर्ने देखिन्छ । 
 

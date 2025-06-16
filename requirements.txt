@@ -18,6 +18,9 @@ django-ckeditor==6.7.3
 pandas==2.3.0
 pillow==11.2.1
 django-meta==2.5.0
+matplotlib==3.10.3
+seaborn==0.13.2
+numpy==2.1.0
 pytz==2025.2
 pytest==8.4.0
 pytest-django==4.11.1

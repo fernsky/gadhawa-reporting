@@ -1,0 +1,315 @@
+{% load nepali_filters %}
+
+<!-- Religion Demographics Report Partial for PDF -->
+<div class="section-content religion-demographics-section" id="section-religion-demographics">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ३.५ धर्म अनुसार जनसंख्याको वडागत विवरण
+    </h2>
+    
+    <!-- Introduction and Context -->
+    <div class="content-section">
+        <p class="content-paragraph">{{ report_content.introduction }}</p>
+        
+        <p class="content-paragraph">{{ report_content.cultural_practices }}</p>
+        
+        <p class="content-paragraph">{{ report_content.statistical_overview }}</p>
+    </div>
+    
+    <!-- Overall Statistics Table -->
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.५.१: धर्म अनुसार जनसंख्या विवरण</h3>
+        <table class="pdf-data-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">क्र.सं.</th>
+                    <th style="width: 25%;">धर्म</th>
+                    <th style="width: 20%;">जनसंख्या</th>
+                    <th style="width: 15%;">प्रतिशत</th>
+                    <th style="width: 32%;">उपस्थित वडाहरू</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for religion_type, data in religion_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
+                            <td>{{ data.name_nepali }}</td>
+                            <td style="text-align: right;">{{ data.population|nepali_number }}</td>
+                            <td style="text-align: right;">{{ data.percentage|floatformat:2|nepali_number }}%</td>
+                            <td style="text-align: center;">{{ data.wards_present|nepali_number }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold; background-color: #f8fafc;">
+                    <td colspan="2" style="text-align: center;">जम्मा</td>
+                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: right;">१००.००%</td>
+                    <td style="text-align: center;">-</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <!-- Chart placeholder for PDF -->
+    {% if pdf_charts.overall_pie_chart %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.५.१: धर्म अनुसार जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                <img src="{{ pdf_charts.overall_pie_chart }}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Ward-wise Detailed Table -->
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.५.२: वडागत धार्मिक जनसंख्या विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-religion-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 8%;">वडा नं.</th>
+                    <th rowspan="2" style="width: 12%;">कुल जनसंख्या</th>
+                    <th colspan="4" style="border-bottom: 1px solid #ccc;">प्रमुख धर्महरू</th>
+                    <th rowspan="2" style="width: 15%;">प्रमुख धर्म</th>
+                    <th rowspan="2" style="width: 12%;">विविधता सूचकांक</th>
+                </tr>
+                <tr>
+                    <th style="width: 12%;">हिन्दू</th>
+                    <th style="width: 12%;">बौद्ध</th>
+                    <th style="width: 12%;">किरात</th>
+                    <th style="width: 12%;">अन्य</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in ward_data.items %}
+                    <tr>
+                        <td style="text-align: center;">{{ ward_num|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.total_population|nepali_number }}</td>
+                        
+                        <!-- Hindu Population -->
+                        <td style="text-align: right;">
+                            {% with hindu_data=ward_info.religions|lookup:"HINDU" %}
+                                {% if hindu_data %}
+                                    {{ hindu_data.population|nepali_number }}<br>
+                                    <small>({{ hindu_data.percentage|floatformat:1|nepali_number }}%)</small>
+                                {% else %}
+                                    ०
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
+                        <!-- Buddhist Population -->
+                        <td style="text-align: right;">
+                            {% with buddhist_data=ward_info.religions|lookup:"BUDDHIST" %}
+                                {% if buddhist_data %}
+                                    {{ buddhist_data.population|nepali_number }}<br>
+                                    <small>({{ buddhist_data.percentage|floatformat:1|nepali_number }}%)</small>
+                                {% else %}
+                                    ०
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
+                        <!-- Kirant Population -->
+                        <td style="text-align: right;">
+                            {% with kirant_data=ward_info.religions|lookup:"KIRANT" %}
+                                {% if kirant_data %}
+                                    {{ kirant_data.population|nepali_number }}<br>
+                                    <small>({{ kirant_data.percentage|floatformat:1|nepali_number }}%)</small>
+                                {% else %}
+                                    ०
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
+                        <!-- Other Religions -->
+                        <td style="text-align: right;">
+                            {% with total_other=ward_info.total_population|subtract:ward_info.religions.HINDU.population|subtract:ward_info.religions.BUDDHIST.population|subtract:ward_info.religions.KIRANT.population %}
+                                {% if total_other > 0 %}
+                                    {{ total_other|nepali_number }}
+                                {% else %}
+                                    ०
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
+                        <!-- Major Religion -->
+                        <td style="text-align: center;">
+                            {% if ward_info.major_religion %}
+                                {% if ward_info.major_religion == "HINDU" %}हिन्दू
+                                {% elif ward_info.major_religion == "BUDDHIST" %}बौद्ध
+                                {% elif ward_info.major_religion == "KIRANT" %}किरात
+                                {% elif ward_info.major_religion == "CHRISTIAN" %}क्रिश्चियन
+                                {% elif ward_info.major_religion == "ISLAM" %}इस्लाम
+                                {% else %}अन्य{% endif %}
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Diversity Index -->
+                        <td style="text-align: right;">{{ ward_info.religious_diversity_index|floatformat:3|nepali_number }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Ward-wise chart for PDF -->
+    {% if pdf_charts.ward_comparison_bar %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.५.२: वडागत धार्मिक जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                <img src="{{ pdf_charts.ward_comparison_bar }}" alt="वडागत धार्मिक जनसंख्या वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Analysis Section -->
+    <div class="content-section">
+        <h3 class="section-subtitle">वडागत विश्लेषण</h3>
+        <p class="content-paragraph">{{ report_content.ward_analysis }}</p>
+        
+        <h3 class="section-subtitle">धार्मिक विविधता विश्लेषण</h3>
+        <p class="content-paragraph">{{ report_content.diversity_analysis }}</p>
+    </div>
+    
+    <!-- Major Religions Summary -->
+    {% if major_religions %}
+        <div class="content-section">
+            <h3 class="section-subtitle">प्रमुख धर्महरूको सारांश</h3>
+            <div class="major-religions-summary">
+                {% for religion in major_religions %}
+                    <div class="religion-summary-item">
+                        <strong>{{ religion.name_nepali }}:</strong> 
+                        {{ religion.population|nepali_number }} जना ({{ religion.percentage|floatformat:2|nepali_number }}%), 
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Recommendations Section -->
+    <div class="content-section">
+        <h3 class="section-subtitle">सिफारिसहरू</h3>
+        <div class="recommendations-list">
+            {% for recommendation in report_content.recommendations %}
+                <p class="recommendation-item">• {{ recommendation }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Conclusion -->
+    <div class="content-section">
+        <h3 class="section-subtitle">निष्कर्ष</h3>
+        <p class="content-paragraph">{{ report_content.conclusion }}</p>
+    </div>
+</div>
+
+<style>
+/* PDF-specific styles */
+.religion-demographics-section {
+    page-break-inside: avoid;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-religion-table th,
+.ward-religion-table td {
+    font-size: 8pt;
+    padding: 3px 4px;
+}
+
+.pdf-chart-container {
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: avoid;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 400px;
+    height: auto;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.section-subtitle {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #1e40af;
+    margin: 1em 0 0.5em 0;
+    border-left: 3px solid #3b82f6;
+    padding-left: 0.5em;
+}
+
+.content-paragraph {
+    font-size: 9pt;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.recommendations-list .recommendation-item {
+    font-size: 9pt;
+    line-height: 1.5;
+    margin: 0.3em 0;
+    text-align: justify;
+}
+
+.major-religions-summary {
+    font-size: 9pt;
+    line-height: 1.5;
+}
+
+.religion-summary-item {
+    margin: 0.2em 0;
+}
+
+/* Print optimization */
+@media print {
+    .religion-demographics-section {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

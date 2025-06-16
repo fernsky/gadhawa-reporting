@@ -1,27 +1,25 @@
-# settlement and household
+३.१.१ मुख्य बस्ती 
 
-#=!=! d'Vo a:tL 
+३.१.१ मुख्य बस्ती
+पोखरा महानगरपालिका भौगोलिक बनावट तथा अनुकूल हावापानीका कारण बसोबासका लागि उपयुक्त
+मानिएको छ । सेवा सुविधा तथा अवसरको उपलब्धताका कारण महानगरपालिका निकट रहेका जिल्लाहरुबाट
+समेत पोखरामा बसाइसराइ गरेको पाइन्छ । सोही अनुरुप महानगरपालिकाको बस्ती क्षेत्र, बजार क्षेत्र,
+औद्योगिक क्षेत्र र व्यापारिक क्षेत्रको विकास भएको देखिन्छ ।
+महानगरपालिकाका विभिन्न क्षेत्रहरूको व्यवस्थित तवरले विकास गर्न प्रत्येक घडेरीमा आवत जावत गर्न
+मोटर बाटो, खुल्ला क्षेत्रको प्रावधान, चारपाटे आकार मिलेका घडेरीहरू लगायत भौतिक तथा पूर्वाधारको
+निर्माण सहितको व्यवस्थित बस्तीको विकास गर्न जग्गा एकीकरण वा सेवा सुविधा जस्ता कार्यक्रमहरू
+संचालन गर्नुपर्दछ । यसरी जग्गा विकास कार्यक्रम संचालन गर्दा शहरी क्षेत्र विस्तार प्रस्तावना गरिएका
+क्षेत्रहरूलाई टेवा पु¥याउने हिसावले प्राथमिकता दिनुपर्दछ ।
 
-#=!=! d'Vo a:tL
-kf]v/f dxfgu/kflnsf ef}uf]lns agfj6 tyf cg's"n xfjfkfgLsf sf/0f a;f]af;sf nflu pko'Qm
-dflgPsf] 5 . ;]jf ;'ljwf tyf cj;/sf] pknAwtfsf sf/0f dxfgu/kflnsf lgs6 /x]sf lhNnfx?af6
-;d]t kf]v/fdf a;fO;/fO u/]sf] kfOG5 . ;f]xL cg'?k dxfgu/kflnsfsf] a:tL If]q, ahf/ If]q,
-cf}Bf]lus If]q / Jofkfl/s If]qsf] ljsf; ePsf] b]lvG5 .
-dxfgu/kflnsfsf ljleGg If]qx¿sf] Jojl:yt tj/n] ljsf; ug{ k|To]s 38]/Ldf cfjt hfjt ug{
-df]6/ af6f], v'Nnf If]qsf] k|fjwfg, rf/kf6] cfsf/ ldn]sf 38]/Lx¿ nufot ef}lts tyf k"jf{wf/sf]
-lgdf{0f ;lxtsf] Jojl:yt a:tLsf] ljsf; ug{ hUuf PsLs/0f jf ;]jf ;'ljwf h:tf sfo{qmdx¿
-;+rfng ug{'kb{5 . o;/L hUuf ljsf; sfo{qmd ;+rfng ubf{ zx/L If]q lj:tf/ k|:tfjgf ul/Psf
-If]qx¿nfO{ 6]jf k'¥ofpg] lx;fjn] k|fyldstf lbg'kb{5 .
+३.१.२ घरपरिवारको विवरण
 
-#=!=@ 3/kl/jf/sf] ljj/0f
-
-kf]v/f dxfgu/kflnsfsf] j8fut hg;+Vofsf] t'ngfTds ljZn]if0f ubf{ ;a}eGbf w]/} hg;+Vof j8f g+
-!& df /x]sf] 5 h;df hDdf hg;+Vof $^,))% dWo]-k'?if @@,&$) hgf / dlxnf @$,%%* hgf,
-cGo ^ hgf_ /x]sf 5g\. o; j8fsf] cf}ift kl/jf/sf]cfsf/ #=& / 3/w'/L ;+Vof !@,*!% /x]sf] 5 .
-To:t} ;a}eGbf yf]/} hg;+Vof j8f g+= @) df /x]sf] 5 h;sf] hg;+Vof #,(#^ -k'?if !,*%# hgf /
-dlxnf @,)^! hgf_ /x]sf 5g\eg] 3/w'/L ;+Vof !)(^ / cf}ift kl/jf/ ;+Vof #=^ /x]sf] 5 . ;a}eGbf
-a9L hg3gTj j8f g+ $ df /x]sf] 5 h;sf] hg3gTj $((* JolQm k|lt ju{ ls=ld= /x]sf] 5 eg]
-;a}eGbf sd hg3gTj j8f g+= @# /x]sf] 5 h;sf] hg3gTj @$=(!^ JolQm k|lt ju{ ls=ld= /x]sf]
-5 . h;sf] lj:t[t ljj/0f dflysf] tflnsfdf pNn]v ul/Psf] 5 eg] tflnsfnfO{ tn :tDe lrqdf
-b]vfO{Psf] 5 .
+पोखरा महानगरपालिकाको वडागत जनसंख्याको तुलनात्मक विश्लेषण गर्दा सबैभन्दा धेरै जनसंख्या वडा नं
+१७ मा रहेको छ जसमा जम्मा जनसंख्या ४६,००५ मध्ये(पुरुष २२,७४० जना र महिला २४,५५८ जना,
+अन्य ६ जना) रहेका छन्। यस वडाको औषत परिवारकोआकार ३.७ र घरधुरी संख्या १२,८१५ रहेको छ ।
+त्यस्तै सबैभन्दा थोरै जनसंख्या वडा नं. २० मा रहेको छ जसको जनसंख्या ३,९३६ (पुरुष १,८५३ जना र
+महिला २,०६१ जना) रहेका छन्भने घरधुरी संख्या १०९६ र औषत परिवार संख्या ३.६ रहेको छ । सबैभन्दा
+बढी जनघनत्व वडा नं ४ मा रहेको छ जसको जनघनत्व ४९९८ व्यक्ति प्रति वर्ग कि.मि. रहेको छ भने
+सबैभन्दा कम जनघनत्व वडा नं. २३ रहेको छ जसको जनघनत्व २४.९१६ व्यक्ति प्रति वर्ग कि.मि. रहेको
+छ । जसको विस्तृत विवरण माथिको तालिकामा उल्लेख गरिएको छ भने तालिकालाई तल स्तम्भ चित्रमा
+देखाईएको छ ।
 

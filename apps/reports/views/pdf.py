@@ -108,25 +108,50 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         # Track download
         track_download(request, "full_report")
 
-        # Municipality name - make dynamic
-        municipality_name = "गढवा गाउँपालिका"
-        municipality_name_english = "lungri Rural Municipality"
+        # Municipality name - make dynamic  
+        municipality_name = "लुङ्ग्री गाउँपालिका"
+        municipality_name_english = "Lungri Rural Municipality"
 
         # Get publication settings (optional)
         publication_settings = self.get_publication_settings()
 
-        # Use hardcoded content instead of database data
+        # Get religion demographics data
+        from apps.demographics.views.religion import ReligionDemographicsView
+        religion_view = ReligionDemographicsView()
+        religion_data = religion_view.get_religion_population_data()
+        ward_data = religion_view.get_ward_wise_religion_data()
+        
+        # Generate religion report content
+        from apps.demographics.utils.report_formatter import ReligionReportFormatter
+        from apps.demographics.utils.chart_generator import ReligionChartGenerator
+        
+        report_formatter = ReligionReportFormatter()
+        chart_generator = ReligionChartGenerator()
+        
+        report_content = report_formatter.generate_formal_report(religion_data, ward_data)
+        pdf_charts = {
+            'overall_pie_chart': chart_generator.generate_pdf_chart(religion_data, 'pie'),
+            'ward_comparison_bar': chart_generator.generate_pdf_chart(ward_data, 'bar'),
+        }        # Use hardcoded content plus dynamic religion data
         context = {
             "municipality_name": municipality_name,
             "municipality_name_english": municipality_name_english,
             "publication_settings": publication_settings,
             "generated_date": timezone.now(),
-            # No need for categories, figures, tables since we're using hardcoded partials
+            # Religion demographics data
+            "religion_data": religion_data,
+            "ward_data": ward_data,
+            "report_content": report_content,
+            "pdf_charts": pdf_charts,
+            "total_population": sum(data['population'] for data in religion_data.values()),
+            "major_religions": religion_view.get_major_religions(religion_data),
+            "ward_summary": religion_view.get_ward_summary(ward_data),
         }
 
         filename = (
             f"lungri_digital_profile_report_{timezone.now().strftime('%Y%m%d')}.pdf"
         )
+        print(context)
         return self.generate_pdf_with_weasyprint(
             "reports/pdf_full_report.html", context, filename
         )
