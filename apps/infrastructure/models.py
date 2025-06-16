@@ -124,8 +124,125 @@ class HouseMapStatusChoice(models.TextChoices):
 # PHYSICAL INFRASTRUCTURE MODELS (Chapter 7 - भौतिक विकासको अवस्था)
 # =============================================================================
 
+# ७.१ यातायात पूर्वाधार
+# ७.१.१ सडक संजालको विद्यमान अवस्था
+    
+class WardWiseTimeToActiveRoad(BaseModel):
+    """Ward wise time to active road (7.1.6 - from TypeScript schema)"""
 
-# 7.2 विद्युत तथा बैकल्पिक उर्जा (Electricity and Alternative Energy)
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    time_duration = models.CharField(
+        max_length=25,
+        choices=TimeDurationChoice.choices,
+        verbose_name=_("सक्रिय सडकमा पुग्न लाग्ने समय"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत सक्रिय सडकमा पुग्न लाग्ने समय")
+        verbose_name_plural = _("वडागत सक्रिय सडकमा पुग्न लाग्ने समय")
+        unique_together = ["ward_number", "time_duration"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+
+# ७.१.२ निर्माणाधीन गाउँ वा नगरस्तरीय सडकहरु
+class WardWiseRoadStatus(BaseModel):
+    """Ward wise road status (7.1.1 - from TypeScript schema)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    road_status = models.CharField(
+        max_length=15,
+        choices=RoadStatusChoice.choices,
+        verbose_name=_("सडकको अवस्था"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत सडकको अवस्था")
+        verbose_name_plural = _("वडागत सडकको अवस्था")
+        unique_together = ["ward_number", "road_status"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_road_status_display()}"
+
+# ७.१.३ सवारी सुबिधा र रुट
+# ७.१.४ गाउँ/नगर क्षेत्रभित्र चल्ने सवारी साधन
+
+# ७.१.५ झोलुंगे पुल तथा पुलपुलेसा
+class BridgeInfo(BaseModel):
+    """Information about bridges (7.1.5)"""
+    
+    name = models.CharField(max_length=100, verbose_name=_("पुलको नाम"))
+    ward_number = models.CharField(max_length=30, verbose_name=_("वडा नं"))
+    address = models.CharField(max_length=150, verbose_name=_("ठेगाना"), blank=True, null=True)
+    
+    class Meta:
+        verbose_name = _("झोलुंगे पुल तथा पुलपुलेसा")
+        verbose_name_plural = _("झोलुंगे पुल तथा पुलपुलेसाहरू")
+        
+    def __str__(self):
+        return f"{self.name} - {self.ward_number}"
+    
+
+# ७.१.६ टाढाको बस्तीबाट सम्बन्धित गाउँ÷नगरपालिकाको केन्द्र पुग्न लाग्ने अनुमानित समय
+
+class WardWiseTimeToMarketCenter(BaseModel):
+    """Ward wise time to market center (7.1.6 - from TypeScript schema)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    time_duration = models.CharField(
+        max_length=25,
+        choices=TimeDurationChoice.choices,
+        verbose_name=_("बजार केन्द्रमा पुग्न लाग्ने समय"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत बजार केन्द्रमा पुग्न लाग्ने समय")
+        verbose_name_plural = _("वडागत बजार केन्द्रमा पुग्न लाग्ने समय")
+        unique_together = ["ward_number", "time_duration"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+
+
+# ७.१.७ वसपार्क तथा वस विसौनी सम्बन्धी विवरण
+
+class WardWiseTimeToPublicTransport(BaseModel):
+    """Ward wise time to public transport (7.1.6 - from TypeScript schema)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    time_duration = models.CharField(
+        max_length=25,
+        choices=TimeDurationChoice.choices,
+        verbose_name=_("सार्वजनिक यातायातमा पुग्न लाग्ने समय"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत सार्वजनिक यातायातमा पुग्न लाग्ने समय")
+        verbose_name_plural = _("वडागत सार्वजनिक यातायातमा पुग्न लाग्ने समय")
+        unique_together = ["ward_number", "time_duration"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+
+# ७.१.८ स्रोत नक्शा
+# ७.२ विद्युत तथा बैकल्पिक उर्जा
+# ७.२.१ इन्धन उपयोग विवरण (खाना पकाउने इन्धनको आधारमा घरपरिवार)
 class WardWiseCookingFuel(BaseModel):
     """Ward wise cooking fuel usage (7.2.1 - from TypeScript schema)"""
 
@@ -149,6 +266,8 @@ class WardWiseCookingFuel(BaseModel):
         return f"वडा {self.ward_number} - {self.get_cooking_fuel_display()}"
 
 
+# ७.२.२ बत्ति बाल्ने इन्धनको प्रयोगको आधारमा घरपरिवार
+
 class WardWiseElectricitySource(BaseModel):
     """Ward wise electricity source (7.2.2 - from TypeScript schema)"""
 
@@ -171,8 +290,15 @@ class WardWiseElectricitySource(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_electricity_source_display()}"
 
-
-# 7.3 सञ्चार तथा प्रविधि (Communication and Technology)
+# ७.२.३ जलविद्युत, सौर्य उर्जा, वायु उर्जाबाट विद्युत उत्पादन विवरण
+# ७.२.४ विद्युत उपलब्ध घरपरिवार विवरण
+# ७.२.५ वैकल्पिक उर्जा (लघु जल विद्युत, सोलार, वायोग्यास, सुधारिएको चुल्हो) प्रयोग गर्ने परिवार
+# ७.२.६ स्रोत नक्शा
+# ७.३ सञ्चार तथा प्रविधि
+# ७.३.१ हुलाक तथा पत्रपत्रिका सम्बन्धी विवरण
+# ७.३.२ दूरसंचार सम्बन्धी विवरण
+# ७.३.३ रेडियो स्टेसन सम्बन्धी विवरण
+# ७.३.४ आधुनिक सुबिधामा पहुँच सम्बन्धी विवरण
 class WardWiseFacilities(BaseModel):
     """Ward wise facilities (7.3.4 - from TypeScript schema)"""
 
@@ -195,8 +321,9 @@ class WardWiseFacilities(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_facility_display()}"
 
+# ७.३.५ स्रोतनक्शाहरु
+# ७.४ आवास तथा भवन
 
-# 7.4 आवास तथा भवन (Housing and Buildings)
 class WardWiseHouseholdFloor(BaseModel):
     """Ward wise household floor type (7.4.1 - from TypeScript schema)"""
 
@@ -266,94 +393,10 @@ class WardWiseHouseMapPassed(BaseModel):
         return f"वडा {self.ward_number} - {self.get_house_map_status_display()}"
 
 
-# 7.1 यातायात पूर्वाधार (Transportation Infrastructure)
-class WardWiseRoadStatus(BaseModel):
-    """Ward wise road status (7.1.1 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    road_status = models.CharField(
-        max_length=15,
-        choices=RoadStatusChoice.choices,
-        verbose_name=_("सडकको अवस्था"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत सडकको अवस्था")
-        verbose_name_plural = _("वडागत सडकको अवस्था")
-        unique_together = ["ward_number", "road_status"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_road_status_display()}"
-
-
-class WardWiseTimeToActiveRoad(BaseModel):
-    """Ward wise time to active road (7.1.6 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    time_duration = models.CharField(
-        max_length=25,
-        choices=TimeDurationChoice.choices,
-        verbose_name=_("सक्रिय सडकमा पुग्न लाग्ने समय"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत सक्रिय सडकमा पुग्न लाग्ने समय")
-        verbose_name_plural = _("वडागत सक्रिय सडकमा पुग्न लाग्ने समय")
-        unique_together = ["ward_number", "time_duration"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
-
-
-class WardWiseTimeToMarketCenter(BaseModel):
-    """Ward wise time to market center (7.1.6 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    time_duration = models.CharField(
-        max_length=25,
-        choices=TimeDurationChoice.choices,
-        verbose_name=_("बजार केन्द्रमा पुग्न लाग्ने समय"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत बजार केन्द्रमा पुग्न लाग्ने समय")
-        verbose_name_plural = _("वडागत बजार केन्द्रमा पुग्न लाग्ने समय")
-        unique_together = ["ward_number", "time_duration"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
-
-
-class WardWiseTimeToPublicTransport(BaseModel):
-    """Ward wise time to public transport (7.1.6 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    time_duration = models.CharField(
-        max_length=25,
-        choices=TimeDurationChoice.choices,
-        verbose_name=_("सार्वजनिक यातायातमा पुग्न लाग्ने समय"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत सार्वजनिक यातायातमा पुग्न लाग्ने समय")
-        verbose_name_plural = _("वडागत सार्वजनिक यातायातमा पुग्न लाग्ने समय")
-        unique_together = ["ward_number", "time_duration"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+# ७.४.१ विद्यमान सतह ढलको अवस्था
+# ७.४.२ छानोको प्रकारका आधारमा घरधुरी
+# ७.४.३ गाउँ÷नगरपालिका अन्तर्गतका सरकारी भवन सम्बन्धी विवरण
+# ७.४.४ गाउँ÷नगरपालिका कार्यालयदेखि प्रत्येक वडा केन्द्रसम्मको दूरी
+# ७.४.५ पशुवधशालाको विवरण
+# ७.४.६ शव दाहस्थल सम्बन्धी विवरण
+# ७.४.८ स्रोत नक्शा

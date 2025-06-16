@@ -615,8 +615,34 @@ class SafeMaternityData(BaseModel):
 
 # ५.३ खानेपानी तथा सरसफाई
 # ५.३.१ खानेपानी सुविधाको अवस्था
-class WardWiseDrinkingWaterFacility(BaseModel):
-    """Ward wise drinking water facility status (5.3.1 - खानेपानी सुविधाको अवस्था)"""
+class WardWiseWaterPurification(BaseModel):
+    """Ward wise water purification (5.3.1 - from TypeScript schema)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    water_purification = models.CharField(
+        max_length=20,
+        choices=WaterPurificationChoice.choices,
+        verbose_name=_("पानी शुद्धिकरण"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत पानी शुद्धिकरण")
+        verbose_name_plural = _("वडागत पानी शुद्धिकरण")
+        unique_together = ["ward_number", "water_purification"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_water_purification_display()}"
+
+
+# ५.३.२ खानेपानीको श्रोतको विवरण
+
+
+class WardWiseDrinkingWaterSource(BaseModel):
+    """Ward wise drinking water source (5.3.2 - from TypeScript schema)"""
 
     ward_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)],
@@ -630,45 +656,19 @@ class WardWiseDrinkingWaterFacility(BaseModel):
     households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
 
     class Meta:
-        verbose_name = _("वडागत खानेपानी सुविधा")
-        verbose_name_plural = _("वडागत खानेपानी सुविधा")
+        verbose_name = _("वडागत पिउने पानीको स्रोत")
+        verbose_name_plural = _("वडागत पिउने पानीको स्रोत")
         unique_together = ["ward_number", "drinking_water_source"]
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_drinking_water_source_display()}"
 
 
-# ५.३.२ खानेपानीको श्रोतको विवरण
-
-
-class DrinkingWaterSourceDetail(BaseModel):
-    """Drinking water source detail (5.3.2 - खानेपानीको श्रोतको विवरण)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    source_type = models.CharField(
-        max_length=25,
-        choices=DrinkingWaterSourceChoice.choices,
-        verbose_name=_("स्रोतको प्रकार"),
-    )
-    households_served = models.PositiveIntegerField(
-        default=0, verbose_name=_("सेवा पाउने घरपरिवार")
-    )
-
-    class Meta:
-        verbose_name = _("खानेपानीको स्रोत विवरण")
-        verbose_name_plural = _("खानेपानीको स्रोत विवरण")
-        unique_together = ["ward_number", "source_name"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.source_name}"
-
 
 # ५.३.३ शौचालय प्रयोगको अवस्था
-class WardWiseToiletUsage(BaseModel):
-    """Ward wise toilet usage status (5.3.3 - शौचालय प्रयोगको अवस्था)"""
+
+class WardWiseToiletType(BaseModel):
+    """Ward wise toilet type (5.3.3 - from TypeScript schema)"""
 
     ward_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)],
@@ -682,8 +682,8 @@ class WardWiseToiletUsage(BaseModel):
     households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
 
     class Meta:
-        verbose_name = _("वडागत शौचालय प्रयोगको अवस्था")
-        verbose_name_plural = _("वडागत शौचालय प्रयोगको अवस्था")
+        verbose_name = _("वडागत शौचालयको प्रकार")
+        verbose_name_plural = _("वडागत शौचालयको प्रकार")
         unique_together = ["ward_number", "toilet_type"]
 
     def __str__(self):
@@ -693,7 +693,7 @@ class WardWiseToiletUsage(BaseModel):
 # ५.३.४ सार्वजनिक शौचालय
 # ५.३.५ फोहोरमैला व्यवस्थापन
 class WardWiseSolidWasteManagement(BaseModel):
-    """Ward wise solid waste management (5.3.5 - फोहोरमैला व्यवस्थापन)"""
+    """Ward wise solid waste management (5.3.5 - from TypeScript schema)"""
 
     ward_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)],
@@ -713,11 +713,13 @@ class WardWiseSolidWasteManagement(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_solid_waste_management_display()}"
+
 # ५.३.६ ढल व्यवस्थापन
 # ५.३.७ स्रोत नक्शा
 
+# ५.४ महिला, बालबालिका तथा सामाजिक समावेशीकरण
+# ५.४.१ लिङ्ग अनुसार बाल विवाह (अठार वर्ष मुनिका)
 
-# 5.4 महिला, बालबालिका तथा सामाजिक समावेशीकरण (Women, Children and Social Inclusion)
 class WardAgeGenderWiseFirstMarriageAge(BaseModel):
     """Ward age gender wise first marriage age (5.4.1 - from TypeScript schema)"""
 
@@ -744,6 +746,11 @@ class WardAgeGenderWiseFirstMarriageAge(BaseModel):
         return f"वडा {self.ward_number} - {self.get_first_marriage_age_group_display()} - {self.get_gender_display()}"
 
 
+# ५.४.२ कामदारको रुपमा घर वाहिर रहेका बालबालिका
+# ५.४.३ बालक्लव तथा संजालको विवरण
+# ५.४.४ घरपरिवार विहीन बालबालिकाको अवस्था
+# ५.४.५ अपाङ्गताका आधारमा जनसंख्या
+
 class WardWiseDisabledPopulation(BaseModel):
     """Ward wise disabled population (5.4.5 - from TypeScript schema)"""
 
@@ -762,6 +769,8 @@ class WardWiseDisabledPopulation(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - अपाङ्गता: {self.disabled_population}"
+
+# ५.४.१० जेष्ठ नागरिक तथा एकल महिला
 
 
 class WardWiseOldAgePopulationAndSingleWomen(BaseModel):
@@ -793,99 +802,9 @@ class WardWiseOldAgePopulationAndSingleWomen(BaseModel):
     def total_old_age_population(self):
         return self.male_old_age_population + self.female_old_age_population
 
-
-# =============================================================================
-# WATER AND SANITATION MODELS (Chapter 5.3 - खानेपानी तथा सरसफाई)
-# =============================================================================
-
-
-class WardWiseDrinkingWaterSource(BaseModel):
-    """Ward wise drinking water source (5.3.2 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    drinking_water_source = models.CharField(
-        max_length=25,
-        choices=DrinkingWaterSourceChoice.choices,
-        verbose_name=_("पिउने पानीको स्रोत"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत पिउने पानीको स्रोत")
-        verbose_name_plural = _("वडागत पिउने पानीको स्रोत")
-        unique_together = ["ward_number", "drinking_water_source"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_drinking_water_source_display()}"
+# ५.४.११ अल्पसंख्यक सीमान्तकृत वर्गको विवरण
+# ५.४.१२ वार्षिक कार्यक्रमबाट लक्षित कार्यक्रमतर्फ भएको विनियोजन तथा खर्चको अवस्था
+# ५.४.१३ स्रोत नक्शा
 
 
-class WardWiseWaterPurification(BaseModel):
-    """Ward wise water purification (5.3.1 - from TypeScript schema)"""
 
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    water_purification = models.CharField(
-        max_length=20,
-        choices=WaterPurificationChoice.choices,
-        verbose_name=_("पानी शुद्धिकरण"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत पानी शुद्धिकरण")
-        verbose_name_plural = _("वडागत पानी शुद्धिकरण")
-        unique_together = ["ward_number", "water_purification"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_water_purification_display()}"
-
-
-class WardWiseToiletType(BaseModel):
-    """Ward wise toilet type (5.3.3 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    toilet_type = models.CharField(
-        max_length=25,
-        choices=ToiletTypeChoice.choices,
-        verbose_name=_("शौचालयको प्रकार"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत शौचालयको प्रकार")
-        verbose_name_plural = _("वडागत शौचालयको प्रकार")
-        unique_together = ["ward_number", "toilet_type"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_toilet_type_display()}"
-
-
-class WardWiseSolidWasteManagement(BaseModel):
-    """Ward wise solid waste management (5.3.5 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    solid_waste_management = models.CharField(
-        max_length=25,
-        choices=SolidWasteManagementChoice.choices,
-        verbose_name=_("ठोस फोहोर व्यवस्थापन"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत ठोस फोहोर व्यवस्थापन")
-        verbose_name_plural = _("वडागत ठोस फोहोर व्यवस्थापन")
-        unique_together = ["ward_number", "solid_waste_management"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_solid_waste_management_display()}"
