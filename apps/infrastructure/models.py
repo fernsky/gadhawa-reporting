@@ -105,11 +105,10 @@ class RoadStatusChoice(models.TextChoices):
 
 # Time Duration Enums
 class TimeDurationChoice(models.TextChoices):
-    LESS_THAN_30_MIN = "LESS_THAN_30_MIN", _("३० मिनेट भन्दा कम")
-    BETWEEN_30_60_MIN = "BETWEEN_30_60_MIN", _("३०-६० मिनेट")
-    BETWEEN_1_2_HOURS = "BETWEEN_1_2_HOURS", _("१-२ घण्टा")
-    BETWEEN_2_4_HOURS = "BETWEEN_2_4_HOURS", _("२-४ घण्टा")
-    MORE_THAN_4_HOURS = "MORE_THAN_4_HOURS", _("४ घण्टा भन्दा बढी")
+    UNDER_15_MIN = "UNDER_15_MIN", _("१५ मिनेट भन्दा कम")
+    UNDER_30_MIN = "UNDER_30_MIN", _("१५-३० मिनेट")
+    UNDER_1_HOUR = "UNDER_1_HOUR", _("३०-६० मिनेट")
+    ONE_HOUR_OR_MORE = "1_HOUR_OR_MORE", _("१ घण्टा वा बढी")
 
 
 # House Map Passed Enums

@@ -248,11 +248,49 @@
       <!-- Caste Demographics Section -->
       {% if all_demographics_data.caste %}
         {% include 'demographics/caste/caste_report_partial.html' with caste_data=all_demographics_data.caste.data total_population=all_demographics_data.caste.total_population coherent_analysis=all_demographics_data.caste.report_content %}
-      {% endif %}
-
-       <!-- Househead Demographics Section -->
+      {% endif %}       <!-- Househead Demographics Section -->
        {% if all_demographics_data.househead %}
        {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Social Domain Category -->
+  <div class="category-break" id="category-social">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+      ५. सामाजिक अवस्था
+    </h1>
+    <p class="section-content">
+      <!-- Introduction to social conditions -->
+      <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+          लुङ्ग्री गाउँपालिकाको सामाजिक अवस्था र जीवनयापनको गुणस्तरको विश्लेषण यस खण्डमा प्रस्तुत गरिएको छ । शिक्षा, स्वास्थ्य, सरसफाइ र आधारभूत सुविधाहरूको पहुँचको अवस्थाले गाउँपालिकाको सामाजिक विकासको स्तर निर्धारण गर्छ । यहाँका समुदायिक सेवाहरू, स्वच्छता अवस्था र सामाजिक पूर्वाधारको विस्तृत अध्ययन गरिएको छ ।
+        </div>
+      </div>
+      
+      <!-- Toilet Type Social Section -->
+      {% if all_social_data.toilet_type %}
+        {% include 'social/toilet_type/toilet_type_report_partial.html' with municipality_data=all_social_data.toilet_type.data.municipality_data ward_data=all_social_data.toilet_type.data.ward_data total_households=all_social_data.toilet_type.data.total_households coherent_analysis=all_social_data.toilet_type.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Infrastructure Domain Category -->
+  <div class="category-break" id="category-infrastructure">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+      ७. पूर्वाधार र यातायात
+    </h1>
+    <p class="section-content">
+      <!-- Introduction to infrastructure -->
+      <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+          लुङ्ग्री गाउँपालिकाको पूर्वाधारगत विकासको अवस्था र यातायात सुविधाको विश्लेषण यस खण्डमा समावेश गरिएको छ । सडक सञ्जाल, बजार पहुँच, सार्वजनिक यातायात र अन्य पूर्वाधारगत सुविधाहरूको उपलब्धताले स्थानीयहरूको दैनिक जीवनयापन र आर्थिक गतिविधिमा प्रत्यक्ष प्रभाव पार्छ । यस अध्ययनले गाउँपालिकाको पूर्वाधारगत क्षमता र विकासका सम्भावनाहरूको मूल्याङ्कन गरेको छ ।
+        </div>
+      </div>
+      
+      <!-- Market Center Time Infrastructure Section -->
+      {% if all_infrastructure_data.market_center_time %}
+        {% include 'infrastructure/market_center_time/market_center_time_report_partial.html' with municipality_data=all_infrastructure_data.market_center_time.data.municipality_data ward_data=all_infrastructure_data.market_center_time.data.ward_data total_households=all_infrastructure_data.market_center_time.data.total_households coherent_analysis=all_infrastructure_data.market_center_time.report_content pdf_charts=pdf_charts %}
       {% endif %}
     </p>
   </div>
