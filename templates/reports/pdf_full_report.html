@@ -206,19 +206,49 @@
 <!-- Main Content Start -->
 <div class="main-content-start">
   <!-- Include Hardcoded Introduction Chapter -->
-  {% include 'reports/partials/introduction/introduction_complete.html' %}
+  <div class="category-break" id="category-introduction">
+    {% include 'reports/partials/introduction/introduction_complete.html' %}
+  </div>
 
   <!-- Demographics Chapter -->
-  <div class="section-break" id="category-demographics">
+  <div class="category-break" id="category-demographics">
     <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
       परिच्छेद – ३ः पारिवारिक विवरण तथा जनसंख्याको अवस्था
     </h1>
-    
-   
+    <div class="section-content">
+      <!-- Background Section -->
+      {% include 'demographics/religion/religion_report_partial.html' %}
+      
+      
+    </div>
   </div>
 
+  <!-- Template for additional categories -->
+  {% comment %}
+  <!-- When adding more categories, use this structure: -->
+  <div class="category-break" id="category-[category-slug]">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+      [Category Title]
+    </h1>
+    <div class="section-content">
+      <!-- Category content here -->
+      
+      <!-- Individual sections within the category -->
+      <div class="section-within-category" id="section-[section-slug]">
+        <h2 class="section-header level-2">[Section Title]</h2>
+        <!-- Section content -->
+      </div>
+      
+      <div class="section-within-category" id="section-[another-section-slug]">
+        <h2 class="section-header level-2">[Another Section Title]</h2>
+        <!-- Section content -->
+      </div>
+    </div>
+  </div>
+  {% endcomment %}
+
   <!-- Placeholder for additional chapters -->
-  <!-- Other chapters would be added here as separate partials -->
+  <!-- Other chapters would be added here as separate category-break divs -->
 </div>
 
 {% endblock %}
