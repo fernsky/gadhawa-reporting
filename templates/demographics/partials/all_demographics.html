@@ -1,0 +1,34 @@
+{% load nepali_filters %}
+
+<!-- All Demographics Sections for PDF -->
+<div class="all-demographics-sections">
+    
+    <!-- Language Demographics Section -->
+    {% if all_demographics_data.language %}
+        {% include 'demographics/partials/language_section.html' with language_data=all_demographics_data.language %}
+    {% endif %}
+    
+    <!-- Religion Demographics Section -->
+    {% if all_demographics_data.religion %}
+        {% include 'demographics/partials/religion_section.html' with religion_data=all_demographics_data.religion %}
+    {% endif %}
+    
+    <!-- Caste Demographics Section -->
+    {% if all_demographics_data.caste %}
+        {% include 'demographics/partials/caste_section.html' with caste_data=all_demographics_data.caste %}
+    {% endif %}
+    
+    <!-- Add more specific demographic partials here as processors are added -->
+    
+</div>
+
+<style>
+.all-demographics-sections {
+    margin: 1em 0;
+}
+
+.all-demographics-sections > div:not(:last-child) {
+    margin-bottom: 3em;
+    page-break-after: auto;
+}
+</style>

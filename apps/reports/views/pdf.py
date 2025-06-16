@@ -113,39 +113,46 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         municipality_name_english = "Lungri Rural Municipality"
 
         # Get publication settings (optional)
-        publication_settings = self.get_publication_settings()
-
-        # Get religion demographics data
-        from apps.demographics.views.religion import ReligionDemographicsView
-        religion_view = ReligionDemographicsView()
-        religion_data = religion_view.get_religion_population_data()
-        ward_data = religion_view.get_ward_wise_religion_data()
+        publication_settings = self.get_publication_settings()        # Get all demographics data using new processor system
+        from apps.demographics.processors.manager import get_demographics_manager
         
-        # Generate religion report content
-        from apps.demographics.utils.report_formatter import ReligionReportFormatter
-        from apps.demographics.utils.chart_generator import ReligionChartGenerator
+        demographics_manager = get_demographics_manager()
+        all_demographics_data = demographics_manager.process_all_for_pdf()
         
-        report_formatter = ReligionReportFormatter()
-        chart_generator = ReligionChartGenerator()
+        # Extract religion data for backward compatibility
+        religion_data = all_demographics_data.get('religion', {}).get('data', {})
+        coherent_analysis = all_demographics_data.get('religion', {}).get('report_content', '')
+        pdf_charts = all_demographics_data.get('religion', {}).get('charts', {})
         
-        report_content = report_formatter.generate_formal_report(religion_data, ward_data)
-        pdf_charts = {
-            'overall_pie_chart': chart_generator.generate_pdf_chart(religion_data, 'pie'),
-            'ward_comparison_bar': chart_generator.generate_pdf_chart(ward_data, 'bar'),
-        }        # Use hardcoded content plus dynamic religion data
+        # Calculate major religions from data
+        def get_major_religions(religion_data):
+            major_religions = []
+            total_population = sum(data.get('population', 0) for data in religion_data.values() if isinstance(data, dict))
+            if total_population > 0:
+                for religion_type, data in religion_data.items():
+                    if isinstance(data, dict) and data.get('percentage', 0) >= 5.0:
+                        major_religions.append({
+                            'type': religion_type,
+                            'name_nepali': data.get('name_nepali', religion_type),
+                            'population': data.get('population', 0),
+                            'percentage': data.get('percentage', 0)
+                        })
+            return sorted(major_religions, key=lambda x: x['percentage'], reverse=True)
+        
+        # Use hardcoded content plus dynamic demographics data
         context = {
             "municipality_name": municipality_name,
             "municipality_name_english": municipality_name_english,
             "publication_settings": publication_settings,
             "generated_date": timezone.now(),
-            # Religion demographics data
+            # Religion demographics data (for backward compatibility)
             "religion_data": religion_data,
-            "ward_data": ward_data,
-            "report_content": report_content,
+            "coherent_analysis": coherent_analysis,
             "pdf_charts": pdf_charts,
-            "total_population": sum(data['population'] for data in religion_data.values()),
-            "major_religions": religion_view.get_major_religions(religion_data),
-            "ward_summary": religion_view.get_ward_summary(ward_data),
+            "total_population": sum(data.get('population', 0) for data in religion_data.values() if isinstance(data, dict)),
+            "major_religions": get_major_religions(religion_data),
+            # All demographics data
+            "all_demographics_data": all_demographics_data,
         }
 
         filename = (

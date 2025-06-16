@@ -447,57 +447,45 @@ class WardAgeWisePopulation(BaseModel):
 
 
 # ३.४ मातृभाषाको आधारमा जनसंख्या विवरण
-class WardWiseMotherTonguePopulation(BaseModel):
-    """Ward wise mother tongue population"""
+class MunicipalityWideMotherTonguePopulation(BaseModel):
+    """Municipality wide mother tongue population"""
 
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
     language_type = models.CharField(
         max_length=50, choices=LanguageTypeChoice.choices, verbose_name=_("मातृभाषा")
     )
     population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
 
     class Meta:
-        verbose_name = _("वडागत मातृभाषा जनसंख्या")
-        verbose_name_plural = _("वडागत मातृभाषा जनसंख्या")
-        unique_together = ["ward_number", "language_type"]
+        verbose_name = _("पालिकास्तरीय मातृभाषा जनसंख्या")
+        verbose_name_plural = _("पालिकास्तरीय मातृभाषा जनसंख्या")
+        unique_together = ["language_type"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_language_type_display()}"
+        return f"{self.get_language_type_display()}"
 
 
 # ३.५ धर्म अनुसार जनसंख्या विवरण
-class WardWiseReligionPopulation(BaseModel):
-    """Ward wise religion population"""
+class MunicipalityWideReligionPopulation(BaseModel):
+    """Municipality wide religion population"""
 
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
     religion_type = models.CharField(
         max_length=20, choices=ReligionTypeChoice.choices, verbose_name=_("धर्म")
     )
     population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
 
     class Meta:
-        verbose_name = _("वडागत धार्मिक जनसंख्या")
-        verbose_name_plural = _("वडागत धार्मिक जनसंख्या")
-        unique_together = ["ward_number", "religion_type"]
+        verbose_name = _("पालिकास्तरीय धार्मिक जनसंख्या")
+        verbose_name_plural = _("पालिकास्तरीय धार्मिक जनसंख्या")
+        unique_together = ["religion_type"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_religion_type_display()}"
+        return f"{self.get_religion_type_display()}"
 
 
 # ३.६ जातिगत आधारमा जनसंख्या विवरण
-class WardWiseCastePopulation(BaseModel):
-    """Ward wise caste population"""
+class MunicipalityWideCastePopulation(BaseModel):
+    """Municipality wide caste population"""
 
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
     caste_type = models.CharField(
         max_length=100, choices=CasteTypeChoice.choices, verbose_name=_("जातजाति")
     )
@@ -506,12 +494,12 @@ class WardWiseCastePopulation(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("वडागत जातीय जनसंख्या")
-        verbose_name_plural = _("वडागत जातीय जनसंख्या")
-        unique_together = ["ward_number", "caste_type"]
+        verbose_name = _("पालिकास्तरीय जातीय जनसंख्या")
+        verbose_name_plural = _("पालिकास्तरीय जातीय जनसंख्या")
+        unique_together = ["caste_type"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_caste_type_display()}"
+        return f"{self.get_caste_type_display()}"
 
 
 # ३.७ घरमूलीको विवरण

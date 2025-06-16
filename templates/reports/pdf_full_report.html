@@ -192,10 +192,19 @@
     <span class="toc-link">३. पारिवारिक विवरण तथा जनसंख्याको अवस्था</span>
     <span class="page-ref"><a href="#category-demographics"></a></span>
   </div>
+  <div class="toc-item level-2">
+    <span class="toc-link">३.४ मातृभाषाको आधारमा जनसंख्या विवरण</span>
+    <span class="page-ref"><a href="#section-language-demographics"></a></span>
+  </div>
 
   <div class="toc-item level-2">
     <span class="toc-link">३.५ धर्म अनुसार जनसंख्याको वडागत विवरण</span>
     <span class="page-ref"><a href="#section-religion-demographics"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">३.६ जातिगत आधारमा जनसंख्या विवरण</span>
+    <span class="page-ref"><a href="#section-caste-demographics"></a></span>
   </div>
 
   <!-- Other categories would go here when added -->
@@ -209,18 +218,22 @@
   <div class="category-break" id="category-introduction">
     {% include 'reports/partials/introduction/introduction_complete.html' %}
   </div>
-
   <!-- Demographics Chapter -->
   <div class="category-break" id="category-demographics">
-    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
       परिच्छेद – ३ः पारिवारिक विवरण तथा जनसंख्याको अवस्था
     </h1>
-    <div class="section-content">
+    <p class="section-content">
       <!-- Background Section -->
+      
+      <!-- All Demographics Sections using new processor system -->
+      {% include 'demographics/partials/all_demographics.html' %}
+      
+      <!-- Backward compatibility: Keep original religion section if needed -->
+      {% comment %}
       {% include 'demographics/religion/religion_report_partial.html' %}
-      
-      
-    </div>
+      {% endcomment %}
+    </p>
   </div>
 
   <!-- Template for additional categories -->
