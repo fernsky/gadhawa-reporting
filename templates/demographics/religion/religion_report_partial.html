@@ -17,7 +17,13 @@
             <h3 class="chart-title">चित्र ३.५.१: धर्म अनुसार जनसंख्या वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                <img src="{% static 'images/religion_pie_chart.png' %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% if pdf_charts.religion.pie_chart_png %}
+                    <img src="{% static pdf_charts.religion.pie_chart_png %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.religion.pie_chart_svg %}
+                    <img src="{% static pdf_charts.religion.pie_chart_svg %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% else %}
+                    <img src="{% static 'images/charts/religion_pie_chart.png' %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% endif %}
             </div>
         </div>
     {% endif %}

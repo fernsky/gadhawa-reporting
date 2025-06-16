@@ -4,12 +4,23 @@ Caste Demographics Processor
 Handles caste demographic data processing, chart generation, and report formatting.
 """
 
-from .base import BaseDemographicsProcessor, BaseChartGenerator, BaseReportFormatter
+from .base import BaseDemographicsProcessor, BaseReportFormatter
 from ..models import MunicipalityWideCastePopulation, CasteTypeChoice
+from ..utils.svg_chart_generator import CASTE_COLORS
+from apps.reports.utils.nepali_numbers import format_nepali_number, format_nepali_percentage
 
 
 class CasteProcessor(BaseDemographicsProcessor):
     """Processor for caste demographics"""
+    
+    def __init__(self):
+        super().__init__()
+        # Customize chart dimensions for caste
+        self.pie_chart_width = 900
+        self.pie_chart_height = 450
+        self.chart_radius = 130
+        # Set caste-specific colors
+        self.chart_generator.colors = CASTE_COLORS
     
     def get_section_title(self):
         return "जातिगत आधारमा जनसंख्या विवरण"
@@ -52,40 +63,22 @@ class CasteProcessor(BaseDemographicsProcessor):
         return formatter.generate_formal_report(data)
     
     def generate_chart_svg(self, data, chart_type="pie"):
-        """Generate caste chart SVG"""
-        generator = self.CasteChartGenerator()
+        """Generate caste chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
-            return generator.generate_pie_chart_svg(data)
+            return self.chart_generator.generate_pie_chart_svg(
+                data, 
+                include_title=False,
+                title_nepali="जातिगत आधारमा जनसंख्या वितरण",
+                title_english="Population Distribution by Caste"
+            )
         elif chart_type == "bar":
-            return generator.generate_bar_chart_svg(data)
+            return self.chart_generator.generate_bar_chart_svg(
+                data, 
+                include_title=False,
+                title_nepali="वडा अनुसार जातिगत जनसंख्या वितरण",
+                title_english="Caste Population by Ward"
+            )
         return None
-
-    class CasteChartGenerator(BaseChartGenerator):
-        """Caste-specific chart generator"""
-        CASTE_COLORS = {
-            'BRAHMIN': '#1f77b4',
-            'CHHETRI': '#ff7f0e',
-            'MAGAR': '#2ca02c',
-            'TAMANG': '#d62728',
-            'NEWAR': '#9467bd',
-            'THARU': '#8c564b',
-            'GURUNG': '#e377c2',
-            'RAI': '#7f7f7f',
-            'LIMBU': '#bcbd22',
-            'SHERPA': '#17becf',
-            'DALIT': '#ff9896',
-            'MADHESI': '#98df8a',
-            'MUSLIM': '#aec7e8',
-            'OTHER': '#c7c7c7'
-        }
-
-        def generate_pie_chart_svg(self, caste_data):
-            """Generate caste pie chart"""
-            return self.generate_simple_pie_chart(caste_data, self.CASTE_COLORS)
-        
-        def generate_bar_chart_svg(self, caste_data):
-            """Generate caste bar chart (placeholder)"""
-            return self._generate_no_data_svg(400, 300)
 
     class CasteReportFormatter(BaseReportFormatter):
         """Caste-specific report formatter"""
@@ -106,13 +99,18 @@ class CasteProcessor(BaseDemographicsProcessor):
             content = []
             
             # Introduction
-            content.append(f"""{self.municipality_name}मा जातीय विविधता रहेको छ । कुल {total_population:,} जनसंख्या मध्ये विभिन्न जातजातिका मानिसहरूको बसोबास रहेको छ ।""")
+            nepali_total = format_nepali_number(total_population)
+            content.append(f"""{self.municipality_name}मा जातीय विविधता रहेको छ । कुल {nepali_total} जनसंख्या मध्ये विभिन्न जातजातिका मानिसहरूको बसोबास रहेको छ ।""")
             
             # Major castes
             if major_castes:
-                major_text = f"""यस गाउँपालिकामा {major_castes[0][0]} जातिको संख्या सबैभन्दा बढी छ जसको संख्या {major_castes[0][1]:,} ({major_castes[0][2]:.1f}%) रहेको छ ।"""
+                major_pop = format_nepali_number(major_castes[0][1])
+                major_pct = format_nepali_percentage(major_castes[0][2])
+                major_text = f"""यस गाउँपालिकामा {major_castes[0][0]} जातिको संख्या सबैभन्दा बढी छ जसको संख्या {major_pop} ({major_pct}) रहेको छ ।"""
                 if len(major_castes) > 1:
-                    major_text += f""" त्यसैगरी {major_castes[1][0]} जातिको संख्या {major_castes[1][1]:,} ({major_castes[1][2]:.1f}%) रहेको छ ।"""
+                    second_pop = format_nepali_number(major_castes[1][1])
+                    second_pct = format_nepali_percentage(major_castes[1][2])
+                    major_text += f""" त्यसैगरी {major_castes[1][0]} जातिको संख्या {second_pop} ({second_pct}) रहेको छ ।"""
                 content.append(major_text)
             
             # Constitutional context

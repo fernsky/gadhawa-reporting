@@ -4,12 +4,23 @@ Religion Demographics Processor
 Handles religion demographic data processing, chart generation, and report formatting.
 """
 
-from .base import BaseDemographicsProcessor, BaseChartGenerator, BaseReportFormatter
+from .base import BaseDemographicsProcessor, BaseReportFormatter
 from ..models import MunicipalityWideReligionPopulation, ReligionTypeChoice
+from ..utils.svg_chart_generator import RELIGION_COLORS
+from apps.reports.utils.nepali_numbers import format_nepali_number, format_nepali_percentage
 
 
 class ReligionProcessor(BaseDemographicsProcessor):
     """Processor for religion demographics"""
+    
+    def __init__(self):
+        super().__init__()
+        # Customize chart dimensions for religion
+        self.pie_chart_width = 900
+        self.pie_chart_height = 450
+        self.chart_radius = 130
+        # Set religion-specific colors
+        self.chart_generator.colors = RELIGION_COLORS
     
     def get_section_title(self):
         return "धर्म अनुसार जनसंख्याको विवरण"
@@ -50,38 +61,22 @@ class ReligionProcessor(BaseDemographicsProcessor):
         return formatter.generate_formal_report(data)
     
     def generate_chart_svg(self, data, chart_type="pie"):
-        """Generate religion chart SVG"""
-        generator = self.ReligionChartGenerator()
+        """Generate religion chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
-            return generator.generate_pie_chart_svg(data)
+            return self.chart_generator.generate_pie_chart_svg(
+                data, 
+                include_title=False,
+                title_nepali="धर्म अनुसार जनसंख्या वितरण",
+                title_english="Population Distribution by Religion"
+            )
         elif chart_type == "bar":
-            return generator.generate_bar_chart_svg(data)
+            return self.chart_generator.generate_bar_chart_svg(
+                data, 
+                include_title=False,
+                title_nepali="वडा अनुसार धार्मिक जनसंख्या वितरण",
+                title_english="Religious Population by Ward"
+            )
         return None
-
-    class ReligionChartGenerator(BaseChartGenerator):
-        """Religion-specific chart generator"""
-        
-        RELIGION_COLORS = {
-            'HINDU': '#FF6B35',
-            'BUDDHIST': '#F7931E',
-            'KIRANT': '#1f77b4',
-            'CHRISTIAN': '#2ca02c',
-            'ISLAM': '#17becf',
-            'NATURE': '#8c564b',
-            'BON': '#e377c2',
-            'JAIN': '#bcbd22',
-            'BAHAI': '#9467bd',
-            'SIKH': '#ff7f0e',
-            'OTHER': '#7f7f7f'
-        }
-        
-        def generate_pie_chart_svg(self, religion_data):
-            """Generate religion pie chart"""
-            return self.generate_simple_pie_chart(religion_data, self.RELIGION_COLORS)
-        
-        def generate_bar_chart_svg(self, religion_data):
-            """Generate religion bar chart (placeholder)"""
-            return self._generate_no_data_svg(400, 300)
 
     class ReligionReportFormatter(BaseReportFormatter):
         """Religion-specific report formatter"""
@@ -102,13 +97,18 @@ class ReligionProcessor(BaseDemographicsProcessor):
             content = []
             
             # Introduction
-            content.append(f"""{self.municipality_name}मा धार्मिक विविधता रहेको छ । कुल {total_population:,} जनसंख्या मध्ये विभिन्न धर्मावलम्बीहरूको बसोबास रहेको छ ।""")
+            nepali_total = format_nepali_number(total_population)
+            content.append(f"""{self.municipality_name}मा धार्मिक विविधता रहेको छ । कुल {nepali_total} जनसंख्या मध्ये विभिन्न धर्मावलम्बीहरूको बसोबास रहेको छ ।""")
             
             # Major religions
             if major_religions:
-                major_text = f"""यस गाउँपालिकामा {major_religions[0][0]} धर्मावलम्बीहरूको संख्या सबैभन्दा बढी छ जसको संख्या {major_religions[0][1]:,} ({major_religions[0][2]:.1f}%) रहेको छ ।"""
+                major_pop = format_nepali_number(major_religions[0][1])
+                major_pct = format_nepali_percentage(major_religions[0][2])
+                major_text = f"""यस गाउँपालिकामा {major_religions[0][0]} धर्मावलम्बीहरूको संख्या सबैभन्दा बढी छ जसको संख्या {major_pop} ({major_pct}) रहेको छ ।"""
                 if len(major_religions) > 1:
-                    major_text += f""" त्यसैगरी {major_religions[1][0]} धर्मावलम्बीहरूको संख्या {major_religions[1][1]:,} ({major_religions[1][2]:.1f}%) रहेको छ ।"""
+                    second_pop = format_nepali_number(major_religions[1][1])
+                    second_pct = format_nepali_percentage(major_religions[1][2])
+                    major_text += f""" त्यसैगरी {major_religions[1][0]} धर्मावलम्बीहरूको संख्या {second_pop} ({second_pct}) रहेको छ ।"""
                 content.append(major_text)
             
             # Constitutional context

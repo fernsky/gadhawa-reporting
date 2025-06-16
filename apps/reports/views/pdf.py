@@ -114,9 +114,7 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         municipality_name_english = "Lungri Rural Municipality"
 
         # Get publication settings (optional)
-        publication_settings = self.get_publication_settings()
-
-        # Get all demographics data using new processor system
+        publication_settings = self.get_publication_settings()        # Get all demographics data using new processor system
         demographics_manager = get_demographics_manager()
         
         # Generate all charts before processing data
@@ -124,6 +122,12 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         
         # Get processed data with charts
         all_demographics_data = demographics_manager.process_all_for_pdf()
+        
+        # Extract chart URLs for template use
+        pdf_charts = {}
+        for category, data in all_demographics_data.items():
+            if 'charts' in data:
+                pdf_charts[category] = data['charts']
 
         # Use hardcoded content plus dynamic demographics data
         context = {
@@ -132,6 +136,7 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
             "publication_settings": publication_settings,
             "generated_date": timezone.now(),
             "all_demographics_data": all_demographics_data,
+            "pdf_charts": pdf_charts,
         }
 
         filename = (

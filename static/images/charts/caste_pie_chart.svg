@@ -1,0 +1,11 @@
+<svg width="900" height="450" xmlns="http://www.w3.org/2000/svg"><style>
+        .nepali-text {
+            font-family: 'Noto Sans Devanagari', 'Mangal', 'Kalimati', 'Devanagari MT', Arial, sans-serif;
+            font-size: 12px;
+        }
+        .nepali-title {
+            font-family: 'Noto Sans Devanagari', 'Mangal', 'Kalimati', 'Devanagari MT', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        </style><text x="450" y="25" text-anchor="middle" class="nepali-title" fill="#333333">जातिगत आधारमा जनसंख्या वितरण</text><path d="M 450 180 L 450.0 50.0 A 130 130 0 0 1 575.0373336124665 215.5761887093708 Z" fill="#1f77b4" stroke="#ffffff" stroke-width="2" /><path d="M 450 180 L 575.0373336124665 215.5761887093708 A 130 130 0 0 1 324.96266638753355 215.57618870937074 Z" fill="#ff7f0e" stroke="#ffffff" stroke-width="2" /><path d="M 450 180 L 324.96266638753355 215.57618870937074 A 130 130 0 0 1 362.4195663259475 83.92884076131435 Z" fill="#2ca02c" stroke="#ffffff" stroke-width="2" /><path d="M 450 180 L 362.4195663259475 83.92884076131435 A 130 130 0 0 1 450.0 50.0 Z" fill="#ff9896" stroke="#ffffff" stroke-width="2" /><rect x="50" y="340" width="15" height="15" fill="#1f77b4" stroke="#333" stroke-width="1" /><text x="70" y="352" class="nepali-text" fill="#333333">ब्राह्मण (५०००, २९.४%)</text><rect x="316" y="340" width="15" height="15" fill="#ff7f0e" stroke="#333" stroke-width="1" /><text x="336" y="352" class="nepali-text" fill="#333333">क्षेत्री (७०००, ४१.२%)</text><rect x="582" y="340" width="15" height="15" fill="#2ca02c" stroke="#333" stroke-width="1" /><text x="602" y="352" class="nepali-text" fill="#333333">मगर (३०००, १७.६%)</text><rect x="50" y="365" width="15" height="15" fill="#ff9896" stroke="#333" stroke-width="1" /><text x="70" y="377" class="nepali-text" fill="#333333">दलित (२०००, ११.८%)</text></svg>

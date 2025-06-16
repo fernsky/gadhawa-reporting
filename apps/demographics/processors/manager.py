@@ -7,6 +7,7 @@ Coordinates all demographic processors and provides unified interface for PDF ge
 from .religion import ReligionProcessor
 from .language import LanguageProcessor
 from .caste import CasteProcessor
+from .househead import HouseheadProcessor
 
 
 class DemographicsManager:
@@ -17,6 +18,7 @@ class DemographicsManager:
             'religion': ReligionProcessor(),
             'language': LanguageProcessor(),
             'caste': CasteProcessor(),
+            'househead': HouseheadProcessor(),
         }
 
     def get_processor(self, category):
@@ -66,7 +68,7 @@ class DemographicsManager:
         # Overall conclusion
         combined_content.append("""
 
-समग्रमा, यस गाउँपालिकामा रहेको जनसांख्यिकीय विविधता नेपाली समाजको समृद्ध सांस्कृतिक परम्पराको झलक हो । विभिन्न समुदायहरूबीचको सद्भावना र एकताले यस क्षेत्रको सामाजिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ ।""")
+समग्रमा, यस गाउँपालिकामा रहेको जनसांख्यिकीय विविधता नेपाली समाजको समृद्ध सांस्कृतिक परम्पराको झलक हो । विभिन्न समुदायहरूबीचको सद्भावना र एकताले यस क्षेत्रको सामाजिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । घरमुखियाको लिङ्गीय वितरणले लिङ्गीय समानताको दिशामा प्रगति भएको संकेत गर्छ ।""")
 
         return ' '.join(combined_content)
 

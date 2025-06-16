@@ -191,20 +191,24 @@
   <div class="toc-item level-1">
     <span class="toc-link">३. पारिवारिक विवरण तथा जनसंख्याको अवस्था</span>
     <span class="page-ref"><a href="#category-demographics"></a></span>
-  </div>
-  <div class="toc-item level-2">
+  </div>  <div class="toc-item level-2">
     <span class="toc-link">३.४ मातृभाषाको आधारमा जनसंख्या विवरण</span>
     <span class="page-ref"><a href="#section-language-demographics"></a></span>
   </div>
 
   <div class="toc-item level-2">
-    <span class="toc-link">३.५ धर्म अनुसार जनसंख्याको वडागत विवरण</span>
+    <span class="toc-link">३.५ धर्म अनुसार जनसंख्याको विवरण</span>
     <span class="page-ref"><a href="#section-religion-demographics"></a></span>
   </div>
 
   <div class="toc-item level-2">
     <span class="toc-link">३.६ जातिगत आधारमा जनसंख्या विवरण</span>
     <span class="page-ref"><a href="#section-caste-demographics"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">३.७ घरमूलीको विवरण</span>
+    <span class="page-ref"><a href="#section-househead-demographics"></a></span>
   </div>
 
   <!-- Other categories would go here when added -->
@@ -219,15 +223,37 @@
     {% include 'reports/partials/introduction/introduction_complete.html' %}
   </div>
  
-
   <!-- Demographics Chapter -->
   <div class="category-break" id="category-demographics">
     <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
       परिच्छेद – ३ः पारिवारिक विवरण तथा जनसंख्याको अवस्था
     </h1>
-    <p class="section-content">
-      <!-- All Demographics Sections using new processor system -->
-      {% include 'demographics/partials/all_demographics.html' %}
+    <p class="section-content">      <!-- Introduction to demographics -->
+      <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+          लुङ्ग्री गाउँपालिकामा विभिन्न धर्म, जातजाति र मातृभाषी समुदायहरूको बसोबास रहेको छ । यस खण्डमा गाउँपालिकाको जनसांख्यिकीय विविधता, सामाजिक संरचना र सांस्कृतिक पहिचानको विस्तृत विवरण प्रस्तुत गरिएको छ । नेपालको संविधान २०७२ ले प्रत्याभूत गरेका भाषिक, धार्मिक र सांस्कृतिक अधिकारहरूको सन्दर्भमा यहाँका विविध समुदायहरूको अवस्था र चुनौतीहरूको विश्लेषण गरिएको छ ।
+        </div>
+      </div>
+      
+      <!-- Language Demographics Section -->
+      {% if all_demographics_data.language %}
+        {% include 'demographics/language/language_report_partial.html' with language_data=all_demographics_data.language.data total_population=all_demographics_data.language.total_population coherent_analysis=all_demographics_data.language.report_content %}
+      {% endif %}
+      
+      <!-- Religion Demographics Section -->
+      {% if all_demographics_data.religion %}
+        {% include 'demographics/religion/religion_report_partial.html' with religion_data=all_demographics_data.religion.data total_population=all_demographics_data.religion.total_population coherent_analysis=all_demographics_data.religion.report_content %}
+      {% endif %}
+      
+      <!-- Caste Demographics Section -->
+      {% if all_demographics_data.caste %}
+        {% include 'demographics/caste/caste_report_partial.html' with caste_data=all_demographics_data.caste.data total_population=all_demographics_data.caste.total_population coherent_analysis=all_demographics_data.caste.report_content %}
+      {% endif %}
+
+       <!-- Househead Demographics Section -->
+       {% if all_demographics_data.househead %}
+       {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
+      {% endif %}
     </p>
   </div>
 

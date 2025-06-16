@@ -7,18 +7,25 @@ Common functionality for processing demographic data across all categories.
 from abc import ABC, abstractmethod
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
-import xml.etree.ElementTree as ET
-import os
+from apps.demographics.utils.svg_chart_generator import SVGChartGenerator
 
 
 class BaseDemographicsProcessor(ABC):
     """Base class for all demographic data processors"""
     
     def __init__(self):
-        self.static_charts_dir = Path(settings.STATIC_ROOT or settings.STATICFILES_DIRS[0]) / 'images' / 'charts'
+        # Use proper static directory path
+        self.static_charts_dir = Path("static/images")
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize SVG chart generator
+        self.chart_generator = SVGChartGenerator()
+          # Default chart dimensions - can be overridden by subclasses
+        self.pie_chart_width = 600
+        self.pie_chart_height = 450
+        self.bar_chart_width = 800
+        self.bar_chart_height = 500
     
     @abstractmethod
     def get_section_title(self):
@@ -40,24 +47,33 @@ class BaseDemographicsProcessor(ABC):
         """Generate report content specific to the demographic category"""
         pass
 
-    @abstractmethod
     def generate_chart_svg(self, data, chart_type="pie"):
-        """Generate chart SVG specific to the demographic category"""
-        pass
+        """Generate chart SVG using SVGChartGenerator"""
+        if chart_type == "pie":
+            return self.chart_generator.generate_pie_chart_svg(data, include_title=False)
+        elif chart_type == "bar":
+            return self.chart_generator.generate_bar_chart_svg(data, include_title=False)
+        else:
+            return None
 
     def process_for_pdf(self):
         """Process category data for PDF generation including charts"""
         # Get raw data
         data = self.get_data()
-        
-        # Generate report content
+          # Generate report content
         report_content = self.generate_report_content(data)
         
         # Generate and save charts
-        charts = self.generate_and_save_charts(data)
-        
-        # Calculate total population
-        total_population = sum(item['population'] for item in data.values() if isinstance(item, dict) and 'population' in item)
+        charts = self.generate_and_save_charts(data)        # Calculate total population
+        if isinstance(data, dict) and 'total_population' in data:
+            # Househead format already has total_population
+            total_population = data['total_population']
+        elif isinstance(data, dict) and 'municipality_data' in data:
+            # Househead format - calculate from municipality_data
+            total_population = sum(item['population'] for item in data['municipality_data'].values() if isinstance(item, dict) and 'population' in item)
+        else:
+            # Simple format
+            total_population = sum(item['population'] for item in data.values() if isinstance(item, dict) and 'population' in item)
         
         return {
             'data': data,
@@ -69,182 +85,54 @@ class BaseDemographicsProcessor(ABC):
         }
 
     def generate_and_save_charts(self, data):
-        """Generate charts and save them to static files"""
+        """Generate charts using SVGChartGenerator and save them as PNG files"""
         charts = {}
         category_name = self.__class__.__name__.lower().replace('processor', '')
         
-        # Generate pie chart
-        pie_chart_svg = self.generate_chart_svg(data, chart_type="pie")
-        if pie_chart_svg:
-            pie_chart_path = self.static_charts_dir / f'{category_name}_pie_chart.svg'
-            self.save_svg_to_file(pie_chart_svg, pie_chart_path)
-            charts['pie_chart'] = pie_chart_svg
-            charts['pie_chart_url'] = f'images/charts/{category_name}_pie_chart.svg'
+        # Determine data structure - check if it's househead format or simple format
+        if isinstance(data, dict) and 'municipality_data' in data and 'ward_data' in data:
+            # Househead format with both municipality and ward data
+            pie_data = data['municipality_data']
+            bar_data = data['ward_data']
+        else:
+            # Simple format - use the data as is for pie chart
+            pie_data = data
+            bar_data = None  # No ward data available for bar chart
         
-        # Generate bar chart
-        bar_chart_svg = self.generate_chart_svg(data, chart_type="bar")
-        if bar_chart_svg:
-            bar_chart_path = self.static_charts_dir / f'{category_name}_bar_chart.svg'
-            self.save_svg_to_file(bar_chart_svg, bar_chart_path)
-            charts['bar_chart'] = bar_chart_svg
-            charts['bar_chart_url'] = f'images/charts/{category_name}_bar_chart.svg'
+        # Generate pie chart using SVGChartGenerator
+        success, png_path, svg_path = self.chart_generator.generate_chart_image(
+            demographic_data=pie_data,
+            output_name=f'{category_name}_pie_chart',
+            static_dir=str(self.static_charts_dir),
+            chart_type="pie",
+            include_title=False
+        )
+        
+        if success and png_path:
+            charts['pie_chart_png'] = f'images/{category_name}_pie_chart.png'
+            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
+        elif svg_path:
+            # Fallback to SVG if PNG conversion fails
+            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
+        
+        # Generate bar chart only if ward data is available
+        if bar_data:
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=bar_data,
+                output_name=f'{category_name}_bar_chart',
+                static_dir=str(self.static_charts_dir),
+                chart_type="bar",
+                include_title=False
+            )
+            
+            if success and png_path:
+                charts['bar_chart_png'] = f'images/{category_name}_bar_chart.png'
+                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
+            elif svg_path:
+                # Fallback to SVG if PNG conversion fails
+                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
         
         return charts
-
-    def save_svg_to_file(self, svg_content, file_path):
-        """Save SVG content to file"""
-        try:
-            if isinstance(svg_content, str):
-                Path(file_path).write_text(svg_content, encoding='utf-8')
-            elif hasattr(svg_content, 'tag'):  # ET.Element
-                ET.ElementTree(svg_content).write(file_path, encoding='utf-8', xml_declaration=True)
-            return True
-        except Exception as e:
-            print(f"Error saving SVG to file: {e}")
-            return False
-
-
-class BaseChartGenerator(ABC):
-    """Base SVG chart generator with common functionality"""
-    
-    def __init__(self):
-        self.font_family = "Arial, sans-serif"
-        self.font_size_title = 16
-        self.font_size_labels = 12
-        self.font_size_legend = 10
-
-    @abstractmethod
-    def generate_pie_chart_svg(self, data):
-        """Generate pie chart SVG"""
-        pass
-
-    @abstractmethod
-    def generate_bar_chart_svg(self, data):
-        """Generate bar chart SVG"""
-        pass
-
-    def generate_simple_pie_chart(self, data, colors):
-        """Generate a simple pie chart SVG"""
-        # Filter data with population > 0
-        filtered_data = {k: v for k, v in data.items() if isinstance(v, dict) and v.get('population', 0) > 0}
-        
-        if not filtered_data:
-            return self._generate_no_data_svg(400, 400)
-        
-        # Calculate total
-        total = sum(item['population'] for item in filtered_data.values())
-        if total == 0:
-            return self._generate_no_data_svg(400, 400)
-        
-        # Create SVG
-        svg = ET.Element('svg', {
-            'width': '400',
-            'height': '400',
-            'xmlns': 'http://www.w3.org/2000/svg'
-        })
-        
-        # Chart parameters
-        center_x, center_y = 200, 180
-        radius = 100
-        
-        # Generate pie slices
-        angle = 0
-        for key, item in filtered_data.items():
-            if item['population'] > 0:
-                slice_angle = (item['population'] / total) * 360
-                color = colors.get(key, '#cccccc')
-                
-                # Create pie slice path
-                start_angle = angle
-                end_angle = angle + slice_angle
-                
-                # Convert to radians
-                import math
-                start_rad = math.radians(start_angle - 90)
-                end_rad = math.radians(end_angle - 90)
-                
-                # Calculate path points
-                x1 = center_x + radius * math.cos(start_rad)
-                y1 = center_y + radius * math.sin(start_rad)
-                x2 = center_x + radius * math.cos(end_rad)
-                y2 = center_y + radius * math.sin(end_rad)
-                
-                large_arc = 1 if slice_angle > 180 else 0
-                
-                path_data = f"M {center_x} {center_y} L {x1} {y1} A {radius} {radius} 0 {large_arc} 1 {x2} {y2} Z"
-                
-                path = ET.SubElement(svg, 'path', {
-                    'd': path_data,
-                    'fill': color,
-                    'stroke': '#ffffff',
-                    'stroke-width': '2'
-                })
-                
-                angle += slice_angle
-        
-        # Add legend
-        legend_y = 320
-        legend_x = 50
-        col_width = 120
-        col = 0
-        
-        for key, item in filtered_data.items():
-            if item['population'] > 0:
-                color = colors.get(key, '#cccccc')
-                percentage = (item['population'] / total) * 100
-                
-                # Legend color box
-                ET.SubElement(svg, 'rect', {
-                    'x': str(legend_x + col * col_width),
-                    'y': str(legend_y),
-                    'width': '12',
-                    'height': '12',
-                    'fill': color
-                })
-                
-                # Legend text
-                label = getattr(item, 'name_nepali', key) if hasattr(item, 'name_nepali') else key
-                text = f"{label} ({percentage:.1f}%)"
-                ET.SubElement(svg, 'text', {
-                    'x': str(legend_x + col * col_width + 18),
-                    'y': str(legend_y + 10),
-                    'font-family': self.font_family,
-                    'font-size': str(self.font_size_legend),
-                    'fill': '#333333'
-                }).text = text
-                
-                col = (col + 1) % 3
-                if col == 0:
-                    legend_y += 20
-        
-        return ET.tostring(svg, encoding='unicode')
-
-    def _generate_no_data_svg(self, width, height):
-        """Generate no data available SVG"""
-        svg = ET.Element('svg', {
-            'width': str(width),
-            'height': str(height),
-            'xmlns': 'http://www.w3.org/2000/svg'
-        })
-        
-        # Background
-        ET.SubElement(svg, 'rect', {
-            'width': str(width),
-            'height': str(height),
-            'fill': '#f8f9fa'
-        })
-        
-        # Text
-        ET.SubElement(svg, 'text', {
-            'x': str(width//2),
-            'y': str(height//2),
-            'text-anchor': 'middle',
-            'font-family': self.font_family,
-            'font-size': '16',
-            'fill': '#6c757d'
-        }).text = 'डाटा उपलब्ध छैन'
-        
-        return ET.tostring(svg, encoding='unicode')
 
 
 class BaseReportFormatter(ABC):

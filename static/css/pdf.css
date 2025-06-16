@@ -17,7 +17,7 @@
 /* Simplified page setup with consistent Nepali numerals for target-counter compatibility */
 @page {
   size: A4;
-  margin: 2cm 1.5cm 3cm 1.5cm;
+  margin: 2.4892cm 2.4892cm 2.4892cm 2.4892cm; /* 1 inch margins */
 
   @bottom-right {
     content: counter(page, nepali-numerals) " | लुङ्ग्री गाउँपालिकाको पार्श्वचित्र";

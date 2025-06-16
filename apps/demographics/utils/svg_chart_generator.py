@@ -2,6 +2,7 @@
 Simple SVG Chart Generator
 
 This module generates basic SVG charts for embedding in PDFs.
+Can be used for any demographic data including religion, language, caste, etc.
 """
 
 import xml.etree.ElementTree as ET
@@ -9,6 +10,30 @@ import math
 import os
 import subprocess
 from pathlib import Path
+
+# Default color palette - can be overridden
+DEFAULT_COLORS = {
+    'DEFAULT_1': '#1f77b4',   # Blue
+    'DEFAULT_2': '#ff7f0e',   # Orange
+    'DEFAULT_3': '#2ca02c',   # Green
+    'DEFAULT_4': '#d62728',   # Red
+    'DEFAULT_5': '#9467bd',   # Purple
+    'DEFAULT_6': '#8c564b',   # Brown
+    'DEFAULT_7': '#e377c2',   # Pink
+    'DEFAULT_8': '#7f7f7f',   # Gray
+    'DEFAULT_9': '#bcbd22',   # Olive
+    'DEFAULT_10': '#17becf',  # Cyan
+    'DEFAULT_11': '#ff9896',  # Light Red
+    'DEFAULT_12': '#98df8a',  # Light Green
+    'DEFAULT_13': '#aec7e8',  # Light Blue
+    'DEFAULT_14': '#ffbb78',  # Light Orange
+    'DEFAULT_15': '#c5b0d5',  # Light Purple
+    'DEFAULT_16': '#c49c94',  # Light Brown
+    'DEFAULT_17': '#f7b6d3',  # Light Pink
+    'DEFAULT_18': '#c7c7c7',  # Light Gray
+    'DEFAULT_19': '#dbdb8d',  # Light Olive
+    'DEFAULT_20': '#9edae5',  # Light Cyan
+}
 
 # Color palette for religions
 RELIGION_COLORS = {
@@ -25,31 +50,57 @@ RELIGION_COLORS = {
     'OTHER': '#7f7f7f'       # Gray
 }
 
-# English labels for religions
-RELIGION_LABELS = {
-    'HINDU': 'Hindu',
-    'BUDDHIST': 'Buddhist', 
-    'KIRANT': 'Kirant',
-    'CHRISTIAN': 'Christian',
-    'ISLAM': 'Islam',
-    'NATURE': 'Nature',
-    'BON': 'Bon',
-    'JAIN': 'Jain',
-    'BAHAI': 'Bahai',
-    'SIKH': 'Sikh',
-    'OTHER': 'Other'
+# Color palette for languages
+LANGUAGE_COLORS = {
+    'NEPALI': '#1f77b4',
+    'LIMBU': '#ff7f0e',
+    'RAI': '#2ca02c',
+    'HINDI': '#d62728',
+    'NEWARI': '#9467bd',
+    'SHERPA': '#8c564b',
+    'TAMANG': '#e377c2',
+    'MAITHILI': '#7f7f7f',
+    'BHOJPURI': '#bcbd22',
+    'THARU': '#17becf',
+    'BAJJIKA': '#ff9896',
+    'MAGAR': '#98df8a',
+    'DOTELI': '#aec7e8',
+    'URDU': '#ffbb78',
+    'AWADI': '#c5b0d5',
+    'GURUNG': '#c49c94',
+    'ENGLISH': '#f7b6d3',
+    'OTHER': '#c7c7c7'
+}
+
+# Color palette for castes
+CASTE_COLORS = {
+    'BRAHMIN': '#1f77b4',
+    'CHHETRI': '#ff7f0e',
+    'MAGAR': '#2ca02c',
+    'TAMANG': '#d62728',
+    'NEWAR': '#9467bd',
+    'THARU': '#8c564b',
+    'GURUNG': '#e377c2',
+    'RAI': '#7f7f7f',
+    'LIMBU': '#bcbd22',
+    'SHERPA': '#17becf',
+    'DALIT': '#ff9896',
+    'MADHESI': '#98df8a',
+    'MUSLIM': '#aec7e8',
+    'OTHER': '#c7c7c7'
 }
 
 
 class SVGChartGenerator:
-    """Generates simple SVG charts"""
+    """Generates simple SVG charts for any demographic data"""
     
-    def __init__(self):
+    def __init__(self, colors=None):
         self.font_family = "Arial, sans-serif"
         self.font_size_title = 18
         self.font_size_labels = 14
         self.font_size_legend = 12
         self.use_english_fallback = False  # Default to showing Nepali text
+        self.colors = colors or DEFAULT_COLORS  # Allow custom color palette
     
     def _create_svg(self, width, height):
         """Create basic SVG element"""
@@ -63,19 +114,19 @@ class SVGChartGenerator:
         """Create SVG element with embedded font support"""
         return self._create_svg(width, height)
     
-    def _get_display_label(self, religion_type, nepali_name):
-        """Get display label for religion - Nepali name or English fallback"""
+    def _get_display_label(self, data_type, nepali_name):
+        """Get display label - Nepali name or fallback to data type"""
         if self.use_english_fallback:
-            return RELIGION_LABELS.get(religion_type, religion_type)
+            return str(data_type)
         else:
-            return nepali_name if nepali_name else RELIGION_LABELS.get(religion_type, religion_type)
+            return str(nepali_name) if nepali_name else str(data_type)
     
     def _safe_title(self, nepali_title, english_title):
         """Return appropriate title based on language preference"""
         if self.use_english_fallback:
-            return english_title
+            return str(english_title)
         else:
-            return nepali_title
+            return str(nepali_title)
     
     def _convert_number_to_nepali(self, number):
         """Convert English numbers to Nepali numerals"""
@@ -94,11 +145,26 @@ class SVGChartGenerator:
         
         return result
     
-    def generate_pie_chart_svg(self, religion_data, include_title=False):
+    def _get_color_for_item(self, item_key, index=0):
+        """Get color for a data item"""
+        if item_key in self.colors:
+            return self.colors[item_key]
+        else:
+            # Use default colors cycling through the palette
+            color_keys = list(DEFAULT_COLORS.keys())
+            return DEFAULT_COLORS[color_keys[index % len(color_keys)]]
+    
+    def generate_pie_chart_svg(self, demographic_data, include_title=False, title_nepali="", title_english=""):
         """Generate pie chart as SVG with proper font embedding"""
         try:
-            # Filter out religions with zero population
-            filtered_data = {k: v for k, v in religion_data.items() if v['population'] > 0}
+            # Filter out entries with zero population
+            filtered_data = {}
+            for k, v in demographic_data.items():
+                if isinstance(v, dict) and v.get('population', 0) > 0:
+                    filtered_data[k] = v
+                elif isinstance(v, (int, float)) and v > 0:
+                    # Handle case where demographic_data contains direct values
+                    filtered_data[k] = {'population': v, 'name_nepali': str(k)}
             
             if not filtered_data:
                 return None
@@ -108,11 +174,11 @@ class SVGChartGenerator:
             values = []
             colors = []
             
-            for religion_type, data in filtered_data.items():
-                nepali_name = str(data['name_nepali']) if data['name_nepali'] else religion_type
-                labels.append(self._get_display_label(religion_type, nepali_name))
+            for i, (data_type, data) in enumerate(filtered_data.items()):
+                nepali_name = str(data.get('name_nepali', data_type)) if data.get('name_nepali') else data_type
+                labels.append(self._get_display_label(data_type, nepali_name))
                 values.append(data['population'])
-                colors.append(RELIGION_COLORS.get(religion_type, '#7f7f7f'))
+                colors.append(self._get_color_for_item(data_type, i))
             
             # Calculate percentages and angles
             total = sum(values)
@@ -120,7 +186,7 @@ class SVGChartGenerator:
             angles = [p / 100 * 360 for p in percentages]
             
             # SVG dimensions - compact size without excessive padding
-            width, height = 600, 450
+            width, height = 600, 300
             center_x, center_y = width // 2, height // 2 - 10
             radius = 120
             
@@ -129,8 +195,8 @@ class SVGChartGenerator:
             
             # Add title only if requested
             title_offset = 0
-            if include_title:
-                title = self._safe_title('धर्म अनुसार जनसंख्या वितरण', 'Population Distribution by Religion')
+            if include_title and (title_nepali or title_english):
+                title = self._safe_title(title_nepali, title_english)
                 title_elem = ET.SubElement(svg, 'text', {
                     'x': str(center_x),
                     'y': '25',
@@ -140,7 +206,7 @@ class SVGChartGenerator:
                     'font-weight': 'bold',
                     'fill': 'black'
                 })
-                title_elem.text = title
+                title_elem.text = str(title)
                 title_offset = 30
             
             # Draw pie slices
@@ -185,7 +251,7 @@ class SVGChartGenerator:
                     'font-weight': 'bold',
                     'fill': 'white'
                 })
-                text_elem.text = percentage_text
+                text_elem.text = str(percentage_text)
                 
                 start_angle = end_angle
             
@@ -220,7 +286,7 @@ class SVGChartGenerator:
                     'font-size': str(self.font_size_legend - 1),
                     'fill': 'black'
                 })
-                text_elem.text = legend_text
+                text_elem.text = str(legend_text)
             
             # Convert to string
             return ET.tostring(svg, encoding='unicode')
@@ -231,36 +297,72 @@ class SVGChartGenerator:
             traceback.print_exc()
             return None
     
-    def generate_bar_chart_svg(self, ward_data, include_title=False):
-        """Generate bar chart as SVG"""
+    def generate_bar_chart_svg(self, ward_data, include_title=False, title_nepali="", title_english=""):
+        """Generate bar chart as SVG for ward-wise demographic data"""
         try:
             if not ward_data:
                 return None
             
-            # Prepare data
-            wards = sorted(ward_data.keys())
+            # Prepare data - convert ward numbers to strings for consistent sorting
+            wards = []
+            for ward_key in ward_data.keys():
+                if isinstance(ward_key, (int, float)):
+                    wards.append(str(int(ward_key)))
+                else:
+                    wards.append(str(ward_key))
+            wards = sorted(wards, key=lambda x: int(x) if x.isdigit() else float('inf'))
             
-            # Get all religions present in the data
-            all_religions = set()
-            for ward_info in ward_data.values():
-                all_religions.update(ward_info['religions'].keys())
+            # Get all demographic categories present in the data
+            all_categories = set()
+            for ward_key, ward_info in ward_data.items():
+                if isinstance(ward_info, dict) and 'demographics' in ward_info:
+                    all_categories.update(ward_info['demographics'].keys())
+                elif isinstance(ward_info, dict):
+                    # Filter out non-demographic keys
+                    for key in ward_info.keys():
+                        if key not in ['ward_name', 'total_population']:
+                            all_categories.add(key)
             
-            # Filter out religions with no data
-            active_religions = []
-            for religion in sorted(all_religions):
-                total_pop = sum(
-                    ward_data[ward]['religions'].get(religion, {}).get('population', 0) 
-                    for ward in wards
-                )
+            # Convert all categories to strings for consistent sorting
+            all_categories = [str(cat) for cat in all_categories]
+            
+            # Filter out categories with no data
+            active_categories = []
+            for category in sorted(all_categories):
+                total_pop = 0
+                for ward_key in ward_data.keys():
+                    ward_key_str = str(ward_key)
+                    try:
+                        ward_info = ward_data[ward_key]
+                        if isinstance(ward_info, dict):
+                            if 'demographics' in ward_info:
+                                demographics = ward_info['demographics']
+                                if category in demographics:
+                                    demo_data = demographics[category]
+                                    if isinstance(demo_data, dict) and 'population' in demo_data:
+                                        total_pop += demo_data['population']
+                                    elif isinstance(demo_data, (int, float)):
+                                        total_pop += demo_data
+                            else:
+                                # Direct demographic data
+                                if category in ward_info:
+                                    demo_data = ward_info[category]
+                                    if isinstance(demo_data, dict) and 'population' in demo_data:
+                                        total_pop += demo_data['population']
+                                    elif isinstance(demo_data, (int, float)):
+                                        total_pop += demo_data
+                    except (TypeError, AttributeError, KeyError):
+                        continue
+                        
                 if total_pop > 0:
-                    active_religions.append(religion)
+                    active_categories.append(category)
             
-            if not active_religions:
+            if not active_categories:
                 return None
             
-            # SVG dimensions - more compact
-            width, height = 800, 450
-            margin = {'top': 30 if include_title else 20, 'right': 150, 'bottom': 60, 'left': 60}
+            # SVG dimensions - improved layout
+            width, height = 800, 500
+            margin = {'top': 30 if include_title else 20, 'right': 20, 'bottom': 80, 'left': 70}
             chart_width = width - margin['left'] - margin['right']
             chart_height = height - margin['top'] - margin['bottom']
             
@@ -268,8 +370,8 @@ class SVGChartGenerator:
             svg = self._create_svg_with_embedded_font(width, height)
             
             # Add title only if requested
-            if include_title:
-                title = self._safe_title('वडा अनुसार धार्मिक जनसंख्या वितरण', 'Religious Population by Ward')
+            if include_title and (title_nepali or title_english):
+                title = self._safe_title(title_nepali, title_english)
                 title_elem = ET.SubElement(svg, 'text', {
                     'x': str(width // 2),
                     'y': '25',
@@ -279,67 +381,241 @@ class SVGChartGenerator:
                     'font-weight': 'bold',
                     'fill': 'black'
                 })
-                title_elem.text = title
+                title_elem.text = str(title)
             
-            # Calculate bar positions
+            # Calculate bar positions and max population
             bar_width = chart_width / len(wards)
-            max_population = max(
-                sum(ward_data[ward]['religions'].get(religion, {}).get('population', 0) 
-                    for religion in active_religions)
-                for ward in wards
-            )
+            max_population = 0
+            
+            # Get maximum population for scaling
+            for ward_str in wards:
+                # Find the actual ward key in ward_data
+                ward_key = None
+                for k in ward_data.keys():
+                    if str(k) == ward_str:
+                        ward_key = k
+                        break
+                
+                if ward_key is None:
+                    continue
+                    
+                ward_total = 0
+                ward_info = ward_data[ward_key]
+                
+                for category in active_categories:
+                    pop = 0
+                    if isinstance(ward_info, dict):
+                        if 'demographics' in ward_info:
+                            demo_data = ward_info['demographics'].get(category, {})
+                            if isinstance(demo_data, dict):
+                                pop = demo_data.get('population', 0)
+                            elif isinstance(demo_data, (int, float)):
+                                pop = demo_data
+                        else:
+                            demo_data = ward_info.get(category, {})
+                            if isinstance(demo_data, dict):
+                                pop = demo_data.get('population', 0)
+                            elif isinstance(demo_data, (int, float)):
+                                pop = demo_data
+                    ward_total += pop
+                    
+                max_population = max(max_population, ward_total)
+            
+            if max_population == 0:
+                return None
+            
+            # Draw Y-axis and grid lines
+            y_axis_x = margin['left']
+            chart_top = margin['top']
+            chart_bottom = margin['top'] + chart_height
+            
+            # Y-axis line
+            ET.SubElement(svg, 'line', {
+                'x1': str(y_axis_x),
+                'y1': str(chart_top),
+                'x2': str(y_axis_x),
+                'y2': str(chart_bottom),
+                'stroke': 'black',
+                'stroke-width': '2'
+            })
+            
+            # Y-axis scale and grid lines
+            scale_steps = 5
+            step_value = max_population / scale_steps
+            
+            for i in range(scale_steps + 1):
+                value = i * step_value
+                y_pos = chart_bottom - (i * chart_height / scale_steps)
+                
+                # Horizontal grid line
+                ET.SubElement(svg, 'line', {
+                    'x1': str(y_axis_x),
+                    'y1': str(y_pos),
+                    'x2': str(y_axis_x + chart_width),
+                    'y2': str(y_pos),
+                    'stroke': '#e0e0e0' if i > 0 else 'black',
+                    'stroke-width': '1' if i > 0 else '2',
+                    'stroke-dasharray': '2,2' if i > 0 else 'none'
+                })
+                
+                # Y-axis tick mark
+                ET.SubElement(svg, 'line', {
+                    'x1': str(y_axis_x - 5),
+                    'y1': str(y_pos),
+                    'x2': str(y_axis_x),
+                    'y2': str(y_pos),
+                    'stroke': 'black',
+                    'stroke-width': '1'
+                })
+                
+                # Y-axis label
+                if i == 0:
+                    scale_text = "०"
+                else:
+                    scale_text = self._convert_number_to_nepali(int(value))
+                    
+                ET.SubElement(svg, 'text', {
+                    'x': str(y_axis_x - 8),
+                    'y': str(y_pos),
+                    'text-anchor': 'end',
+                    'dominant-baseline': 'middle',
+                    'font-family': self.font_family,
+                    'font-size': str(self.font_size_labels - 3),
+                    'fill': 'black'
+                }).text = str(scale_text)
             
             # Draw bars for each ward
-            for i, ward in enumerate(wards):
+            for i, ward_str in enumerate(wards):
+                # Find the actual ward key in ward_data
+                ward_key = None
+                for k in ward_data.keys():
+                    if str(k) == ward_str:
+                        ward_key = k
+                        break
+                
+                if ward_key is None:
+                    continue
+                
                 x = margin['left'] + i * bar_width
                 bottom = margin['top'] + chart_height
+                ward_info = ward_data[ward_key]
                 
-                # Stack religions for this ward
+                # Stack categories for this ward
                 current_y = bottom
-                for religion in active_religions:
-                    pop = ward_data[ward]['religions'].get(religion, {}).get('population', 0)
+                ward_total = 0
+                
+                for j, category in enumerate(active_categories):
+                    pop = 0
+                    if isinstance(ward_info, dict):
+                        if 'demographics' in ward_info:
+                            demo_data = ward_info['demographics'].get(category, {})
+                            if isinstance(demo_data, dict):
+                                pop = demo_data.get('population', 0)
+                            elif isinstance(demo_data, (int, float)):
+                                pop = demo_data
+                        else:
+                            demo_data = ward_info.get(category, {})
+                            if isinstance(demo_data, dict):
+                                pop = demo_data.get('population', 0)
+                            elif isinstance(demo_data, (int, float)):
+                                pop = demo_data
+                    
                     if pop > 0:
                         bar_height = (pop / max_population) * chart_height
-                        color = RELIGION_COLORS.get(religion, '#7f7f7f')
+                        color = self._get_color_for_item(category, j)
                         
                         # Draw bar segment
                         ET.SubElement(svg, 'rect', {
-                            'x': str(x + bar_width * 0.1),
+                            'x': str(x + bar_width * 0.15),
                             'y': str(current_y - bar_height),
-                            'width': str(bar_width * 0.8),
+                            'width': str(bar_width * 0.7),
                             'height': str(bar_height),
                             'fill': color,
                             'stroke': 'white',
                             'stroke-width': '1'
                         })
                         
+                        # Add value label on bar if significant height
+                        if bar_height > 20:
+                            value_text = self._convert_number_to_nepali(pop)
+                            ET.SubElement(svg, 'text', {
+                                'x': str(x + bar_width / 2),
+                                'y': str(current_y - bar_height / 2),
+                                'text-anchor': 'middle',
+                                'dominant-baseline': 'middle',
+                                'font-family': self.font_family,
+                                'font-size': str(self.font_size_labels - 2),
+                                'font-weight': 'bold',
+                                'fill': 'white'
+                            }).text = str(value_text)
+                        
                         current_y -= bar_height
+                        ward_total += pop
                 
-                # Ward label
-                ward_label = f"वडा {self._convert_number_to_nepali(ward)}" if not self.use_english_fallback else f"Ward {ward}"
-                text_elem = ET.SubElement(svg, 'text', {
+                # Ward label (smaller font)
+                ward_label = f"वडा {self._convert_number_to_nepali(ward_str)}" if not self.use_english_fallback else f"Ward {ward_str}"
+                ET.SubElement(svg, 'text', {
                     'x': str(x + bar_width / 2),
-                    'y': str(bottom + 20),
+                    'y': str(bottom + 15),
                     'text-anchor': 'middle',
                     'font-family': self.font_family,
-                    'font-size': str(self.font_size_labels),
+                    'font-size': str(self.font_size_labels - 2),
                     'fill': 'black'
-                })
-                text_elem.text = ward_label
+                }).text = str(ward_label)
+                
+                # Total value label above bar
+                if ward_total > 0:
+                    total_text = self._convert_number_to_nepali(ward_total)
+                    ET.SubElement(svg, 'text', {
+                        'x': str(x + bar_width / 2),
+                        'y': str(current_y - 5),
+                        'text-anchor': 'middle',
+                        'font-family': self.font_family,
+                        'font-size': str(self.font_size_labels - 3),
+                        'fill': 'black'
+                    }).text = str(total_text)
             
-            # Add legend - more compact
-            legend_x = width - margin['right'] + 10
-            legend_y = margin['top'] + 10
+            # Add horizontal legend at bottom (grouped together)
+            legend_y = height - margin['bottom'] + 20
+            total_legend_width = 0
+            legend_items = []
             
-            # Skip legend title to save space
-            for i, religion in enumerate(active_religions):
-                y_pos = legend_y + i * 20
-                color = RELIGION_COLORS.get(religion, '#7f7f7f')
+            # Calculate total width needed for legend
+            for i, category in enumerate(active_categories):
+                category_data = None
+                for ward_key in ward_data.keys():
+                    ward_info = ward_data[ward_key]
+                    if isinstance(ward_info, dict):
+                        if 'demographics' in ward_info and category in ward_info['demographics']:
+                            category_data = ward_info['demographics'][category]
+                            break
+                        elif category in ward_info:
+                            category_data = ward_info[category]
+                            break
+                
+                if category_data and isinstance(category_data, dict) and 'name_nepali' in category_data:
+                    label = self._get_display_label(category, category_data['name_nepali'])
+                else:
+                    label = str(category)
+                
+                # Estimate text width (rough approximation)
+                text_width = len(label) * 6  # Approximate character width
+                item_width = 12 + 4 + text_width + 15  # colorbox + spacing + text + margin
+                legend_items.append((category, label, item_width))
+                total_legend_width += item_width
+            
+            # Center the legend
+            legend_start_x = (width - total_legend_width) / 2
+            current_x = legend_start_x
+            
+            # Draw legend items grouped together
+            for i, (category, label, item_width) in enumerate(legend_items):
+                color = self._get_color_for_item(category, i)
                 
                 # Legend color box
                 ET.SubElement(svg, 'rect', {
-                    'x': str(legend_x),
-                    'y': str(y_pos - 6),
+                    'x': str(current_x),
+                    'y': str(legend_y - 6),
                     'width': '12',
                     'height': '12',
                     'fill': color,
@@ -348,27 +624,17 @@ class SVGChartGenerator:
                 })
                 
                 # Legend text
-                religion_data = None
-                for ward in wards:
-                    if religion in ward_data[ward]['religions']:
-                        religion_data = ward_data[ward]['religions'][religion]
-                        break
-                
-                if religion_data:
-                    nepali_name = str(religion_data.get('name_nepali', religion))
-                    label = self._get_display_label(religion, nepali_name)
-                else:
-                    label = RELIGION_LABELS.get(religion, religion)
-                
-                text_elem = ET.SubElement(svg, 'text', {
-                    'x': str(legend_x + 16),
-                    'y': str(y_pos),
+                ET.SubElement(svg, 'text', {
+                    'x': str(current_x + 16),
+                    'y': str(legend_y),
                     'dominant-baseline': 'middle',
                     'font-family': self.font_family,
                     'font-size': str(self.font_size_legend - 1),
                     'fill': 'black'
-                })
-                text_elem.text = label
+                }).text = str(label)
+                
+                # Move to next position
+                current_x += item_width
             
             # Convert to string
             return ET.tostring(svg, encoding='unicode')
@@ -389,17 +655,19 @@ class SVGChartGenerator:
             print(f"Error saving SVG: {e}")
             return False
     
-    def generate_chart_image(self, religion_data, output_name, static_dir="static/images", 
-                           chart_type="pie", include_title=False):
+    def generate_chart_image(self, demographic_data, output_name, static_dir="static/images", 
+                           chart_type="pie", include_title=False, title_nepali="", title_english=""):
         """
         Generate chart image using Inkscape conversion
         
         Args:
-            religion_data: Data for the chart
+            demographic_data: Data for the chart (any demographic data)
             output_name: Base name for the output files (without extension)
             static_dir: Directory to save images
             chart_type: Type of chart ('pie' or 'bar')
             include_title: Whether to include title in the chart
+            title_nepali: Nepali title for the chart
+            title_english: English title for the chart
             
         Returns:
             tuple: (success, png_path, svg_path)
@@ -411,9 +679,19 @@ class SVGChartGenerator:
             
             # Generate SVG
             if chart_type == "pie":
-                svg_content = self.generate_pie_chart_svg(religion_data, include_title=include_title)
+                svg_content = self.generate_pie_chart_svg(
+                    demographic_data, 
+                    include_title=include_title,
+                    title_nepali=title_nepali,
+                    title_english=title_english
+                )
             elif chart_type == "bar":
-                svg_content = self.generate_bar_chart_svg(religion_data, include_title=include_title)
+                svg_content = self.generate_bar_chart_svg(
+                    demographic_data, 
+                    include_title=include_title,
+                    title_nepali=title_nepali,
+                    title_english=title_english
+                )
             else:
                 raise ValueError(f"Unsupported chart type: {chart_type}")
             
