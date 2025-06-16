@@ -218,21 +218,16 @@
   <div class="category-break" id="category-introduction">
     {% include 'reports/partials/introduction/introduction_complete.html' %}
   </div>
+ 
+
   <!-- Demographics Chapter -->
   <div class="category-break" id="category-demographics">
     <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
       परिच्छेद – ३ः पारिवारिक विवरण तथा जनसंख्याको अवस्था
     </h1>
     <p class="section-content">
-      <!-- Background Section -->
-      
       <!-- All Demographics Sections using new processor system -->
       {% include 'demographics/partials/all_demographics.html' %}
-      
-      <!-- Backward compatibility: Keep original religion section if needed -->
-      {% comment %}
-      {% include 'demographics/religion/religion_report_partial.html' %}
-      {% endcomment %}
     </p>
   </div>
 

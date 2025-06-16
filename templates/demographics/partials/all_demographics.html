@@ -2,6 +2,14 @@
 
 <!-- All Demographics Sections for PDF -->
 <div class="all-demographics-sections">
+    <h1 class="section-header level-1" style="color: #0ea5e9; border-bottom: 3px solid #1e40af; padding-bottom: 0.4em; font-size: 20pt; margin-top: 1em;">
+        जनसांख्यिकीय विविधता
+    </h1>
+    <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt;">
+            लुङ्ग्री गाउँपालिकामा विभिन्न धर्म, जातजाति र मातृभाषी समुदायहरूको बसोबास रहेको छ । यस खण्डमा गाउँपालिकाको जनसांख्यिकीय विविधताको विस्तृत विवरण प्रस्तुत गरिएको छ ।
+        </div>
+    </div>
     
     <!-- Language Demographics Section -->
     {% if all_demographics_data.language %}
@@ -13,10 +21,7 @@
         {% include 'demographics/partials/religion_section.html' with religion_data=all_demographics_data.religion %}
     {% endif %}
     
-    <!-- Caste Demographics Section -->
-    {% if all_demographics_data.caste %}
-        {% include 'demographics/partials/caste_section.html' with caste_data=all_demographics_data.caste %}
-    {% endif %}
+
     
     <!-- Add more specific demographic partials here as processors are added -->
     

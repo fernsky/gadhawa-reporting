@@ -30,10 +30,10 @@ class Command(BaseCommand):
         # Aggregate the ward data to municipality level
         # Based on the original ward data, calculate totals
         religion_data = [
-            {'id': '6897a374-5f1b-4905-8123-03bc1418094c', 'religion_type': 'CHRISTIAN', 'population': 121},  
-            {'id': 'ae1c5381-18fe-4a52-a042-f66b94af0b8d', 'religion_type': 'HINDU', 'population': 26713},   
-            {'id': '97027b07-fda1-4368-a604-b5a9a0a46b2a', 'religion_type': 'NATURE', 'population': 61},     
-            {'id': '5864c7c9-3409-43e4-8c37-de5195f3c96b', 'religion_type': 'BUDDHIST', 'population': 535},  
+            {'id': '6897a374-5f1b-4905-8123-03bc1418094c', 'religion': 'CHRISTIAN', 'population': 121},  
+            {'id': 'ae1c5381-18fe-4a52-a042-f66b94af0b8d', 'religion': 'HINDU', 'population': 26713},   
+            {'id': '97027b07-fda1-4368-a604-b5a9a0a46b2a', 'religion': 'NATURE', 'population': 61},     
+            {'id': '5864c7c9-3409-43e4-8c37-de5195f3c96b', 'religion': 'BUDDHIST', 'population': 535},  
         ]
 
         # Check if data already exists
@@ -52,7 +52,7 @@ class Command(BaseCommand):
             for data in religion_data:
                 # Create the record with the specified ID
                 obj, created = MunicipalityWideReligionPopulation.objects.get_or_create(
-                    religion_type=data['religion_type'],
+                    religion=data['religion'],
                     defaults={
                         'id': data['id'],
                         'population': data['population'],
@@ -62,14 +62,14 @@ class Command(BaseCommand):
                 if created:
                     created_count += 1
                     self.stdout.write(
-                        f"Created: {data['religion_type']} ({data['population']} people)"
+                        f"Created: {data['religion']} ({data['population']} people)"
                     )
                 else:
                     # Update existing record
                     obj.population = data['population']
                     obj.save()
                     self.stdout.write(
-                        f"Updated: {data['religion_type']} ({data['population']} people)"
+                        f"Updated: {data['religion']} ({data['population']} people)"
                     )
 
         # Print summary
@@ -91,7 +91,7 @@ class Command(BaseCommand):
             religion_code = religion_choice[0]
             religion_name = religion_choice[1]
             try:
-                religion_obj = MunicipalityWideReligionPopulation.objects.get(religion_type=religion_code)
+                religion_obj = MunicipalityWideReligionPopulation.objects.get(religion=religion_code)
                 religion_pop = religion_obj.population
                 percentage = religion_pop / total_population * 100
                 self.stdout.write(

@@ -18,6 +18,7 @@ from ..models import (
     ReportTable,
     PublicationSettings,
 )
+from apps.demographics.processors.manager import get_demographics_manager
 
 
 class PDFGeneratorMixin:
@@ -108,57 +109,34 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         # Track download
         track_download(request, "full_report")
 
-        # Municipality name - make dynamic  
+        # Municipality name - make dynamic
         municipality_name = "लुङ्ग्री गाउँपालिका"
         municipality_name_english = "Lungri Rural Municipality"
 
         # Get publication settings (optional)
-        publication_settings = self.get_publication_settings()        # Get all demographics data using new processor system
-        from apps.demographics.processors.manager import get_demographics_manager
-        
+        publication_settings = self.get_publication_settings()
+
+        # Get all demographics data using new processor system
         demographics_manager = get_demographics_manager()
+        
+        # Generate all charts before processing data
+        demographics_manager.generate_all_charts()
+        
+        # Get processed data with charts
         all_demographics_data = demographics_manager.process_all_for_pdf()
-        
-        # Extract religion data for backward compatibility
-        religion_data = all_demographics_data.get('religion', {}).get('data', {})
-        coherent_analysis = all_demographics_data.get('religion', {}).get('report_content', '')
-        pdf_charts = all_demographics_data.get('religion', {}).get('charts', {})
-        
-        # Calculate major religions from data
-        def get_major_religions(religion_data):
-            major_religions = []
-            total_population = sum(data.get('population', 0) for data in religion_data.values() if isinstance(data, dict))
-            if total_population > 0:
-                for religion_type, data in religion_data.items():
-                    if isinstance(data, dict) and data.get('percentage', 0) >= 5.0:
-                        major_religions.append({
-                            'type': religion_type,
-                            'name_nepali': data.get('name_nepali', religion_type),
-                            'population': data.get('population', 0),
-                            'percentage': data.get('percentage', 0)
-                        })
-            return sorted(major_religions, key=lambda x: x['percentage'], reverse=True)
-        
+
         # Use hardcoded content plus dynamic demographics data
         context = {
             "municipality_name": municipality_name,
             "municipality_name_english": municipality_name_english,
             "publication_settings": publication_settings,
             "generated_date": timezone.now(),
-            # Religion demographics data (for backward compatibility)
-            "religion_data": religion_data,
-            "coherent_analysis": coherent_analysis,
-            "pdf_charts": pdf_charts,
-            "total_population": sum(data.get('population', 0) for data in religion_data.values() if isinstance(data, dict)),
-            "major_religions": get_major_religions(religion_data),
-            # All demographics data
             "all_demographics_data": all_demographics_data,
         }
 
         filename = (
             f"lungri_digital_profile_report_{timezone.now().strftime('%Y%m%d')}.pdf"
         )
-        print(context)
         return self.generate_pdf_with_weasyprint(
             "reports/pdf_full_report.html", context, filename
         )
