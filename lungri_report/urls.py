@@ -22,6 +22,10 @@ urlpatterns = [
     # API URLs
     path("api/v1/", include("apps.core.urls")),
     path("api/v1/auth/", include("apps.users.urls")),
+    path(
+        "api/v1/municipality-introduction/",
+        include("apps.municipality_introduction.urls"),
+    ),
     path("api/v1/demographics/", include("apps.demographics.urls")),
     path("api/v1/economics/", include("apps.economics.urls")),
     path("api/v1/social/", include("apps.social.urls")),

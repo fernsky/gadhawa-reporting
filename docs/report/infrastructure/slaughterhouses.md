@@ -1,0 +1,3 @@
+# slaughterhouses
+
+<!-- auto‑generated stub -->

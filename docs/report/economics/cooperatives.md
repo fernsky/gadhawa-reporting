@@ -1,0 +1,3 @@
+# cooperatives
+
+<!-- auto‑generated stub -->

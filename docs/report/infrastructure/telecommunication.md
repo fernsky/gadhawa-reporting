@@ -1,0 +1,3 @@
+# telecommunication
+
+<!-- auto‑generated stub -->
