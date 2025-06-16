@@ -1,3 +1,3 @@
 # bus parks stops
 
-<!-- auto‑generated stub -->
+xfn ufpFkflnsfdf ;'ljwf ;DkGg a;kfs{ tyf a; lj;f}gL / k|ltIffnox? lgdf{0f x'g ;s]sf 5}gg\ . kflnsf leq tyf aflx/ rNg] ;jf/L ;fwgx? ;fj{hlgs v'Nnf / pko'Qm :ynx?df /fVg] k|rng /x]sf] 5 . cfufdL lbgdf lah'nL aQL, kfgL, ofq' k|ltIffno, zf}rfno, ;fj{hlgs df]afOn rflh{ª :6]zg nufotsf ;'ljwfx¿ ePsf a;kfs{sf] lgdf{0f u/L hgtfsf] cjfudgnfO{ ;xh agfpg ;lsG5 . ljsl;t d'n'sx¿sf] cEof; x]bf{ a;kfs{x¿df x]Nk 8]:s nufot zflGt ;'/Iffsf] plrt k|aGw ldnfPsf] kfO{G5 . ;'ljwf ;DkGg / ;'/lIft a;kfs{x¿ lgdf{0f ePsf] v08df oftfoft ;]jfsf] u'0f:t/ j[l4 x'G5 .

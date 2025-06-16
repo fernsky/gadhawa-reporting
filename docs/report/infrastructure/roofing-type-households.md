@@ -1,3 +1,3 @@
-# roofing type households
+5fgf]sf] k|sf/sf cfwf/df 3/w'/L
 
-<!-- auto‑generated stub -->
+ufpFkflnsfsf /x]sf hDdf 3/w'/L !@^* dWo] h:tf÷l6gsf] 5fgf] ePsf] 3/df a;f]af; ug]{sf] ;+Vof !!%& cyf{t (!=@% k|ltzt, 9'Ëf÷:n]6sf] 5fgf] ePsf] kl/jf/ ;+Vof %& cyf{t $=% k|ltzt, sf7÷ˆNofssf] 5fgf] ePsf] kl/jf/ ;+Vof #) cyf{t @=#& k|ltzt /x]sf 5g\ eg] v/÷k/fn÷5\jfnL 5fgf]sf] k|of]u u/L a;f]af; ug]{ 3/kl/jf/sf] ;+Vof !! cyf{t )=*& k|ltzt /x]sf] kfOG5 . o;sf] lj:t[t ljj/0f tflnsfdf k|:t't ul/Psf] 5 . 

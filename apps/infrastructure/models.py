@@ -347,28 +347,6 @@ class WardWiseHouseholdFloor(BaseModel):
         return f"वडा {self.ward_number} - {self.get_floor_type_display()}"
 
 
-class WardWiseHouseholdRoof(BaseModel):
-    """Ward wise household roof type (7.4.2 - from TypeScript schema)"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    roof_type = models.CharField(
-        max_length=15,
-        choices=RoofTypeChoice.choices,
-        verbose_name=_("छानोको प्रकार"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत छानोको प्रकार")
-        verbose_name_plural = _("वडागत छानोको प्रकार")
-        unique_together = ["ward_number", "roof_type"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_roof_type_display()}"
-
 
 class WardWiseHouseMapPassed(BaseModel):
     """Ward wise house map passed status (7.4.3 - from TypeScript schema)"""
@@ -395,6 +373,29 @@ class WardWiseHouseMapPassed(BaseModel):
 
 # ७.४.१ विद्यमान सतह ढलको अवस्था
 # ७.४.२ छानोको प्रकारका आधारमा घरधुरी
+
+class WardWiseHouseholdRoof(BaseModel):
+    """Ward wise household roof type (7.4.2 - from TypeScript schema)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    roof_type = models.CharField(
+        max_length=15,
+        choices=RoofTypeChoice.choices,
+        verbose_name=_("छानोको प्रकार"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत छानोको प्रकार")
+        verbose_name_plural = _("वडागत छानोको प्रकार")
+        unique_together = ["ward_number", "roof_type"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_roof_type_display()}"
+
 # ७.४.३ गाउँ÷नगरपालिका अन्तर्गतका सरकारी भवन सम्बन्धी विवरण
 # ७.४.४ गाउँ÷नगरपालिका कार्यालयदेखि प्रत्येक वडा केन्द्रसम्मको दूरी
 # ७.४.५ पशुवधशालाको विवरण

@@ -1,3 +1,3 @@
-# lighting fuel households
+&=@=@ 	aQL afNg] OGwgsf] k|of]usf] cfwf/df 3/kl/jf/
 
-<!-- auto‑generated stub -->
+o; ufpFkflnsfsf ;a} j8fx¿df ljB't dd{t ;Def/, dx;"n c;'nL tyf ljB'tLs/0f of]hgfsf] sfof{Gjog g]kfn ljB't k|flws/0fn] ub}{ cfPsf] 5 . 3/w'/L ;j]{If0f, @)*! sf] glthf cg';f/ b}lgs aQL afNg k|of]u ul/g] OGwgdf ljB't k|d'v ;|f]tsf] ?kdf /x]sf] b]lvG5 .k|d'v sf/0f ;d]t xf] . xfdLn] cfoft k|lt:yfkg / lgof{t k|jGwsf] gLltnfO{ Jojxf/df k|efjsf/L tl/sfn] ptf{g g;ls/x]sf] kl/k|]Iodf jfo" pmhf{, ;f}o{ pmhf{, ljB't pmhf{ tyf afof] UofF;sf] ljsf;dfkm{t xfdL pmhf{sf] ;|f]tdf cfTdlge{/ aGg ;S5f}+ . To;}n] g]kfnsf] xsdf :yfgLo ;/sf/, k|b]z ;/sf/ / ;+3Lo ;/sf/n] gjLs/0fLo j}slNks pmhf{sf] ljsf;df cfjZos gLlt lgdf{0f u/L sfd ug'{ kg]{ b]lvG5 .   

@@ -1,3 +1,7 @@
-# access to modern facilities
+&=#=!	cfw'lgs ;'ljwfdf kx'Fr ;DaGwL ljj/0f
 
-<!-- auto‑generated stub -->
+PSsfO{;f}}+ ztfAbLsf] e'–d08nLs[t ;dfh ;"rgf / ;~rf/sf] o'udf 5 . ;"rgf / ;~rf/sf] If]qdf cfPsf] qmflGtnfO{ g]kfnsf] zx/L If]qn] nueu cfTd;fy ul/;s]sf] ePtfklg u|fdL0f If]qdf 6]lnlehg, kqklqsf, OG6/g]6, 6]lnkmf]g, df]afOn / s'l/o/ ;]jf lj:tf/ x'g afFsL 5 . ;~rf/ / k|ljlwsf oL dfWodx¿sf] k"0f{¿kn] ljsf; u/L u|fdL0f hgtfnfO{ ;"rgf / ;~rf/sf] o'u k|j]z u/fpg' r'gf}tLk"0f{ /x]sf] 5 . g]kfnsf] ;+ljwfgn] hgtfsf] ;"rgfsf] xsnfO{ df}lns xssf] ?kdf kl/eflift u/]sf] 5 . 
+
+&=#=!	cfw'lgs ;'ljwfdf kx'Fr ;DaGwL ljj/0f
+
+;fwg tyf ;]jf ;'ljwfsf] cfwf/df ufpFkflnsfdf df]afOn ;'ljwf pknAwtf ePsf] 3/kl/jf/sf] ;+Vof pRr /x]sf] b]lvG5 . ufpFkflnsfsf s'n 3/kl/jf/x¿dWo] !,)*( cyf{t\ $@=%@ k|ltzt 3/kl/jf/df df]afOnsf] ;'ljwf ePsf] b]lvG5 . bf];|f]df /]l8of] x'g] 3/kl/jf/sf] ;+Vof &$^ cyf{t @(=!# k|ltzt /x]sf] 5 . o;}u/L 6]lnlehgsf] k|of]u ug]{ 3/kl/jf/sf] ;+Vof $!$ cyf{t !^=!& k|ltzt, df]6/;fOsn÷:s'6/ -k]6«f]n_ k|of]u ug]{ 3/kl/jf/sf] ;+Vof !@$ cyf{t $=*$ k|ltzt, OG6/g]6 ;'ljwf 3/kl/jf/sf] ;+Vof () cyf{t #=%! k|ltzt, sDKo'6/÷Nofk6k k|of]u ug]{sf] ;+Vof !( cyf{t )=&$ k|ltzt /x]sf] 5 . ;du|df x]bf{ df]afOnsf] ;]jfdf j[l4 x'Fb} uPsf] b]lvG5 . df]afOn k|of]ustf{n] ;a} vfn] ;+rf/sf ;'ljwf h:t} >Jo, b[io, ;"rgf, uLt, va/ cfbfg k|bfg nufotsf w]/} sfd ug{ ;xh x'g] ePsf]n] df]afOnsf] t'ngfdf 6]lnlehg, /]l8of] k|of]ustf{sf] ;+Vof 3l6/x]sf] b]lvG5 . csf{]tkm{ sf/÷hLk÷Eofg, dfOqmf]j]e cf]eg, /fli6«o b}lgs klqsfsf] kx"Fr h:tf pRr ;'ljwfsf ;fdfu|Lx¿sf] ;+Vof 3l6/x]sf] 5 . oBkL, u|fdL0f Onfsfx¿df ;d]t qmdzM cfw'lgs ;'v ;'ljwfsf ;fdu|Lx¿sf] k|of]ustf{x¿ a9\gfn] pkef]QmfjfbL ;+:s[ltsf] ljsf; eO/x]sf] b]lvG5 . j8fut ?kdf lj:t[t ljj/0f tflnsfdf k|:t't ul/Psf] 5 .   

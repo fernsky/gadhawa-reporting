@@ -1,3 +1,9 @@
-# road network status
+&=!=! 	;8s ;+hfnsf] ljBdfg cj:yf
 
-<!-- auto‑generated stub -->
+s'g} klg :yfgsf] ef}lts ljsf;sf] lglDt ;8s ;~hfn k|f/lDes zt{ xf] . ;Dk'0f{ ;'ljwf ;DkGg ;8s oftfoftsf] ljsf;;Fu} ;du| ljsf;sf] 9f]sf v'Nb5 . :yfgLo txsf] xsdf j8f s]Gb|x¿nfO{ kflnsf s]Gb|;Fu hf]8\g' tyf kflnsf s]Gb|nfO{ lhNnf ;8s x'Fb} /fli6«o /fhdfu{ k|0ffnLdf hf]8\g' clt g} cfjZos x'G5 . ufpFa:tLx¿df s[lif ;8sx¿sf] ljsf; / :t/f]Gglt dfkm{t\ s[lif pTkfbgx¿sf] ahf/Ls/0f u/L hgtfsf] cfly{s cj:yfnfO{ dha't agfpg ;lsG5 . ;'ljwf ;DkGg ;8s ;~hfn dfkm{t pBf]u tyf ko{6g If]qsf] ljsf; u/L cfly{s qmflGt ;Dej 5 . o;sf] cnfjf wfld{s If]qx¿df ;8s ;~hfn dfkm{t kx'Fr k'¥ofP/ cfGtl/s tyf afx\o ko{6sx¿ cfslif{t ug{ ;lsG5 .  
+@)%) sf] gS;f+sg sfo{ ug]{ ;do;Dd g]kfnsf kxf8L If]qdf ;8ssf] cj:yf lgs} sdhf]/ lyof] . t/ @)$^ sf] cfd kl/jt{gkl5 :yfgLo lgsfonfO{ /fli6«o sf]ifaf6 /sd lalgof]hg ug]{ kl/kf6L eP cg';f/ u|fdL0f If]qdf klg ;8s la:tf/sf] sfo{n] ult lng yfNof] . tTkZrft ;8s ;~hfnsf] la:tf/df u|fdL0f If]qn] klg km8\sf] df/]sf] 5 . t/ b'u{d kxf8L e"–efusf sf/0f sltko To:tf :ynut ;+/rgfsf] gS;f+sg sfo{ x'g g;s]sf] / tYout ;"rgfsf] cefjdf tL If]qx¿df s] slt ;8s ;~hfnsf] la:tf/ ePsf] 5 eGg Plsg tYofÍ eg] pknAw 5}g\ . oxL k|;+udf ufpFkflnsf oftfoft u'?of]hgfM (Rural Municipality Transport Master Plan- RMTMP) sf] kl/sNkgf x/]s gu/÷ufpF If]qsf] oftfoft ;~hfnsf tYof+sdf cfwfl/t gS;f / tYosf] cfwf/df ug'{kg]{ afWofTds Joj:yf ul/Psf] lyof] . t/ u|fdL0f a:tLx¿df Tof] k'u]sf] lyPg . o; ufpFkflnsfdf ;fj{hlgs oftfoft;Ddsf] kx'Frsf] cj:yf b]xfo adf]lhd /x]sf] 5 .   
+
+tflnsf g+= 78 M ufpFkflnsfdf ;fj{hlgs oftfoftsf] kx'Fr;Dd k'Ug nfUg] ;dosf] ljj/0f 
+
+o; ufpFkflnsfdf /x]sf s'n !,@^* 3/w'/LdWo] #$# cyf{t @&=)% k|ltzt 3/w'/L !% ldg]6 leq jf ;f] eGbf sd ;dosf] cGt/fndf ;fj{hlgs oftfoftsf] kx"Fr;Dd k'Ug] u/]sf 5g\ . o;}u/L !(& cyf{t !%=%$ k|ltzt 3/w'/L #) ldg]6leq, ##* cyf{t\ @^=^^ k|ltzt ! 306fleq / #() cyf{t\ #)=&^ k|ltzt kl/jf/ ! 306feGbf a9L ;do ;fj{hlgs oftfoftsf] kx'Frdf k'Ug] u5{g\ . h;sf] lj:t[t j8fut ljj/0f tflnsfdf k|:t't ul/Psf] 5 . 
+
