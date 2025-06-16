@@ -126,13 +126,14 @@ li {
 
 /* Category sections - only break before first category */
 .section-break {
-  page-break-before: auto;
+  page-break-before: always;
   page-break-after: avoid;
   page-break-inside: auto;
+  break-before: page;
 }
 
-.section-break:first-of-type {
-  page-break-before: always;
+.section-break {
+  page-break-before: page;
 }
 
 .section-content {
