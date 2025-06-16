@@ -360,9 +360,9 @@ class SVGChartGenerator:
             if not active_categories:
                 return None
             
-            # SVG dimensions - improved layout
-            width, height = 800, 500
-            margin = {'top': 30 if include_title else 20, 'right': 20, 'bottom': 80, 'left': 70}
+            # SVG dimensions - improved layout with more space for legend
+            width, height = 800, 520
+            margin = {'top': 30 if include_title else 20, 'right': 20, 'bottom': 100, 'left': 70}
             chart_width = width - margin['left'] - margin['right']
             chart_height = height - margin['top'] - margin['bottom']
             
@@ -424,17 +424,20 @@ class SVGChartGenerator:
             if max_population == 0:
                 return None
             
-            # Draw Y-axis and grid lines
+            # Draw Y-axis and grid lines with elevated baseline
             y_axis_x = margin['left']
             chart_top = margin['top']
             chart_bottom = margin['top'] + chart_height
+            baseline_offset = 15  # Elevate the baseline so bars appear elevated
+            effective_chart_height = chart_height - baseline_offset
+            effective_chart_bottom = chart_bottom - baseline_offset
             
-            # Y-axis line
+            # Y-axis line (with elevated baseline)
             ET.SubElement(svg, 'line', {
                 'x1': str(y_axis_x),
                 'y1': str(chart_top),
                 'x2': str(y_axis_x),
-                'y2': str(chart_bottom),
+                'y2': str(effective_chart_bottom),
                 'stroke': 'black',
                 'stroke-width': '2'
             })
@@ -445,7 +448,7 @@ class SVGChartGenerator:
             
             for i in range(scale_steps + 1):
                 value = i * step_value
-                y_pos = chart_bottom - (i * chart_height / scale_steps)
+                y_pos = effective_chart_bottom - (i * effective_chart_height / scale_steps)
                 
                 # Horizontal grid line
                 ET.SubElement(svg, 'line', {
@@ -497,7 +500,7 @@ class SVGChartGenerator:
                     continue
                 
                 x = margin['left'] + i * bar_width
-                bottom = margin['top'] + chart_height
+                bottom = effective_chart_bottom  # Use elevated baseline
                 ward_info = ward_data[ward_key]
                 
                 # Stack categories for this ward
@@ -521,7 +524,7 @@ class SVGChartGenerator:
                                 pop = demo_data
                     
                     if pop > 0:
-                        bar_height = (pop / max_population) * chart_height
+                        bar_height = (pop / max_population) * effective_chart_height  # Use effective height
                         color = self._get_color_for_item(category, j)
                         
                         # Draw bar segment
@@ -552,11 +555,11 @@ class SVGChartGenerator:
                         current_y -= bar_height
                         ward_total += pop
                 
-                # Ward label (smaller font)
+                # Ward label (positioned below the elevated baseline with more spacing)
                 ward_label = f"वडा {self._convert_number_to_nepali(ward_str)}" if not self.use_english_fallback else f"Ward {ward_str}"
                 ET.SubElement(svg, 'text', {
                     'x': str(x + bar_width / 2),
-                    'y': str(bottom + 15),
+                    'y': str(chart_bottom + 25),  # More space from the chart bottom
                     'text-anchor': 'middle',
                     'font-family': self.font_family,
                     'font-size': str(self.font_size_labels - 2),
@@ -575,8 +578,8 @@ class SVGChartGenerator:
                         'fill': 'black'
                     }).text = str(total_text)
             
-            # Add horizontal legend at bottom (grouped together)
-            legend_y = height - margin['bottom'] + 20
+            # Add horizontal legend at bottom with more spacing
+            legend_y = height - margin['bottom'] + 45  # More space between chart and legend
             total_legend_width = 0
             legend_items = []
             

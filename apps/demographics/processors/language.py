@@ -73,8 +73,8 @@ class LanguageProcessor(BaseDemographicsProcessor):
             return self.chart_generator.generate_bar_chart_svg(
                 data, 
                 include_title=False,
-                title_nepali="वडा अनुसार भाषिक जनसंख्या वितरण",
-                title_english="Language Population by Ward"
+                title_nepali="मातृभाषाको आधारमा जनसंख्या वितरण",
+                title_english="Population Distribution by Mother Tongue"
             )
         return None
 
@@ -137,7 +137,7 @@ class LanguageProcessor(BaseDemographicsProcessor):
             content.append("""संविधानको धारा ३२ मा भाषा तथा संस्कृतिको हकलाई मौलिक हकको रुपमा स्थापित गरेको र धारा ३१ को शिक्षासम्बन्धी हकको उपधारा ५ बमोजिम "नेपालमा बसोबास गर्ने प्रत्येक नेपाली समुदायलाई कानुन बमोजिम आफ्नो मातृभाषामा शिक्षा पाउने र त्यसका लागि विद्यालय तथा शैक्षिक संस्था खोल्ने र संचालन गर्ने हक हुनेछ ।" भनी स्पष्ट किटान गरेको छ ।""")
             
             # Local initiatives and provisions
-            content.append("""आफ्नो मातृभाषामा पढ्न चाहने विद्यार्थीहरूलाई गाउँपालिकाले विशेष व्यवस्था गर्न सक्ने प्रावधान रहेको छ । वडा अनुसार मातृभाषाको विस्तृत विवरण तालिकामा उल्लेख गरिएको छ ।""")
+            content.append("""आफ्नो मातृभाषामा पढ्न चाहने विद्यार्थीहरूलाई गाउँपालिकाले विशेष व्यवस्था गर्न सक्ने प्रावधान रहेको छ ।""")
             
             # Indigenous communities section
             content.append(self._generate_indigenous_analysis(language_data, total_population))
@@ -157,7 +157,7 @@ class LanguageProcessor(BaseDemographicsProcessor):
             """Generate analysis for indigenous communities"""
             content = []
             
-            content.append("""<br><br><strong>(क) आदिवासी</strong><br>""")
+            content.append("""<strong>(क) आदिवासी</strong>""")
             content.append("""आदिवासी/जनजाति उत्थान राष्ट्रिय प्रतिष्ठान ऐन, २०५८ अनुसार आदिवासी जनजाति भन्नाले आफ्नो मातृभाषा र परम्परागत रीतिरिवाज, छुट्टै साँस्कृतिक पहिचान, छुट्टै सामाजिक संरचना र लिखित वा अलिखित इतिहास भएका जाति वा समुदायलाई बुझिन्छ ।""")
             
             # Calculate indigenous population
@@ -194,7 +194,7 @@ class LanguageProcessor(BaseDemographicsProcessor):
             """Generate analysis for marginalized communities"""
             content = []
             
-            content.append("""<br><br><strong>(ख) उत्पीडित तथा सीमान्तकृत समुदाय</strong><br>""")
+            content.append("""<strong>(ख) उत्पीडित तथा सीमान्तकृत समुदाय</strong>""")
             content.append("""नेपालको संविधानको भाग ३४ अन्तर्गत धारा ३०६ को (ड) मा सीमान्तकृत समुदाय भन्नाले राजनीतिक, आर्थिक र सामाजिक रूपले पछाडि पारिएका विभेद र उत्पीडन तथा भौगोलिक विकटताको कारणले सेवा सुविधाको उपभोग गर्न नसकेका वा त्यसबाट वञ्चित रहेका संघीय कानून बमोजिमको मानव विकासको स्तर भन्दा न्यून स्थितिमा रहेका समुदाय सम्झनु पर्दछ भनी उल्लेख गरेको छ ।""")
             
             content.append("""सामाजिक विभेदका रूपमा छुवाछुत जस्तो अमानवीय भेदभाव भोगिरहेको यो समुदायले राजनैतिक, आर्थिक र सामाजिक क्षेत्रमा समेत उपेक्षाको अनुभूति गर्नु परेको छ । परम्परागत सिपको धनी यो समुदायले आफ्नो सिपलाई आर्थिक विपन्नता र सामाजिक उपेक्षाका कारण पनि अघि बढाउन नसकेको पाइन्छ ।""")

@@ -8,6 +8,9 @@ from .religion import ReligionProcessor
 from .language import LanguageProcessor
 from .caste import CasteProcessor
 from .househead import HouseheadProcessor
+from .occupation import OccupationProcessor
+from .economically_active import EconomicallyActiveProcessor
+from .occupation import OccupationProcessor
 
 
 class DemographicsManager:
@@ -19,6 +22,8 @@ class DemographicsManager:
             'language': LanguageProcessor(),
             'caste': CasteProcessor(),
             'househead': HouseheadProcessor(),
+            'occupation': OccupationProcessor(),
+            'economically_active': EconomicallyActiveProcessor(),
         }
 
     def get_processor(self, category):

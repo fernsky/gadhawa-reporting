@@ -73,8 +73,8 @@ class ReligionProcessor(BaseDemographicsProcessor):
             return self.chart_generator.generate_bar_chart_svg(
                 data, 
                 include_title=False,
-                title_nepali="वडा अनुसार धार्मिक जनसंख्या वितरण",
-                title_english="Religious Population by Ward"
+                title_nepali="धर्म अनुसार जनसंख्या वितरण",
+                title_english="Population Distribution by Religion"
             )
         return None
 
@@ -88,40 +88,57 @@ class ReligionProcessor(BaseDemographicsProcessor):
             # Find major religions
             major_religions = []
             for religion_type, data in religion_data.items():
-                if data['population'] > 0 and data['percentage'] >= 5.0:
+                if data['population'] > 0:
                     major_religions.append((data['name_nepali'], data['population'], data['percentage']))
             
             major_religions.sort(key=lambda x: x[1], reverse=True)
             
-            # Build coherent analysis
+            # Build content based on provided text
             content = []
             
-            # Introduction
+            # Constitutional and historical context
+            content.append("""नेपालमा धार्मिक स्वतन्त्रता र विविधता रहेको छ । अझै विधिवत रुपमा नेपालको अन्तरिम संविधान २०६३, ले मिति २०६३ जेठ ४ मा पुर्नस्थापित संसदको ऐतिहासिक घोषणाले नेपाललाई एक धर्म निरपेक्ष राष्ट्रको रुपमा घोषणा गर्यो । त्यस्तै नेपालको संविधान, २०७२ को प्रस्तावनामा नेपाललाई एक बहुजातीय, बहुभाषिक, बहुधार्मिक, बहुसांस्कृतिक तथा भौगोलिक विविधतायुक्त विशेषतालाई आत्मसात् गरी विविधता बिचको एकता, सामाजिक सांस्कृतिक ऐक्यबद्धता, सहिष्णुता र सद्भावलाई संरक्षण एवं प्रवर्धन गर्दै, वर्गीय, जातीय, क्षेत्रीय, भाषिक, धार्मिक, लैङ्गिक विभेद र सबै प्रकारका जातीय छुवाछूतको अन्त्य गरी आर्थिक समानता, समृद्धि र सामाजिक न्याय सुनिश्चित गर्न समानुपातिक समावेशी र सहभागितामूलक सिद्धान्तका आधारमा समतामूलक समाजको निर्माण गर्ने संकल्प उल्लेख गरिएको छ । फलस्वरुप नेपालमा धार्मिक स्वतन्त्रता र सौहार्दता रहेको पाईन्छ ।""")
+            
+            # Festivals and cultural practices
+            content.append("""यहाँ विभिन्न समुदायका मानिसहरूको बसोबास रहेको हुनाले उनीहरूका आ–आफ्नै चाडपर्वहरू छन् । पालिकाबासीले दशैँ, तिहार, तिज, ल्होसार, माघे संक्रान्ति, फागु पूर्णिमा, चण्डी पूर्णिमा, जनैपूर्णिमा, बुद्ध जयन्ती, क्रिसमस पर्व आदि मनाउने गर्दछन् ।""")
+            
+            # Population statistics
             nepali_total = format_nepali_number(total_population)
-            content.append(f"""{self.municipality_name}मा धार्मिक विविधता रहेको छ । कुल {nepali_total} जनसंख्या मध्ये विभिन्न धर्मावलम्बीहरूको बसोबास रहेको छ ।""")
-            
-            # Major religions
             if major_religions:
-                major_pop = format_nepali_number(major_religions[0][1])
-                major_pct = format_nepali_percentage(major_religions[0][2])
-                major_text = f"""यस गाउँपालिकामा {major_religions[0][0]} धर्मावलम्बीहरूको संख्या सबैभन्दा बढी छ जसको संख्या {major_pop} ({major_pct}) रहेको छ ।"""
-                if len(major_religions) > 1:
-                    second_pop = format_nepali_number(major_religions[1][1])
-                    second_pct = format_nepali_percentage(major_religions[1][2])
-                    major_text += f""" त्यसैगरी {major_religions[1][0]} धर्मावलम्बीहरूको संख्या {second_pop} ({second_pct}) रहेको छ ।"""
-                content.append(major_text)
+                # Get Hindu percentage (assuming it's the major religion)
+                hindu_data = next((r for r in major_religions if 'हिन्दु' in r[0]), None)
+                buddhist_data = next((r for r in major_religions if 'बौद्ध' in r[0]), None)
+                kirant_data = next((r for r in major_religions if 'किराँत' in r[0]), None)
+                christian_data = next((r for r in major_religions if 'क्रिश्चियन' in r[0] or 'ईसाई' in r[0]), None)
+                
+                stats_text = f"""गाउँपालिकामा रहेका कुल {nepali_total} जनसंख्या मध्ये"""
+                
+                if hindu_data:
+                    hindu_pop = format_nepali_number(hindu_data[1])
+                    hindu_pct = format_nepali_percentage(hindu_data[2])
+                    stats_text += f""" {hindu_pop} अर्थात {hindu_pct} प्रतिशत जनसंख्याले हिन्दु धर्म मान्दछन्"""
+                
+                if buddhist_data:
+                    buddhist_pop = format_nepali_number(buddhist_data[1])
+                    buddhist_pct = format_nepali_percentage(buddhist_data[2])
+                    stats_text += f""" भने दोस्रोमा बौद्ध धर्म मान्नेको संख्या {buddhist_pop} अर्थात {buddhist_pct} प्रतिशत रहेका छन् ।"""
+                
+                other_religions = []
+                if kirant_data:
+                    kirant_pop = format_nepali_number(kirant_data[1])
+                    kirant_pct = format_nepali_percentage(kirant_data[2])
+                    other_religions.append(f"""{kirant_pop} अर्थात {kirant_pct} प्रतिशत किराँत""")
+                
+                if christian_data:
+                    christian_pct = format_nepali_percentage(christian_data[2])
+                    other_religions.append(f"""क्रिश्चियन {christian_pct} प्रतिशत""")
+                
+                if other_religions:
+                    stats_text += f""" त्यसैगरी {' भने '.join(other_religions)} रहेका छन् ।"""
+                
+                content.append(stats_text)
             
-            # Constitutional context
-            content.append("""नेपालको संविधान २०७२ ले धर्मिक स्वतन्त्रताको ग्यारेन्टी गरेको छ । सबै नागरिकहरूलाई आफ्नो धर्म मान्ने, त्यसको प्रचार प्रसार गर्ने र धार्मिक क्रियाकलाप गर्ने अधिकार छ । धर्मनिरपेक्षताको सिद्धान्त अनुसार राज्यले कुनै पनि धर्मलाई राज्य धर्मको रूपमा स्थापना गर्दैन ।""")
-            
-            # Diversity analysis
-            active_religions = len([d for d in religion_data.values() if d['population'] > 0])
-            content.append(self.generate_diversity_analysis(active_religions, total_population))
-            
-            # Religious harmony
-            content.append("""स्थानीय तहले सबै धर्मावलम्बीहरूको धार्मिक स्वतन्त्रता र अधिकारको संरक्षणमा विशेष ध्यान दिएको छ । धार्मिक सद्भावना र पारस्परिक सहिष्णुताको वातावरण निर्माण गरी सबै समुदायहरूबीच मेलमिलापको भावना विकास गर्न कार्यक्रमहरू सञ्चालन गरिएको छ । धार्मिक पर्वहरूमा सबै समुदायको सहभागिता र सहयोगले सामाजिक एकताको परिचय दिन्छ ।""")
-            
-            # Conclusion
-            content.append(self.generate_harmony_conclusion())
+            # Religious diversity and tolerance
+            content.append("""गाउँपालिकामा धार्मिक विविधता रहेता पनि हिन्दु र बौद्ध धर्मावलम्बीहरूको प्रधानता रहेको तथ्याङ्कले देखाउँछ । नेपालमा सदियौंदेखि रहि आएको धार्मिक सहिष्णुता यस गाउँपालिकामा पनि कायमै रहेको देखिन्छ ।""")
             
             return ' '.join(content)

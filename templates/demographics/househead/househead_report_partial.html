@@ -17,15 +17,15 @@
     <!-- Bar Chart for Ward-wise Distribution -->
     {% if ward_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ३.७.२: वडागत घरमुखियाको लिङ्गको आधारमा घरपरिवार वितरण</h3>
+            <h3 class="chart-title">चित्र ३.७.२: वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
                 {% if pdf_charts.househead.bar_chart_png %}
-                    <img src="{% static pdf_charts.househead.bar_chart_png %}" alt="वडागत घरमुखियाको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                    <img src="{% static pdf_charts.househead.bar_chart_png %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
                 {% elif pdf_charts.househead.bar_chart_svg %}
-                    <img src="{% static pdf_charts.househead.bar_chart_svg %}" alt="वडागत घरमुखियाको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                    <img src="{% static pdf_charts.househead.bar_chart_svg %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
                 {% else %}
-                    <img src="{% static 'images/charts/househead_bar_chart.png' %}" alt="वडागत घरमुखियाको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                    <img src="{% static 'images/charts/househead_bar_chart.png' %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
                 {% endif %}
             </div>
         </div>
@@ -36,12 +36,12 @@
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ३.७.२: वडागत घरमुखियाको लिङ्गको आधारमा घरपरिवार विस्तृत विवरण</h3>
+        <h3 class="table-title">तालिका ३.७.२: वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार विस्तृत विवरण</h3>
         <table class="pdf-data-table ward-househead-table">
             <thead>
                 <tr>
                     <th rowspan="2">वडा नं.</th>
-                    <th colspan="2">घरमुखियाको लिङ्ग</th>
+                    <th colspan="2">घरमूलीको लिङ्ग</th>
                     <th rowspan="2">कुल घरपरिवार</th>
                 </tr>
                 <tr>

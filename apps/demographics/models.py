@@ -135,6 +135,21 @@ class ReligionTypeChoice(models.TextChoices):
     OTHER = "OTHER", _("अन्य")
 
 
+class OccupationTypeChoice(models.TextChoices):
+    ANIMAL_HUSBANDRY = "ANIMAL_HUSBANDRY", _("पशुपालन")
+    BUSINESS = "BUSINESS", _("व्यापर")
+    DAILY_WAGE = "DAILY_WAGE", _("दैनिक मजदुरी")
+    FOREIGN_EMPLOYMENT = "FOREIGN_EMPLOYMENT", _("वैदेशिक रोजगार")
+    GOVERNMENT_SERVICE = "GOVERNMENT_SERVICE", _("सरकारी सेवा")
+    HOUSEHOLD_WORK = "HOUSEHOLD_WORK", _("घरेलु काम")
+    INDUSTRY = "INDUSTRY", _("उद्योग")
+    NON_GOVERNMENT_SERVICE = "NON_GOVERNMENT_SERVICE", _("गैर सरकारी सेवा")
+    OTHER = "OTHER", _("अन्य")
+    OTHER_SELF_EMPLOYMENT = "OTHER_SELF_EMPLOYMENT", _("अन्य स्व रोजगार")
+    OTHER_UNEMPLOYMENT = "OTHER_UNEMPLOYMENT", _("अन्य बेरोजगार")
+    STUDENT = "STUDENT", _("विद्यार्थी")
+
+
 class DisabilityCauseChoice(models.TextChoices):
     CONGENITAL = "CONGENITAL", _("जन्मजात")
     ACCIDENT = "ACCIDENT", _("दुर्घटना")
@@ -538,7 +553,11 @@ class WardWiseMajorOccupation(BaseModel):
         validators=[MinValueValidator(1), MaxValueValidator(9)],
         verbose_name=_("वडा नं."),
     )
-    occupation = models.TextField(verbose_name=_("पेशा"))
+    occupation = models.CharField(
+        max_length=50,
+        choices=OccupationTypeChoice.choices,
+        verbose_name=_("पेशा")
+    )
     population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
 
     class Meta:
@@ -547,31 +566,45 @@ class WardWiseMajorOccupation(BaseModel):
         unique_together = ["ward_number", "occupation"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.occupation}"
+        return f"वडा {self.ward_number} - {self.get_occupation_display()}"
+
+
+# Special age group choices for economically active population
+class EconomicallyActiveAgeGroupChoice(models.TextChoices):
+    AGE_0_TO_14 = "AGE_0_TO_14", _("०-१४ वर्ष")
+    AGE_15_TO_59 = "AGE_15_TO_59", _("१५-५९ वर्ष")
+    AGE_60_PLUS = "AGE_60_PLUS", _("६० वर्ष माथि")
 
 
 # ३.९ आर्थिक रुपले सक्रिय जनसंख्या विवरण
 class WardAgeWiseEconomicallyActivePopulation(BaseModel):
-    """Ward age wise economically active population"""
+    """Ward age wise economically active population by gender"""
 
     ward_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)],
         verbose_name=_("वडा नं."),
     )
     age_group = models.CharField(
-        max_length=20, choices=AgeGroupChoice.choices, verbose_name=_("उमेर समूह")
+        max_length=20, 
+        choices=EconomicallyActiveAgeGroupChoice.choices, 
+        verbose_name=_("उमेर समूह")
+    )
+    gender = models.CharField(
+        max_length=20,
+        choices=GenderChoice.choices,
+        verbose_name=_("लिङ्ग")
     )
     population = models.PositiveIntegerField(
         default=0, verbose_name=_("आर्थिक रूपमा सक्रिय जनसंख्या")
     )
 
     class Meta:
-        verbose_name = _("वडागत उमेरअनुसार आर्थिक रूपमा सक्रिय जनसंख्या")
-        verbose_name_plural = _("वडागत उमेरअनुसार आर्थिक रूपमा सक्रिय जनसंख्या")
-        unique_together = ["ward_number", "age_group"]
+        verbose_name = _("वडागत उमेर र लिङ्गअनुसार आर्थिक रूपमा सक्रिय जनसंख्या")
+        verbose_name_plural = _("वडागत उमेर र लिङ्गअनुसार आर्थिक रूपमा सक्रिय जनसंख्या")
+        unique_together = ["ward_number", "age_group", "gender"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_age_group_display()}"
+        return f"वडा {self.ward_number} - {self.get_age_group_display()} - {self.get_gender_display()}"
 
 
 # ३.१० अपाङ्गताको आधारमा जनसंख्या विवरण

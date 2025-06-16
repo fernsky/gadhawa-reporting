@@ -110,14 +110,14 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             return self.chart_generator.generate_pie_chart_svg(
                 data['municipality_data'], 
                 include_title=False,
-                title_nepali="घरमुखियाको लिङ्गको आधारमा घरपरिवार वितरण",
+                title_nepali="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण",
                 title_english="Household Distribution by Head Gender"
             )
         elif chart_type == "bar":
             return self.chart_generator.generate_bar_chart_svg(
                 data['ward_data'], 
                 include_title=False,
-                title_nepali="वडा अनुसार घरमुखियाको लिङ्गको वितरण",
+                title_nepali="वडा अनुसार घरमूलीको लिङ्गको वितरण",
                 title_english="Head Gender Distribution by Ward"
             )
         return None
@@ -193,7 +193,7 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             
             # Introduction
             nepali_total = format_nepali_number(total_population)
-            content.append(f"""{self.municipality_name}मा कुल {nepali_total} घरपरिवारहरू छन् । घरमुखियाको लिङ्गको आधारमा यी घरपरिवारहरूको वितरण गर्दा रोचक तथ्यहरू देखिन्छन् ।""")
+            content.append(f"""{self.municipality_name}मा कुल {nepali_total} घरपरिवारहरू छन् । घरमूलीको लिङ्गको आधारमा यी घरपरिवारहरूको वितरण गर्दा रोचक तथ्यहरू देखिन्छन् ।""")
             
             # Major genders analysis
             if major_genders:
@@ -201,17 +201,17 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                 main_percentage = format_nepali_percentage(main_gender[2])
                 main_population = format_nepali_number(main_gender[1])
                 
-                content.append(f"""घरमुखियाको हकमा {main_gender[0]} मुखिया भएका घरपरिवारहरूको संख्या सबैभन्दा बढी छ जुन कुल घरपरिवारको {main_percentage} प्रतिशत ({main_population} घरपरिवार) हो ।""")
+                content.append(f"""घरमूलीको हकमा {main_gender[0]} मूली भएका घरपरिवारहरूको संख्या सबैभन्दा बढी छ जुन कुल घरपरिवारको {main_percentage} प्रतिशत ({main_population} घरपरिवार) हो ।""")
                 
                 if len(major_genders) > 1:
                     second_gender = major_genders[1]
                     second_percentage = format_nepali_percentage(second_gender[2])
                     second_population = format_nepali_number(second_gender[1])
                     
-                    content.append(f"""{second_gender[0]} मुखिया भएका घरपरिवारहरूको संख्या {second_percentage} प्रतिशत ({second_population} घरपरिवार) रहेको छ ।""")
+                    content.append(f"""{second_gender[0]} मूली भएका घरपरिवारहरूको संख्या {second_percentage} प्रतिशत ({second_population} घरपरिवार) रहेको छ ।""")
             
             # Ward-wise analysis
-            content.append("""वडागत रूपमा हेर्दा घरमुखियाको लिङ्गीय वितरणमा केही भिन्नताहरू देखिन्छन् ।""")
+            content.append("""वडागत रूपमा हेर्दा घरमूलीको लिङ्गीय वितरणमा केही भिन्नताहरू देखिन्छन् ।""")
             
             # Find ward with highest female head percentage
             highest_female_ward = None
@@ -226,27 +226,27 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             if highest_female_ward:
                 ward_nepali = format_nepali_number(highest_female_ward)
                 female_percentage_nepali = format_nepali_percentage(highest_female_percentage)
-                content.append(f"""वडा नं. {ward_nepali} मा महिला घरमुखियाको प्रतिशत सबैभन्दा बढी {female_percentage_nepali} प्रतिशत रहेको छ जुन महिला सशक्तिकरणको सकारात्मक संकेत हो ।""")
+                content.append(f"""वडा नं. {ward_nepali} मा महिला घरमूलीको प्रतिशत सबैभन्दा बढी {female_percentage_nepali} प्रतिशत रहेको छ जुन महिला सशक्तिकरणको सकारात्मक संकेत हो ।""")
             
             # Constitutional context
-            content.append("""नेपालको संविधान २०७२ ले लिङ्गीय समानताको सिद्धान्त स्थापना गरेको छ । घरमुखियाको जिम्मेवारी पुरुष र महिला दुवैले समान रूपमा वहन गर्न सक्छन् । हालका वर्षहरूमा महिला घरमुखियाको संख्यामा वृद्धि भएको छ जुन सामाजिक परिवर्तनको सकारात्मक संकेत हो ।""")
+            content.append("""नेपालको संविधान २०७२ ले लिङ्गीय समानताको सिद्धान्त स्थापना गरेको छ । घरमूलीको जिम्मेवारी पुरुष र महिला दुवैले समान रूपमा वहन गर्न सक्छन् । हालका वर्षहरूमा महिला घरमूलीको संख्यामा वृद्धि भएको छ जुन सामाजिक परिवर्तनको सकारात्मक संकेत हो ।""")
             
             # Diversity analysis
             active_genders = len([d for d in househead_data.values() if d['population'] > 0])
             if active_genders > 1:
-                content.append(f"""यस गाउँपालिकामा घरमुखियाको लिङ्गमा विविधता रहेको छ जसले लिङ्गीय समानताको दिशामा प्रगति भएको संकेत गर्छ । घरपरिवारको नेतृत्वमा विभिन्न लिङ्गका व्यक्तिहरूको सहभागिता सामाजिक न्यायको सूचक हो ।""")
+                content.append(f"""यस गाउँपालिकामा घरमूलीको लिङ्गमा विविधता रहेको छ जसले लिङ्गीय समानताको दिशामा प्रगति भएको संकेत गर्छ । घरपरिवारको नेतृत्वमा विभिन्न लिङ्गका व्यक्तिहरूको सहभागिता सामाजिक न्यायको सूचक हो ।""")
             
             # Social development implications
-            content.append("""घरमुखियाको भूमिका घरपरिवारको आर्थिक र सामाजिक निर्णयमा महत्वपूर्ण हुन्छ । लिङ्गीय समानताको सिद्धान्त अनुसार सबै घरमुखियाहरूलाई समान अधिकार र जिम्मेवारी प्राप्त हुनुपर्छ । गाउँपालिकाले घरमुखियाहरूको क्षमता विकास र सशक्तिकरणका लागि विभिन्न कार्यक्रमहरू सञ्चालन गर्दै आएको छ ।""")
+            content.append("""घरमूलीको भूमिका घरपरिवारको आर्थिक र सामाजिक निर्णयमा महत्वपूर्ण हुन्छ । लिङ्गीय समानताको सिद्धान्त अनुसार सबै घरमूलीहरूलाई समान अधिकार र जिम्मेवारी प्राप्त हुनुपर्छ । गाउँपालिकाले घरमूलीहरूको क्षमता विकास र सशक्तिकरणका लागि विभिन्न कार्यक्रमहरू सञ्चालन गर्दै आएको छ ।""")
             
             # Economic empowerment
-            content.append("""महिला घरमुखियाहरूको बढ्दो संख्याले आर्थिक सशक्तिकरणमा महत्वपूर्ण भूमिका खेलेको छ । उनीहरूले घरपरिवारको आर्थिक व्यवस्थापन, बचत र लगानीमा प्रभावकारी नेतृत्व प्रदान गरेका छन् । यसले समुदायिक विकासमा सकारात्मक प्रभाव पारेको छ ।""")
+            content.append("""महिला घरमूलीहरूको बढ्दो संख्याले आर्थिक सशक्तिकरणमा महत्वपूर्ण भूमिका खेलेको छ । उनीहरूले घरपरिवारको आर्थिक व्यवस्थापन, बचत र लगानीमा प्रभावकारी नेतृत्व प्रदान गरेका छन् । यसले समुदायिक विकासमा सकारात्मक प्रभाव पारेको छ ।""")
             
             # Future implications
-            content.append("""घरमुखियाको लिङ्गीय वितरणले स्थानीय विकास योजना र नीति निर्माणमा महत्वपूर्ण भूमिका खेल्छ । महिला घरमुखियाको संख्यामा वृद्धिले महिला सशक्तिकरण र लिङ्गीय न्यायमा सकारात्मक प्रभाव पार्छ । भविष्यमा थप समानुपातिक वितरणको अपेक्षा गर्न सकिन्छ जुन समुदायको समग्र विकासमा योगदान पुर्याउनेछ ।""")
+            content.append("""घरमूलीको लिङ्गीय वितरणले स्थानीय विकास योजना र नीति निर्माणमा महत्वपूर्ण भूमिका खेल्छ । महिला घरमूलीको संख्यामा वृद्धिले महिला सशक्तिकरण र लिङ्गीय न्यायमा सकारात्मक प्रभाव पार्छ । भविष्यमा थप समानुपातिक वितरणको अपेक्षा गर्न सकिन्छ जुन समुदायको समग्र विकासमा योगदान पुर्याउनेछ ।""")
             
             return ' '.join(content)
 
         def generate_harmony_conclusion(self):
             """Generate harmony conclusion text"""
-            return """घरमुखियाको लिङ्गीय विविधताले समुदायमा लिङ्गीय समानताको वातावरण सिर्जना गरेको छ । यसले सामाजिक न्याय र समानताको दिशामा गाउँपालिका अगाडि बढेको संकेत गर्छ ।"""
+            return """घरमूलीको लिङ्गीय विविधताले समुदायमा लिङ्गीय समानताको वातावरण सिर्जना गरेको छ । यसले सामाजिक न्याय र समानताको दिशामा गाउँपालिका अगाडि बढेको संकेत गर्छ ।"""

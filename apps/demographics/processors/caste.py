@@ -23,7 +23,7 @@ class CasteProcessor(BaseDemographicsProcessor):
         self.chart_generator.colors = CASTE_COLORS
     
     def get_section_title(self):
-        return "जातिगत आधारमा जनसंख्या विवरण"
+        return "जातजातीको आधारमा जनसंख्याको विवरण"
     
     def get_section_number(self):
         return "३.६"
@@ -68,15 +68,15 @@ class CasteProcessor(BaseDemographicsProcessor):
             return self.chart_generator.generate_pie_chart_svg(
                 data, 
                 include_title=False,
-                title_nepali="जातिगत आधारमा जनसंख्या वितरण",
+                title_nepali="जातजातीको आधारमा जनसंख्या वितरण",
                 title_english="Population Distribution by Caste"
             )
         elif chart_type == "bar":
             return self.chart_generator.generate_bar_chart_svg(
                 data, 
                 include_title=False,
-                title_nepali="वडा अनुसार जातिगत जनसंख्या वितरण",
-                title_english="Caste Population by Ward"
+                title_nepali="जातजातीको आधारमा जनसंख्या वितरण",
+                title_english="Population Distribution by Caste"
             )
         return None
 
@@ -90,40 +90,72 @@ class CasteProcessor(BaseDemographicsProcessor):
             # Find major castes
             major_castes = []
             for caste_type, data in caste_data.items():
-                if data['population'] > 0 and data['percentage'] >= 3.0:  # Lower threshold for caste
+                if data['population'] > 0:
                     major_castes.append((data['name_nepali'], data['population'], data['percentage']))
             
             major_castes.sort(key=lambda x: x[1], reverse=True)
             
-            # Build coherent analysis
+            # Build content based on provided format
             content = []
             
-            # Introduction
+            # Main population breakdown
             nepali_total = format_nepali_number(total_population)
-            content.append(f"""{self.municipality_name}मा जातीय विविधता रहेको छ । कुल {nepali_total} जनसंख्या मध्ये विभिन्न जातजातिका मानिसहरूको बसोबास रहेको छ ।""")
+            content.append(f"""गाउँपालिकामा जातजातिका आधारमा जनसंख्याको विवरणलाई हेर्दा""")
             
-            # Major castes
-            if major_castes:
-                major_pop = format_nepali_number(major_castes[0][1])
-                major_pct = format_nepali_percentage(major_castes[0][2])
-                major_text = f"""यस गाउँपालिकामा {major_castes[0][0]} जातिको संख्या सबैभन्दा बढी छ जसको संख्या {major_pop} ({major_pct}) रहेको छ ।"""
-                if len(major_castes) > 1:
-                    second_pop = format_nepali_number(major_castes[1][1])
-                    second_pct = format_nepali_percentage(major_castes[1][2])
-                    major_text += f""" त्यसैगरी {major_castes[1][0]} जातिको संख्या {second_pop} ({second_pct}) रहेको छ ।"""
-                content.append(major_text)
+            # Top 5 castes detailed breakdown
+            if len(major_castes) >= 5:
+                first = major_castes[0]
+                second = major_castes[1]
+                third = major_castes[2]
+                fourth = major_castes[3]
+                fifth = major_castes[4]
+                
+                first_pop = format_nepali_number(first[1])
+                first_pct = format_nepali_percentage(first[2])
+                second_pop = format_nepali_number(second[1])
+                second_pct = format_nepali_percentage(second[2])
+                third_pop = format_nepali_number(third[1])
+                third_pct = format_nepali_percentage(third[2])
+                fourth_pct = format_nepali_percentage(fourth[2])
+                fifth_pct = format_nepali_percentage(fifth[2])
+                
+                content.append(f"""सबैभन्दा धेरै {first_pop} अर्थात {first_pct} प्रतिशत {first[0]}, दोस्रोमा {second_pop} अर्थात {second_pct} प्रतिशत {second[0]}, तेस्रोमा {third[0]} {third_pop} अर्थात {third_pct} प्रतिशत रहेका छन् भने चौथो र पाचौमा क्र.म.श. {fourth_pct} प्रतिशत {fourth[0]} र {fifth_pct} प्रतिशत {fifth[0]} रहेका छन् ।""")
+            elif major_castes:
+                # Flexible breakdown for available data
+                breakdown_parts = []
+                positions = ["सबैभन्दा धेरै", "दोस्रोमा", "तेस्रोमा", "चौथोमा", "पाचौमा"]
+                
+                for i, (name, pop, pct) in enumerate(major_castes[:5]):
+                    pop_nepali = format_nepali_number(pop)
+                    pct_nepali = format_nepali_percentage(pct)
+                    if i < len(positions):
+                        breakdown_parts.append(f"""{positions[i]} {pop_nepali} अर्थात {pct_nepali} प्रतिशत {name}""")
+                
+                if breakdown_parts:
+                    content.append(' र '.join(breakdown_parts) + " रहेका छन् ।")
             
-            # Constitutional context
-            content.append("""नेपालको संविधान २०७२ ले जातीय छुवाछूत र भेदभावको अन्त्य गर्ने संकल्प गरेको छ । समानुपातिक समावेशी र सहभागितामूलक सिद्धान्तका आधारमा समतामूलक समाजको निर्माण गर्ने नीति अपनाइएको छ । सबै जातजातिका नागरिकहरूलाई समान अधिकार र अवसर प्रदान गर्ने व्यवस्था छ ।""")
+            # Other castes present
+            if len(major_castes) > 5:
+                other_castes = [caste[0] for caste in major_castes[5:10]]  # Next 5 castes
+                if other_castes:
+                    content.append(f"""त्यसैगरी यहाँ {', '.join(other_castes)} लगायतका जातजातिहरूको बसोबास रहेको छ ।""")
             
-            # Diversity analysis
-            active_castes = len([d for d in caste_data.values() if d['population'] > 0])
-            content.append(self.generate_diversity_analysis(active_castes, total_population))
+            # Social tolerance and diversity analysis
+            content.append("""यसरी जातीय हिसाबले विविधतायुक्त समाजमा स्थानीयहरू सामाजिक सहिष्णुताका साथ बसेको पाइन्छ ।""")
             
-            # Social inclusion
-            content.append("""स्थानीय तहले सबै जातजातिका नागरिकहरूको सामाजिक, आर्थिक र राजनीतिक सशक्तिकरणमा विशेष ध्यान दिएको छ । समावेशी विकासका कार्यक्रमहरू सञ्चालन गरी सबै वर्गका मानिसहरूलाई मुख्य धारामा ल्याउने प्रयास गरिएको छ । जातीय एकता र सामाजिक सद्भावना कायम राख्न समुदायिक संवाद र सहकार्यलाई प्रोत्साहन गरिएको छ ।""")
+            # Cultural preservation and identity
+            content.append("""आफ्नो छुट्टै भाषा, संस्कृति र रहनसहन भएका नेपालको सिमान्तकृत जाति लगायत गाउँपालिकामा बसोबास गर्ने विभिन्न जातजातिको मौलिक संस्कृति, परम्परा, भाषा र रहनसहनलाई संरक्षण गरी उनीहरूको पहिचान कायम राख्ने कार्यक्रमहरूको निर्माण गर्नु आवश्यक छ ।""")
             
-            # Conclusion
-            content.append(self.generate_harmony_conclusion())
+            # Constitutional and social framework
+            content.append("""नेपालको संविधान २०७२ ले जातीय छुवाछूत र भेदभावको अन्त्य गर्ने संकल्प गरेको छ । समानुपातिक समावेशी र सहभागितामूलक सिद्धान्तका आधारमा समतामूलक समाजको निर्माण गर्ने नीति अपनाइएको छ ।""")
+            
+            # Local government initiatives
+            content.append("""स्थानीय तहले सबै जातजातिका नागरिकहरूको सामाजिक, आर्थिक र राजनीतिक सशक्तिकरणमा विशेष ध्यान दिएको छ । समावेशी विकासका कार्यक्रमहरू सञ्चालन गरी सबै वर्गका मानिसहरूलाई मुख्य धारामा ल्याउने प्रयास गरिएको छ ।""")
+            
+            # Social harmony and unity
+            content.append("""जातीय एकता र सामाजिक सद्भावना कायम राख्न समुदायिक संवाद र सहकार्यलाई प्रोत्साहन गरिएको छ । विविधतामा एकताको सिद्धान्त अनुसार सबै जातजातिले मिलेर गाउँपालिकाको समग्र विकासमा योगदान पुर्याइरहेका छन् ।""")
+            
+            # Future commitment
+            content.append("""भविष्यमा पनि सबै जातजातिको सांस्कृतिक पहिचान र मौलिकताको संरक्षण गर्दै समग्र समुदायको कल्याणमा गाउँपालिका प्रतिबद्ध रहनेछ ।""")
             
             return ' '.join(content)
