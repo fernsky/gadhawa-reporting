@@ -132,7 +132,7 @@ class SVGChartGenerator:
         style_elem.text = """
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
         text {
-            font-family: 'Noto Sans+Devanagari', Arial, sans-serif;
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif !important;
         }
         """
 
@@ -870,9 +870,8 @@ class SVGChartGenerator:
                     "inkscape",
                     str(svg_path),
                     "--export-type=png",
-                    """-actions="select-all;object-to-path;export-do;file-close" """,
                     f"--export-filename={png_path}",
-                    "--export-dpi=600",  # High quality for PDF
+                    "--export-dpi=300",  # High quality for PDF
                     "--export-text-to-path",  # Convert text to paths to avoid font issues
                 ]
 
@@ -888,9 +887,8 @@ class SVGChartGenerator:
                         "inkscape",
                         str(svg_path),
                         "--export-type=png",
-                        """-actions="select-all;object-to-path;export-do;file-close" """,
                         f"--export-filename={png_path}",
-                        "--export-dpi=600",
+                        "--export-dpi=300",
                     ]
 
                     result_alt = subprocess.run(
