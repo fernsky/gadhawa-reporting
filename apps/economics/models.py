@@ -386,13 +386,10 @@ class RemittanceExpenseTypeChoice(models.TextChoices):
 
 # Time to Financial Organization (based on ward-wise-time-to-financial-organization.ts)
 class TimeToFinancialOrganizationChoice(models.TextChoices):
-    UNDER_15_MIN = "UNDER_15_MIN", _("१५ मिनेटभन्दा कम")
-    UNDER_30_MIN = "UNDER_30_MIN", _("३० मिनेटभन्दा कम")
-    UNDER_1_HOUR = "UNDER_1_HOUR", _("१ घण्टाभन्दा कम")
-    HOUR_OR_MORE = "1_HOUR_OR_MORE", _("१ घण्टा वा बढी")
-    CONSUMER = "CONSUMER", _("उपभोक्ता")
-    HOUSING = "HOUSING", _("आवास")
-    TRANSPORT = "TRANSPORT", _("यातायात")
+    UNDER_15_MIN = "UNDER_15_MIN", _("१५ मिनेट भन्दा कम")
+    UNDER_30_MIN = "UNDER_30_MIN", _("१५-३० मिनेट")
+    UNDER_1_HOUR = "UNDER_1_HOUR", _("३०-६० मिनेट")
+    ONE_HOUR_OR_MORE = "1_HOUR_OR_MORE", _("१ घण्टा वा बढी")
     LABOR = "LABOR", _("श्रमिक")
     WOMEN = "WOMEN", _("महिला")
     YOUTH = "YOUTH", _("युवा")
@@ -1203,31 +1200,6 @@ class TouristicSite(BaseModel):
 # ४.५.४ व्यापार र व्यवसाय सम्बन्धी विवरण (किराना, थोक, मासु, तरकारी र फलफूल आदि)
 # ४.५.५ खनिज तथा खानी सम्बन्धी विवरण
 # ४.५.६ स्थानीय बजार तथा व्यापारिक केन्द्रको विवरण
-# ४.५.७ बैंक तथा वित्तीय संस्था सम्बन्धी विवरण
-
-
-class WardWiseTimeToFinancialOrganization(BaseModel):
-    """Ward wise time to financial organization"""
-
-    ward_number = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(9)],
-        verbose_name=_("वडा नं."),
-    )
-    time_to_financial_organization_type = models.CharField(
-        max_length=20,
-        choices=TimeToFinancialOrganizationChoice.choices,
-        verbose_name=_("वित्तीय संस्थासम्म पुग्ने समय"),
-    )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
-
-    class Meta:
-        verbose_name = _("वडागत वित्तीय संस्थासम्म पुग्ने समय")
-        verbose_name_plural = _("वडागत वित्तीय संस्थासम्म पुग्ने समय")
-        unique_together = ["ward_number", "time_to_financial_organization_type"]
-
-    def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_time_to_financial_organization_type_display()}"
-
 
 # ४.५.८ सहकारी सम्बन्धी विवरण
 class CooperativeTypeChoice(models.TextChoices):
@@ -1447,3 +1419,26 @@ class WardWiseTrainedPopulation(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - तालिम प्राप्त: {self.trained_population}"
+
+
+class WardWiseTimeToFinancialOrganization(BaseModel):
+    """Ward wise time to financial organization (4.5.7 - बैंक तथा वित्तीय संस्था सम्बन्धी विवरण)"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    time_to_financial_organization_type = models.CharField(
+        max_length=20,
+        choices=TimeToFinancialOrganizationChoice.choices,
+        verbose_name=_("वित्तीय संस्थासम्म पुग्ने समय"),
+    )
+    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार"))
+
+    class Meta:
+        verbose_name = _("वडागत वित्तीय संस्थासम्म पुग्ने समय")
+        verbose_name_plural = _("वडागत वित्तीय संस्थासम्म पुग्ने समय")
+        unique_together = ["ward_number", "time_to_financial_organization_type"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.get_time_to_financial_organization_type_display()}"

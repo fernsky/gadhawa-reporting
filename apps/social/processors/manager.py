@@ -5,6 +5,7 @@ Coordinates all social processors and provides unified interface for PDF generat
 """
 
 from .toilet_type import ToiletTypeProcessor
+from .solid_waste_management import SolidWasteManagementProcessor
 
 
 class SocialManager:
@@ -13,6 +14,7 @@ class SocialManager:
     def __init__(self):
         self.processors = {
             'toilet_type': ToiletTypeProcessor(),
+            'solid_waste_management': SolidWasteManagementProcessor(),
         }
 
     def get_processor(self, category):
