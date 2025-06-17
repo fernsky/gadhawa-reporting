@@ -4,6 +4,7 @@ Occupation Demographics Processor
 Handles occupation demographic data processing, chart generation, and report formatting.
 """
 
+import subprocess
 from .base import BaseDemographicsProcessor, BaseReportFormatter
 from ..models import WardWiseMajorOccupation
 from ..utils.svg_chart_generator import DEFAULT_COLORS
@@ -164,84 +165,80 @@ class OccupationProcessor(BaseDemographicsProcessor):
         return None
 
     def generate_and_save_charts(self, data):
-        """Generate and save both pie and bar charts for occupation data using SVGChartGenerator"""
-        charts = {}
-        category_name = self.get_chart_key()
+        """Generate and save both pie and bar charts for occupation data"""
+        charts_info = {}
 
-        # Prepare pie chart data for municipality-wide distribution
-        municipality_data = data.get("municipality_data", {})
-        if municipality_data:
-            # Convert to format expected by SVGChartGenerator
-            pie_data = {}
-            for occ_code, occ_info in municipality_data.items():
-                if isinstance(occ_info, dict) and occ_info.get("population", 0) > 0:
-                    pie_data[occ_code] = {
-                        "population": occ_info.get("population", 0),
-                        "name_nepali": occ_info.get("name_nepali", occ_code),
-                        "percentage": occ_info.get("percentage", 0),
-                    }
+        try:
+            # Generate pie chart for municipality-wide data
+            pie_svg = self.generate_chart_svg(data, chart_type="pie")
+            if pie_svg:
+                pie_path = self.static_charts_dir / "occupation_pie_chart.svg"
+                with open(pie_path, "w", encoding="utf-8") as f:
+                    f.write(pie_svg)
+                charts_info["pie_chart_svg"] = f"images/charts/occupation_pie_chart.svg"
 
-            # Generate pie chart using SVGChartGenerator
-            if pie_data:
-                success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                    demographic_data=pie_data,
-                    output_name=f"{category_name}_pie_chart",
-                    static_dir=str(self.static_charts_dir),
-                    chart_type="pie",
-                    include_title=False,
-                )
-
-                if success and png_path:
-                    charts["pie_chart_png"] = (
-                        f"images/charts/{category_name}_pie_chart.png"
+                # Try to convert to PNG using subprocess
+                try:
+                    png_path = self.static_charts_dir / "occupation_pie_chart.png"
+                    subprocess.run(
+                        [
+                            "inkscape",
+                            "--export-filename",
+                            str(png_path),
+                            "--export-width",
+                            "900",
+                            "--export-height",
+                            "450",
+                            "--export-dpi=600",  # High quality for PDF
+                            str(pie_path),
+                        ],
+                        check=True,
+                        timeout=30,
                     )
-                    charts["pie_chart_svg"] = (
-                        f"images/charts/{category_name}_pie_chart.svg"
-                    )
-                elif svg_path:
-                    # Fallback to SVG if PNG conversion fails
-                    charts["pie_chart_svg"] = (
-                        f"images/charts/{category_name}_pie_chart.svg"
-                    )
+                    if png_path.exists():
+                        charts_info["pie_chart_png"] = (
+                            f"images/charts/occupation_pie_chart.png"
+                        )
+                except:
+                    pass  # Use SVG fallback
 
-        # Generate bar chart for ward data if available
-        ward_data = data.get("ward_data", {})
-        if ward_data:
-            # Convert ward data to format expected by SVGChartGenerator
-            bar_data = {}
-            for ward_num, ward_info in ward_data.items():
-                if isinstance(ward_info, dict):
-                    total_pop = ward_info.get("total_population", 0)
-                    if total_pop > 0:
-                        bar_data[f"ward_{ward_num}"] = {
-                            "population": total_pop,
-                            "name_nepali": f"वडा {ward_num}",
-                            "percentage": 0,  # Can be calculated if needed
-                        }
+            # Generate bar chart for ward-wise data
+            bar_svg = self.generate_chart_svg(data, chart_type="bar")
+            if bar_svg:
+                bar_path = self.static_charts_dir / "occupation_bar_chart.svg"
+                with open(bar_path, "w", encoding="utf-8") as f:
+                    f.write(bar_svg)
+                charts_info["bar_chart_svg"] = f"images/charts/occupation_bar_chart.svg"
 
-            if bar_data:
-                success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                    demographic_data=bar_data,
-                    output_name=f"{category_name}_bar_chart",
-                    static_dir=str(self.static_charts_dir),
-                    chart_type="bar",
-                    include_title=False,
-                )
+                # Try to convert to PNG using subprocess
+                try:
+                    png_path = self.static_charts_dir / "occupation_bar_chart.png"
+                    subprocess.run(
+                        [
+                            "inkscape",
+                            "--export-filename",
+                            str(png_path),
+                            "--export-width",
+                            "1000",
+                            "--export-height",
+                            "600",
+                            "--export-dpi=600",  # High quality for PDF
+                            str(bar_path),
+                        ],
+                        check=True,
+                        timeout=30,
+                    )
+                    if png_path.exists():
+                        charts_info["bar_chart_png"] = (
+                            f"images/charts/occupation_bar_chart.png"
+                        )
+                except:
+                    pass  # Use SVG fallback
 
-                if success and png_path:
-                    charts["bar_chart_png"] = (
-                        f"images/charts/{category_name}_bar_chart.png"
-                    )
-                    charts["bar_chart_svg"] = (
-                        f"images/charts/{category_name}_bar_chart.svg"
-                    )
-                elif svg_path:
-                    # Fallback to SVG if PNG conversion fails
-                    charts["bar_chart_svg"] = (
-                        f"images/charts/{category_name}_bar_chart.svg"
-                    )
+        except Exception as e:
+            print(f"Error generating occupation charts: {e}")
 
-        return charts
+        return charts_info
 
     class OccupationReportFormatter(BaseReportFormatter):
         """Occupation-specific report formatter"""

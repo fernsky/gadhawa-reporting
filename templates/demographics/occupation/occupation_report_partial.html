@@ -1,4 +1,5 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Occupation Demographics Report Partial for PDF -->
 <p class="section-content occupation-demographics-section" id="section-occupation-demographics">
@@ -28,39 +29,7 @@
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Occupation Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ३.८.१: पेशाका आधारमा जनसंख्या विस्तृत विवरण</h3>
-        <table class="pdf-data-table occupation-summary-table">
-            <thead>
-                <tr>
-                    <th>पेशा</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for occupation_type, data in municipality_data.items %}
-                    {% if data.population > 0 %}
-                        <tr>
-                            <td style="text-align: left;">{{ data.name_nepali }}</td>
-                            <td style="text-align: right;">{{ data.population|nepali_number }}</td>
-                            <td style="text-align: right;">{{ data.percentage|floatformat:1|nepali_number }}%</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                    <td style="text-align: right;">१००.०%</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    {% endif %}
+    
 
     <!-- Bar Chart for Ward-wise Distribution -->
     {% if ward_data %}
@@ -105,7 +74,9 @@
                         {% for occupation_type, data in municipality_data.items %}
                             {% if data.population > 0 %}
                                 <td style="text-align: right; font-size: 8pt;">
-                                    {{ ward_info.demographics|get_item:occupation_type.population|default:0|nepali_number }}
+                                    {% with ward_info.demographics|get_item:occupation_type as occupation_demo %}
+                                        {{ occupation_demo.population|default:0|nepali_number }}
+                                    {% endwith %}
                                 </td>
                             {% endif %}
                         {% endfor %}
