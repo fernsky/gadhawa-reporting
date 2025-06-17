@@ -260,27 +260,23 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
         if not data or not data["age_group_data"]:
             return None
 
-        # Prepare data for chart
-        chart_data = []
+        # Prepare data for chart in the format expected by SVGChartGenerator
+        chart_data = {}
         for age_code, age_info in data["age_group_data"].items():
             if age_info["population"] > 0:
-                chart_data.append(
-                    {
-                        "label": age_info["name_nepali"],
-                        "value": age_info["population"],
-                        "percentage": age_info["percentage"],
-                    }
-                )
+                chart_data[age_code] = {
+                    "population": age_info["population"],
+                    "name_nepali": age_info["name_nepali"],
+                }
 
         if not chart_data:
             return None
 
-        return self.chart_generator.generate_pie_chart(
-            data=chart_data,
-            title=title,
-            width=self.pie_chart_width,
-            height=self.pie_chart_height,
-            radius=self.chart_radius,
+        return self.chart_generator.generate_pie_chart_svg(
+            demographic_data=chart_data,
+            include_title=False,
+            title_nepali=title,
+            title_english="",
         )
 
     def process_for_pdf(self):
