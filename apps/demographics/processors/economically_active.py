@@ -4,7 +4,6 @@ Economically Active Population Demographics Processor
 Handles economically active population demographic data processing, chart generation, and report formatting.
 """
 
-import subprocess
 from django.db import models
 from .base import BaseDemographicsProcessor, BaseReportFormatter
 from ..models import (
@@ -42,6 +41,10 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
 
     def get_section_number(self):
         return "३.९"
+
+    def get_chart_key(self):
+        """Get the key for storing charts in PDF context"""
+        return "economically_active"
 
     def get_data(self):
         """Get economically active population data - both municipality-wide and ward-wise"""
@@ -167,6 +170,7 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
                         }
 
         return {
+            "municipality_data": age_group_data,  # Use age_group_data as municipality_data for charts
             "age_group_data": age_group_data,
             "gender_data": gender_data,
             "ward_data": ward_data,
@@ -278,35 +282,6 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
             title_nepali=title,
             title_english="",
         )
-
-    def process_for_pdf(self):
-        """Process data for PDF generation"""
-        data = self.get_data()
-
-        # Generate analysis text
-        coherent_analysis = self.generate_analysis_text(data)
-
-        # Generate pie chart
-        pie_chart_svg = self.generate_pie_chart(data)
-
-        # Prepare chart data for template
-        pdf_charts = {
-            "economically_active": {
-                "pie_chart_svg": pie_chart_svg,
-                "pie_chart_png": None,  # Can be generated if needed
-            }
-        }
-
-        return {
-            "age_group_data": data["age_group_data"],
-            "gender_data": data["gender_data"],
-            "ward_data": data["ward_data"],
-            "total_population": data["total_population"],
-            "coherent_analysis": coherent_analysis,
-            "pdf_charts": pdf_charts,
-            "section_title": self.get_section_title(),
-            "section_number": self.get_section_number(),
-        }
 
 
 class EconomicallyActiveReportFormatter(BaseReportFormatter):

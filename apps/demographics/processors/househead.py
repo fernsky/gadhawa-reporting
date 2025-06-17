@@ -183,10 +183,6 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                             "inkscape",
                             "--export-filename",
                             str(png_path),
-                            "--export-width",
-                            "800",
-                            "--export-height",
-                            "500",
                             "--export-dpi=600",  # High quality for PDF
                             str(bar_path),
                         ],

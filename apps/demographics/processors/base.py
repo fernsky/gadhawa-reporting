@@ -13,20 +13,20 @@ from apps.demographics.utils.svg_chart_generator import SVGChartGenerator
 
 class BaseDemographicsProcessor(ABC):
     """Base class for all demographic data processors"""
-    
+
     def __init__(self):
         # Use proper static directory path
-        self.static_charts_dir = Path("static/images")
+        self.static_charts_dir = Path("static/images/charts")
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize SVG chart generator
         self.chart_generator = SVGChartGenerator()
-          # Default chart dimensions - can be overridden by subclasses
+        # Default chart dimensions - can be overridden by subclasses
         self.pie_chart_width = 600
         self.pie_chart_height = 450
         self.bar_chart_width = 800
         self.bar_chart_height = 500
-    
+
     @abstractmethod
     def get_section_title(self):
         """Return the section title for the demographic category"""
@@ -50,9 +50,13 @@ class BaseDemographicsProcessor(ABC):
     def generate_chart_svg(self, data, chart_type="pie"):
         """Generate chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
-            return self.chart_generator.generate_pie_chart_svg(data, include_title=False)
+            return self.chart_generator.generate_pie_chart_svg(
+                data, include_title=False
+            )
         elif chart_type == "bar":
-            return self.chart_generator.generate_bar_chart_svg(data, include_title=False)
+            return self.chart_generator.generate_bar_chart_svg(
+                data, include_title=False
+            )
         else:
             return None
 
@@ -60,87 +64,99 @@ class BaseDemographicsProcessor(ABC):
         """Process category data for PDF generation including charts"""
         # Get raw data
         data = self.get_data()
-          # Generate report content
+        # Generate report content
         report_content = self.generate_report_content(data)
-        
+
         # Generate and save charts
-        charts = self.generate_and_save_charts(data)        # Calculate total population
-        if isinstance(data, dict) and 'total_population' in data:
+        charts = self.generate_and_save_charts(data)  # Calculate total population
+        if isinstance(data, dict) and "total_population" in data:
             # Househead format already has total_population
-            total_population = data['total_population']
-        elif isinstance(data, dict) and 'municipality_data' in data:
+            total_population = data["total_population"]
+        elif isinstance(data, dict) and "municipality_data" in data:
             # Househead format - calculate from municipality_data
-            total_population = sum(item['population'] for item in data['municipality_data'].values() if isinstance(item, dict) and 'population' in item)
+            total_population = sum(
+                item["population"]
+                for item in data["municipality_data"].values()
+                if isinstance(item, dict) and "population" in item
+            )
         else:
             # Simple format
-            total_population = sum(item['population'] for item in data.values() if isinstance(item, dict) and 'population' in item)
-        
+            total_population = sum(
+                item["population"]
+                for item in data.values()
+                if isinstance(item, dict) and "population" in item
+            )
+
         return {
-            'data': data,
-            'report_content': report_content,
-            'charts': charts,
-            'total_population': total_population,
-            'section_title': self.get_section_title(),
-            'section_number': self.get_section_number(),
+            "data": data,
+            "report_content": report_content,
+            "charts": charts,
+            "total_population": total_population,
+            "section_title": self.get_section_title(),
+            "section_number": self.get_section_number(),
         }
 
     def generate_and_save_charts(self, data):
         """Generate charts using SVGChartGenerator and save them as PNG files"""
         charts = {}
-        category_name = self.__class__.__name__.lower().replace('processor', '')
-        
+        category_name = self.__class__.__name__.lower().replace("processor", "")
+
         # Determine data structure - check if it's househead format or simple format
-        if isinstance(data, dict) and 'municipality_data' in data and 'ward_data' in data:
+        if (
+            isinstance(data, dict)
+            and "municipality_data" in data
+            and "ward_data" in data
+        ):
             # Househead format with both municipality and ward data
-            pie_data = data['municipality_data']
-            bar_data = data['ward_data']
+            pie_data = data["municipality_data"]
+            bar_data = data["ward_data"]
         else:
             # Simple format - use the data as is for pie chart
             pie_data = data
             bar_data = None  # No ward data available for bar chart
-        
+
         # Generate pie chart using SVGChartGenerator
         success, png_path, svg_path = self.chart_generator.generate_chart_image(
             demographic_data=pie_data,
-            output_name=f'{category_name}_pie_chart',
+            output_name=f"{category_name}_pie_chart",
             static_dir=str(self.static_charts_dir),
             chart_type="pie",
-            include_title=False
+            include_title=False,
         )
-        
+
         if success and png_path:
-            charts['pie_chart_png'] = f'images/{category_name}_pie_chart.png'
-            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
+            charts["pie_chart_png"] = f"images/charts/{category_name}_pie_chart.png"
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
         elif svg_path:
             # Fallback to SVG if PNG conversion fails
-            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
-        
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+
         # Generate bar chart only if ward data is available
         if bar_data:
             success, png_path, svg_path = self.chart_generator.generate_chart_image(
                 demographic_data=bar_data,
-                output_name=f'{category_name}_bar_chart',
+                output_name=f"{category_name}_bar_chart",
                 static_dir=str(self.static_charts_dir),
                 chart_type="bar",
-                include_title=False
+                include_title=False,
             )
-            
+
             if success and png_path:
-                charts['bar_chart_png'] = f'images/{category_name}_bar_chart.png'
-                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
+                charts["bar_chart_png"] = f"images/charts/{category_name}_bar_chart.png"
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
             elif svg_path:
                 # Fallback to SVG if PNG conversion fails
-                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
-        
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
+
         return charts
 
 
 class BaseReportFormatter(ABC):
     """Base report formatter with common functionality"""
-    
+
     def __init__(self):
         self.municipality_name = "लुङ्ग्री गाउँपालिका"
-    
+
     @abstractmethod
     def generate_formal_report(self, data):
         """Generate formal report content"""

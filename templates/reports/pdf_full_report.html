@@ -277,12 +277,12 @@
 
         <!-- Ward wise economically active Population -->
       {% if all_demographics_data.economically_active %}
-       {% include 'demographics/economically_active/economically_active_report_partial.html' with economically_active_data=all_demographics_data.economically_active.data total_population=all_demographics_data.economically_active.total_population coherent_analysis=all_demographics_data.economically_active.report_content %}
+       {% include 'demographics/economically_active/economically_active_report_partial.html' with age_group_data=all_demographics_data.economically_active.data.age_group_data gender_data=all_demographics_data.economically_active.data.gender_data ward_data=all_demographics_data.economically_active.data.ward_data total_population=all_demographics_data.economically_active.total_population coherent_analysis=all_demographics_data.economically_active.report_content pdf_charts=pdf_charts %}
       {% endif %}
 
       <!-- Occupation Demographics Section -->
       {% if all_demographics_data.occupation %}
-       {% include 'demographics/occupation/occupation_report_partial.html' with occupation_data=all_demographics_data.occupation.data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content %}
+       {% include 'demographics/occupation/occupation_report_partial.html' with municipality_data=all_demographics_data.occupation.data.municipality_data ward_data=all_demographics_data.occupation.data.ward_data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content pdf_charts=pdf_charts %}
       {% endif %}
     </p>
   </div>
