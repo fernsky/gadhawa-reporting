@@ -871,7 +871,7 @@ class SVGChartGenerator:
                     str(svg_path),
                     "--export-type=png",
                     f"--export-filename={png_path}",
-                    "--export-dpi=300",  # High quality for PDF
+                    "--export-dpi=600",  # High quality for PDF
                     "--export-text-to-path",  # Convert text to paths to avoid font issues
                 ]
 
@@ -888,7 +888,7 @@ class SVGChartGenerator:
                         str(svg_path),
                         "--export-type=png",
                         f"--export-filename={png_path}",
-                        "--export-dpi=300",
+                        "--export-dpi=600",
                     ]
 
                     result_alt = subprocess.run(
