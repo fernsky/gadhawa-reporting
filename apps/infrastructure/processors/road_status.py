@@ -10,6 +10,7 @@ from ..models import WardWiseRoadStatus, RoadStatusChoice
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
+    to_nepali_digits,
 )
 
 
@@ -86,7 +87,7 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
             if ward_households > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {ward_num}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_households,  # Using households
                     "road_statuses": {},
                 }
@@ -213,9 +214,9 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                 )
 
                 analysis_parts.append(
-                    f"वडागत विश्लेषणमा, वडा नं. {best_ward} मा सबैभन्दा राम्रो सडक पहुँच "
+                    f"वडागत विश्लेषणमा, वडा नं. {to_nepali_digits(best_ward)} मा सबैभन्दा राम्रो सडक पहुँच "
                     f"({format_nepali_percentage(best_road_access)} घरपरिवारले गुणस्तरीय सडकमा पहुँच) छ "
-                    f"भने वडा नं. {worst_ward} मा केही सुधारको आवश्यकता "
+                    f"भने वडा नं. {to_nepali_digits(worst_ward)} मा केही सुधारको आवश्यकता "
                     f"({format_nepali_percentage(worst_road_access)} घरपरिवारले मात्र गुणस्तरीय सडकमा पहुँच) देखिन्छ।"
                 )
 
