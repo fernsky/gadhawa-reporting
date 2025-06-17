@@ -21,6 +21,7 @@ from ..models import (
 from apps.demographics.processors.manager import get_demographics_manager
 from apps.social.processors.manager import get_social_manager
 from apps.infrastructure.processors.manager import get_infrastructure_manager
+from apps.economics.processors.manager import get_economics_manager
 
 
 class PDFGeneratorMixin:
@@ -116,34 +117,45 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         municipality_name_english = "Lungri Rural Municipality"
 
         # Get publication settings (optional)
-        publication_settings = self.get_publication_settings()        # Get all data using new processor system
+        publication_settings = (
+            self.get_publication_settings()
+        )  # Get all data using new processor system
         demographics_manager = get_demographics_manager()
         social_manager = get_social_manager()
         infrastructure_manager = get_infrastructure_manager()
-        
+        economics_manager = get_economics_manager()
+
         # Generate all charts before processing data
         demographics_manager.generate_all_charts()
         social_manager.generate_all_charts()
         infrastructure_manager.generate_all_charts()
-        
+        economics_manager.generate_all_charts()
+
         # Get processed data with charts
         all_demographics_data = demographics_manager.process_all_for_pdf()
         all_social_data = social_manager.process_all_for_pdf()
         all_infrastructure_data = infrastructure_manager.process_all_for_pdf()
-        
+        all_economics_data = economics_manager.process_all_for_pdf()
+
         # Extract chart URLs for template use
         pdf_charts = {}
         for category, data in all_demographics_data.items():
-            if 'charts' in data:
-                pdf_charts[category] = data['charts']
-        
+            if "charts" in data:
+                pdf_charts[category] = data["charts"]
+
         for category, data in all_social_data.items():
-            if 'pdf_charts' in data and data['pdf_charts']:
-                pdf_charts.update(data['pdf_charts'])
-                
+            if "pdf_charts" in data and data["pdf_charts"]:
+                pdf_charts.update(data["pdf_charts"])
+
         for category, data in all_infrastructure_data.items():
-            if 'pdf_charts' in data and data['pdf_charts']:
-                pdf_charts.update(data['pdf_charts'])        # Use hardcoded content plus dynamic data
+            if "pdf_charts" in data and data["pdf_charts"]:
+                pdf_charts.update(data["pdf_charts"])
+
+        for category, data in all_economics_data.items():
+            if "pdf_charts" in data and data["pdf_charts"]:
+                pdf_charts.update(
+                    data["pdf_charts"]
+                )  # Use hardcoded content plus dynamic data
         context = {
             "municipality_name": municipality_name,
             "municipality_name_english": municipality_name_english,
@@ -152,6 +164,7 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
             "all_demographics_data": all_demographics_data,
             "all_social_data": all_social_data,
             "all_infrastructure_data": all_infrastructure_data,
+            "all_economics_data": all_economics_data,
             "pdf_charts": pdf_charts,
         }
 

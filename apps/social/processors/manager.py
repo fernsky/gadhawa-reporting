@@ -6,15 +6,21 @@ Coordinates all social processors and provides unified interface for PDF generat
 
 from .toilet_type import ToiletTypeProcessor
 from .solid_waste_management import SolidWasteManagementProcessor
+from .old_age_and_single_women import OldAgeAndSingleWomenProcessor
+from .major_subject import MajorSubjectProcessor
+from .literacy_status import LiteracyStatusProcessor
 
 
 class SocialManager:
     """Manager for all social processors"""
-    
+
     def __init__(self):
         self.processors = {
-            'toilet_type': ToiletTypeProcessor(),
-            'solid_waste_management': SolidWasteManagementProcessor(),
+            "toilet_type": ToiletTypeProcessor(),
+            "solid_waste_management": SolidWasteManagementProcessor(),
+            "old_age_and_single_women": OldAgeAndSingleWomenProcessor(),
+            "major_subject": MajorSubjectProcessor(),
+            "literacy_status": LiteracyStatusProcessor(),
         }
 
     def get_processor(self, category):

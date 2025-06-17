@@ -368,20 +368,20 @@ class RemittanceAmountGroupChoice(models.TextChoices):
 
 # Remittance Expense Types (based on ward-wise-remittance-expenses.ts)
 class RemittanceExpenseTypeChoice(models.TextChoices):
-    EDUCATION = "EDUCATION", _("शिक्षा")
-    HEALTH = "HEALTH", _("स्वास्थ्य")
-    HOUSEHOLD_USE = "HOUSEHOLD_USE", _("घरेलु प्रयोग")
-    FESTIVALS = "FESTIVALS", _("चाडपर्व")
-    LOAN_PAYMENT = "LOAN_PAYMENT", _("ऋण भुक्तानी")
-    LOANED_OTHERS = "LOANED_OTHERS", _("अरुलाई ऋण")
-    SAVING = "SAVING", _("बचत")
-    HOUSE_CONSTRUCTION = "HOUSE_CONSTRUCTION", _("घर निर्माण")
-    LAND_OWNERSHIP = "LAND_OWNERSHIP", _("जमिन स्वामित्व")
-    JEWELRY_PURCHASE = "JEWELRY_PURCHASE", _("गहना खरिद")
-    GOODS_PURCHASE = "GOODS_PURCHASE", _("सामान खरिद")
-    BUSINESS_INVESTMENT = "BUSINESS_INVESTMENT", _("व्यापारिक लगानी")
-    OTHER = "OTHER", _("अन्य")
-    UNKNOWN = "UNKNOWN", _("थाहा छैन")
+    EDUCATION = "education", _("शिक्षा")
+    HEALTH = "health", _("स्वास्थ्य")
+    HOUSEHOLD_USE = "household_use", _("घरेलु प्रयोग")
+    FESTIVALS = "festivals", _("चाडपर्व")
+    LOAN_PAYMENT = "loan_payment", _("ऋण भुक्तानी")
+    LOANED_OTHERS = "loaned_others", _("अरुलाई ऋण")
+    SAVING = "saving", _("बचत")
+    HOUSE_CONSTRUCTION = "house_construction", _("घर निर्माण")
+    LAND_OWNERSHIP = "land_ownership", _("जमिन स्वामित्व")
+    JWELLERY_PURCHASE = "jwellery_purchase", _("गहना खरिद")
+    GOODS_PURCHASE = "goods_purchase", _("सामान खरिद")
+    BUSINESS_INVESTMENT = "business_investment", _("व्यापारिक लगानी")
+    OTHER = "other", _("अन्य")
+    UNKNOWN = "unknown", _("थाहा छैन")
 
 
 # Time to Financial Organization (based on ward-wise-time-to-financial-organization.ts)
@@ -1200,6 +1200,7 @@ class TouristicSite(BaseModel):
 # ४.५.४ व्यापार र व्यवसाय सम्बन्धी विवरण (किराना, थोक, मासु, तरकारी र फलफूल आदि)
 # ४.५.५ खनिज तथा खानी सम्बन्धी विवरण
 # ४.५.६ स्थानीय बजार तथा व्यापारिक केन्द्रको विवरण
+
 
 # ४.५.८ सहकारी सम्बन्धी विवरण
 class CooperativeTypeChoice(models.TextChoices):

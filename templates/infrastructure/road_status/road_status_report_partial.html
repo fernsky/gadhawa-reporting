@@ -1,0 +1,596 @@
+{% load nepali_filters %}
+
+<!-- Road Status Infrastructure Report Partial for PDF -->
+<p class="section-content road-status-infrastructure-section" id="section-road-status-infrastructure">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ७.१.१ सडकको अवस्था अनुसार घरपरिवार विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if municipality_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ७.१.१.१: सडकको अवस्था अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                {% if pdf_charts.road_status.pie_chart_png %}
+                    <img src="{% static pdf_charts.road_status.pie_chart_png %}" 
+                         alt="सडकको अवस्था अनुसार घरपरिवार वितरण" 
+                         class="pdf-chart-image">
+                {% elif pdf_charts.road_status.pie_chart_svg %}
+                    <div class="svg-chart-container">
+                        {{ pdf_charts.road_status.pie_chart_svg|safe }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Municipality-wide Road Status Summary Table -->
+    {% if municipality_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ७.१.१.१: सडकको अवस्था अनुसार घरपरिवार विस्तृत विवरण</h3>
+        <table class="pdf-data-table road-status-summary-table">
+            <thead>
+                <tr>
+                    <th>क्र.स.</th>
+                    <th>सडकको अवस्था</th>
+                    <th>घरपरिवार संख्या</th>
+                    <th>प्रतिशत</th>
+                    <th>गुणस्तर श्रेणी</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for road_code, road_info in municipality_data.items %}
+                <tr>
+                    <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
+                    <td>{{ road_info.name_nepali }}</td>
+                    <td style="text-align: right;">{{ road_info.population|nepali_number }}</td>
+                    <td style="text-align: right;">{{ road_info.percentage|nepali_percentage }}%</td>
+                    <td style="text-align: center;">
+                        {% if road_code == 'BLACKTOPPED' %}
+                            <span class="excellent-quality">उत्कृष्ट</span>
+                        {% elif road_code == 'GRAVELED' %}
+                            <span class="good-quality">राम्रो</span>
+                        {% elif road_code == 'EARTHEN' %}
+                            <span class="basic-quality">आधारभूत</span>
+                        {% elif road_code == 'NO_ROAD' %}
+                            <span class="no-access">पहुँच छैन</span>
+                        {% else %}
+                            <span class="other-quality">अन्य</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr style="background-color: #f0f8ff; font-weight: bold;">
+                    <td colspan="2" style="text-align: center;">कुल जम्मा</td>
+                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: right;">{{ "100.0"|nepali_percentage }}%</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Infrastructure Quality Analysis Summary -->
+    {% if municipality_data %}
+    <div class="content-section">
+        <h3 class="table-title">सडक पूर्वाधार गुणस्तर विश्लेषण</h3>
+        <table class="pdf-data-table infrastructure-quality-table">
+            <thead>
+                <tr>
+                    <th>गुणस्तर श्रेणी</th>
+                    <th>सडकका प्रकारहरू</th>
+                    <th>घरपरिवार संख्या</th>
+                    <th>प्रतिशत</th>
+                    <th>विकास प्राथमिकता</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: #E8F5E8;">
+                    <td style="color: #2E7D32; font-weight: bold;">उत्कृष्ट पहुँच</td>
+                    <td>कालोपत्रे सडक</td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.BLACKTOPPED %}
+                            {{ municipality_data.BLACKTOPPED.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.BLACKTOPPED %}
+                            {{ municipality_data.BLACKTOPPED.percentage|floatformat:1|nepali_number }}%
+                        {% else %}
+                            ०.०%
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; color: #2E7D32; font-weight: bold;">मर्मत/विस्तार</td>
+                </tr>
+                
+                <tr style="background-color: #E3F2FD;">
+                    <td style="color: #1976D2; font-weight: bold;">राम्रो पहुँच</td>
+                    <td>ढुंगामाटो सडक</td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.GRAVELED %}
+                            {{ municipality_data.GRAVELED.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.GRAVELED %}
+                            {{ municipality_data.GRAVELED.percentage|floatformat:1|nepali_number }}%
+                        {% else %}
+                            ०.०%
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; color: #1976D2; font-weight: bold;">कालोपत्रे</td>
+                </tr>
+                
+                <tr style="background-color: #FFF3E0;">
+                    <td style="color: #E65100; font-weight: bold;">आधारभूत पहुँच</td>
+                    <td>कच्ची सडक</td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.EARTHEN %}
+                            {{ municipality_data.EARTHEN.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.EARTHEN %}
+                            {{ municipality_data.EARTHEN.percentage|floatformat:1|nepali_number }}%
+                        {% else %}
+                            ०.०%
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; color: #E65100; font-weight: bold;">गुणस्तर सुधार</td>
+                </tr>
+                
+                <tr style="background-color: #FFEBEE;">
+                    <td style="color: #F44336; font-weight: bold;">पहुँच छैन</td>
+                    <td>सडक नभएको</td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.NO_ROAD %}
+                            {{ municipality_data.NO_ROAD.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.NO_ROAD %}
+                            {{ municipality_data.NO_ROAD.percentage|floatformat:1|nepali_number }}%
+                        {% else %}
+                            ०.०%
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; color: #F44336; font-weight: bold;">नयाँ निर्माण</td>
+                </tr>
+                
+                <tr style="background-color: #F5F5F5; font-weight: bold;">
+                    <td colspan="2" style="text-align: center;">गुणस्तरीय सडक पहुँच</td>
+                    <td style="text-align: right;">
+                        {% with quality_total=0 %}
+                            {% if municipality_data.BLACKTOPPED %}
+                                {% add quality_total municipality_data.BLACKTOPPED.population as quality_total %}
+                            {% endif %}
+                            {% if municipality_data.GRAVELED %}
+                                {% add quality_total municipality_data.GRAVELED.population as quality_total %}
+                            {% endif %}
+                            {{ quality_total|nepali_number }}
+                        {% endwith %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% with quality_total=0 %}
+                            {% if municipality_data.BLACKTOPPED %}
+                                {% add quality_total municipality_data.BLACKTOPPED.population as quality_total %}
+                            {% endif %}
+                            {% if municipality_data.GRAVELED %}
+                                {% add quality_total municipality_data.GRAVELED.population as quality_total %}
+                            {% endif %}
+                            {% widthratio quality_total total_households 100 as quality_percentage %}
+                            {{ quality_percentage|floatformat:1|nepali_number }}%
+                        {% endwith %}
+                    </td>
+                    <td style="text-align: center;">समग्र लक्ष्य</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Ward-wise Detailed Table -->
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ७.१.१.२: वडागत सडकको अवस्था अनुसार घरपरिवार विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-road-status-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">वडा नं.</th>
+                    <th rowspan="2">कुल घरपरिवार</th>
+                    <th colspan="4">सडकको अवस्था</th>
+                </tr>
+                <tr>
+                    <th>कालोपत्रे</th>
+                    <th>ढुंगामाटो</th>
+                    <th>कच्ची</th>
+                    <th>सडक छैन</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in ward_data.items %}
+                <tr>
+                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
+                    <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
+                    
+                    <!-- Blacktopped -->
+                    <td style="text-align: right;">
+                        {% if ward_info.road_types.BLACKTOPPED %}
+                            {{ ward_info.road_types.BLACKTOPPED.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Graveled -->
+                    <td style="text-align: right;">
+                        {% if ward_info.road_types.GRAVELED %}
+                            {{ ward_info.road_types.GRAVELED.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Earthen -->
+                    <td style="text-align: right;">
+                        {% if ward_info.road_types.EARTHEN %}
+                            {{ ward_info.road_types.EARTHEN.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                    
+                    <!-- No Road -->
+                    <td style="text-align: right;">
+                        {% if ward_info.road_types.NO_ROAD %}
+                            {{ ward_info.road_types.NO_ROAD.population|nepali_number }}
+                        {% else %}
+                            ०
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
+                    <td style="text-align: center;">जम्मा</td>
+                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.BLACKTOPPED %}{{ municipality_data.BLACKTOPPED.population|nepali_number }}{% else %}०{% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.GRAVELED %}{{ municipality_data.GRAVELED.population|nepali_number }}{% else %}०{% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.EARTHEN %}{{ municipality_data.EARTHEN.population|nepali_number }}{% else %}०{% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if municipality_data.NO_ROAD %}{{ municipality_data.NO_ROAD.population|nepali_number }}{% else %}०{% endif %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.road-status-infrastructure-section {
+    page-break-inside: avoid;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.road-status-summary-table th,
+.road-status-summary-table td,
+.ward-road-status-table th,
+.ward-road-status-table td,
+.infrastructure-quality-table th,
+.infrastructure-quality-table td {
+    font-size: 10pt;
+    padding: 6px 8px;
+}
+
+.ward-road-status-table th {
+    background-color: #e8f4f8;
+    font-size: 9pt;
+    padding: 4px 6px;
+}
+
+.infrastructure-quality-table th {
+    background-color: #f0f8ff;
+    font-size: 10pt;
+}
+
+.pdf-chart-container {
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: avoid;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 400px;
+    height: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 400px;
+    height: auto;
+}
+
+.svg-chart-container {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+/* Road quality styling */
+.excellent-quality {
+    background-color: #E8F5E8;
+    color: #2E7D32;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.good-quality {
+    background-color: #E3F2FD;
+    color: #1976D2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.basic-quality {
+    background-color: #FFF3E0;
+    color: #E65100;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.no-access {
+    background-color: #FFEBEE;
+    color: #F44336;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.other-quality {
+    background-color: #F3E5F5;
+    color: #7B1FA2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+/* Enhanced table styling */
+.ward-road-status-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ward-road-status-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.infrastructure-quality-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Infrastructure-specific styling */
+.road-status-infrastructure-section .section-header {
+    color: #16a34a; /* Green for infrastructure */
+    border-bottom-color: #22c55e;
+}
+
+/* Color coding for road quality columns */
+.ward-road-status-table th:nth-child(3) { /* Blacktopped */
+    background-color: #d1fae5;
+    color: #166534;
+}
+
+.ward-road-status-table th:nth-child(4) { /* Graveled */
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.ward-road-status-table th:nth-child(5) { /* Earthen */
+    background-color: #fed7aa;
+    color: #c2410c;
+}
+
+.ward-road-status-table th:nth-child(6) { /* No Road */
+    background-color: #fecaca;
+    color: #dc2626;
+}
+
+/* Print optimization */
+@media print {
+    .road-status-infrastructure-section {
+        page-break-inside: avoid;
+        margin-bottom: 1.5em;
+    }
+    
+    .pdf-data-table {
+        font-size: 7pt;
+        page-break-inside: avoid;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+        margin: 1em 0;
+    }
+    
+    .table-section {
+        page-break-inside: avoid;
+        margin: 1em 0;
+    }
+    
+    .pdf-chart-container {
+        page-break-inside: avoid;
+    }
+    
+    .content-paragraph {
+        page-break-inside: avoid;
+    }
+    
+    .ward-road-status-table th,
+    .ward-road-status-table td {
+        font-size: 6pt;
+        padding: 2px 3px;
+    }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .pdf-data-table {
+        font-size: 8pt;
+    }
+    
+    .ward-road-status-table th,
+    .ward-road-status-table td {
+        padding: 2px 3px;
+        font-size: 7pt;
+    }
+    
+    .chart-title,
+    .table-title {
+        font-size: 10pt;
+    }
+    
+    .quality-tag {
+        font-size: 7pt;
+        padding: 1px 4px;
+    }
+}
+
+/* Accessibility improvements */
+.pdf-data-table th {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.pdf-data-table tbody tr:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: -2px;
+}
+
+/* Ward table column width optimization */
+.ward-road-status-table th:first-child,
+.ward-road-status-table td:first-child {
+    width: 10%;
+}
+
+.ward-road-status-table th:nth-child(2),
+.ward-road-status-table td:nth-child(2) {
+    width: 15%;
+}
+
+.ward-road-status-table th:nth-child(n+3),
+.ward-road-status-table td:nth-child(n+3) {
+    width: 18.75%;
+}
+
+/* Quality analysis styling */
+.infrastructure-quality-table .excellent-row {
+    background-color: #E8F5E8;
+    border-left: 4px solid #4CAF50;
+}
+
+.infrastructure-quality-table .good-row {
+    background-color: #E3F2FD;
+    border-left: 4px solid #2196F3;
+}
+
+.infrastructure-quality-table .basic-row {
+    background-color: #FFF3E0;
+    border-left: 4px solid #FF9800;
+}
+
+.infrastructure-quality-table .poor-row {
+    background-color: #FFEBEE;
+    border-left: 4px solid #F44336;
+}
+</style>

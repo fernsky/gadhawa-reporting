@@ -211,6 +211,26 @@
     <span class="page-ref"><a href="#section-househead-demographics"></a></span>
   </div>
 
+  <!-- Economics Chapter TOC -->
+  <div class="toc-item level-1">
+    <span class="toc-link">४. आर्थिक अवस्था</span>
+    <span class="page-ref"><a href="#category-economics"></a></span>
+  </div>
+  <div class="toc-item level-2">
+    <span class="toc-link">४.१ वडागत मुख्य सीपहरू</span>
+    <span class="page-ref"><a href="#section-major-skills"></a></span>
+  </div>
+
+  <!-- Social Chapter TOC -->
+  <div class="toc-item level-1">
+    <span class="toc-link">५. सामाजिक अवस्था</span>
+    <span class="page-ref"><a href="#category-social"></a></span>
+  </div>
+  <div class="toc-item level-2">
+    <span class="toc-link">५.१.१ साक्षरता विवरण</span>
+    <span class="page-ref"><a href="#section-literacy-status"></a></span>
+  </div>
+
   <!-- Other categories would go here when added -->
 </div>
 
@@ -248,9 +268,21 @@
       <!-- Caste Demographics Section -->
       {% if all_demographics_data.caste %}
         {% include 'demographics/caste/caste_report_partial.html' with caste_data=all_demographics_data.caste.data total_population=all_demographics_data.caste.total_population coherent_analysis=all_demographics_data.caste.report_content %}
-      {% endif %}       <!-- Househead Demographics Section -->
+      {% endif %}       
+      
+      <!-- Househead Demographics Section -->
        {% if all_demographics_data.househead %}
        {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
+      {% endif %}
+
+        <!-- Ward wise economically active Population -->
+      {% if all_demographics_data.economically_active %}
+       {% include 'demographics/economically_active/economically_active_report_partial.html' with economically_active_data=all_demographics_data.economically_active.data total_population=all_demographics_data.economically_active.total_population coherent_analysis=all_demographics_data.economically_active.report_content %}
+      {% endif %}
+
+      <!-- Occupation Demographics Section -->
+      {% if all_demographics_data.occupation %}
+       {% include 'demographics/occupation/occupation_report_partial.html' with occupation_data=all_demographics_data.occupation.data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content %}
       {% endif %}
     </p>
   </div>
@@ -272,6 +304,46 @@
       {% if all_social_data.toilet_type %}
         {% include 'social/toilet_type/toilet_type_report_partial.html' with municipality_data=all_social_data.toilet_type.data.municipality_data ward_data=all_social_data.toilet_type.data.ward_data total_households=all_social_data.toilet_type.data.total_households coherent_analysis=all_social_data.toilet_type.report_content pdf_charts=pdf_charts %}
       {% endif %}
+
+        <!-- Solid Waste Management Section -->
+      {% if all_social_data.solid_waste_management %}
+        {% include 'social/solid_waste_management/solid_waste_management_report_partial.html' with municipality_data=all_social_data.solid_waste_management.data.municipality_data ward_data=all_social_data.solid_waste_management.data.ward_data total_households=all_social_data.solid_waste_management.data.total_households coherent_analysis=all_social_data.solid_waste_management.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+
+      <!-- Old Age and Single Women Section -->
+      {% if all_social_data.old_age_and_single_women %}
+        {% include 'social/old_age_and_single_women/old_age_and_single_women_report_partial.html' with municipality_data=all_social_data.old_age_and_single_women.municipality_data single_women_data=all_social_data.old_age_and_single_women.single_women_data ward_data=all_social_data.old_age_and_single_women.ward_data total_male_old_age=all_social_data.old_age_and_single_women.total_male_old_age total_female_old_age=all_social_data.old_age_and_single_women.total_female_old_age total_old_age_population=all_social_data.old_age_and_single_women.total_old_age_population total_single_women=all_social_data.old_age_and_single_women.total_single_women coherent_analysis=all_social_data.old_age_and_single_women.coherent_analysis pdf_charts=all_social_data.old_age_and_single_women.pdf_charts %}
+      {% endif %}
+
+      <!-- Literacy Status Section -->
+      {% if all_social_data.literacy_status %}
+        {% include 'social/literacy_status/literacy_status_report_partial.html' with municipality_data=all_social_data.literacy_status.data.municipality_data ward_data=all_social_data.literacy_status.data.ward_data total_population=all_social_data.literacy_status.data.total_population coherent_analysis=all_social_data.literacy_status.report_content pdf_charts=all_social_data.literacy_status.pdf_charts %}
+      {% endif %}
+
+      <!-- Major Subject Section -->
+      {% if all_social_data.major_subject %}
+        {% include 'social/major_subject/major_subject_report_partial.html' with municipality_data=all_social_data.major_subject.data.municipality_data ward_data=all_social_data.major_subject.data.ward_data total_students=all_social_data.major_subject.data.total_students coherent_analysis=all_social_data.major_subject.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Economics Domain Category -->
+  <div class="category-break" id="category-economics">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em;">
+      परिच्छेद – ४ः आर्थिक अवस्था
+    </h1>
+    <p class="section-content">
+      <!-- Introduction to economics -->
+      <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+          लुङ्ग्री गाउँपालिकाको आर्थिक अवस्था र स्थानीयहरूको जीविकोपार्जनका साधनहरूको विश्लेषण यस खण्डमा प्रस्तुत गरिएको छ । यहाँका मानिसहरूको मुख्य सीप, व्यवसायिक क्षमता र आर्थिक गतिविधिहरूको अध्ययनले गाउँपालिकाको आर्थिक सम्भावना र चुनौतीहरूको पहिचान गर्न मद्दत गर्छ । स्थानीय स्रोत साधनको उपयोग, मानव पुँजीको विकास र रोजगारी सृजनाका अवसरहरूको मूल्याङ्कन गरिएको छ ।
+        </div>
+      </div>
+      
+      <!-- Ward Wise Major Skills Section -->
+      {% if all_economics_data.major_skills %}
+        {% include 'economics/major_skills/major_skills_report_partial.html' with municipality_data=all_economics_data.major_skills.data.municipality_data ward_data=all_economics_data.major_skills.data.ward_data total_population=all_economics_data.major_skills.data.total_population coherent_analysis=all_economics_data.major_skills.report_content pdf_charts=pdf_charts %}
+      {% endif %}
     </p>
   </div>
 
@@ -291,6 +363,11 @@
       <!-- Market Center Time Infrastructure Section -->
       {% if all_infrastructure_data.market_center_time %}
         {% include 'infrastructure/market_center_time/market_center_time_report_partial.html' with municipality_data=all_infrastructure_data.market_center_time.data.municipality_data ward_data=all_infrastructure_data.market_center_time.data.ward_data total_households=all_infrastructure_data.market_center_time.data.total_households coherent_analysis=all_infrastructure_data.market_center_time.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+
+      <!-- Time to Public Transport -->
+      {% if all_infrastructure_data.public_transport_time %}
+        {% include 'infrastructure/public_transport_time/public_transport_time_report_partial.html' with municipality_data=all_infrastructure_data.public_transport_time.data.municipality_data ward_data=all_infrastructure_data.public_transport_time.data.ward_data total_households=all_infrastructure_data.public_transport_time.data.total_households coherent_analysis=all_infrastructure_data.public_transport_time.report_content pdf_charts=pdf_charts %}
       {% endif %}
     </p>
   </div>

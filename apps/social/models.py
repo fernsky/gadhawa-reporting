@@ -365,6 +365,7 @@ class SchoolDropoutCauseTypeChoice(models.TextChoices):
     WANTED_STUDY_COMPLETED = "WANTED_STUDY_COMPLETED", _("अध्ययन पूरा गर्न चाहना")
     MARRIAGE = "MARRIAGE", _("विवाह")
     EMPLOYMENT = "EMPLOYMENT", _("रोजगारी")
+    UNKNOWN = "UNKNOWN", _("अज्ञात")
     OTHER = "OTHER", _("अन्य")
 
 
@@ -664,8 +665,8 @@ class WardWiseDrinkingWaterSource(BaseModel):
         return f"वडा {self.ward_number} - {self.get_drinking_water_source_display()}"
 
 
-
 # ५.३.३ शौचालय प्रयोगको अवस्था
+
 
 class WardWiseToiletType(BaseModel):
     """Ward wise toilet type (5.3.3 - from TypeScript schema)"""
@@ -714,11 +715,13 @@ class WardWiseSolidWasteManagement(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_solid_waste_management_display()}"
 
+
 # ५.३.६ ढल व्यवस्थापन
 # ५.३.७ स्रोत नक्शा
 
 # ५.४ महिला, बालबालिका तथा सामाजिक समावेशीकरण
 # ५.४.१ लिङ्ग अनुसार बाल विवाह (अठार वर्ष मुनिका)
+
 
 class WardAgeGenderWiseFirstMarriageAge(BaseModel):
     """Ward age gender wise first marriage age (5.4.1 - from TypeScript schema)"""
@@ -751,6 +754,7 @@ class WardAgeGenderWiseFirstMarriageAge(BaseModel):
 # ५.४.४ घरपरिवार विहीन बालबालिकाको अवस्था
 # ५.४.५ अपाङ्गताका आधारमा जनसंख्या
 
+
 class WardWiseDisabledPopulation(BaseModel):
     """Ward wise disabled population (5.4.5 - from TypeScript schema)"""
 
@@ -769,6 +773,7 @@ class WardWiseDisabledPopulation(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - अपाङ्गता: {self.disabled_population}"
+
 
 # ५.४.१० जेष्ठ नागरिक तथा एकल महिला
 
@@ -802,9 +807,7 @@ class WardWiseOldAgePopulationAndSingleWomen(BaseModel):
     def total_old_age_population(self):
         return self.male_old_age_population + self.female_old_age_population
 
+
 # ५.४.११ अल्पसंख्यक सीमान्तकृत वर्गको विवरण
 # ५.४.१२ वार्षिक कार्यक्रमबाट लक्षित कार्यक्रमतर्फ भएको विनियोजन तथा खर्चको अवस्था
 # ५.४.१३ स्रोत नक्शा
-
-
-
