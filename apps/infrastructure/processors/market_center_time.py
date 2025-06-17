@@ -10,7 +10,7 @@ from ..models import WardWiseTimeToMarketCenter, TimeDurationChoice
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
-    convert_to_nepali_number,
+    to_nepali_digits,
 )
 
 
@@ -87,7 +87,7 @@ class MarketCenterTimeProcessor(BaseInfrastructureProcessor):
             if ward_households > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {convert_to_nepali_number(ward_num)}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_households,  # Using households
                     "time_durations": {},
                 }
