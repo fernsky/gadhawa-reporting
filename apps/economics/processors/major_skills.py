@@ -10,6 +10,7 @@ from ..models import WardWiseMajorSkills, SkillTypeChoice
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
+    to_nepali_digits,
 )
 
 
@@ -114,7 +115,7 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
             if ward_population > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {ward_num}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_population,
                     "skill_types": {},
                 }

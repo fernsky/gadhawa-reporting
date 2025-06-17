@@ -1,0 +1,163 @@
+{% load nepali_filters %}
+
+<!-- Infrastructure Report Section for PDF -->
+<div class="infrastructure-section" id="section-infrastructure">
+    <h1 class="section-header level-1" style="color: #1e40af; border-bottom: 3px solid #0ea5e9; padding-bottom: 0.5em; font-size: 18pt; margin-top: 3em; page-break-before: always;">
+        ७. भौतिक पूर्वाधारको अवस्था
+    </h1>
+    
+    <!-- Infrastructure Introduction -->
+    <div class="content-section">
+        <p class="content-paragraph">
+            लुङ्ग्री गाउँपालिकाको भौतिक पूर्वाधारको अवस्था विश्लेषण गर्दा यातायात, सडक, सार्वजनिक यातायात र बजार पहुँचको क्षेत्रमा 
+            विभिन्न प्रकारका सुविधाहरू उपलब्ध रहेको देखिन्छ। यस खण्डमा गाउँपालिकाको पूर्वाधारको विस्तृत विवरण प्रस्तुत गरिएको छ।
+        </p>
+    </div>
+
+    <!-- Road Status Section -->
+    {% if all_infrastructure_data.road_status %}
+        {% with road_data=all_infrastructure_data.road_status %}
+            {% include 'infrastructure/road_status/road_status_report_partial.html' with section_number=road_data.section_number section_title=road_data.section_title coherent_analysis=road_data.coherent_analysis municipality_data=road_data.municipality_data ward_data=road_data.ward_data pdf_charts=road_data.pdf_charts total_households=road_data.total_households %}
+        {% endwith %}
+    {% endif %}
+
+    <!-- Public Transport Section -->
+    {% if all_infrastructure_data.public_transport %}
+        {% with transport_data=all_infrastructure_data.public_transport %}
+            {% include 'infrastructure/public_transport/public_transport_report_partial.html' with section_number=transport_data.section_number section_title=transport_data.section_title coherent_analysis=transport_data.coherent_analysis time_duration_data=transport_data.municipality_data ward_data=transport_data.ward_data pdf_charts=transport_data.pdf_charts total_households=transport_data.total_households %}
+        {% endwith %}
+    {% endif %}
+
+    <!-- Market Center Time Section -->
+    {% if all_infrastructure_data.market_center_time %}
+        {% with market_data=all_infrastructure_data.market_center_time %}
+            {% include 'infrastructure/market_center_time/market_center_time_report_partial.html' with section_number=market_data.section_number section_title=market_data.section_title coherent_analysis=market_data.coherent_analysis municipality_data=market_data.municipality_data ward_data=market_data.ward_data pdf_charts=market_data.pdf_charts total_households=market_data.total_households %}
+        {% endwith %}
+    {% endif %}
+</div>
+
+<style>
+/* Infrastructure section styles */
+.infrastructure-section {
+    margin: 2em 0;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: avoid;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pdf-chart-container {
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: avoid;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 400px;
+    height: auto;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+}
+
+.table-section {
+    margin: 1.5em 0;
+}
+
+/* Color coding for road status */
+.road-status-summary-table tbody tr:nth-child(1) td:first-child {
+    color: #2E7D32; /* Blacktopped - Dark Green */
+}
+
+.road-status-summary-table tbody tr:nth-child(2) td:first-child {
+    color: #4CAF50; /* Graveled - Green */
+}
+
+.road-status-summary-table tbody tr:nth-child(3) td:first-child {
+    color: #FF9800; /* Earthen - Orange */
+}
+
+.road-status-summary-table tbody tr:nth-child(4) td:first-child {
+    color: #F44336; /* No Road - Red */
+}
+
+/* Time duration color coding */
+.public-transport-summary-table tbody tr:nth-child(1) td:first-child,
+.market-center-time-summary-table tbody tr:nth-child(1) td:first-child {
+    color: #22C55E; /* Under 15 min - Green */
+}
+
+.public-transport-summary-table tbody tr:nth-child(2) td:first-child,
+.market-center-time-summary-table tbody tr:nth-child(2) td:first-child {
+    color: #84CC16; /* 15-30 min - Light Green */
+}
+
+.public-transport-summary-table tbody tr:nth-child(3) td:first-child,
+.market-center-time-summary-table tbody tr:nth-child(3) td:first-child {
+    color: #F59E0B; /* 30-60 min - Amber */
+}
+
+.public-transport-summary-table tbody tr:nth-child(4) td:first-child,
+.market-center-time-summary-table tbody tr:nth-child(4) td:first-child {
+    color: #EF4444; /* 1+ hour - Red */
+}
+
+/* Print optimization */
+@media print {
+    .infrastructure-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        font-size: 8pt;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

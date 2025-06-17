@@ -1,9 +1,9 @@
 {% load nepali_filters %}
 
 <!-- Market Center Time Infrastructure Report Partial for PDF -->
-<p class="section-content market-center-time-infrastructure-section" id="section-market-center-time-infrastructure">
+<div class="section-content market-center-time-infrastructure-section" id="section-market-center-time-infrastructure">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ७.१.६ बजार केन्द्रमा पुग्न लाग्ने समयको विवरण
+        {{ section_number|default:"７.१.३" }} {{ section_title|default:"बजार केन्द्रमा पुग्न लाग्ने समयको विवरण" }}
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -28,40 +28,6 @@
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Market Center Time Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ७.१.६.१: बजार केन्द्रमा पुग्न लाग्ने समयको आधारमा घरपरिवार विस्तृत विवरण</h3>
-        <table class="pdf-data-table market-center-time-summary-table">
-            <thead>
-                <tr>
-                    <th>बजार केन्द्रमा पुग्न लाग्ने समय</th>
-                    <th>घरपरिवार</th>
-                    <th>प्रतिशत</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for time_code, data in municipality_data.items %}
-                    {% if data.population > 0 %}
-                        <tr>
-                            <td style="text-align: left;">{{ data.name_nepali }}</td>
-                            <td style="text-align: right;">{{ data.population|nepali_number }}</td>
-                            <td style="text-align: right;">{{ data.percentage|floatformat:1|nepali_number }}%</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
-                    <td style="text-align: right;">१००.०%</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
@@ -153,7 +119,7 @@
         </table>
     </div>
     {% endif %}
-</p>
+</div>
 
 <style>
 /* PDF-specific styles */

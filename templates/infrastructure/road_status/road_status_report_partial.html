@@ -1,9 +1,9 @@
 {% load nepali_filters %}
 
 <!-- Road Status Infrastructure Report Partial for PDF -->
-<p class="section-content road-status-infrastructure-section" id="section-road-status-infrastructure">
+<div class="section-content road-status-infrastructure-section" id="section-road-status-infrastructure">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ७.१.१ सडकको अवस्था अनुसार घरपरिवार विवरण
+        {{ section_number|default:"७.१.१" }} {{ section_title|default:"सडकको अवस्था अनुसार घरपरिवार विवरण" }}
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -175,25 +175,13 @@
                 <tr style="background-color: #F5F5F5; font-weight: bold;">
                     <td colspan="2" style="text-align: center;">गुणस्तरीय सडक पहुँच</td>
                     <td style="text-align: right;">
-                        {% with quality_total=0 %}
-                            {% if municipality_data.BLACKTOPPED %}
-                                {% add quality_total municipality_data.BLACKTOPPED.population as quality_total %}
-                            {% endif %}
-                            {% if municipality_data.GRAVELED %}
-                                {% add quality_total municipality_data.GRAVELED.population as quality_total %}
-                            {% endif %}
-                            {{ quality_total|nepali_number }}
+                        {% with blacktopped_pop=municipality_data.BLACKTOPPED.population|default:0 graveled_pop=municipality_data.GRAVELED.population|default:0 %}
+                            {{ blacktopped_pop|add:graveled_pop|nepali_number }}
                         {% endwith %}
                     </td>
                     <td style="text-align: right;">
-                        {% with quality_total=0 %}
-                            {% if municipality_data.BLACKTOPPED %}
-                                {% add quality_total municipality_data.BLACKTOPPED.population as quality_total %}
-                            {% endif %}
-                            {% if municipality_data.GRAVELED %}
-                                {% add quality_total municipality_data.GRAVELED.population as quality_total %}
-                            {% endif %}
-                            {% widthratio quality_total total_households 100 as quality_percentage %}
+                        {% with blacktopped_pop=municipality_data.BLACKTOPPED.population|default:0 graveled_pop=municipality_data.GRAVELED.population|default:0 %}
+                            {% widthratio blacktopped_pop|add:graveled_pop total_households 100 as quality_percentage %}
                             {{ quality_percentage|floatformat:1|nepali_number }}%
                         {% endwith %}
                     </td>
@@ -287,7 +275,7 @@
         </table>
     </div>
     {% endif %}
-</p>
+</div>
 
 <style>
 /* PDF-specific styles */

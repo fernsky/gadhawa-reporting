@@ -110,26 +110,19 @@ class BaseInfrastructureProcessor(ABC):
         # Generate analysis text
         coherent_analysis = self.generate_analysis_text(data)
 
-        # Generate charts
-        pie_chart_svg = self.generate_pie_chart(data.get("category_data", {}))
-        bar_chart_svg = self.generate_bar_chart(data)
+        # Generate and save charts
+        charts = self.generate_and_save_charts(data)
 
-        # Prepare chart data for template
-        pdf_charts = {
-            self.get_chart_key(): {
-                "pie_chart_svg": pie_chart_svg,
-                "bar_chart_svg": bar_chart_svg,
-                "pie_chart_png": None,  # Can be generated if needed
-                "bar_chart_png": None,  # Can be generated if needed
-            }
-        }
+        # Calculate total households
+        total_households = data.get("total_households", 0)
 
         return {
+            "municipality_data": data.get("municipality_data", {}),
             "category_data": data.get("category_data", {}),
             "ward_data": data.get("ward_data", {}),
-            "total_households": data.get("total_households", 0),
+            "total_households": total_households,
             "coherent_analysis": coherent_analysis,
-            "pdf_charts": pdf_charts,
+            "pdf_charts": {self.get_chart_key(): charts},
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
         }
@@ -139,26 +132,87 @@ class BaseInfrastructureProcessor(ABC):
         return self.get_section_number().lower().replace(".", "_")
 
     def generate_and_save_charts(self, data):
-        """Generate and save charts to static directory"""
+        """Generate and save charts to static directory using SVGChartGenerator"""
         charts = {}
+        category_name = self.get_chart_key()
 
-        # Generate pie chart
-        pie_chart = self.generate_pie_chart(data.get("category_data", {}))
-        if pie_chart:
-            pie_filename = f"{self.get_chart_key()}_pie_chart.svg"
-            pie_path = self.static_charts_dir / pie_filename
-            with open(pie_path, "w", encoding="utf-8") as f:
-                f.write(pie_chart)
-            charts["pie_chart_svg"] = f"images/charts/{pie_filename}"
+        # Prepare data for chart generation - check for both municipality_data and category_data
+        municipality_data = data.get("municipality_data", {})
+        category_data = data.get("category_data", {})
+        chart_data = municipality_data if municipality_data else category_data
 
-        # Generate bar chart
-        bar_chart = self.generate_bar_chart(data)
-        if bar_chart:
-            bar_filename = f"{self.get_chart_key()}_bar_chart.svg"
-            bar_path = self.static_charts_dir / bar_filename
-            with open(bar_path, "w", encoding="utf-8") as f:
-                f.write(bar_chart)
-            charts["bar_chart_svg"] = f"images/charts/{bar_filename}"
+        if not chart_data:
+            return charts
+
+        # Convert infrastructure data to format expected by SVGChartGenerator
+        pie_data = {}
+        for key, info in chart_data.items():
+            if isinstance(info, dict) and (
+                "households" in info or "population" in info
+            ):
+                population = info.get("households", info.get("population", 0))
+                if population > 0:
+                    pie_data[key] = {
+                        "population": population,
+                        "name_nepali": info.get("name_nepali", key),
+                        "percentage": info.get("percentage", 0),
+                    }
+
+        # Generate pie chart using SVGChartGenerator
+        if pie_data:
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=pie_data,
+                output_name=f"{category_name}_pie_chart",
+                static_dir=str(self.static_charts_dir),
+                chart_type="pie",
+                include_title=False,
+            )
+
+            if success and png_path:
+                charts["pie_chart_png"] = f"images/charts/{category_name}_pie_chart.png"
+                charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+            elif svg_path:
+                # Fallback to SVG if PNG conversion fails
+                charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+
+        # Generate bar chart for ward data if available
+        ward_data = data.get("ward_data", {})
+        if ward_data:
+            # Convert ward data to format expected by SVGChartGenerator
+            bar_data = {}
+            for ward_num, ward_info in ward_data.items():
+                if isinstance(ward_info, dict):
+                    total_pop = ward_info.get(
+                        "total_population", ward_info.get("total_households", 0)
+                    )
+                    if total_pop > 0:
+                        bar_data[f"ward_{ward_num}"] = {
+                            "population": total_pop,
+                            "name_nepali": f"वडा {ward_num}",
+                            "percentage": 0,  # Can be calculated if needed
+                        }
+
+            if bar_data:
+                success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                    demographic_data=bar_data,
+                    output_name=f"{category_name}_bar_chart",
+                    static_dir=str(self.static_charts_dir),
+                    chart_type="bar",
+                    include_title=False,
+                )
+
+                if success and png_path:
+                    charts["bar_chart_png"] = (
+                        f"images/charts/{category_name}_bar_chart.png"
+                    )
+                    charts["bar_chart_svg"] = (
+                        f"images/charts/{category_name}_bar_chart.svg"
+                    )
+                elif svg_path:
+                    # Fallback to SVG if PNG conversion fails
+                    charts["bar_chart_svg"] = (
+                        f"images/charts/{category_name}_bar_chart.svg"
+                    )
 
         return charts
 

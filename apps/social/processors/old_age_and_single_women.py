@@ -10,6 +10,7 @@ from ..models import WardWiseOldAgePopulationAndSingleWomen
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
+    to_nepali_digits,
 )
 
 
@@ -55,7 +56,7 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
 
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {ward_num}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "male_old_age_population": ward_obj.male_old_age_population,
                     "female_old_age_population": ward_obj.female_old_age_population,
                     "single_women_population": ward_obj.single_women_population,

@@ -1,5 +1,5 @@
 """
-Public Transport Access Processor
+Public Transport Access Processor - Complete Implementation
 
 Handles public transport accessibility data processing, chart generation, and report formatting.
 """
@@ -27,16 +27,20 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
         # Set time duration-specific colors
         self.chart_generator.colors = {
             "UNDER_15_MIN": "#22C55E",  # Green - Excellent access
-            "UNDER_30_MIN": "#84CC16",  # Lime - Good access
+            "UNDER_30_MIN": "#84CC16",  # Light Green - Good access
             "UNDER_1_HOUR": "#F59E0B",  # Amber - Moderate access
             "1_HOUR_OR_MORE": "#EF4444",  # Red - Poor access
         }
+
+    def get_chart_key(self):
+        """Get the key for storing charts in PDF context"""
+        return "public_transport"
 
     def get_section_title(self):
         return "सार्वजनिक यातायातमा पहुँचको अवस्था"
 
     def get_section_number(self):
-        return "७.१.६"
+        return "७.१.७"
 
     def get_data(self):
         """Get public transport accessibility data - both municipality-wide and ward-wise"""
@@ -55,19 +59,20 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
                 or 0
             )
 
-            time_duration_data[time_code] = {
-                "name_english": time_code,
-                "name_nepali": time_name,
-                "households": time_households,
-                "percentage": 0,  # Will be calculated below
-            }
-            total_households += time_households
+            if time_households > 0:  # Only include time durations with households
+                time_duration_data[time_code] = {
+                    "name_english": time_code,
+                    "name_nepali": time_name,
+                    "population": time_households,  # Using households as population for consistency
+                    "percentage": 0,  # Will be calculated below
+                }
+                total_households += time_households
 
         # Calculate percentages
         for time_code in time_duration_data:
             if total_households > 0:
                 time_duration_data[time_code]["percentage"] = (
-                    time_duration_data[time_code]["households"] / total_households * 100
+                    time_duration_data[time_code]["population"] / total_households * 100
                 )
 
         # Ward-wise data
@@ -84,7 +89,7 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {ward_num}",
-                    "total_households": ward_households,
+                    "total_population": ward_households,  # Using households
                     "time_durations": {},
                 }
 
@@ -93,192 +98,229 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
                     time_code = time_choice[0]
                     time_name = time_choice[1]
 
-                    time_households = (
+                    time_households_ward = (
                         WardWiseTimeToPublicTransport.objects.filter(
                             ward_number=ward_num, time_duration=time_code
                         ).aggregate(total=models.Sum("households"))["total"]
                         or 0
                     )
 
-                    if time_households > 0:
+                    if time_households_ward > 0:
                         ward_data[ward_num]["time_durations"][time_code] = {
                             "name_nepali": time_name,
-                            "households": time_households,
+                            "population": time_households_ward,
                             "percentage": (
-                                (time_households / ward_households * 100)
+                                (time_households_ward / ward_households * 100)
                                 if ward_households > 0
                                 else 0
                             ),
                         }
 
         return {
-            "category_data": time_duration_data,
+            "municipality_data": time_duration_data,
             "ward_data": ward_data,
             "total_households": total_households,
         }
 
     def generate_analysis_text(self, data):
-        """Generate coherent analysis text for public transport accessibility"""
+        """Generate comprehensive analysis text for public transport accessibility"""
         if not data or data["total_households"] == 0:
             return "सार्वजनिक यातायातमा पहुँचको तथ्याङ्क उपलब्ध छैन।"
 
         total_households = data["total_households"]
-        time_duration_data = data["category_data"]
+        municipality_data = data["municipality_data"]
         ward_data = data["ward_data"]
 
         analysis_parts = []
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको सार्वजनिक यातायातमा पहुँचको विश्लेषण गरिएको छ।"
+            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको सार्वजनिक यातायातमा पहुँचको अवस्था विश्लेषण गर्दा विभिन्न समयावधिमा सार्वजनिक यातायात पुग्ने सुविधा उपलब्ध रहेको देखिन्छ।"
         )
 
         # Accessibility analysis
-        excellent_access = time_duration_data.get("UNDER_15_MIN", {}).get(
-            "households", 0
-        )
-        good_access = time_duration_data.get("UNDER_30_MIN", {}).get("households", 0)
-        moderate_access = time_duration_data.get("UNDER_1_HOUR", {}).get(
-            "households", 0
-        )
-        poor_access = time_duration_data.get("1_HOUR_OR_MORE", {}).get("households", 0)
-
-        # Calculate combined good access (under 30 minutes)
-        combined_good_access = excellent_access + good_access
-        good_access_percentage = (
-            (combined_good_access / total_households * 100)
-            if total_households > 0
-            else 0
-        )
-
-        # Detailed time duration analysis
-        if excellent_access > 0:
-            analysis_parts.append(
-                f"१५ मिनेट भन्दा कममा सार्वजनिक यातायातमा पुग्न सक्ने घरपरिवारको संख्या {format_nepali_number(excellent_access)} "
-                f"({format_nepali_percentage(time_duration_data['UNDER_15_MIN']['percentage'])}) छ, जुन उत्कृष्ट पहुँच मानिन्छ।"
+        if municipality_data:
+            # Calculate accessibility levels
+            excellent_access = municipality_data.get("UNDER_15_MIN", {}).get(
+                "population", 0
+            )
+            good_access = municipality_data.get("UNDER_30_MIN", {}).get("population", 0)
+            moderate_access = municipality_data.get("UNDER_1_HOUR", {}).get(
+                "population", 0
+            )
+            poor_access = municipality_data.get("1_HOUR_OR_MORE", {}).get(
+                "population", 0
             )
 
-        if good_access > 0:
-            analysis_parts.append(
-                f"३० मिनेट भन्दा कममा पुग्न सक्ने घरपरिवारको संख्या {format_nepali_number(good_access)} "
-                f"({format_nepali_percentage(time_duration_data['UNDER_30_MIN']['percentage'])}) छ।"
+            # Combined good accessibility (under 30 minutes)
+            good_accessibility = excellent_access + good_access
+            good_accessibility_percentage = (
+                (good_accessibility / total_households * 100)
+                if total_households > 0
+                else 0
             )
 
-        if moderate_access > 0:
-            analysis_parts.append(
-                f"१ घण्टा भन्दा कममा पुग्न सक्ने घरपरिवारको संख्या {format_nepali_number(moderate_access)} "
-                f"({format_nepali_percentage(time_duration_data['UNDER_1_HOUR']['percentage'])}) छ, जुन मध्यम पहुँच मानिन्छ।"
-            )
-
-        if poor_access > 0:
-            analysis_parts.append(
-                f"१ घण्टा वा सो भन्दा बढी समय लाग्ने घरपरिवारको संख्या {format_nepali_number(poor_access)} "
-                f"({format_nepali_percentage(time_duration_data['1_HOUR_OR_MORE']['percentage'])}) छ, जसलाई कमजोर पहुँच मानिन्छ।"
-            )
-
-        # Overall accessibility assessment
-        analysis_parts.append(
-            self.generate_accessibility_assessment(good_access_percentage)
-        )
-
-        # Ward-wise analysis
-        if ward_data:
-            # Find ward with best and worst access
-            best_ward_data = self.find_ward_with_best_access(ward_data)
-            worst_ward_data = self.find_ward_with_worst_access(ward_data)
-
-            if best_ward_data and worst_ward_data:
+            # Find the most common time duration
+            if municipality_data:
+                dominant_time = max(
+                    municipality_data.items(), key=lambda x: x[1]["population"]
+                )
                 analysis_parts.append(
-                    f"वडाको आधारमा हेर्दा, वडा नं. {best_ward_data['ward_number']} मा सबैभन्दा राम्रो पहुँच "
-                    f"({format_nepali_number(best_ward_data['good_access_households'])} घरपरिवार) छ "
-                    f"भने वडा नं. {worst_ward_data['ward_number']} मा सबैभन्दा कमजोर पहुँच "
-                    f"({format_nepali_number(worst_ward_data['poor_access_households'])} घरपरिवार) छ।"
+                    f"समयावधिको आधारमा विश्लेषण गर्दा, {dominant_time[1]['name_nepali']} समयमा सार्वजनिक यातायात पुग्ने घरपरिवारको संख्या सबैभन्दा बढी "
+                    f"{format_nepali_number(dominant_time[1]['population'])} "
+                    f"({format_nepali_percentage(dominant_time[1]['percentage'])}) रहेको छ।"
                 )
 
-        # Recommendations
-        if poor_access > 0:
+            # Accessibility quality analysis
+            if good_accessibility > 0:
+                analysis_parts.append(
+                    f"सार्वजनिक यातायातमा पहुँचको गुणस्तरको दृष्टिकोणले हेर्दा, {format_nepali_number(good_accessibility)} घरपरिवार "
+                    f"({format_nepali_percentage(good_accessibility_percentage)}) ले ३० मिनेट भित्रमा सार्वजनिक यातायात पुग्न सक्छन् जुन राम्रो पहुँचको सूचक हो।"
+                )
+
+            # Distance and connectivity analysis
+            if excellent_access > 0:
+                excellent_percentage = excellent_access / total_households * 100
+                analysis_parts.append(
+                    f"विशेष गरी {format_nepali_number(excellent_access)} घरपरिवार "
+                    f"({format_nepali_percentage(excellent_percentage)}) ले १५ मिनेट भित्रमा सार्वजनिक यातायात पुग्न सक्ने उत्कृष्ट अवस्था छ।"
+                )
+
+            # Challenge analysis
+            if poor_access > 0:
+                poor_percentage = poor_access / total_households * 100
+                analysis_parts.append(
+                    f"तर, {format_nepali_number(poor_access)} घरपरिवार "
+                    f"({format_nepali_percentage(poor_percentage)}) लाई सार्वजनिक यातायात पुग्न एक घण्टा वा सो भन्दा बढी समय लाग्छ जसले यातायात सेवामा सुधारको आवश्यकता देखाउँछ।"
+                )
+
+        # Ward-wise comparative analysis
+        if ward_data and len(ward_data) > 1:
+            best_ward, worst_ward = self.find_best_worst_wards(ward_data)
+
+            if best_ward and worst_ward and best_ward != worst_ward:
+                best_accessibility = self.calculate_ward_accessibility(
+                    ward_data[best_ward]
+                )
+                worst_accessibility = self.calculate_ward_accessibility(
+                    ward_data[worst_ward]
+                )
+
+                analysis_parts.append(
+                    f"वडागत विश्लेषणमा, वडा नं. {best_ward} मा सबैभन्दा राम्रो सार्वजनिक यातायात पहुँच "
+                    f"({format_nepali_percentage(best_accessibility)} घरपरिवारले ३० मिनेट भित्रमा पहुँच) छ "
+                    f"भने वडा नं. {worst_ward} मा केही सुधारको आवश्यकता "
+                    f"({format_nepali_percentage(worst_accessibility)} घरपरिवारले मात्र ३० मिनेट भित्रमा पहुँच) देखिन्छ।"
+                )
+
+        # Economic and social implications
+        if good_accessibility_percentage > 70:
             analysis_parts.append(
-                f"कमजोर पहुँच भएका {format_nepali_number(poor_access)} घरपरिवारका लागि सार्वजनिक यातायात सेवा विस्तार गर्न आवश्यक छ।"
+                "सार्वजनिक यातायातमा राम्रो पहुँचले स्थानीय आर्थिक गतिविधि, शिक्षा र स्वास्थ्य सेवामा पहुँचमा सकारात्मक प्रभाव पारेको छ।"
+            )
+        else:
+            analysis_parts.append(
+                "सार्वजनिक यातायात सेवामा सुधार भएमा स्थानीय विकासमा महत्वपूर्ण योगदान पुग्ने अपेक्षा गर्न सकिन्छ।"
             )
 
-        # Industry standard conclusion
-        analysis_parts.append(
-            "अन्तर्राष्ट्रिय मापदण्ड अनुसार ३०% घरपरिवारको सार्वजनिक यातायातमा १५ मिनेट भित्र पहुँच हुनुपर्छ र ८०% घरपरिवारको १ घण्टा भित्र पहुँच हुनुपर्छ।"
-        )
+        # Future development recommendations
+        if poor_access > total_households * 0.3:  # If more than 30% have poor access
+            analysis_parts.append(
+                "भविष्यमा सार्वजनिक यातायात सेवाको विस्तार र नियमितता सुधारले यातायातमा पहुँचमा उल्लेखनीय सुधार ल्याउन सक्छ।"
+            )
 
         return " ".join(analysis_parts)
 
+    def calculate_ward_accessibility(self, ward_info):
+        """Calculate good accessibility percentage for a ward"""
+        excellent = (
+            ward_info["time_durations"].get("UNDER_15_MIN", {}).get("population", 0)
+        )
+        good = ward_info["time_durations"].get("UNDER_30_MIN", {}).get("population", 0)
+        good_access_ward = excellent + good
+        return (
+            (good_access_ward / ward_info["total_population"] * 100)
+            if ward_info["total_population"] > 0
+            else 0
+        )
+
+    def find_best_worst_wards(self, ward_data):
+        """Find wards with best and worst public transport accessibility"""
+        best_ward = None
+        worst_ward = None
+        best_accessibility = 0
+        worst_accessibility = 100
+
+        for ward_num, ward_info in ward_data.items():
+            accessibility_percentage = self.calculate_ward_accessibility(ward_info)
+
+            if accessibility_percentage > best_accessibility:
+                best_accessibility = accessibility_percentage
+                best_ward = ward_num
+
+            if accessibility_percentage < worst_accessibility:
+                worst_accessibility = accessibility_percentage
+                worst_ward = ward_num
+
+        return best_ward, worst_ward
+
     def generate_accessibility_assessment(self, good_access_percentage):
-        """Generate accessibility assessment based on industry standards"""
+        """Generate accessibility assessment text"""
         if good_access_percentage >= 80:
-            return f"कुल मिलाएर {format_nepali_percentage(good_access_percentage)} घरपरिवारको राम्रो पहुँच छ, जुन अन्तर्राष्ट्रिय मापदण्ड अनुसार उत्कृष्ट मानिन्छ।"
+            return "उत्कृष्ट पहुँच - अधिकांश घरपरिवारहरूको सार्वजनिक यातायातमा राम्रो पहुँच छ।"
         elif good_access_percentage >= 60:
-            return f"कुल मिलाएर {format_nepali_percentage(good_access_percentage)} घरपरिवारको राम्रो पहुँच छ, जुन सन्तोषजनक तर सुधार आवश्यक छ।"
+            return "राम्रो पहुँच - धेरैजसो घरपरिवारहरूको सार्वजनिक यातायातमा स्वीकार्य पहुँच छ।"
         elif good_access_percentage >= 40:
-            return f"कुल मिलाएर {format_nepali_percentage(good_access_percentage)} घरपरिवारको राम्रो पहुँच छ, जुन मध्यम तर महत्वपूर्ण सुधार आवश्यक छ।"
+            return "मध्यम पहुँच - सार्वजनिक यातायात सेवामा केही सुधारको आवश्यकता छ।"
         else:
-            return f"कुल मिलाएर केवल {format_nepali_percentage(good_access_percentage)} घरपरिवारको मात्र राम्रो पहुँच छ, जुन तत्काल सुधार आवश्यक छ।"
+            return "कमजोर पहुँच - सार्वजनिक यातायात सेवामा महत्वपूर्ण सुधारको आवश्यकता छ।"
 
     def find_ward_with_best_access(self, ward_data):
         """Find ward with best public transport access"""
         best_ward = None
-        best_score = -1
+        best_accessibility = 0
 
         for ward_num, ward_info in ward_data.items():
-            # Calculate good access score (under 30 minutes)
-            good_access = 0
-            good_access += (
-                ward_info["time_durations"].get("UNDER_15_MIN", {}).get("households", 0)
-            )
-            good_access += (
-                ward_info["time_durations"].get("UNDER_30_MIN", {}).get("households", 0)
-            )
-
-            if good_access > best_score:
-                best_score = good_access
-                best_ward = {
-                    "ward_number": ward_num,
-                    "good_access_households": good_access,
-                    "total_households": ward_info["total_households"],
-                }
+            accessibility_percentage = self.calculate_ward_accessibility(ward_info)
+            if accessibility_percentage > best_accessibility:
+                best_accessibility = accessibility_percentage
+                best_ward = ward_num
 
         return best_ward
 
     def find_ward_with_worst_access(self, ward_data):
         """Find ward with worst public transport access"""
         worst_ward = None
-        worst_score = float("inf")
+        worst_accessibility = 100
 
         for ward_num, ward_info in ward_data.items():
-            # Calculate poor access score (1 hour or more)
-            poor_access = (
-                ward_info["time_durations"]
-                .get("1_HOUR_OR_MORE", {})
-                .get("households", 0)
-            )
-
-            if poor_access < worst_score:
-                worst_score = poor_access
-                worst_ward = {
-                    "ward_number": ward_num,
-                    "poor_access_households": poor_access,
-                    "total_households": ward_info["total_households"],
-                }
+            accessibility_percentage = self.calculate_ward_accessibility(ward_info)
+            if accessibility_percentage < worst_accessibility:
+                worst_accessibility = accessibility_percentage
+                worst_ward = ward_num
 
         return worst_ward
 
     def generate_pie_chart(self, data, title="सार्वजनिक यातायातमा पहुँचको समय वितरण"):
-        """Generate pie chart for time duration distribution"""
-        if not data:
+        """Generate pie chart for public transport time distribution"""
+        # Handle both direct municipality_data and full data structure
+        if isinstance(data, dict) and "municipality_data" in data:
+            municipality_data = data["municipality_data"]
+        else:
+            # data is already the municipality_data
+            municipality_data = data
+
+        if not municipality_data:
             return None
 
         # Prepare data for chart in the format expected by SVGChartGenerator
         chart_data = {}
-        for time_code, time_info in data.items():
-            if time_info["households"] > 0:
+        for time_code, time_info in municipality_data.items():
+            if time_info["population"] > 0:
                 chart_data[time_code] = {
-                    "population": time_info["households"],
                     "name_nepali": time_info["name_nepali"],
+                    "population": time_info["population"],
+                    "percentage": time_info["percentage"],
                 }
 
         if not chart_data:
@@ -286,9 +328,9 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
 
         return self.chart_generator.generate_pie_chart_svg(
             demographic_data=chart_data,
-            include_title=False,
+            include_title=True,
             title_nepali=title,
-            title_english="",
+            title_english="Household Distribution by Time to Public Transport",
         )
 
 
@@ -301,7 +343,7 @@ class PublicTransportReportFormatter(BaseInfrastructureReportFormatter):
     def format_for_html(self):
         """Format data for HTML template rendering"""
         return {
-            "time_duration_data": self.data["category_data"],
+            "municipality_data": self.data["municipality_data"],
             "ward_data": self.data["ward_data"],
             "total_households": self.data["total_households"],
             "coherent_analysis": self.data["coherent_analysis"],
@@ -315,10 +357,10 @@ class PublicTransportReportFormatter(BaseInfrastructureReportFormatter):
             "title": self.data["section_title"],
             "summary": {
                 "total_households": self.data["total_households"],
-                "time_categories": len(self.data["category_data"]),
+                "time_categories": len(self.data["municipality_data"]),
                 "wards": len(self.data["ward_data"]),
             },
-            "time_duration_breakdown": self.data["category_data"],
+            "time_duration_breakdown": self.data["municipality_data"],
             "ward_breakdown": self.data["ward_data"],
             "analysis": self.data["coherent_analysis"],
         }

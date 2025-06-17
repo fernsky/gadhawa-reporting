@@ -10,6 +10,7 @@ from ..models import WardWiseSchoolDropout, SchoolDropoutCauseTypeChoice
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
+    to_nepali_digits,
 )
 
 
@@ -88,7 +89,7 @@ class SchoolDropoutProcessor(BaseSocialProcessor):
             if ward_children > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {ward_num}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_children,
                     "dropout_causes": {},
                 }

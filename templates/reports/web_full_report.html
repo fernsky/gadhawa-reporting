@@ -1,0 +1,94 @@
+{% extends 'reports/base.html' %}
+{% load nepali_filters %}
+
+{% block title %}लुङ्ग्री गाउँपालिका - पूर्ण प्रतिवेदन{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <!-- Navigation Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'reports:home' %}">मुख्य पृष्ठ</a></li>
+          <li class="breadcrumb-item active" aria-current="page">पूर्ण प्रतिवेदन</li>
+        </ol>
+      </nav>
+      
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h2 mb-0">लुङ्ग्री गाउँपालिका - पूर्ण प्रतिवेदन</h1>
+        <div class="btn-group">
+          <a href="{% url 'reports:pdf_full' %}" class="btn btn-primary">
+            <i class="fas fa-download me-1"></i>PDF डाउनलोड
+          </a>
+          <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+            <i class="fas fa-print me-1"></i>प्रिन्ट
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Content -->
+  <div class="row">
+    <div class="col-lg-3 col-xl-2">
+      <!-- Table of Contents Sidebar -->
+      <div class="sticky-top" style="top: 2rem;">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">विषयसूची</h6>
+          </div>
+          <div class="card-body p-2">
+            <nav class="nav flex-column">
+              <a class="nav-link py-1" href="#category-introduction">१. परिचय</a>
+              <a class="nav-link py-1" href="#category-demographics">३. जनसंख्याको अवस्था</a>
+              <a class="nav-link py-1" href="#category-infrastructure">७. पूर्वाधार र यातायात</a>
+              <!-- Add more sections as needed -->
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-9 col-xl-10">
+      <!-- Include the full PDF report content -->
+      {% include 'reports/pdf_full_report.html' %}
+    </div>
+  </div>
+</div>
+
+<!-- Print Styles -->
+<style media="print">
+  .btn-group, nav[aria-label="breadcrumb"], .sticky-top {
+    display: none !important;
+  }
+  
+  .col-lg-9.col-xl-10 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .container-fluid {
+    padding: 0 !important;
+  }
+</style>
+
+<!-- Smooth scrolling for navigation -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Smooth scrolling for navigation links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+});
+</script>
+{% endblock %}

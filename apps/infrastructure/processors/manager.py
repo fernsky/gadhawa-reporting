@@ -6,15 +6,17 @@ Coordinates all infrastructure processors and provides unified interface for PDF
 
 from .public_transport import PublicTransportProcessor
 from .market_center_time import MarketCenterTimeProcessor
+from .road_status import RoadStatusProcessor
 
 
 class InfrastructureManager:
     """Manager for all infrastructure processors"""
-    
+
     def __init__(self):
         self.processors = {
-            'public_transport': PublicTransportProcessor(),
-            'market_center_time': MarketCenterTimeProcessor(),
+            "public_transport": PublicTransportProcessor(),
+            "market_center_time": MarketCenterTimeProcessor(),
+            "road_status": RoadStatusProcessor(),
         }
 
     def get_processor(self, category):
@@ -53,8 +55,8 @@ class InfrastructureManager:
         titles = {}
         for category, processor in self.processors.items():
             titles[category] = {
-                'section_number': processor.get_section_number(),
-                'title': processor.get_section_title()
+                "section_number": processor.get_section_number(),
+                "title": processor.get_section_title(),
             }
         return titles
 

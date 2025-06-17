@@ -10,6 +10,7 @@ from ..models import WardWiseRoadStatus, RoadStatusChoice
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
+    to_nepali_digits,
 )
 
 
@@ -29,10 +30,6 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
             "EARTHEN": "#FF9800",  # Orange - Basic quality
             "NO_ROAD": "#F44336",  # Red - No access
         }
-
-    def get_chart_key(self):
-        """Get the key for storing charts in PDF context"""
-        return "road_status"
 
     def get_section_title(self):
         return "सडकको अवस्था अनुसार घरपरिवार विवरण"
@@ -86,7 +83,7 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
             if ward_households > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {ward_num}",
+                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_households,  # Using households
                     "road_statuses": {},
                 }
@@ -315,8 +312,27 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
 
     def process_for_pdf(self):
         """Process road status data for PDF generation including charts"""
-        # Use the base class method which handles chart generation and saving properly
-        return super().process_for_pdf()
+        # Get raw data
+        data = self.get_data()
+
+        # Generate analysis text
+        coherent_analysis = self.generate_analysis_text(data)
+
+        # Generate and save charts
+        charts = self.generate_and_save_charts(data)
+
+        # Calculate total households
+        total_households = data["total_households"]
+
+        return {
+            "section_number": self.get_section_number(),
+            "section_title": self.get_section_title(),
+            "municipality_data": data["municipality_data"],
+            "ward_data": data["ward_data"],
+            "total_households": total_households,
+            "coherent_analysis": coherent_analysis,
+            "pdf_charts": charts,
+        }
 
 
 class RoadStatusReportFormatter(BaseInfrastructureReportFormatter):

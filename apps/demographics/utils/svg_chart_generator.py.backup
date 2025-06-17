@@ -26,7 +26,40 @@ DEFAULT_COLORS = {
     "DEFAULT_11": "#ff9896",  # Light Red
     "DEFAULT_12": "#98df8a",  # Light Green
     "DEFAULT_13": "#aec7e8",  # Light Blue
-    "DEFAULT_14": "#ffbb78",  # Light Orange
+    "DEFAULT_14": "#ffbb78                # Try to run Inkscape command with better font handling
+                cmd = [
+                    "inkscape",
+                    str(svg_path),
+                    "--export-type=png",
+                    f"--export-filename={png_path}",
+                    "--export-dpi=150",  # High quality for PDF
+                    "--export-text-to-path",  # Convert text to paths to avoid font issues
+                ]
+
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+
+                if result.returncode == 0:
+                    print(f"✓ Chart generated: {png_path}")
+                    return True, str(png_path), str(svg_path)
+                else:
+                    print(f"Inkscape error: {result.stderr}")
+                    # Try alternative command without text-to-path conversion
+                    cmd_alt = [
+                        "inkscape",
+                        str(svg_path),
+                        "--export-type=png",
+                        f"--export-filename={png_path}",
+                        "--export-dpi=150",
+                    ]
+                    
+                    result_alt = subprocess.run(cmd_alt, capture_output=True, text=True, timeout=30)
+                    
+                    if result_alt.returncode == 0:
+                        print(f"✓ Chart generated (alternative method): {png_path}")
+                        return True, str(png_path), str(svg_path)
+                    else:
+                        print(f"Alternative Inkscape command also failed: {result_alt.stderr}")
+                        return False, None, str(svg_path)e
     "DEFAULT_15": "#c5b0d5",  # Light Purple
     "DEFAULT_16": "#c49c94",  # Light Brown
     "DEFAULT_17": "#f7b6d3",  # Light Pink
@@ -102,9 +135,6 @@ class SVGChartGenerator:
         self.use_english_fallback = False  # Default to showing Nepali text
         self.colors = colors or DEFAULT_COLORS  # Allow custom color palette
 
-        # Check if Noto Sans Devanagari is available (only once per initialization)
-        self.font_available = check_noto_sans_devanagari()
-
     def _create_svg(self, width, height):
         """Create basic SVG element"""
         return ET.Element(
@@ -132,7 +162,7 @@ class SVGChartGenerator:
         style_elem.text = """
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
         text {
-            font-family: 'Noto Sans+Devanagari', Arial, sans-serif;
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif;
         }
         """
 
@@ -865,15 +895,13 @@ class SVGChartGenerator:
 
             # Convert to PNG using Inkscape
             try:
-                # Try to run Inkscape command with better font handling
+                # Try to run Inkscape command
                 cmd = [
                     "inkscape",
                     str(svg_path),
                     "--export-type=png",
-                    """-actions="select-all;object-to-path;export-do;file-close" """,
                     f"--export-filename={png_path}",
-                    "--export-dpi=600",  # High quality for PDF
-                    "--export-text-to-path",  # Convert text to paths to avoid font issues
+                    "--export-dpi=300",  # High quality for PDF
                 ]
 
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -883,28 +911,7 @@ class SVGChartGenerator:
                     return True, str(png_path), str(svg_path)
                 else:
                     print(f"Inkscape error: {result.stderr}")
-                    # Try alternative command without text-to-path conversion
-                    cmd_alt = [
-                        "inkscape",
-                        str(svg_path),
-                        "--export-type=png",
-                        """-actions="select-all;object-to-path;export-do;file-close" """,
-                        f"--export-filename={png_path}",
-                        "--export-dpi=600",
-                    ]
-
-                    result_alt = subprocess.run(
-                        cmd_alt, capture_output=True, text=True, timeout=30
-                    )
-
-                    if result_alt.returncode == 0:
-                        print(f"✓ Chart generated (alternative method): {png_path}")
-                        return True, str(png_path), str(svg_path)
-                    else:
-                        print(
-                            f"Alternative Inkscape command also failed: {result_alt.stderr}"
-                        )
-                        return False, None, str(svg_path)
+                    return False, None, str(svg_path)
 
             except subprocess.TimeoutExpired:
                 print("Inkscape conversion timed out")
@@ -964,87 +971,3 @@ class SVGChartGenerator:
             }
 
         return charts_info
-
-    def test_font_rendering(self, output_dir="static/images"):
-        """
-        Create a test chart to verify that Devanagari fonts are rendering properly
-        """
-        test_data = {
-            "HINDU": {"population": 500, "name_nepali": "हिन्दू"},
-            "BUDDHIST": {"population": 300, "name_nepali": "बौद्ध"},
-            "KIRANT": {"population": 200, "name_nepali": "किरात"},
-            "CHRISTIAN": {"population": 100, "name_nepali": "क्रिश्चियन"},
-        }
-
-        try:
-            # Generate test chart
-            success, png_path, svg_path = self.generate_chart_image(
-                demographic_data=test_data,
-                output_name="font_test_chart",
-                static_dir=output_dir,
-                chart_type="pie",
-                include_title=True,
-                title_nepali="फन्ट परीक्षण चार्ट",
-                title_english="Font Test Chart",
-            )
-
-            if success:
-                print(f"✓ Font test chart created successfully: {png_path}")
-                print(
-                    "   Check the generated image to verify Devanagari text rendering"
-                )
-                return True, png_path, svg_path
-            else:
-                print("✗ Failed to create font test chart")
-                return False, None, svg_path
-
-        except Exception as e:
-            print(f"Error creating font test chart: {e}")
-            return False, None, None
-
-
-def check_noto_sans_devanagari():
-    """
-    Check if Noto Sans Devanagari font is available on the system
-    """
-    try:
-        # On macOS, check if the font exists in common font directories
-        import platform
-
-        if platform.system() == "Darwin":  # macOS
-            font_paths = [
-                "/System/Library/Fonts/",
-                "/Library/Fonts/",
-                "~/Library/Fonts/",
-                "/System/Library/Assets/com_apple_MobileAsset_Font6/",
-            ]
-            for font_path in font_paths:
-                expanded_path = os.path.expanduser(font_path)
-                if os.path.exists(expanded_path):
-                    for root, dirs, files in os.walk(expanded_path):
-                        for file in files:
-                            if "NotoSansDevanagari" in file or "Devanagari" in file:
-                                print(
-                                    f"Found Devanagari font: {os.path.join(root, file)}"
-                                )
-                                return True
-
-        # Try to use fc-list command if available (Linux/Unix systems)
-        result = subprocess.run(
-            ["fc-list", ":", "family"], capture_output=True, text=True, timeout=10
-        )
-        if result.returncode == 0:
-            fonts = result.stdout.lower()
-            if "noto sans devanagari" in fonts or "devanagari" in fonts:
-                print("✓ Noto Sans Devanagari font found via fc-list")
-                return True
-
-        print("⚠ Noto Sans Devanagari font not found on system")
-        print("   You may need to install it for proper Devanagari text rendering")
-        print("   On macOS: brew install font-noto-sans-devanagari")
-        print("   On Ubuntu/Debian: sudo apt install fonts-noto-devanagari")
-        return False
-
-    except Exception as e:
-        print(f"Could not check font availability: {e}")
-        return False
