@@ -230,9 +230,9 @@ class MarketCenterTimeProcessor(BaseInfrastructureProcessor):
 
             if best_ward and worst_ward and best_ward != worst_ward:
                 analysis_parts.append(
-                    f"वडागत विश्लेषणमा, वडा नं. {convert_to_nepali_number(best_ward)} मा सबैभन्दा राम्रो बजार पहुँच "
+                    f"वडागत विश्लेषणमा, वडा नं. {to_nepali_digits(best_ward)} मा सबैभन्दा राम्रो बजार पहुँच "
                     f"({format_nepali_percentage(best_accessibility)} घरपरिवारले ३० मिनेट भित्रमा पहुँच) छ "
-                    f"भने वडा नं. {convert_to_nepali_number(worst_ward)} मा केही सुधारको आवश्यकता "
+                    f"भने वडा नं. {to_nepali_digits(worst_ward)} मा केही सुधारको आवश्यकता "
                     f"({format_nepali_percentage(worst_accessibility)} घरपरिवारले मात्र ३० मिनेट भित्रमा पहुँच) देखिन्छ।"
                 )
 
