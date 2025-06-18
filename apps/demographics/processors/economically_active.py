@@ -242,9 +242,9 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
             lowest_ward = min(ward_data.items(), key=lambda x: x[1]["total_population"])
 
             analysis_parts.append(
-                f"वडाको आधारमा हेर्दा, वडा नं. {highest_ward[0]} मा सबैभन्दा बढी "
+                f"वडाको आधारमा हेर्दा, वडा नं. {format_nepali_number(highest_ward[0])} मा सबैभन्दा बढी "
                 f"{format_nepali_number(highest_ward[1]['total_population'])} जना आर्थिक रूपले सक्रिय जनसंख्या छ "
-                f"भने वडा नं. {lowest_ward[0]} मा सबैभन्दा कम "
+                f"भने वडा नं. {format_nepali_number(lowest_ward[0])} मा सबैभन्दा कम "
                 f"{format_nepali_number(lowest_ward[1]['total_population'])} जना छ।"
             )
 

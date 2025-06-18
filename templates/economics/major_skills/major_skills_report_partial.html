@@ -16,11 +16,15 @@
         <div class="chart-section">
             <h3 class="chart-title">चित्र ४.१.१.१: मुख्य सीप अनुसार दक्ष जनशक्ति वितरण</h3>
             <div class="pdf-chart-container">
+                {% load static %}
                 {% if pdf_charts.major_skills.pie_chart_png %}
-                {% if pdf_charts.major_skills.pie_chart_svg %}
+                    <img src="{% static pdf_charts.major_skills.pie_chart_png %}" 
+                         alt="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण" 
+                         class="pdf-chart-image">
+                {% elif pdf_charts.major_skills.pie_chart_svg %}
                     <div class="svg-chart">{{ pdf_charts.major_skills.pie_chart_svg|safe }}</div>
                 {% else %}
-                    <img src="/{{ pdf_charts.major_skills.pie_chart_png }}" 
+                    <img src="{% static 'images/charts/major_skills_pie_chart.png' %}" 
                          alt="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण" 
                          class="pdf-chart-image">
                 {% endif %}
@@ -33,8 +37,15 @@
         <div class="chart-section">
             <h3 class="chart-title">चित्र ४.१.१.२: वडागत दक्ष जनशक्ति वितरण</h3>
             <div class="pdf-chart-container">
+                {% load static %}
                 {% if pdf_charts.major_skills.bar_chart_png %}
-                    <img src="/{{ pdf_charts.major_skills.bar_chart_png }}" 
+                    <img src="{% static pdf_charts.major_skills.bar_chart_png %}" 
+                         alt="वडागत दक्ष जनशक्ति वितरण" 
+                         class="pdf-chart-image">
+                {% elif pdf_charts.major_skills.bar_chart_svg %}
+                    <div class="svg-chart">{{ pdf_charts.major_skills.bar_chart_svg|safe }}</div>
+                {% else %}
+                    <img src="{% static 'images/charts/major_skills_bar_chart.png' %}" 
                          alt="वडागत दक्ष जनशक्ति वितरण" 
                          class="pdf-chart-image">
                 {% endif %}
@@ -87,43 +98,6 @@
                     <td style="text-align: center;">समग्र विकास</td>
                 </tr>
             </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Economic Sector Categories Analysis Table -->
-    {% if skill_categories %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ४.१.१.२: आर्थिक क्षेत्र अनुसार दक्ष जनशक्ति वर्गीकरण</h3>
-        <table class="pdf-data-table sector-analysis-table">
-            <thead>
-                <tr>
-                    <th>आर्थिक क्षेत्र</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>आर्थिक प्रभाव</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for category_key, category_info in skill_categories.items %}
-                    <tr {% if forloop.counter0|divisibleby:2 %}style="background-color: #f0f9ff;"{% endif %}>
-                        <td style="font-weight: 600;">{{ category_info.name }}</td>
-                        <td style="text-align: right;">{{ category_info.population|nepali_number }}</td>
-                        <td style="text-align: right;">{{ category_info.percentage|nepali_percentage }}%</td>
-                        <td style="text-align: center;">
-                            <span class="economic-impact" style="padding: 2px 8px; border-radius: 4px; font-size: 8pt;
-                                {% if category_info.economic_impact == 'उच्च' %}background-color: #dcfce7; color: #166534;
-                                {% elif category_info.economic_impact == 'मध्यम-उच्च' %}background-color: #fef3c7; color: #92400e;
-                                {% elif category_info.economic_impact == 'मध्यम' %}background-color: #fed7aa; color: #9a3412;
-                                {% elif category_info.economic_impact == 'न्यून-मध्यम' %}background-color: #fecaca; color: #991b1b;
-                                {% elif category_info.economic_impact == 'न्यून' %}background-color: #f3f4f6; color: #6b7280;
-                                {% else %}background-color: #e5e7eb; color: #374151;{% endif %}">
-                                {{ category_info.economic_impact }}
-                            </span>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
         </table>
     </div>
     {% endif %}

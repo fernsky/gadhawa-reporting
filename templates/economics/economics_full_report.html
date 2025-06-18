@@ -1,0 +1,209 @@
+{% load nepali_filters %}
+
+<!-- Economics Full Report Partial for PDF -->
+<div class="economics-full-section">
+    
+    <!-- Economics Chapter Introduction -->
+    <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+            आर्थिक क्षेत्रको विकास कुनै पनि स्थानीय तहको समग्र विकासको मूल आधार हो । लुङ्ग्री गाउँपालिकाको आर्थिक अवस्थाको यो खण्डमा जनशक्तिको सीप, रेमिटेन्स प्रवाह र यसको उपयोग, र आर्थिक गतिविधिहरूको विस्तृत विश्लेषण प्रस्तुत गरिएको छ । स्थानीय आर्थिक विकासका लागि मानव संसाधनको दक्षता र वैदेशिक रोजगारीबाट प्राप्त आम्दानीको प्रभावकारी उपयोग महत्वपूर्ण कारक हुन् । यस अध्ययनले गाउँपालिकाको आर्थिक क्षमता, चुनौती र सम्भावनाहरूको समग्र मूल्याङ्कन गरेको छ ।
+        </div>
+    </div>
+
+    <!-- Major Skills Section -->
+    {% if all_economics_data.major_skills %}
+        {% include 'economics/major_skills/major_skills_report_partial.html' with municipality_data=all_economics_data.major_skills.data.municipality_data ward_data=all_economics_data.major_skills.data.ward_data total_population=all_economics_data.major_skills.total_population coherent_analysis=all_economics_data.major_skills.report_content pdf_charts=pdf_charts skill_categories=all_economics_data.major_skills.data.skill_categories top_skills=all_economics_data.major_skills.data.top_skills %}
+    {% endif %}
+
+    <!-- Remittance Expenses Section -->
+    {% if all_economics_data.remittance_expenses %}
+        {% include 'economics/remittance_expenses/remittance_expenses_report_partial.html' with municipality_data=all_economics_data.remittance_expenses.data.municipality_data ward_data=all_economics_data.remittance_expenses.data.ward_data total_households=all_economics_data.remittance_expenses.total_households coherent_analysis=all_economics_data.remittance_expenses.report_content pdf_charts=pdf_charts %}
+    {% endif %}
+
+    <!-- Economics Summary and Analysis Section -->
+    <div class="economics-summary-section" id="section-economics-summary">
+        <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+            ४.३ आर्थिक अवस्थाको समग्र विश्लेषण
+        </h2>
+        
+        <div class="content-section">
+            <div class="content-paragraph">
+                <p>लुङ्ग्री गाउँपालिकाको आर्थिक विश्लेषणले देखाउँछ कि स्थानीय तहमा विविध प्रकारका सीप भएका दक्ष जनशक्ति रहेको छ । यी सीपहरूको उचित उपयोग र विकासले स्थानीय अर्थतन्त्रमा महत्वपूर्ण योगदान पुर्‍याउन सक्छ । साथै, वैदेशिक रोजगारीबाट प्राप्त रेमिटेन्सको उपयोगले स्थानीय आर्थिक विकासमा सकारात्मक प्रभाव पारेको देखिन्छ ।</p>
+            </div>
+        </div>
+
+        <!-- Combined Economic Impact Analysis -->
+        {% if all_economics_data.major_skills and all_economics_data.remittance_expenses %}
+        <div class="table-section">
+            <h3 class="table-title">तालिका ४.३.१: आर्थिक क्षेत्रको समग्र प्रभाव विश्लेषण</h3>
+            <table class="pdf-data-table economics-summary-table">
+                <thead>
+                    <tr>
+                        <th>आर्थिक घटक</th>
+                        <th>मुख्य विशेषताहरू</th>
+                        <th>सकारात्मक प्रभाव</th>
+                        <th>चुनौतीहरू</th>
+                        <th>सिफारिसहरू</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #f0f8ff;">
+                        <td style="font-weight: bold; color: #1e40af;">दक्ष जनशक्ति</td>
+                        <td style="font-size: 9pt;">
+                            • विविध प्रकारका सीप<br>
+                            • शिक्षा क्षेत्रमा उच्च दक्षता<br>
+                            • कृषि र शिल्प सीप
+                        </td>
+                        <td style="font-size: 9pt; color: #166534;">
+                            • स्थानीय विकास निर्माण<br>
+                            • रोजगारी सिर्जना<br>
+                            • सेवा गुणस्तर सुधार
+                        </td>
+                        <td style="font-size: 9pt; color: #991b1b;">
+                            • सीप उपयोगमा कमी<br>
+                            • बजार पहुँचको अभाव<br>
+                            • प्रविधिको कमी
+                        </td>
+                        <td style="font-size: 9pt; color: #92400e;">
+                            • सीप विकास कार्यक्रम<br>
+                            • बजार सम्पर्क सुधार<br>
+                            • उद्यमशीलता प्रवर्द्धन
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f0fdf4;">
+                        <td style="font-weight: bold; color: #166534;">रेमिटेन्स प्रवाह</td>
+                        <td style="font-size: 9pt;">
+                            • शिक्षा र स्वास्थ्यमा लगानी<br>
+                            • घर निर्माण र सम्पत्ति<br>
+                            • बचत र व्यापारिक लगानी
+                        </td>
+                        <td style="font-size: 9pt; color: #166534;">
+                            • मानव पूँजी विकास<br>
+                            • जीवनयापन स्तर सुधार<br>
+                            • आर्थिक स्थिरता
+                        </td>
+                        <td style="font-size: 9pt; color: #991b1b;">
+                            • निर्भरताको बृद्धि<br>
+                            • उत्पादनशील क्षेत्रमा कम लगानी<br>
+                            • स्थानीय रोजगारी कमी
+                        </td>
+                        <td style="font-size: 9pt; color: #92400e;">
+                            • उत्पादनशील क्षेत्रमा लगानी<br>
+                            • सहकारी र बैंकिङ सेवा<br>
+                            • स्थानीय उद्यम प्रवर्द्धन
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Economic Development Priorities -->
+        <div class="content-section">
+            <h3 class="table-title">आर्थिक विकासका प्राथमिकताहरू</h3>
+            <div class="content-paragraph">
+                <p><strong>१. दक्ष जनशक्ति विकास:</strong> स्थानीय तहमा उपलब्ध सीपहरूको पहिचान र विकासमार्फत रोजगारी सिर्जना गर्नुपर्छ । विशेष गरी कृषि, शिक्षा, र शिल्प क्षेत्रमा उन्नत प्रविधि र बजार सम्पर्कको विकास आवश्यक छ ।</p>
+                
+                <p><strong>२. रेमिटेन्सको उत्पादनशील उपयोग:</strong> वैदेशिक रोजगारीबाट प्राप्त आम्दानीलाई उत्पादनशील क्षेत्रमा लगानी गर्न प्रोत्साहन गर्नुपर्छ । विशेष गरी कृषि व्यवसायीकरण, पर्यटन, र साना उद्योगमा लगानी प्रवर्द्धन गर्नुपर्छ ।</p>
+                
+                <p><strong>३. स्थानीय उद्यमशीलता प्रवर्द्धन:</strong> स्थानीय स्रोत साधनको उपयोग गरी उद्यमशीलता विकास गर्न वित्तीय पहुँच, सीप विकास, र बजार सम्पर्कमा सुधार गर्नुपर्छ ।</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Economics Full Report Styles */
+.economics-full-section {
+    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    line-height: 1.4;
+    color: #1f2937;
+}
+
+.economics-summary-section {
+    margin-top: 2em;
+    page-break-inside: avoid;
+}
+
+.economics-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 1em 0;
+}
+
+.economics-summary-table th,
+.economics-summary-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    vertical-align: top;
+}
+
+.economics-summary-table th {
+    background-color: #1e40af;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 9pt;
+}
+
+.content-paragraph {
+    text-align: justify;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+    text-indent: 1.5em;
+}
+
+.content-paragraph p {
+    margin: 0.8em 0;
+}
+
+.content-paragraph strong {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #1e40af;
+    margin: 1.5em 0 0.5em 0;
+    text-align: center;
+}
+
+.content-section {
+    margin: 1.5em 0;
+}
+
+.table-section {
+    margin: 2em 0;
+    page-break-inside: avoid;
+}
+
+/* Print optimization */
+@media print {
+    .economics-full-section {
+        page-break-inside: avoid;
+    }
+    
+    .economics-summary-table {
+        font-size: 8pt;
+        page-break-inside: avoid;
+    }
+    
+    .economics-summary-table th,
+    .economics-summary-table td {
+        padding: 4px 6px;
+    }
+    
+    .content-paragraph {
+        font-size: 10pt;
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

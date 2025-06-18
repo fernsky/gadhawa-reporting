@@ -4,13 +4,12 @@ Major Skills Economics Processor
 Handles major skills economics data processing, chart generation, and report formatting.
 """
 
-from django.db import models
 from .base import BaseEconomicsProcessor, BaseEconomicsReportFormatter
 from ..models import WardWiseMajorSkills, SkillTypeChoice
+from apps.demographics.utils.svg_chart_generator import DEFAULT_COLORS
 from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
-    to_nepali_digits,
 )
 
 
@@ -70,413 +69,300 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
         return "४.१.१"
 
     def get_data(self):
-        """Get ward wise major skills data"""
+        """Get major skills data - both municipality-wide and ward-wise"""
         # Municipality-wide summary
-        skill_data = {}
-        total_population = 0
+        municipality_data = {}
 
-        for skill_choice in SkillTypeChoice.choices:
-            skill_code = skill_choice[0]
-            skill_name = skill_choice[1]
+        # Initialize all skill types
+        skill_types = dict(SkillTypeChoice.choices)
 
-            skill_population = (
-                WardWiseMajorSkills.objects.filter(skill_type=skill_code).aggregate(
-                    total=models.Sum("population")
-                )["total"]
-                or 0
-            )
+        for skill_code, skill_name in skill_types.items():
+            municipality_data[skill_code] = {
+                "population": 0,
+                "percentage": 0.0,
+                "name_nepali": skill_name,
+            }
 
-            if skill_population > 0:  # Only include skills with population
-                skill_data[skill_code] = {
-                    "name_english": skill_code,
-                    "name_nepali": skill_name,
-                    "population": skill_population,
-                    "percentage": 0,  # Will be calculated below
-                }
-                total_population += skill_population
-
-        # Calculate percentages
-        for skill_code in skill_data:
-            if total_population > 0:
-                skill_data[skill_code]["percentage"] = (
-                    skill_data[skill_code]["population"] / total_population * 100
-                )
-
-        # Ward-wise data
+        # Ward-wise data for bar chart and detailed table
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7
-            ward_population = (
-                WardWiseMajorSkills.objects.filter(ward_number=ward_num).aggregate(
-                    total=models.Sum("population")
-                )["total"]
-                or 0
-            )
-
-            if ward_population > 0:
-                ward_data[ward_num] = {
-                    "ward_number": ward_num,
-                    "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
-                    "total_population": ward_population,
-                    "skill_types": {},
+        for ward_num in range(1, 8):  # Wards 1-7 based on sample data
+            ward_data[ward_num] = {
+                "ward_name": f"वडा नं. {ward_num}",
+                "demographics": {},
+            }
+            # Initialize skills for each ward
+            for skill_code, skill_name in skill_types.items():
+                ward_data[ward_num]["demographics"][skill_code] = {
+                    "population": 0,
+                    "percentage": 0.0,
+                    "name_nepali": skill_name,
                 }
 
-                # Skill type breakdown for this ward
-                for skill_choice in SkillTypeChoice.choices:
-                    skill_code = skill_choice[0]
-                    skill_name = skill_choice[1]
+        # Get actual data from database
+        total_population = 0
+        for skill_obj in WardWiseMajorSkills.objects.all():
+            skill = skill_obj.skill_type
+            ward_num = skill_obj.ward_number
+            population = skill_obj.population
 
-                    skill_population_ward = (
-                        WardWiseMajorSkills.objects.filter(
-                            ward_number=ward_num, skill_type=skill_code
-                        ).aggregate(total=models.Sum("population"))["total"]
-                        or 0
-                    )
+            # Add to municipality-wide totals
+            if skill in municipality_data:
+                municipality_data[skill]["population"] += population
+                total_population += population
 
-                    if skill_population_ward > 0:
-                        ward_data[ward_num]["skill_types"][skill_code] = {
-                            "name_nepali": skill_name,
-                            "population": skill_population_ward,
-                            "percentage": (
-                                (skill_population_ward / ward_population * 100)
-                                if ward_population > 0
-                                else 0
-                            ),
-                        }
+            # Add to ward-wise data
+            if ward_num in ward_data and skill in ward_data[ward_num]["demographics"]:
+                ward_data[ward_num]["demographics"][skill]["population"] += population
 
-        # Prepare top skills list
-        top_skills = []
-        for skill_code, skill_info in skill_data.items():
-            top_skills.append(
-                {
-                    "skill_code": skill_code,
-                    "skill_name": skill_info["name_nepali"],
-                    "population": skill_info["population"],
-                    "percentage": skill_info["percentage"],
-                }
+        # Calculate percentages for municipality-wide data
+        if total_population > 0:
+            for skill, data in municipality_data.items():
+                data["percentage"] = (data["population"] / total_population) * 100
+
+        # Calculate ward totals and percentages
+        for ward_num, ward_info in ward_data.items():
+            ward_total = sum(
+                demo["population"] for demo in ward_info["demographics"].values()
             )
+            ward_info["total_population"] = ward_total
 
-        # Sort by population (descending)
-        top_skills.sort(key=lambda x: x["population"], reverse=True)
-
-        # Categorize skills by economic sector
-        skill_categories = self._categorize_skills_by_sector(
-            skill_data, total_population
-        )
+            # Calculate percentages within each ward
+            if ward_total > 0:
+                for skill, demo in ward_info["demographics"].items():
+                    demo["percentage"] = (demo["population"] / ward_total) * 100
 
         return {
-            "municipality_data": skill_data,
+            "municipality_data": municipality_data,
             "ward_data": ward_data,
             "total_population": total_population,
-            "top_skills": top_skills,
-            "skill_categories": skill_categories,
         }
 
-    def _categorize_skills_by_sector(self, skill_data, total_population):
-        """Categorize skills into economic sectors"""
-        categories = {
-            "professional_technical": {
-                "name": "व्यावसायिक र प्राविधिक",
-                "skills": [
-                    "TEACHING_RELATED",
-                    "ENGINEERING_DESIGN_RELATED",
-                    "COMPUTER_SCIENCE_RELATED",
-                    "HUMAN_HEALTH_RELATED",
-                    "ANIMAL_HEALTH_RELATED",
-                    "LAND_SURVEY_RELATED",
-                ],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "उच्च",
-            },
-            "skilled_trades": {
-                "name": "दक्ष शिल्पकारी",
-                "skills": [
-                    "CARPENTERY_RELATED",
-                    "PLUMBING",
-                    "ELECTRICITY_INSTALLMENT_RELATED",
-                    "MECHANICS_RELATED",
-                    "FURNITURE_RELATED",
-                    "STONEWORK_WOODWORK",
-                ],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "मध्यम-उच्च",
-            },
-            "agriculture_primary": {
-                "name": "कृषि र प्राथमिक",
-                "skills": ["AGRICULTURE_RELATED"],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "मध्यम",
-            },
-            "service_industry": {
-                "name": "सेवा उद्योग",
-                "skills": [
-                    "DRIVING_RELATED",
-                    "HOTEL_RESTAURANT_RELATED",
-                    "PHOTOGRAPHY_RELATED",
-                    "BEUATICIAN_RELATED",
-                ],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "मध्यम",
-            },
-            "creative_cultural": {
-                "name": "सिर्जनशील र सांस्कृतिक",
-                "skills": [
-                    "MUSIC_DRAMA_RELATED",
-                    "LITERARY_CREATION_RELATED",
-                    "HANDICRAFT_RELATED",
-                ],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "न्यून-मध्यम",
-            },
-            "personal_services": {
-                "name": "व्यक्तिगत सेवा",
-                "skills": [
-                    "SEWING_RELATED",
-                    "JWELLERY_MAKING_RELATED",
-                    "SELF_PROTECTION_RELATED",
-                ],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "न्यून",
-            },
-            "others": {
-                "name": "अन्य र अपरिभाषित",
-                "skills": ["OTHER", "NONE"],
-                "population": 0,
-                "percentage": 0,
-                "economic_impact": "अनुसन्धान आवश्यक",
-            },
-        }
-
-        # Calculate population for each category
-        for category_key, category_info in categories.items():
-            for skill_code in category_info["skills"]:
-                if skill_code in skill_data:
-                    category_info["population"] += skill_data[skill_code]["population"]
-
-            # Calculate percentage
-            if total_population > 0:
-                category_info["percentage"] = (
-                    category_info["population"] / total_population
-                ) * 100
-
-        return categories
-
-    def generate_analysis_text(self, data):
-        """Generate comprehensive analysis text for major skills"""
-        if not data or data["total_population"] == 0:
-            return "मुख्य सीपको तथ्याङ्क उपलब्ध छैन।"
-
-        total_population = data["total_population"]
-        municipality_data = data["municipality_data"]
-        ward_data = data["ward_data"]
-        skill_categories = data["skill_categories"]
-
-        analysis_parts = []
-
-        # Overall summary
-        analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_population)} जना दक्ष जनशक्तिको विविध सीपको विश्लेषण गर्दा विभिन्न क्षेत्रहरूमा विशेषज्ञता देखिन्छ।"
+    def generate_report_content(self, data):
+        """Generate major skills-specific report content"""
+        formatter = self.MajorSkillsReportFormatter()
+        return formatter.generate_formal_report(
+            data["municipality_data"], data["ward_data"], data["total_population"]
         )
 
-        # Dominant skill analysis
-        if municipality_data:
-            # Find the most common skill
-            dominant_skill = max(
-                municipality_data.items(), key=lambda x: x[1]["population"]
-            )
-            analysis_parts.append(
-                f"सीपको आधारमा विश्लेषण गर्दा, {dominant_skill[1]['name_nepali']} सबैभन्दा बढी "
-                f"{format_nepali_number(dominant_skill[1]['population'])} जना "
-                f"({format_nepali_percentage(dominant_skill[1]['percentage'])}) मा देखिन्छ।"
-            )
+    def get_chart_key(self):
+        """Get the key for storing charts in PDF context"""
+        return "major_skills"
 
-            # Professional and technical skills analysis
-            professional_skills = [
-                "TEACHING_RELATED",
-                "ENGINEERING_DESIGN_RELATED",
-                "COMPUTER_SCIENCE_RELATED",
-                "HUMAN_HEALTH_RELATED",
-                "ANIMAL_HEALTH_RELATED",
-            ]
-            professional_population = sum(
-                municipality_data.get(skill, {}).get("population", 0)
-                for skill in professional_skills
+    def generate_chart_svg(self, data, chart_type="pie"):
+        """Generate major skills chart SVG using SVGChartGenerator"""
+        if chart_type == "pie":
+            return self.chart_generator.generate_pie_chart_svg(
+                data["municipality_data"],
+                include_title=False,
+                title_nepali="मुख्य सीपका आधारमा वितरण",
+                title_english="Distribution by Major Skills",
             )
-            professional_percentage = (
-                (professional_population / total_population * 100)
-                if total_population > 0
-                else 0
+        elif chart_type == "bar":
+            return self.chart_generator.generate_bar_chart_svg(
+                data["ward_data"],
+                include_title=False,
+                title_nepali="वडा अनुसार मुख्य सीपका आधारमा वितरण",
+                title_english="Major Skills Distribution by Ward",
             )
+        return None
 
-            if professional_percentage > 0:
-                analysis_parts.append(
-                    f"व्यावसायिक र प्राविधिक सीप क्षेत्रमा {format_nepali_number(professional_population)} जना "
-                    f"({format_nepali_percentage(professional_percentage)}) शिक्षण, इन्जिनियरिङ, कम्प्युटर, स्वास्थ्य "
-                    f"जस्ता उच्च गुणस्तरका सीपहरूमा दक्ष छन्। यसले ज्ञानमा आधारित अर्थतन्त्रको विकासमा योगदान पुर्‍याउँछ।"
+    def generate_and_save_charts(self, data):
+        """Generate and save both pie and bar charts for major skills data"""
+        charts_info = {}
+
+        try:
+            # Generate pie chart for municipality-wide data
+            pie_svg = self.generate_chart_svg(data, chart_type="pie")
+            if pie_svg:
+                pie_path = self.static_charts_dir / "major_skills_pie_chart.svg"
+                with open(pie_path, "w", encoding="utf-8") as f:
+                    f.write(pie_svg)
+                charts_info["pie_chart_svg"] = (
+                    f"images/charts/major_skills_pie_chart.svg"
                 )
 
-            # Skilled trades analysis
-            trades_skills = [
-                "CARPENTERY_RELATED",
-                "PLUMBING",
-                "ELECTRICITY_INSTALLMENT_RELATED",
-                "MECHANICS_RELATED",
-                "FURNITURE_RELATED",
-            ]
-            trades_population = sum(
-                municipality_data.get(skill, {}).get("population", 0)
-                for skill in trades_skills
-            )
-            trades_percentage = (
-                (trades_population / total_population * 100)
-                if total_population > 0
-                else 0
-            )
+                # Try to convert to PNG using subprocess
+                try:
+                    png_path = self.static_charts_dir / "major_skills_pie_chart.png"
+                    # PNG conversion would need additional implementation
+                    charts_info["pie_chart_png"] = (
+                        f"images/charts/major_skills_pie_chart.png"
+                    )
+                except:
+                    pass
 
-            if trades_percentage > 0:
-                analysis_parts.append(
-                    f"दक्ष शिल्पकारी क्षेत्रमा {format_nepali_number(trades_population)} जना "
-                    f"({format_nepali_percentage(trades_percentage)}) सिकर्मी, प्लम्बिंग, बिजुली, मेकानिक्स "
-                    f"जस्ता निर्माण र मर्मत सम्बन्धी काममा दक्ष छन्। यसले स्थानीय पूर्वाधार विकासमा सहयोग पुर्‍याउँछ।"
+            # Generate bar chart for ward-wise data
+            bar_svg = self.generate_chart_svg(data, chart_type="bar")
+            if bar_svg:
+                bar_path = self.static_charts_dir / "major_skills_bar_chart.svg"
+                with open(bar_path, "w", encoding="utf-8") as f:
+                    f.write(bar_svg)
+                charts_info["bar_chart_svg"] = (
+                    f"images/charts/major_skills_bar_chart.svg"
                 )
 
-            # Agriculture related skills
-            if "AGRICULTURE_RELATED" in municipality_data:
-                agri_population = municipality_data["AGRICULTURE_RELATED"]["population"]
-                agri_percentage = municipality_data["AGRICULTURE_RELATED"]["percentage"]
-                analysis_parts.append(
-                    f"कृषि सम्बन्धी सीपमा {format_nepali_number(agri_population)} जना "
-                    f"({format_nepali_percentage(agri_percentage)}) दक्ष छन्। यसले खाद्य सुरक्षा र "
-                    f"कृषि उत्पादनमा गुणात्मक सुधारको संभावना देखाउँछ।"
+                # Try to convert to PNG using subprocess
+                try:
+                    png_path = self.static_charts_dir / "major_skills_bar_chart.png"
+                    # PNG conversion would need additional implementation
+                    charts_info["bar_chart_png"] = (
+                        f"images/charts/major_skills_bar_chart.png"
+                    )
+                except:
+                    pass
+
+        except Exception as e:
+            print(f"Error generating major skills charts: {e}")
+
+        return charts_info
+
+    class MajorSkillsReportFormatter(BaseEconomicsReportFormatter):
+        """Major skills-specific report formatter"""
+
+        def generate_formal_report(self, skills_data, ward_data, total_population):
+            """Generate major skills formal report content"""
+
+            # Find major skills
+            major_skills = []
+            for skill_type, data in skills_data.items():
+                if data["population"] > 0:
+                    major_skills.append(
+                        (data["name_nepali"], data["population"], data["percentage"])
+                    )
+
+            major_skills.sort(key=lambda x: x[1], reverse=True)
+
+            # Build comprehensive analysis
+            content = []
+
+            # Introduction
+            nepali_total = format_nepali_number(total_population)
+            content.append(
+                f"""लुङ्ग्री गाउँपालिकामा कुल {nepali_total} जनसंख्यासँग विभिन्न सीप र कौशलताहरू छन् । मुख्य सीपका आधारमा जनसंख्याको वितरण गर्दा गाउँपालिकाको मानव संसाधनको गुणस्तर र आर्थिक क्षमताको अवस्था देखिन्छ ।"""
+            )
+
+            # Top skills analysis
+            if len(major_skills) >= 3:
+                top_three = major_skills[:3]
+                first_skill = top_three[0]
+                second_skill = top_three[1]
+                third_skill = top_three[2]
+
+                first_pop = format_nepali_number(first_skill[1])
+                first_pct = format_nepali_percentage(first_skill[2])
+                second_pop = format_nepali_number(second_skill[1])
+                second_pct = format_nepali_percentage(second_skill[2])
+                third_pop = format_nepali_number(third_skill[1])
+                third_pct = format_nepali_percentage(third_skill[2])
+
+                content.append(
+                    f"""सबैभन्दा बढी {first_pop} जनसंख्या अर्थात् {first_pct} प्रतिशत {first_skill[0]} सीप भएका छन् भने दोस्रोमा {second_pop} जनसंख्या अर्थात् {second_pct} प्रतिशत {second_skill[0]} र तेस्रोमा {third_pop} जनसंख्या अर्थात् {third_pct} प्रतिशत {third_skill[0]} सीप भएका छन् ।"""
+                )
+
+            # Technical and professional skills
+            technical_keywords = ["शिक्षा", "इन्जिनियरिङ", "कम्प्युटर", "स्वास्थ्य"]
+            technical_skills = []
+            for skill in major_skills:
+                if any(keyword in skill[0] for keyword in technical_keywords):
+                    technical_skills.append(skill)
+
+            if technical_skills:
+                technical_total = sum(skill[1] for skill in technical_skills)
+                technical_pct = (
+                    (technical_total / total_population * 100)
+                    if total_population > 0
+                    else 0
+                )
+                content.append(
+                    f"""प्राविधिक र व्यावसायिक सीपमा {format_nepali_number(technical_total)} जनसंख्या ({format_nepali_percentage(technical_pct)} प्रतिशत) संलग्न छन् जसले गाउँपालिकामा उच्च गुणस्तरको मानव संसाधनको उपस्थिति देखाउँछ ।"""
+                )
+
+            # Skilled crafts and trades
+            craft_keywords = ["काष्ठकला", "प्लम्बिङ", "बिजुली", "मेकानिक"]
+            craft_skills = []
+            for skill in major_skills:
+                if any(keyword in skill[0] for keyword in craft_keywords):
+                    craft_skills.append(skill)
+
+            if craft_skills:
+                craft_total = sum(skill[1] for skill in craft_skills)
+                craft_pct = (
+                    (craft_total / total_population * 100)
+                    if total_population > 0
+                    else 0
+                )
+                content.append(
+                    f"""दक्ष शिल्पकारी र हस्तकलामा {format_nepali_number(craft_total)} जनसंख्या ({format_nepali_percentage(craft_pct)} प्रतिशत) संलग्न छन् जसले स्थानीय उत्पादन र निर्माण क्षेत्रमा योगदान पुर्याइरहेको छ ।"""
+                )
+
+            # Agricultural skills
+            agriculture_skills = next(
+                (skill for skill in major_skills if "कृषि" in skill[0]), None
+            )
+            if agriculture_skills:
+                agri_pop = format_nepali_number(agriculture_skills[1])
+                agri_pct = format_nepali_percentage(agriculture_skills[2])
+                content.append(
+                    f"""कृषि सम्बन्धी सीपमा {agri_pop} जनसंख्या ({agri_pct} प्रतिशत) संलग्न छन् जसले गाउँपालिकाको मुख्य आर्थिक आधार कृषिको विकासमा महत्वपूर्ण भूमिका खेलिरहेको छ ।"""
                 )
 
             # Service sector skills
-            service_skills = [
-                "DRIVING_RELATED",
-                "HOTEL_RESTAURANT_RELATED",
-                "PHOTOGRAPHY_RELATED",
-            ]
-            service_population = sum(
-                municipality_data.get(skill, {}).get("population", 0)
-                for skill in service_skills
-            )
-            service_percentage = (
-                (service_population / total_population * 100)
-                if total_population > 0
-                else 0
-            )
+            service_keywords = ["ड्राइभिङ", "होटल", "फोटोग्राफी"]
+            service_skills = []
+            for skill in major_skills:
+                if any(keyword in skill[0] for keyword in service_keywords):
+                    service_skills.append(skill)
 
-            if service_percentage > 0:
-                analysis_parts.append(
-                    f"सेवा उद्योग क्षेत्रमा {format_nepali_number(service_population)} जना "
-                    f"({format_nepali_percentage(service_percentage)}) चालक, होटल, फोटोग्राफी "
-                    f"जस्ता सेवामुखी व्यापारमा सक्षम छन्। यसले पर्यटन र सेवा क्षेत्रको विकासमा योगदान पुर्‍याउँछ।"
+            if service_skills:
+                service_total = sum(skill[1] for skill in service_skills)
+                service_pct = (
+                    (service_total / total_population * 100)
+                    if total_population > 0
+                    else 0
+                )
+                content.append(
+                    f"""सेवा उद्योगमा {format_nepali_number(service_total)} जनसंख्या ({format_nepali_percentage(service_pct)} प्रतिशत) संलग्न छन् जसले पर्यटन र सेवा क्षेत्रको विकासमा योगदान पुर्याइरहेको छ ।"""
                 )
 
             # Creative and cultural skills
-            creative_skills = [
-                "MUSIC_DRAMA_RELATED",
-                "HANDICRAFT_RELATED",
-                "SEWING_RELATED",
-            ]
-            creative_population = sum(
-                municipality_data.get(skill, {}).get("population", 0)
-                for skill in creative_skills
+            creative_skills = next(
+                (
+                    skill
+                    for skill in major_skills
+                    if "संगीत" in skill[0]
+                    or "साहित्य" in skill[0]
+                    or "हस्तशिल्प" in skill[0]
+                ),
+                None,
             )
-            creative_percentage = (
-                (creative_population / total_population * 100)
-                if total_population > 0
-                else 0
-            )
-
-            if creative_percentage > 0:
-                analysis_parts.append(
-                    f"सिर्जनशील र सांस्कृतिक सीपमा {format_nepali_number(creative_population)} जना "
-                    f"({format_nepali_percentage(creative_percentage)}) संगीत, हस्तकला, सिलाई "
-                    f"जस्ता कलात्मक कार्यमा निपुण छन्। यसले सांस्कृतिक पर्यटन र स्थानीय उत्पादनमा योगदान पुर्‍याउँछ।"
+            if creative_skills:
+                creative_pop = format_nepali_number(creative_skills[1])
+                creative_pct = format_nepali_percentage(creative_skills[2])
+                content.append(
+                    f"""सिर्जनशील र सांस्कृतिक सीपमा {creative_pop} जनसंख्या ({creative_pct} प्रतिशत) संलग्न छन् जसले सांस्कृतिक संरक्षण र सिर्जनशील अर्थतन्त्रको विकासमा योगदान पुर्याइरहेको छ ।"""
                 )
 
-        # Ward-wise comparative analysis
-        if ward_data and len(ward_data) > 1:
-            # Find wards with highest and lowest skilled population
-            ward_skill_counts = {}
-            for ward_num, ward_info in ward_data.items():
-                ward_skill_counts[ward_num] = ward_info["total_population"]
-
-            highest_ward = max(ward_skill_counts.items(), key=lambda x: x[1])
-            lowest_ward = min(ward_skill_counts.items(), key=lambda x: x[1])
-
-            if highest_ward[0] != lowest_ward[0]:
-                analysis_parts.append(
-                    f"वडागत विश्लेषणमा, वडा नं. {highest_ward[0]} मा सबैभन्दा बढी "
-                    f"{format_nepali_number(highest_ward[1])} दक्ष जनशक्ति छ "
-                    f"भने वडा नं. {lowest_ward[0]} मा सबैभन्दा कम "
-                    f"{format_nepali_number(lowest_ward[1])} दक्ष जनशक्ति छ।"
-                )
-
-            # Skill diversity analysis
-            ward_diversity = {}
-            for ward_num, ward_info in ward_data.items():
-                ward_diversity[ward_num] = len(ward_info["skill_types"])
-
-            most_diverse_ward = max(ward_diversity.items(), key=lambda x: x[1])
-            analysis_parts.append(
-                f"सीप विविधताको दृष्टिकोणले हेर्दा, वडा नं. {most_diverse_ward[0]} मा सबैभन्दा बढी "
-                f"{format_nepali_number(most_diverse_ward[1])} प्रकारका सीपहरू देखिन्छन्।"
+            # Economic development potential
+            content.append(
+                """मुख्य सीपको यो विविधताले गाउँपालिकामा बहुआयामिक आर्थिक विकासको सम्भावना देखाउँछ । प्राविधिक सीप, दक्ष शिल्पकारी र सेवा उद्योगको संयोजनले संतुलित आर्थिक संरचना निर्माण गर्न सहयोग पुर्याएको छ ।"""
             )
 
-        # Economic impact analysis
-        analysis_parts.append(
-            "दक्ष जनशक्तिको उपस्थितिले स्थानीय अर्थतन्त्रमा सकारात्मक प्रभाव पारेको छ। "
-            "विविध सीपहरूले रोजगारी सिर्जना, उत्पादकत्व वृद्धि र आय आर्जनमा योगदान पुर्‍याएको छ।"
-        )
-
-        # Gender implications
-        analysis_parts.append(
-            "सिलाई, सौन्दर्य, हस्तकला जस्ता सीपहरूले महिला सशक्तिकरणमा विशेष योगदान पुर्‍याएको छ। "
-            "यसले लैङ्गिक समानता र आर्थिक स्वावलम्बनमा सहयोग पुर्‍याएको छ।"
-        )
-
-        # Employment and entrepreneurship
-        analysis_parts.append(
-            "दक्ष जनशक्तिले स्वरोजगार र साना उद्यमहरूको विकासमा महत्वपूर्ण भूमिका खेलेको छ। "
-            "यसले बेरोजगारी न्यूनीकरण र आर्थिक गतिविधि बृद्धिमा योगदान पुर्‍याएको छ।"
-        )
-
-        # Technology and modernization
-        if "COMPUTER_SCIENCE_RELATED" in municipality_data:
-            analysis_parts.append(
-                "कम्प्युटर र सूचना प्रविधि सम्बन्धी सीपले डिजिटल साक्षरता र आधुनिकीकरणमा योगदान पुर्‍याएको छ। "
-                "यसले ई-गभर्नेन्स र डिजिटल अर्थतन्त्रको विकासमा सहयोग पुर्‍याउँछ।"
+            # Skills development recommendations
+            content.append(
+                """भविष्यमा सीप विकास कार्यक्रमहरू मार्फत युवाहरूलाई आधुनिक प्रविधि र बजार माग अनुकूलका सीपहरू सिकाएर रोजगारीको अवसर बृद्धि गर्न सकिन्छ । विशेष गरी डिजिटल सीप, उद्यमशीलता र नवाचार क्षेत्रमा जोड दिनुपर्छ ।"""
             )
 
-        # Future development recommendations
-        analysis_parts.append(
-            "भविष्यमा सीप विकास कार्यक्रमहरू, व्यावसायिक तालिम र नवाचार केन्द्रहरूको स्थापना गरी "
-            "दक्ष जनशक्ति उत्पादनमा वृद्धि गर्नुपर्छ।"
-        )
+            # Human resource utilization
+            content.append(
+                """वडागत रूपमा सीपको वितरणमा भिन्नता रहेको देखिन्छ । यो विविधताले गाउँपालिकामा मानव संसाधनको संतुलित उपयोगमा योगदान पुर्याएको छ र स्थानीय आर्थिक गतिविधिलाई गतिशील बनाएको छ ।"""
+            )
 
-        # Market linkage importance
-        analysis_parts.append(
-            "दक्ष जनशक्तिको उत्पादन र सेवालाई बजारसँग जोड्न उद्यमशीलता विकास, वित्तीय पहुँच र "
-            "मार्केटिङ सहयोग आवश्यक छ।"
-        )
+            # Future opportunities
+            content.append(
+                """स्थानीय सीप र ज्ञानको आधारमा साना उद्योग, कुटीर उद्योग र सामुदायिक उद्यमहरू स्थापना गरी आत्मनिर्भर अर्थतन्त्रको विकास गर्न सकिने सम्भावना छ । सहकारी संस्थाहरूको माध्यमबाट सीपमूलक व्यवसाय प्रवर्द्धन गर्नुपर्छ ।"""
+            )
 
-        return " ".join(analysis_parts)
-
-    def generate_pie_chart(self, data, title="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण"):
-        """Generate pie chart for major skills data"""
-        return self.chart_generator.generate_pie_chart_svg(
-            data,
-            include_title=False,
-            title_nepali=title,
-            title_english="Skilled Workforce Distribution by Major Skills",
-        )
+            return " ".join(content)
 
     def process_for_pdf(self):
         """Process major skills data for PDF generation including charts"""
@@ -484,7 +370,7 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
         data = self.get_data()
 
         # Generate analysis text
-        coherent_analysis = self.generate_analysis_text(data)
+        coherent_analysis = self.generate_report_content(data)
 
         # Generate and save charts
         charts = self.generate_and_save_charts(data)
@@ -493,48 +379,10 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
         total_count = data.get("total_population", 0)
 
         return {
-            "municipality_data": data.get("municipality_data", {}),
-            "ward_data": data.get("ward_data", {}),
+            "data": data,
+            "report_content": coherent_analysis,
+            "charts": charts,
             "total_population": total_count,
-            "top_skills": data.get("top_skills", []),
-            "skill_categories": data.get("skill_categories", {}),
-            "coherent_analysis": coherent_analysis,
-            "pdf_charts": {"major_skills": charts},
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
-        }
-
-
-class MajorSkillsReportFormatter(BaseEconomicsReportFormatter):
-    """Report formatter for major skills economics data"""
-
-    def __init__(self, processor_data):
-        super().__init__(processor_data)
-
-    def format_for_html(self):
-        """Format data for HTML template rendering"""
-        return {
-            "municipality_data": self.data["municipality_data"],
-            "ward_data": self.data["ward_data"],
-            "total_population": self.data["total_population"],
-            "top_skills": self.data["top_skills"],
-            "skill_categories": self.data["skill_categories"],
-            "coherent_analysis": self.data["coherent_analysis"],
-            "pdf_charts": self.data["pdf_charts"],
-        }
-
-    def format_for_api(self):
-        """Format data for API response"""
-        return {
-            "section": self.data["section_number"],
-            "title": self.data["section_title"],
-            "summary": {
-                "total_population": self.data["total_population"],
-                "skill_types": len(self.data["municipality_data"]),
-                "wards": len(self.data["ward_data"]),
-            },
-            "skills_breakdown": self.data["municipality_data"],
-            "ward_breakdown": self.data["ward_data"],
-            "skill_categories": self.data["skill_categories"],
-            "analysis": self.data["coherent_analysis"],
         }

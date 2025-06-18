@@ -1,7 +1,7 @@
 """
 Economics Manager
 
-Centralized manager for all economics-related data processors in Lungri Rural Municipality.
+Coordinates all economics processors and provides unified interface for PDF generation.
 """
 
 from .remittance_expenses import RemittanceExpensesProcessor
@@ -12,56 +12,68 @@ class EconomicsManager:
     """Manager for all economics processors"""
 
     def __init__(self):
-        # Initialize all processors
-        self.remittance_expenses_processor = RemittanceExpensesProcessor()
-        self.major_skills_processor = MajorSkillsProcessor()
-
-        # Registry of all processors
         self.processors = {
-            "remittance_expenses": self.remittance_expenses_processor,
-            "major_skills": self.major_skills_processor,
+            "remittance_expenses": RemittanceExpensesProcessor(),
+            "major_skills": MajorSkillsProcessor(),
         }
 
-    def generate_all_charts(self):
-        """Generate all charts for all economics processors"""
-        for processor_name, processor in self.processors.items():
-            try:
-                data = processor.get_data()
-                processor.generate_and_save_charts(data)
-                print(f"Generated charts for {processor_name}")
-            except Exception as e:
-                print(f"Error generating charts for {processor_name}: {e}")
+    def get_processor(self, category):
+        """Get processor for specific category"""
+        return self.processors.get(category)
 
     def process_all_for_pdf(self):
-        """Process all economics data for PDF generation"""
-        pdf_data = {}
+        """Process all economics categories for PDF generation with charts"""
+        results = {}
+        for category, processor in self.processors.items():
+            results[category] = processor.process_for_pdf()
+        return results
 
-        for processor_name, processor in self.processors.items():
-            try:
-                pdf_data[processor_name] = processor.process_for_pdf()
-                print(f"Processed {processor_name} for PDF")
-            except Exception as e:
-                print(f"Error processing {processor_name} for PDF: {e}")
-                pdf_data[processor_name] = {}
+    def process_category_for_pdf(self, category):
+        """Process specific category for PDF with charts"""
+        processor = self.get_processor(category)
+        if processor:
+            return processor.process_for_pdf()
+        return None
 
-        return pdf_data
+    def generate_all_charts(self):
+        """Generate and save all charts for all categories"""
+        chart_urls = {}
+        for category, processor in self.processors.items():
+            data = processor.get_data()
+            charts = processor.generate_and_save_charts(data)
+            chart_urls[category] = charts
+        return chart_urls
 
-    def get_remittance_expenses_data(self):
-        """Get remittance expenses data"""
-        return self.remittance_expenses_processor.process_for_pdf()
+    def get_available_categories(self):
+        """Get list of available economics categories"""
+        return list(self.processors.keys())
 
-    def get_major_skills_data(self):
-        """Get major skills data"""
-        return self.major_skills_processor.process_for_pdf()
+    def get_combined_report_content(self):
+        """Get combined report content for all categories"""
+        all_data = self.process_all_for_pdf()
+        combined_content = []
 
-    def get_all_section_data(self):
-        """Get all section data for web views"""
-        return {
-            "remittance_expenses": self.get_remittance_expenses_data(),
-            "major_skills": self.get_major_skills_data(),
-        }
+        # Introduction
+        combined_content.append(
+            """लुङ्ग्री गाउँपालिकामा आर्थिक क्रियाकलापहरूको स्पष्ट चित्र देखिन्छ । विभिन्न आर्थिक क्षेत्रहरूमा स्थानीय जनताको सहभागिता र रेमिटेन्स खर्चको ढाँचाले गाउँपालिकाको आर्थिक संरचनाको प्रतिनिधित्व गर्छ ।"""
+        )
+
+        # Add each category's content
+        for category, processed_data in all_data.items():
+            if processed_data and "report_content" in processed_data:
+                combined_content.append(processed_data["report_content"])
+
+        # Overall conclusion
+        combined_content.append(
+            """
+
+समग्रमा, यस गाउँपालिकामा रहेको आर्थिक विविधता नेपाली ग्रामीण अर्थतन्त्रको समृद्ध परम्पराको झलक हो । विभिन्न आर्थिक क्षेत्रहरूबीचको सहकार्य र एकताले यस क्षेत्रको आर्थिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । रेमिटेन्स खर्चको ढाँचाले आर्थिक प्राथमिकता र भविष्यको दिशाको संकेत गर्छ ।"""
+        )
+
+        return " ".join(combined_content)
 
 
+# Convenience function for easy access
 def get_economics_manager():
-    """Get the economics manager instance"""
+    """Get configured economics manager instance"""
     return EconomicsManager()

@@ -1,9 +1,10 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Remittance Expenses Economics Report Partial for PDF -->
 <p class="section-content remittance-expenses-economics-section" id="section-remittance-expenses-economics">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ६.२.५ रेमिटेन्स प्राप्त गरेको र खर्चको विवरण
+        ४.२ रेमिटेन्स प्राप्त गरेको र खर्चको विवरण
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -14,501 +15,74 @@
     <!-- Pie Chart for Municipality-wide Distribution -->
     {% if municipality_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ६.२.५.१: रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण</h3>
+            <h3 class="chart-title">चित्र ४.२.१: रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.remittance_expenses.pie_chart_png %}
-                    <img src="{% static pdf_charts.remittance_expenses.pie_chart_png %}" 
-                         alt="रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.remittance_expenses.pie_chart_svg %}
-                    <div class="svg-chart-container">
-                        {{ pdf_charts.remittance_expenses.pie_chart_svg|safe }}
-                    </div>
-                {% endif %}
+               
+                    <img src="{% static 'images/charts/remittance_expenses_pie_chart.png' %}" alt="रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+              
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Bar Chart for Ward-wise Distribution -->
+    {% if ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.२.२: वडागत रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+              
+                    <img src="{% static 'images/charts/remittance_expenses_bar_chart.png' %}" alt="वडागत रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+                
             </div>
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Remittance Expenses Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ६.२.५.१: रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार विस्तृत विवरण</h3>
-        <table class="pdf-data-table remittance-expenses-summary-table">
-            <thead>
-                <tr>
-                    <th>क्र.स.</th>
-                    <th>रेमिटेन्स खर्चको कार्यक्षेत्र</th>
-                    <th>घरपरिवार संख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>खर्च प्रकार</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for expense_code, expense_info in municipality_data.items %}
-                <tr>
-                    <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
-                    <td>{{ expense_info.name_nepali }}</td>
-                    <td style="text-align: right;">{{ expense_info.households|nepali_number }}</td>
-                    <td style="text-align: right;">{{ expense_info.percentage|nepali_percentage }}%</td>
-                    <td style="text-align: center;">
-                        {% if expense_code == 'education' or expense_code == 'health' or expense_code == 'household_use' %}
-                            <span class="essential-expense">आधारभूत</span>
-                        {% elif expense_code == 'house_construction' or expense_code == 'land_ownership' or expense_code == 'business_investment' %}
-                            <span class="investment-expense">लगानी</span>
-                        {% elif expense_code == 'loan_payment' or expense_code == 'loaned_others' %}
-                            <span class="financial-expense">वित्तीय</span>
-                        {% elif expense_code == 'saving' %}
-                            <span class="positive-expense">सकारात्मक</span>
-                        {% elif expense_code == 'festivals' %}
-                            <span class="social-expense">सामाजिक</span>
-                        {% else %}
-                            <span class="other-expense">अन्य</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr style="background-color: #f0f8ff; font-weight: bold;">
-                    <td colspan="2" style="text-align: center;">कुल जम्मा</td>
-                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
-                    <td style="text-align: right;">{{ "100.0"|nepali_percentage }}%</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Impact Analysis Summary -->
-    {% if municipality_data %}
-    <div class="content-section">
-        <h3 class="table-title">रेमिटेन्स खर्च प्रभाव विश्लेषण</h3>
-        <table class="pdf-data-table remittance-impact-table">
-            <thead>
-                <tr>
-                    <th>खर्च प्रकार</th>
-                    <th>मुख्य कार्यक्षेत्रहरू</th>
-                    <th>घरपरिवार संख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>आर्थिक प्रभाव</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% with essential_count=0 investment_count=0 financial_count=0 social_count=0 other_count=0 %}
-                    {% for expense_code, expense_info in municipality_data.items %}
-                        {% if expense_code == 'education' or expense_code == 'health' or expense_code == 'household_use' %}
-                            {% with essential_count=essential_count|add:expense_info.households %}
-                            {% endif %}
-                        {% elif expense_code == 'house_construction' or expense_code == 'land_ownership' or expense_code == 'business_investment' %}
-                            {% with investment_count=investment_count|add:expense_info.households %}
-                            {% endif %}
-                        {% elif expense_code == 'loan_payment' or expense_code == 'loaned_others' %}
-                            {% with financial_count=financial_count|add:expense_info.households %}
-                            {% endif %}
-                        {% elif expense_code == 'festivals' %}
-                            {% with social_count=social_count|add:expense_info.households %}
-                            {% endif %}
-                        {% else %}
-                            {% with other_count=other_count|add:expense_info.households %}
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    
-                    <tr style="background-color: #E3F2FD;">
-                        <td style="color: #1976D2; font-weight: bold;">आधारभूत खर्च</td>
-                        <td>शिक्षा, स्वास्थ्य, घरेलु प्रयोग</td>
-                        <td style="text-align: right;">
-                            {% with essential_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'education' or expense_code == 'health' or expense_code == 'household_use' %}
-                                        {% with essential_households=essential_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ essential_households|nepali_number }}
-                            {% endwith %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% with essential_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'education' or expense_code == 'health' or expense_code == 'household_use' %}
-                                        {% with essential_households=essential_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if essential_households > 0 and total_households > 0 %}
-                                    {{ essential_households|mul:100|div:total_households|nepali_percentage }}%
-                                {% else %}
-                                    ०.०%
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td style="color: #1976D2; font-weight: bold;">मानव पूँजी विकास</td>
-                    </tr>
-                    
-                    <tr style="background-color: #E8F5E8;">
-                        <td style="color: #2E7D32; font-weight: bold;">लगानी खर्च</td>
-                        <td>घर निर्माण, जमिन, व्यापार</td>
-                        <td style="text-align: right;">
-                            {% with investment_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'house_construction' or expense_code == 'land_ownership' or expense_code == 'business_investment' %}
-                                        {% with investment_households=investment_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ investment_households|nepali_number }}
-                            {% endwith %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% with investment_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'house_construction' or expense_code == 'land_ownership' or expense_code == 'business_investment' %}
-                                        {% with investment_households=investment_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if investment_households > 0 and total_households > 0 %}
-                                    {{ investment_households|mul:100|div:total_households|nepali_percentage }}%
-                                {% else %}
-                                    ०.०%
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td style="color: #2E7D32; font-weight: bold;">सम्पत्ति निर्माण</td>
-                    </tr>
-                    
-                    <tr style="background-color: #FFF3E0;">
-                        <td style="color: #E65100; font-weight: bold;">वित्तीय दायित्व</td>
-                        <td>ऋण भुक्तानी, अरुलाई ऋण</td>
-                        <td style="text-align: right;">
-                            {% with financial_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'loan_payment' or expense_code == 'loaned_others' %}
-                                        {% with financial_households=financial_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ financial_households|nepali_number }}
-                            {% endwith %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% with financial_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'loan_payment' or expense_code == 'loaned_others' %}
-                                        {% with financial_households=financial_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if financial_households > 0 and total_households > 0 %}
-                                    {{ financial_households|mul:100|div:total_households|nepali_percentage }}%
-                                {% else %}
-                                    ०.०%
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td style="color: #E65100; font-weight: bold;">वित्तीय बोझ</td>
-                    </tr>
-                    
-                    <tr style="background-color: #F3E5F5;">
-                        <td style="color: #7B1FA2; font-weight: bold;">सामाजिक खर्च</td>
-                        <td>चाडपर्व, गहना खरिद</td>
-                        <td style="text-align: right;">
-                            {% with social_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'festivals' or expense_code == 'jwellery_purchase' %}
-                                        {% with social_households=social_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {{ social_households|nepali_number }}
-                            {% endwith %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% with social_households=0 %}
-                                {% for expense_code, expense_info in municipality_data.items %}
-                                    {% if expense_code == 'festivals' or expense_code == 'jwellery_purchase' %}
-                                        {% with social_households=social_households|add:expense_info.households %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if social_households > 0 and total_households > 0 %}
-                                    {{ social_households|mul:100|div:total_households|nepali_percentage }}%
-                                {% else %}
-                                    ०.०%
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td style="color: #7B1FA2; font-weight: bold;">सामाजिक सम्बन्ध</td>
-                    </tr>
-                {% endwith %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ६.२.५.२: वडागत रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार विवरण</h3>
+        <h3 class="table-title">तालिका ४.२.२: वडागत रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार विस्तृत विवरण</h3>
         <table class="pdf-data-table ward-remittance-expenses-table">
             <thead>
                 <tr>
-                    <th rowspan="2">वडा नं.</th>
-                    <th rowspan="2">कुल घरपरिवार</th>
-                    <th colspan="12">रेमिटेन्स खर्चको कार्यक्षेत्र</th>
-                </tr>
-                <tr>
-                    <th>शिक्षा</th>
-                    <th>स्वास्थ्य</th>
-                    <th>घरेलु प्रयोग</th>
-                    <th>चाडपर्व</th>
-                    <th>ऋण भुक्तानी</th>
-                    <th>अरुलाई ऋण</th>
-                    <th>बचत</th>
-                    <th>घर निर्माण</th>
-                    <th>जमिन</th>
-                    <th>गहना</th>
-                    <th>व्यापार</th>
-                    <th>अन्य</th>
+                    <th style="width: 30%; text-align: left; padding: 6px;">रेमिटेन्स खर्चको कार्यक्षेत्र</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                    <td style="text-align: right; font-weight: bold;">{{ ward_info.total_households|nepali_number }}</td>
-                    
-                    <!-- Education -->
-                    <td style="text-align: right; background-color: #E3F2FD;">
-                        {% if ward_info.expense_types.education %}
-                            {{ ward_info.expense_types.education.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.education.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Health -->
-                    <td style="text-align: right; background-color: #FFEBEE;">
-                        {% if ward_info.expense_types.health %}
-                            {{ ward_info.expense_types.health.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.health.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Household Use -->
-                    <td style="text-align: right; background-color: #E8F5E8;">
-                        {% if ward_info.expense_types.household_use %}
-                            {{ ward_info.expense_types.household_use.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.household_use.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Festivals -->
-                    <td style="text-align: right; background-color: #FFF3E0;">
-                        {% if ward_info.expense_types.festivals %}
-                            {{ ward_info.expense_types.festivals.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.festivals.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Loan Payment -->
-                    <td style="text-align: right; background-color: #F3E5F5;">
-                        {% if ward_info.expense_types.loan_payment %}
-                            {{ ward_info.expense_types.loan_payment.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.loan_payment.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Loaned Others -->
-                    <td style="text-align: right;">
-                        {% if ward_info.expense_types.loaned_others %}
-                            {{ ward_info.expense_types.loaned_others.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.loaned_others.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Saving -->
-                    <td style="text-align: right; background-color: #E0F2F1;">
-                        {% if ward_info.expense_types.saving %}
-                            {{ ward_info.expense_types.saving.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.saving.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- House Construction -->
-                    <td style="text-align: right; background-color: #FFF8E1;">
-                        {% if ward_info.expense_types.house_construction %}
-                            {{ ward_info.expense_types.house_construction.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.house_construction.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Land Ownership -->
-                    <td style="text-align: right;">
-                        {% if ward_info.expense_types.land_ownership %}
-                            {{ ward_info.expense_types.land_ownership.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.land_ownership.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Jewelry Purchase -->
-                    <td style="text-align: right; background-color: #FFFDE7;">
-                        {% if ward_info.expense_types.jwellery_purchase %}
-                            {{ ward_info.expense_types.jwellery_purchase.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.jwellery_purchase.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Business Investment -->
-                    <td style="text-align: right; background-color: #E8EAF6;">
-                        {% if ward_info.expense_types.business_investment %}
-                            {{ ward_info.expense_types.business_investment.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.business_investment.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    
-                    <!-- Other -->
-                    <td style="text-align: right;">
-                        {% if ward_info.expense_types.other %}
-                            {{ ward_info.expense_types.other.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.other.percentage|nepali_percentage }}%)</small>
-                        {% elif ward_info.expense_types.unknown %}
-                            {{ ward_info.expense_types.unknown.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.unknown.percentage|nepali_percentage }}%)</small>
-                        {% elif ward_info.expense_types.goods_purchase %}
-                            {{ ward_info.expense_types.goods_purchase.households|nepali_number }}
-                            <br><small>({{ ward_info.expense_types.goods_purchase.percentage|nepali_percentage }}%)</small>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                </tr>
+                {% for expense_type, data in municipality_data.items %}
+                    {% if data.households > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info.expense_types|get_item:expense_type as expense_demo %}
+                                        {{ expense_demo.households|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.households|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.education %}
-                            {{ municipality_data.education.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.health %}
-                            {{ municipality_data.health.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.household_use %}
-                            {{ municipality_data.household_use.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.festivals %}
-                            {{ municipality_data.festivals.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.loan_payment %}
-                            {{ municipality_data.loan_payment.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.loaned_others %}
-                            {{ municipality_data.loaned_others.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.saving %}
-                            {{ municipality_data.saving.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.house_construction %}
-                            {{ municipality_data.house_construction.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.land_ownership %}
-                            {{ municipality_data.land_ownership.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.jwellery_purchase %}
-                            {{ municipality_data.jwellery_purchase.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.business_investment %}
-                            {{ municipality_data.business_investment.households|nepali_number }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% with other_total=0 %}
-                            {% if municipality_data.other %}
-                                {% with other_total=other_total|add:municipality_data.other.households %}
-                                {% endif %}
-                            {% endif %}
-                            {% if municipality_data.unknown %}
-                                {% with other_total=other_total|add:municipality_data.unknown.households %}
-                                {% endif %}
-                            {% endif %}
-                            {% if municipality_data.goods_purchase %}
-                                {% with other_total=other_total|add:municipality_data.goods_purchase.households %}
-                                {% endif %}
-                            {% endif %}
-                            {% if other_total > 0 %}
-                                {{ other_total|nepali_number }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        {% endwith %}
-                    </td>
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_households|nepali_number }}</td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
         </table>
@@ -546,24 +120,40 @@
 }
 
 .remittance-expenses-summary-table th,
-.remittance-expenses-summary-table td,
-.ward-remittance-expenses-table th,
-.ward-remittance-expenses-table td,
-.remittance-impact-table th,
-.remittance-impact-table td {
+.remittance-expenses-summary-table td {
     font-size: 10pt;
     padding: 6px 8px;
 }
 
-.ward-remittance-expenses-table th {
-    background-color: #e8f4f8;
-    font-size: 8pt;
-    padding: 3px 4px;
+.ward-remittance-expenses-table th,
+.ward-remittance-expenses-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
 }
 
-.remittance-impact-table th {
-    background-color: #f0f8ff;
-    font-size: 10pt;
+.ward-remittance-expenses-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-remittance-expenses-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-remittance-expenses-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-remittance-expenses-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
 }
 
 .pdf-chart-container {
@@ -574,19 +164,14 @@
 
 .pdf-chart-container svg {
     max-width: 100%;
-    max-height: 400px;
+    max-height: 500px;
     height: auto;
 }
 
 .pdf-chart-image {
     max-width: 100%;
-    max-height: 400px;
+    max-height: 500px;
     height: auto;
-}
-
-.svg-chart-container {
-    display: inline-block;
-    max-width: 100%;
 }
 
 .chart-title,
@@ -623,61 +208,6 @@
     page-break-inside: avoid;
 }
 
-/* Expense type styling */
-.essential-expense {
-    background-color: #E3F2FD;
-    color: #1976D2;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.investment-expense {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.financial-expense {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.positive-expense {
-    background-color: #E0F2F1;
-    color: #00695C;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.social-expense {
-    background-color: #F3E5F5;
-    color: #7B1FA2;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.other-expense {
-    background-color: #F5F5F5;
-    color: #616161;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
 /* Enhanced table styling */
 .ward-remittance-expenses-table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -687,20 +217,15 @@
     background-color: #f0f8ff;
 }
 
-.remittance-impact-table tbody tr:nth-child(even) {
-    background-color: #fafafa;
-}
-
 /* Print optimization */
 @media print {
     .remittance-expenses-economics-section {
-        page-break-inside: avoid;
-        margin-bottom: 1.5em;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .pdf-data-table {
-        font-size: 7pt;
-        page-break-inside: avoid;
+        page-break-inside: auto;
     }
     
     .pdf-data-table tr {
@@ -709,122 +234,10 @@
     
     .chart-section {
         page-break-inside: avoid;
-        margin: 1em 0;
     }
     
     .table-section {
         page-break-inside: avoid;
-        margin: 1em 0;
     }
-    
-    .pdf-chart-container {
-        page-break-inside: avoid;
-    }
-    
-    .content-paragraph {
-        page-break-inside: avoid;
-    }
-    
-    .ward-remittance-expenses-table th,
-    .ward-remittance-expenses-table td {
-        font-size: 6pt;
-        padding: 2px 3px;
-    }
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .pdf-data-table {
-        font-size: 8pt;
-    }
-    
-    .ward-remittance-expenses-table th,
-    .ward-remittance-expenses-table td {
-        padding: 2px 3px;
-        font-size: 7pt;
-    }
-    
-    .chart-title,
-    .table-title {
-        font-size: 10pt;
-    }
-    
-    .expense-tag {
-        font-size: 7pt;
-        padding: 1px 4px;
-    }
-}
-
-/* Accessibility improvements */
-.pdf-data-table th {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-
-.pdf-data-table tbody tr:focus {
-    outline: 2px solid #2196F3;
-    outline-offset: -2px;
-}
-
-/* Ward table column width optimization */
-.ward-remittance-expenses-table th:first-child,
-.ward-remittance-expenses-table td:first-child {
-    width: 6%;
-}
-
-.ward-remittance-expenses-table th:nth-child(2),
-.ward-remittance-expenses-table td:nth-child(2) {
-    width: 8%;
-}
-
-.ward-remittance-expenses-table th:nth-child(n+3),
-.ward-remittance-expenses-table td:nth-child(n+3) {
-    width: 6.5%;
-}
-
-/* Impact analysis styling */
-.remittance-impact-table .high-impact {
-    background-color: #E3F2FD;
-    color: #1976D2;
-    font-weight: bold;
-}
-
-.remittance-impact-table .medium-impact {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    font-weight: bold;
-}
-
-.remittance-impact-table .low-impact {
-    background-color: #FFF3E0;
-    color: #E65100;
-    font-weight: bold;
-}
-
-.remittance-impact-table .neutral-impact {
-    background-color: #F5F5F5;
-    color: #616161;
-    font-weight: bold;
-}
-
-/* Economic impact color coding */
-.human-capital-development {
-    background-color: #E3F2FD;
-    color: #1976D2;
-}
-
-.asset-building {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-}
-
-.financial-burden {
-    background-color: #FFF3E0;
-    color: #E65100;
-}
-
-.social-investment {
-    background-color: #F3E5F5;
-    color: #7B1FA2;
 }
 </style>

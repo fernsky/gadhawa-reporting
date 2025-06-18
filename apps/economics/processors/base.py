@@ -15,6 +15,10 @@ class BaseEconomicsProcessor(ABC):
     """Base class for all economics data processors"""
 
     def __init__(self):
+        # Use proper static directory path
+        self.static_charts_dir = Path("static/images/charts")
+        self.static_charts_dir.mkdir(parents=True, exist_ok=True)
+
         self.chart_generator = SVGChartGenerator()
         # Default chart dimensions
         self.pie_chart_width = 800
@@ -53,160 +57,138 @@ class BaseEconomicsProcessor(ABC):
 
     @abstractmethod
     def get_data(self):
-        """Get processed data for the section"""
+        """Fetch and process data specific to the economics category"""
         pass
 
     @abstractmethod
-    def generate_analysis_text(self, data):
-        """Generate comprehensive Nepali analysis text"""
+    def generate_report_content(self, data):
+        """Generate report content specific to the economics category"""
         pass
 
-    def generate_pie_chart(self, data, title="Economics Distribution"):
-        """Generate pie chart for economics data"""
-        if not data:
-            return ""
-
-        # Prepare data for chart - convert to format expected by SVGChartGenerator
-        chart_data = {}
-        for key, info in data.items():
-            if info.get("households", 0) > 0:
-                chart_data[key] = {
-                    "population": info.get("households", 0),
-                    "name_nepali": info.get("name_nepali", key),
-                }
-
-        if not chart_data:
-            return ""
-
-        return self.chart_generator.generate_pie_chart_svg(
-            chart_data, include_title=False, title_nepali=title, title_english=""
-        )
-
-    def generate_bar_chart(self, data, title="Ward-wise Economics Distribution"):
-        """Generate bar chart for ward-wise economics data"""
-        if not data:
-            return ""
-
-        # Prepare ward-wise data in the format expected by SVGChartGenerator
-        ward_data = {}
-        for ward_num, ward_info in data.items():
-            if isinstance(ward_info, dict) and "total_households" in ward_info:
-                ward_data[ward_num] = {
-                    "total_population": ward_info["total_households"],
-                    "ward_name": f"वडा {ward_num}",
-                }
-
-        if not ward_data:
-            return ""
-
-        return self.chart_generator.generate_bar_chart_svg(
-            ward_data, include_title=False, title_nepali=title, title_english=""
-        )
+    def generate_chart_svg(self, data, chart_type="pie"):
+        """Generate chart SVG using SVGChartGenerator"""
+        if chart_type == "pie":
+            return self.chart_generator.generate_pie_chart_svg(
+                data, include_title=False
+            )
+        elif chart_type == "bar":
+            return self.chart_generator.generate_bar_chart_svg(
+                data, include_title=False
+            )
+        else:
+            return None
 
     def process_for_pdf(self):
-        """Process economics data for PDF generation including charts"""
+        """Process category data for PDF generation including charts"""
         # Get raw data
         data = self.get_data()
-
-        # Generate analysis text
-        coherent_analysis = self.generate_analysis_text(data)
+        # Generate report content
+        report_content = self.generate_report_content(data)
 
         # Generate and save charts
-        charts = self.generate_and_save_charts(data)
-
-        # Calculate total households
-        total_count = data.get("total_households", 0)
+        charts = self.generate_and_save_charts(
+            data
+        )  # Calculate total population/households
+        if isinstance(data, dict) and "total_population" in data:
+            # Standard format already has total_population
+            total_population = data["total_population"]
+        elif isinstance(data, dict) and "total_households" in data:
+            # Standard format already has total_households (for economics)
+            total_population = data["total_households"]
+        elif isinstance(data, dict) and "municipality_data" in data:
+            # Standard format - calculate from municipality_data
+            total_population = sum(
+                item.get("population", item.get("households", 0))
+                for item in data["municipality_data"].values()
+                if isinstance(item, dict)
+            )
+        else:
+            # Simple format
+            total_population = sum(
+                item.get("population", item.get("households", 0))
+                for item in data.values()
+                if isinstance(item, dict)
+            )
 
         return {
-            "municipality_data": data.get("municipality_data", {}),
-            "ward_data": data.get("ward_data", {}),
-            "total_households": total_count,
-            "coherent_analysis": coherent_analysis,
-            "pdf_charts": {self.get_chart_key(): charts},
+            "data": data,
+            "report_content": report_content,
+            "charts": charts,
+            "total_population": total_population,
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
         }
 
-    def get_chart_key(self):
-        """Get the chart key for this processor"""
-        return self.__class__.__name__.lower().replace("processor", "")
-
     def generate_and_save_charts(self, data):
-        """Generate and save charts, return paths"""
+        """Generate charts using SVGChartGenerator and save them as PNG files"""
         charts = {}
+        category_name = self.__class__.__name__.lower().replace("processor", "")
 
-        # Generate pie chart
-        if data.get("municipality_data"):
-            pie_chart = self.generate_pie_chart(data["municipality_data"])
-            if pie_chart:
-                charts["pie_chart_svg"] = pie_chart
+        # Determine data structure - check if it's standard format or simple format
+        if (
+            isinstance(data, dict)
+            and "municipality_data" in data
+            and "ward_data" in data
+        ):
+            # Standard format with both municipality and ward data
+            pie_data = data["municipality_data"]
+            bar_data = data["ward_data"]
+        else:
+            # Simple format - use the data as is for pie chart
+            pie_data = data
+            bar_data = None  # No ward data available for bar chart
 
-        # Generate bar chart for ward data
-        if data.get("ward_data"):
-            bar_chart = self.generate_bar_chart(data["ward_data"])
-            if bar_chart:
-                charts["bar_chart_svg"] = bar_chart
+        # Generate pie chart using SVGChartGenerator
+        success, png_path, svg_path = self.chart_generator.generate_chart_image(
+            demographic_data=pie_data,
+            output_name=f"{category_name}_pie_chart",
+            static_dir=str(self.static_charts_dir),
+            chart_type="pie",
+            include_title=False,
+        )
+
+        if success and png_path:
+            charts["pie_chart_png"] = f"images/charts/{category_name}_pie_chart.png"
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+        elif svg_path:
+            # Fallback to SVG if PNG conversion fails
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+
+        # Generate bar chart only if ward data is available
+        if bar_data:
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=bar_data,
+                output_name=f"{category_name}_bar_chart",
+                static_dir=str(self.static_charts_dir),
+                chart_type="bar",
+                include_title=False,
+            )
+
+            if success and png_path:
+                charts["bar_chart_png"] = f"images/charts/{category_name}_bar_chart.png"
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
+            elif svg_path:
+                # Fallback to SVG if PNG conversion fails
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
 
         return charts
 
 
 class BaseEconomicsReportFormatter(ABC):
-    """Base report formatter for economics data with common functionality"""
+    """Base report formatter with common functionality"""
 
-    def __init__(self, processor_data):
-        self.data = processor_data
+    def __init__(self):
+        self.municipality_name = "लुङ्ग्री गाउँपालिका"
 
     @abstractmethod
-    def format_for_html(self):
-        """Format data for HTML template rendering"""
+    def generate_formal_report(self, data):
+        """Generate formal report content"""
         pass
 
-    def format_for_api(self):
-        """Format data for API response with common structure"""
-        return {
-            "section": self.data.get("section_number", ""),
-            "title": self.data.get("section_title", ""),
-            "summary": {
-                "total_households": self.data.get("total_households", 0),
-                "categories": len(self.data.get("municipality_data", {})),
-                "wards": len(self.data.get("ward_data", {})),
-            },
-            "municipality_breakdown": self.data.get("municipality_data", {}),
-            "ward_breakdown": self.data.get("ward_data", {}),
-            "analysis": self.data.get("coherent_analysis", ""),
-            "charts": self.data.get("pdf_charts", {}),
-        }
+    def generate_diversity_analysis(self, active_count, total_population):
+        """Generate diversity analysis text"""
+        return f"""यस गाउँपालिकामा कुल {active_count} वटा विभिन्न आर्थिक क्षेत्रहरूको गतिविधि रहेको छ जसले आर्थिक विविधताको झलक दिन्छ । यस्तो विविधताले स्थानीय आर्थिक संरचनालाई समृद्ध बनाउँदै आर्थिक स्थिरताको विकास गर्न सहयोग पुर्‍याएको छ ।"""
 
-    def generate_economic_impact_analysis(self, total_households, essential_percentage):
-        """Generate economic impact analysis"""
-        impact_level = (
-            "उच्च"
-            if essential_percentage > 60
-            else "मध्यम" if essential_percentage > 30 else "न्यून"
-        )
-
-        return {
-            "total_affected": total_households,
-            "essential_services_percentage": essential_percentage,
-            "impact_level": impact_level,
-            "priority_areas": self._identify_priority_areas(),
-        }
-
-    def _identify_priority_areas(self):
-        """Identify priority areas based on data"""
-        priority_areas = []
-        municipality_data = self.data.get("municipality_data", {})
-
-        # Check for high education expenses
-        if municipality_data.get("education", {}).get("percentage", 0) > 20:
-            priority_areas.append("शिक्षा क्षेत्रमा उच्च खर्च")
-
-        # Check for health expenses
-        if municipality_data.get("health", {}).get("percentage", 0) > 15:
-            priority_areas.append("स्वास्थ्य सेवामा उच्च खर्च")
-
-        # Check for loan burden
-        if municipality_data.get("loan_payment", {}).get("percentage", 0) > 25:
-            priority_areas.append("ऋण भुक्तानीको उच्च बोझ")
-
-        return priority_areas
+    def generate_harmony_conclusion(self):
+        """Generate harmony conclusion text"""
+        return """सबै आर्थिक क्षेत्रहरू बीचको सन्तुलन र पारस्परिक सहयोगले यस गाउँपालिकाको आर्थिक एकता र स्थिरतामा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । विविधतामा एकताको यो उदाहरणले भविष्यका पुस्ताहरूका लागि सकारात्मक सन्देश दिन्छ ।"""

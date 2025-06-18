@@ -220,6 +220,14 @@
     <span class="toc-link">४.१ वडागत मुख्य सीपहरू</span>
     <span class="page-ref"><a href="#section-major-skills"></a></span>
   </div>
+  <div class="toc-item level-2">
+    <span class="toc-link">४.२ रेमिटेन्स प्राप्त गरेको र खर्चको विवरण</span>
+    <span class="page-ref"><a href="#section-remittance-expenses-economics"></a></span>
+  </div>
+  <div class="toc-item level-2">
+    <span class="toc-link">४.३ आर्थिक अवस्थाको समग्र विश्लेषण</span>
+    <span class="page-ref"><a href="#section-economics-summary"></a></span>
+  </div>
 
   <!-- Social Chapter TOC -->
   <div class="toc-item level-1">
@@ -284,6 +292,17 @@
       {% if all_demographics_data.occupation %}
        {% include 'demographics/occupation/occupation_report_partial.html' with municipality_data=all_demographics_data.occupation.data.municipality_data ward_data=all_demographics_data.occupation.data.ward_data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content pdf_charts=pdf_charts %}
       {% endif %}
+    </p>
+  </div>
+
+  <!-- Economics Chapter -->
+  <div class="category-break" id="category-economics">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
+      परिच्छेद – ४ः आर्थिक अवस्था
+    </h1>
+    <p class="section-content">
+      <!-- Economics Full Section -->
+      {% include 'economics/economics_full_report.html' %}
     </p>
   </div>
 
