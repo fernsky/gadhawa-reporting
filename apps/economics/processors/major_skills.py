@@ -19,9 +19,11 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
     def __init__(self):
         super().__init__()
         # Customize chart dimensions for major skills
-        self.pie_chart_width = 950
-        self.pie_chart_height = 500
-        self.chart_radius = 150
+        self.pie_chart_width = 900
+        self.pie_chart_height = 450
+        self.bar_chart_width = 1000
+        self.bar_chart_height = 600
+        self.chart_radius = 130
         # Set skill-specific colors with meaningful associations
         self.chart_generator.colors = {
             # Professional/Technical Skills
@@ -168,53 +170,90 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
 
     def generate_and_save_charts(self, data):
         """Generate and save both pie and bar charts for major skills data"""
-        charts_info = {}
+        charts = {}
+        category_name = "major_skills"
 
-        try:
-            # Generate pie chart for municipality-wide data
-            pie_svg = self.generate_chart_svg(data, chart_type="pie")
-            if pie_svg:
-                pie_path = self.static_charts_dir / "major_skills_pie_chart.svg"
-                with open(pie_path, "w", encoding="utf-8") as f:
-                    f.write(pie_svg)
-                charts_info["pie_chart_svg"] = (
-                    f"images/charts/major_skills_pie_chart.svg"
-                )
+        # Determine data structure - check if it's standard format or simple format
+        if (
+            isinstance(data, dict)
+            and "municipality_data" in data
+            and "ward_data" in data
+        ):
+            # Standard format with both municipality and ward data
+            pie_data = data["municipality_data"]
+            bar_data = data["ward_data"]
+        else:
+            # Simple format - use the data as is for pie chart
+            pie_data = data
+            bar_data = None  # No ward data available for bar chart
 
-                # Try to convert to PNG using subprocess
-                try:
-                    png_path = self.static_charts_dir / "major_skills_pie_chart.png"
-                    # PNG conversion would need additional implementation
-                    charts_info["pie_chart_png"] = (
-                        f"images/charts/major_skills_pie_chart.png"
-                    )
-                except:
-                    pass
+        # Transform data for chart generator (population -> population)
+        transformed_pie_data = {}
+        for key, value in pie_data.items():
+            if isinstance(value, dict) and value.get("population", 0) > 0:
+                transformed_pie_data[key] = {
+                    "population": value["population"],
+                    "name_nepali": value.get("name_nepali", key),
+                    "percentage": value.get("percentage", 0),
+                }
 
-            # Generate bar chart for ward-wise data
-            bar_svg = self.generate_chart_svg(data, chart_type="bar")
-            if bar_svg:
-                bar_path = self.static_charts_dir / "major_skills_bar_chart.svg"
-                with open(bar_path, "w", encoding="utf-8") as f:
-                    f.write(bar_svg)
-                charts_info["bar_chart_svg"] = (
-                    f"images/charts/major_skills_bar_chart.svg"
-                )
+        # Transform ward data for bar chart
+        transformed_bar_data = None
+        if bar_data:
+            transformed_bar_data = {}
+            for ward_num, ward_info in bar_data.items():
+                transformed_bar_data[ward_num] = {
+                    "ward_name": ward_info.get("ward_name", f"वडा नं. {ward_num}"),
+                    "demographics": {},
+                }
+                # Transform demographics to demographics with population
+                if "demographics" in ward_info:
+                    for skill_code, skill_data in ward_info["demographics"].items():
+                        if skill_data.get("population", 0) > 0:
+                            transformed_bar_data[ward_num]["demographics"][
+                                skill_code
+                            ] = {
+                                "population": skill_data["population"],
+                                "name_nepali": skill_data.get(
+                                    "name_nepali", skill_code
+                                ),
+                                "percentage": skill_data.get("percentage", 0),
+                            }
 
-                # Try to convert to PNG using subprocess
-                try:
-                    png_path = self.static_charts_dir / "major_skills_bar_chart.png"
-                    # PNG conversion would need additional implementation
-                    charts_info["bar_chart_png"] = (
-                        f"images/charts/major_skills_bar_chart.png"
-                    )
-                except:
-                    pass
+        # Generate pie chart using SVGChartGenerator
+        success, png_path, svg_path = self.chart_generator.generate_chart_image(
+            demographic_data=transformed_pie_data,
+            output_name=f"{category_name}_pie_chart",
+            static_dir=str(self.static_charts_dir),
+            chart_type="pie",
+            include_title=False,
+        )
 
-        except Exception as e:
-            print(f"Error generating major skills charts: {e}")
+        if success and png_path:
+            charts["pie_chart_png"] = f"images/charts/{category_name}_pie_chart.png"
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
+        elif svg_path:
+            # Fallback to SVG if PNG conversion fails
+            charts["pie_chart_svg"] = f"images/charts/{category_name}_pie_chart.svg"
 
-        return charts_info
+        # Generate bar chart only if ward data is available
+        if transformed_bar_data:
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=transformed_bar_data,
+                output_name=f"{category_name}_bar_chart",
+                static_dir=str(self.static_charts_dir),
+                chart_type="bar",
+                include_title=False,
+            )
+
+            if success and png_path:
+                charts["bar_chart_png"] = f"images/charts/{category_name}_bar_chart.png"
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
+            elif svg_path:
+                # Fallback to SVG if PNG conversion fails
+                charts["bar_chart_svg"] = f"images/charts/{category_name}_bar_chart.svg"
+
+        return charts
 
     class MajorSkillsReportFormatter(BaseEconomicsReportFormatter):
         """Major skills-specific report formatter"""

@@ -115,6 +115,7 @@ class BaseEconomicsProcessor(ABC):
             "report_content": report_content,
             "charts": charts,
             "total_population": total_population,
+            "total_households": total_population,  # For economics compatibility
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
         }

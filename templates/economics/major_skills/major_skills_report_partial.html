@@ -1,4 +1,5 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Major Skills Economics Report Partial for PDF -->
 <p class="section-content major-skills-section" id="section-major-skills">
@@ -8,204 +9,78 @@
     
     <!-- Coherent Analysis Text -->
     <div class="content-section">
-        <div class="content-paragraph"><p>{{ coherent_analysis }}</p></div>
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
     </div>
 
-    <!-- Pie Chart for Major Skills Distribution -->
-    {% if pdf_charts.major_skills %}
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if municipality_data %}
         <div class="chart-section">
             <h3 class="chart-title">चित्र ४.१.१.१: मुख्य सीप अनुसार दक्ष जनशक्ति वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.major_skills.pie_chart_png %}
-                    <img src="{% static pdf_charts.major_skills.pie_chart_png %}" 
-                         alt="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.major_skills.pie_chart_svg %}
-                    <div class="svg-chart">{{ pdf_charts.major_skills.pie_chart_svg|safe }}</div>
-                {% else %}
-                    <img src="{% static 'images/charts/major_skills_pie_chart.png' %}" 
-                         alt="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण" 
-                         class="pdf-chart-image">
-                {% endif %}
+                <img src="{% static 'images/charts/major_skills_pie_chart.png' %}" alt="मुख्य सीप अनुसार दक्ष जनशक्ति वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
 
     <!-- Bar Chart for Ward-wise Distribution -->
-    {% if pdf_charts.major_skills %}
+    {% if ward_data %}
         <div class="chart-section">
             <h3 class="chart-title">चित्र ४.१.१.२: वडागत दक्ष जनशक्ति वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.major_skills.bar_chart_png %}
-                    <img src="{% static pdf_charts.major_skills.bar_chart_png %}" 
-                         alt="वडागत दक्ष जनशक्ति वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.major_skills.bar_chart_svg %}
-                    <div class="svg-chart">{{ pdf_charts.major_skills.bar_chart_svg|safe }}</div>
-                {% else %}
-                    <img src="{% static 'images/charts/major_skills_bar_chart.png' %}" 
-                         alt="वडागत दक्ष जनशक्ति वितरण" 
-                         class="pdf-chart-image">
-                {% endif %}
+                <img src="{% static 'images/charts/major_skills_bar_chart.png' %}" alt="वडागत दक्ष जनशक्ति वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Skills Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ४.१.१.१: मुख्य सीप अनुसार दक्ष जनशक्ति विस्तृत विवरण</h3>
-        <table class="pdf-data-table skills-summary-table">
-            <thead>
-                <tr>
-                    <th>क्र.स.</th>
-                    <th>सीपको प्रकार</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>आर्थिक प्रभाव</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for skill_code, skill_info in municipality_data.items %}
-                <tr {% if forloop.counter0|divisibleby:2 %}style="background-color: #f8fafc;"{% endif %}>
-                    <td style="text-align: center; font-weight: bold;">{{ forloop.counter|nepali_number }}</td>
-                    <td>{{ skill_info.name_nepali }}</td>
-                    <td style="text-align: right;">{{ skill_info.population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ skill_info.percentage|nepali_percentage }}%</td>
-                    <td style="text-align: center; font-size: 8pt;">
-                        {% if skill_code == 'TEACHING_RELATED' or skill_code == 'ENGINEERING_DESIGN_RELATED' or skill_code == 'COMPUTER_SCIENCE_RELATED' or skill_code == 'HUMAN_HEALTH_RELATED' %}
-                            <span class="high-impact" style="background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px;">उच्च</span>
-                        {% elif skill_code == 'CARPENTERY_RELATED' or skill_code == 'PLUMBING' or skill_code == 'ELECTRICITY_INSTALLMENT_RELATED' or skill_code == 'MECHANICS_RELATED' %}
-                            <span class="medium-high-impact" style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px;">मध्यम-उच्च</span>
-                        {% elif skill_code == 'AGRICULTURE_RELATED' or skill_code == 'DRIVING_RELATED' or skill_code == 'HOTEL_RESTAURANT_RELATED' %}
-                            <span class="medium-impact" style="background-color: #fed7aa; color: #9a3412; padding: 2px 6px; border-radius: 4px;">मध्यम</span>
-                        {% elif skill_code == 'SEWING_RELATED' or skill_code == 'HANDICRAFT_RELATED' or skill_code == 'MUSIC_DRAMA_RELATED' %}
-                            <span class="low-medium-impact" style="background-color: #fecaca; color: #991b1b; padding: 2px 6px; border-radius: 4px;">न्यून-मध्यम</span>
-                        {% else %}
-                            <span class="variable-impact" style="background-color: #e5e7eb; color: #374151; padding: 2px 6px; border-radius: 4px;">परिवर्तनशील</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr style="font-weight: bold; background-color: #f3f4f6; border-top: 2px solid #333;">
-                    <td colspan="2" style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                    <td style="text-align: right;">१००.०%</td>
-                    <td style="text-align: center;">समग्र विकास</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ४.१.१.३: वडागत मुख्य सीप वितरण (शीर्ष ५ सीपहरू)</h3>
-        <table class="pdf-data-table ward-skills-table">
+        <h3 class="table-title">तालिका ४.१.१.१: वडागत मुख्य सीप अनुसार दक्ष जनशक्ति विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-major-skills-table">
             <thead>
                 <tr>
-                    <th>वडा नं.</th>
-                    <th>कुल जनसंख्या</th>
-                    <th>शीर्ष सीपहरू (जनसंख्या)</th>
-                    <th>सीप विविधता</th>
+                    <th style="width: 30%; text-align: left; padding: 6px;">मुख्य सीप</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                    <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
-                    <td style="font-size: 8pt;">
-                        {% for skill_code, skill_info in ward_info.skill_types.items %}
-                            {% if forloop.counter <= 5 %}
-                                {{ skill_info.name_nepali }}: {{ skill_info.population|nepali_number }}
-                                {% if not forloop.last and forloop.counter < 5 %}<br>{% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td style="text-align: center;">
-                        {% with diversity_count=ward_info.skill_types|length %}
-                            {% if diversity_count >= 15 %}
-                                <span class="high-diversity" style="background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 8pt;">उच्च ({{ diversity_count|nepali_number }} सीप)</span>
-                            {% elif diversity_count >= 8 %}
-                                <span class="medium-diversity" style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 8pt;">मध्यम ({{ diversity_count|nepali_number }} सीप)</span>
-                            {% else %}
-                                <span class="low-diversity" style="background-color: #fecaca; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 8pt;">न्यून ({{ diversity_count|nepali_number }} सीप)</span>
-                            {% endif %}
-                        {% endwith %}
-                    </td>
-                </tr>
+                {% for skill_type, data in municipality_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info.demographics|get_item:skill_type as skill_demo %}
+                                        {{ skill_demo.population|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.population|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                    <td colspan="2" style="text-align: center;">
-                        {% with total_skills=municipality_data|length %}
-                            {{ total_skills|nepali_number }} प्रकारका सीप भएको दक्ष जनशक्ति
-                        {% endwith %}
-                    </td>
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Top 10 Skills Detail Table -->
-    {% if top_skills %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ४.१.१.४: शीर्ष १० मुख्य सीपहरूको विस्तृत विवरण</h3>
-        <table class="pdf-data-table top-skills-table">
-            <thead>
-                <tr>
-                    <th>स्थान</th>
-                    <th>मुख्य सीप</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>रोजगारी सम्भावना</th>
-                    <th>स्थानीय माग</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for skill in top_skills %}
-                    {% if forloop.counter <= 10 %}
-                    <tr>
-                        <td style="text-align: center; font-weight: bold;">{{ forloop.counter|nepali_number }}</td>
-                        <td>{{ skill.skill_name }}</td>
-                        <td style="text-align: right;">{{ skill.population|nepali_number }}</td>
-                        <td style="text-align: right;">{{ skill.percentage|nepali_percentage }}%</td>
-                        <td style="text-align: center; font-size: 8pt;">
-                            {% if skill.skill_code == 'TEACHING_RELATED' or skill.skill_code == 'HUMAN_HEALTH_RELATED' or skill.skill_code == 'COMPUTER_SCIENCE_RELATED' %}
-                                <span class="high-employment" style="background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px;">उच्च</span>
-                            {% elif skill.skill_code == 'CARPENTERY_RELATED' or skill.skill_code == 'ELECTRICITY_INSTALLMENT_RELATED' or skill.skill_code == 'DRIVING_RELATED' %}
-                                <span class="medium-employment" style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px;">मध्यम</span>
-                            {% elif skill.skill_code == 'AGRICULTURE_RELATED' or skill.skill_code == 'HOTEL_RESTAURANT_RELATED' %}
-                                <span class="local-employment" style="background-color: #fed7aa; color: #9a3412; padding: 2px 6px; border-radius: 4px;">स्थानीय उच्च</span>
-                            {% else %}
-                                <span class="variable-employment" style="background-color: #e5e7eb; color: #374151; padding: 2px 6px; border-radius: 4px;">परिवर्तनशील</span>
-                            {% endif %}
-                        </td>
-                        <td style="text-align: center; font-size: 8pt;">
-                            {% if skill.skill_code == 'AGRICULTURE_RELATED' or skill.skill_code == 'CARPENTERY_RELATED' or skill.skill_code == 'TEACHING_RELATED' %}
-                                <span class="very-high-local" style="background-color: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px;">अति उच्च</span>
-                            {% elif skill.skill_code == 'PLUMBING' or skill.skill_code == 'ELECTRICITY_INSTALLMENT_RELATED' or skill.skill_code == 'DRIVING_RELATED' %}
-                                <span class="high-local" style="background-color: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px;">उच्च</span>
-                            {% elif skill.skill_code == 'SEWING_RELATED' or skill.skill_code == 'HOTEL_RESTAURANT_RELATED' %}
-                                <span class="medium-local" style="background-color: #fed7aa; color: #9a3412; padding: 2px 6px; border-radius: 4px;">मध्यम</span>
-                            {% else %}
-                                <span class="general-local" style="background-color: #e5e7eb; color: #374151; padding: 2px 6px; border-radius: 4px;">सामान्य</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
         </table>
     </div>
     {% endif %}
@@ -214,107 +89,146 @@
 <style>
 /* PDF-specific styles */
 .major-skills-section {
-    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
-    line-height: 1.4;
-    color: #1f2937;
+    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
-.skills-summary-table,
-.sector-analysis-table,
-.ward-skills-table,
-.top-skills-table {
+.pdf-data-table {
     width: 100%;
     border-collapse: collapse;
+    margin: 1em 0;
     font-size: 9pt;
-    margin-bottom: 1em;
+    page-break-inside: avoid;
 }
 
-.skills-summary-table th,
-.sector-analysis-table th,
-.ward-skills-table th,
-.top-skills-table th {
-    background-color: #1e40af;
-    color: white;
-    padding: 6px 4px;
-    text-align: center;
-    font-weight: bold;
+.pdf-data-table th,
+.pdf-data-table td {
     border: 1px solid #333;
-    font-size: 8pt;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
 }
 
-.skills-summary-table td,
-.sector-analysis-table td,
-.ward-skills-table td,
-.top-skills-table td {
-    padding: 4px;
-    border: 1px solid #d1d5db;
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-major-skills-table th,
+.ward-major-skills-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
     vertical-align: middle;
 }
 
-.chart-section {
-    margin: 1.5em 0;
+.ward-major-skills-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
     text-align: center;
 }
 
-.chart-title {
-    font-size: 11pt;
+.ward-major-skills-table td:first-child {
+    background-color: #f9f9f9;
     font-weight: bold;
-    color: #1e40af;
-    margin-bottom: 0.5em;
-    text-align: center;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-major-skills-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-major-skills-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
 }
 
 .pdf-chart-container {
     text-align: center;
     margin: 1em 0;
+    page-break-inside: avoid;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 500px;
+    height: auto;
 }
 
 .pdf-chart-image {
     max-width: 100%;
+    max-height: 500px;
     height: auto;
 }
 
+.chart-title,
 .table-title {
-    font-size: 10pt;
+    font-size: 11pt;
     font-weight: bold;
-    color: #1e40af;
-    margin: 1em 0 0.5em 0;
+    color: #333;
+    margin: 0.5em 0;
     text-align: center;
 }
 
-/* Impact and status indicators */
-.high-impact,
-.medium-high-impact,
-.medium-impact,
-.low-medium-impact,
-.variable-impact,
-.high-employment,
-.medium-employment,
-.local-employment,
-.variable-employment,
-.very-high-local,
-.high-local,
-.medium-local,
-.general-local,
-.high-diversity,
-.medium-diversity,
-.low-diversity {
-    font-weight: bold;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 7pt;
-}
-
-/* Content paragraph styling */
 .content-paragraph {
-    text-align: justify;
-    font-size: 11pt;
     line-height: 1.6;
-    margin-bottom: 1.5em;
-    text-indent: 1.5em;
+    text-align: justify;
+    margin: 0.5em 0;
 }
 
 .content-paragraph p {
-    margin: 0;
+    margin: 0.5em 0;
+    text-indent: 0;
 }
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+/* Enhanced table styling */
+.ward-major-skills-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ward-major-skills-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Print optimization */
+@media print {
+    .major-skills-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </style>
