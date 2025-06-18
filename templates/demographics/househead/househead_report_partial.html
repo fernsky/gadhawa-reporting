@@ -20,13 +20,7 @@
             <h3 class="chart-title">चित्र ३.७.२: वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.househead.bar_chart_png %}
-                    <img src="{% static pdf_charts.househead.bar_chart_png %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
-                {% elif pdf_charts.househead.bar_chart_svg %}
-                    <img src="{% static pdf_charts.househead.bar_chart_svg %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
-                {% else %}
                     <img src="{% static 'images/charts/househead_bar_chart.png' %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
-                {% endif %}
             </div>
         </div>
     {% endif %}
