@@ -55,11 +55,12 @@
         <table class="pdf-data-table ward-occupation-table">
             <thead>
                 <tr>
-                    <th style="width: 35%; text-align: left; padding: 6px;">पेशाका प्रकार</th>
+                    <th style="width: 30%; text-align: left; padding: 6px;">पेशाका प्रकार</th>
                     {% for ward_num, ward_info in ward_data.items %}
                         <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
                     {% endfor %}
                     <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +77,9 @@
                             {% endfor %}
                             <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
                                 {{ data.population|nepali_number }}
-                                <br><small style="color: #666;">({{ data.percentage|nepali_percentage }})</small>
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
                             </td>
                         </tr>
                     {% endif %}
@@ -89,6 +92,7 @@
                         <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
                     {% endfor %}
                     <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
         </table>

@@ -410,12 +410,24 @@ class SVGChartGenerator:
             if not active_categories:
                 return None
 
-            # SVG dimensions - improved layout with more space for legend
-            width, height = 800, 520
+            # Calculate dynamic height based on number of legend rows
+            max_items_per_row = 4
+            legend_rows = (
+                len(active_categories) + max_items_per_row - 1
+            ) // max_items_per_row
+            additional_legend_height = max(
+                0, (legend_rows - 1) * 20
+            )  # 20px per additional row
+
+            # SVG dimensions - improved layout with more space for multi-row legend
+            width = 800
+            height = (
+                520 + additional_legend_height
+            )  # Dynamic height based on legend rows
             margin = {
                 "top": 30 if include_title else 20,
                 "right": 20,
-                "bottom": 100,
+                "bottom": 100 + additional_legend_height,  # More space for legend
                 "left": 70,
             }
             chart_width = width - margin["left"] - margin["right"]
@@ -677,14 +689,14 @@ class SVGChartGenerator:
                         },
                     ).text = str(total_text)
 
-            # Add horizontal legend at bottom with more spacing
-            legend_y = (
-                height - margin["bottom"] + 45
-            )  # More space between chart and legend
-            total_legend_width = 0
-            legend_items = []
+            # Add multi-row legend at bottom with proper spacing
+            legend_start_y = height - margin["bottom"] + 45
+            max_items_per_row = 4  # Limit items per row to prevent overflow
+            item_spacing = 15  # Spacing between items
+            row_height = 20  # Height between rows
 
-            # Calculate total width needed for legend
+            # Prepare legend items with labels
+            legend_items = []
             for i, category in enumerate(active_categories):
                 category_data = None
                 for ward_key in ward_data.keys():
@@ -711,29 +723,47 @@ class SVGChartGenerator:
                 else:
                     label = str(category)
 
-                # Estimate text width (rough approximation)
+                legend_items.append((category, label, i))
+
+            # Calculate layout for multi-row legend
+            total_rows = (
+                len(legend_items) + max_items_per_row - 1
+            ) // max_items_per_row
+
+            # Draw legend items in multiple rows
+            for item_index, (category, label, color_index) in enumerate(legend_items):
+                row = item_index // max_items_per_row
+                col = item_index % max_items_per_row
+
+                # Calculate position for this item
+                items_in_this_row = min(
+                    max_items_per_row, len(legend_items) - row * max_items_per_row
+                )
+
+                # Estimate text width for better centering
                 text_width = len(label) * 6  # Approximate character width
                 item_width = (
-                    12 + 4 + text_width + 15
+                    12 + 4 + text_width + item_spacing
                 )  # colorbox + spacing + text + margin
-                legend_items.append((category, label, item_width))
-                total_legend_width += item_width
 
-            # Center the legend
-            legend_start_x = (width - total_legend_width) / 2
-            current_x = legend_start_x
+                # Center this row's items
+                total_row_width = (
+                    items_in_this_row * 180
+                )  # Fixed width per item for consistency
+                row_start_x = (width - total_row_width) / 2
 
-            # Draw legend items grouped together
-            for i, (category, label, item_width) in enumerate(legend_items):
-                color = self._get_color_for_item(category, i)
+                x_pos = row_start_x + col * 180  # Fixed spacing for cleaner layout
+                y_pos = legend_start_y + row * row_height
+
+                color = self._get_color_for_item(category, color_index)
 
                 # Legend color box
                 ET.SubElement(
                     svg,
                     "rect",
                     {
-                        "x": str(current_x),
-                        "y": str(legend_y - 6),
+                        "x": str(x_pos),
+                        "y": str(y_pos - 6),
                         "width": "12",
                         "height": "12",
                         "fill": color,
@@ -747,17 +777,14 @@ class SVGChartGenerator:
                     svg,
                     "text",
                     {
-                        "x": str(current_x + 16),
-                        "y": str(legend_y),
+                        "x": str(x_pos + 16),
+                        "y": str(y_pos),
                         "dominant-baseline": "middle",
                         "font-family": self.font_family,
                         "font-size": str(self.font_size_legend - 1),
                         "fill": "black",
                     },
                 ).text = str(label)
-
-                # Move to next position
-                current_x += item_width
 
             # Convert to string
             return ET.tostring(svg, encoding="unicode")
