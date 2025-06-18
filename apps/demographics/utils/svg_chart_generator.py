@@ -280,32 +280,7 @@ class SVGChartGenerator:
                     },
                 )
 
-                # Add percentage text on slice
-                mid_angle = start_angle + angle / 2
-                text_x = center_x + (radius * 0.7) * math.cos(math.radians(mid_angle))
-                text_y = center_y + (radius * 0.7) * math.sin(math.radians(mid_angle))
-
-                percentage_text = f"{percentages[i]:.1f}%"
-                if not self.use_english_fallback:
-                    percentage_text = (
-                        self._convert_number_to_nepali(f"{percentages[i]:.1f}") + "%"
-                    )
-
-                text_elem = ET.SubElement(
-                    svg,
-                    "text",
-                    {
-                        "x": str(text_x),
-                        "y": str(text_y),
-                        "text-anchor": "middle",
-                        "dominant-baseline": "middle",
-                        "font-family": self.font_family,
-                        "font-size": str(self.font_size_labels - 2),
-                        "font-weight": "bold",
-                        "fill": "white",
-                    },
-                )
-                text_elem.text = str(percentage_text)
+                # No percentage text overlay - removed for cleaner appearance
 
                 start_angle = end_angle
 

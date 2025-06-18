@@ -185,10 +185,6 @@ class OccupationProcessor(BaseDemographicsProcessor):
                             "inkscape",
                             "--export-filename",
                             str(png_path),
-                            "--export-width",
-                            "900",
-                            "--export-height",
-                            "450",
                             "--export-dpi=600",  # High quality for PDF
                             str(pie_path),
                         ],
@@ -218,10 +214,6 @@ class OccupationProcessor(BaseDemographicsProcessor):
                             "inkscape",
                             "--export-filename",
                             str(png_path),
-                            "--export-width",
-                            "1000",
-                            "--export-height",
-                            "600",
                             "--export-dpi=600",  # High quality for PDF
                             str(bar_path),
                         ],

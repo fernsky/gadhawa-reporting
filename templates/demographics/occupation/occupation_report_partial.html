@@ -55,44 +55,40 @@
         <table class="pdf-data-table ward-occupation-table">
             <thead>
                 <tr>
-                    <th rowspan="2">वडा नं.</th>
-                    <th colspan="12">पेशाका प्रकार</th>
-                    <th rowspan="2">कुल</th>
-                </tr>
-                <tr>
-                    {% for occupation_type, data in municipality_data.items %}
-                        {% if data.population > 0 %}
-                            <th style="font-size: 8pt; padding: 2px;">{{ data.name_nepali|truncatechars:8 }}</th>
-                        {% endif %}
+                    <th style="width: 35%; text-align: left; padding: 6px;">पेशाका प्रकार</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
                     {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                    <tr>
-                        <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                        {% for occupation_type, data in municipality_data.items %}
-                            {% if data.population > 0 %}
-                                <td style="text-align: right; font-size: 8pt;">
+                {% for occupation_type, data in municipality_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
                                     {% with ward_info.demographics|get_item:occupation_type as occupation_demo %}
                                         {{ occupation_demo.population|default:0|nepali_number }}
                                     {% endwith %}
                                 </td>
-                            {% endif %}
-                        {% endfor %}
-                        <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
-                    </tr>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.population|nepali_number }}
+                                <br><small style="color: #666;">({{ data.percentage|nepali_percentage }})</small>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    {% for occupation_type, data in municipality_data.items %}
-                        {% if data.population > 0 %}
-                            <td style="text-align: right; font-size: 8pt;">{{ data.population|nepali_number }}</td>
-                        {% endif %}
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
                     {% endfor %}
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -137,14 +133,33 @@
 
 .ward-occupation-table th,
 .ward-occupation-table td {
-    font-size: 8pt;
-    padding: 3px 4px;
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
 }
 
 .ward-occupation-table th {
     background-color: #e8f4f8;
-    font-size: 7pt;
-    padding: 2px 3px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-occupation-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-occupation-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-occupation-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
 }
 
 .pdf-chart-container {
