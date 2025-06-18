@@ -284,30 +284,32 @@ class SVGChartGenerator:
 
                 start_angle = end_angle
 
-            # Add legend - positioned more compactly
-            legend_x = center_x + radius + 30
-            legend_y = center_y - (len(labels) * 20) // 2
+            # Add legend - positioned more compactly with smaller elements
+            legend_x = center_x + radius + 25
+            legend_y = (
+                center_y - (len(labels) * 15) // 2
+            )  # Reduced spacing between items
 
             # Skip legend title to save space
             for i, (label, value, color) in enumerate(zip(labels, values, colors)):
-                y_pos = legend_y + i * 20
+                y_pos = legend_y + i * 15  # Reduced row height from 20 to 15
 
-                # Legend color box
+                # Legend color box - smaller size
                 ET.SubElement(
                     svg,
                     "rect",
                     {
                         "x": str(legend_x),
-                        "y": str(y_pos - 6),
-                        "width": "12",
-                        "height": "12",
+                        "y": str(y_pos - 4),  # Reduced from -6 to -4
+                        "width": "8",  # Reduced from 12 to 8
+                        "height": "8",  # Reduced from 12 to 8
                         "fill": color,
                         "stroke": "black",
-                        "stroke-width": "1",
+                        "stroke-width": "0.5",  # Thinner border
                     },
                 )
 
-                # Legend text - more compact
+                # Legend text - more compact with smaller font
                 nepali_count = self._convert_number_to_nepali(value)
                 legend_text = (
                     f"{label} ({nepali_count})"
@@ -319,11 +321,13 @@ class SVGChartGenerator:
                     svg,
                     "text",
                     {
-                        "x": str(legend_x + 16),
+                        "x": str(legend_x + 12),  # Reduced from +16 to +12
                         "y": str(y_pos),
                         "dominant-baseline": "middle",
                         "font-family": self.font_family,
-                        "font-size": str(self.font_size_legend - 1),
+                        "font-size": str(
+                            self.font_size_legend - 3
+                        ),  # Reduced from -1 to -3
                         "fill": "black",
                     },
                 )
