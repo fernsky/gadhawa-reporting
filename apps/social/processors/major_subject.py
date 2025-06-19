@@ -15,7 +15,23 @@ from apps.reports.utils.nepali_numbers import (
 
 
 class MajorSubjectProcessor(BaseSocialProcessor):
-    """Processor for ward wise major subject educational data"""
+    """Processor for ward wise major su        chart_data = {}
+    for ward_num, ward_info in data["ward_data"].items():
+        # Find top 3 subjects in each ward
+        sorted_ward_subjects = sorted(
+            ward_info["demographics"].items(),
+            key=lambda x: x[1]["population"],
+            reverse=True,
+        )[:3]
+
+        chart_data[f"ward_{ward_num}"] = {
+            "name_nepali": f"वडा {ward_num}",
+            "total_population": ward_info["total_population"],
+            "subjects": {
+                subject_code: subject_info["population"]
+                for subject_code, subject_info in sorted_ward_subjects
+            },
+        } data"""
 
     def __init__(self):
         super().__init__()
@@ -119,7 +135,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_population,
-                    "subjects": {},
+                    "demographics": {},
                 }
 
                 # Subject type breakdown for this ward
@@ -135,7 +151,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     )
 
                     if subject_population_ward > 0:
-                        ward_data[ward_num]["subjects"][subject_code] = {
+                        ward_data[ward_num]["demographics"][subject_code] = {
                             "name_nepali": subject_name,
                             "population": subject_population_ward,
                             "percentage": (
@@ -434,7 +450,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
             # Find wards with highest and lowest educational diversity
             ward_diversity = {}
             for ward_num, ward_info in ward_data.items():
-                ward_diversity[ward_num] = len(ward_info["subjects"])
+                ward_diversity[ward_num] = len(ward_info["demographics"])
 
             highest_diversity_ward = max(ward_diversity.items(), key=lambda x: x[1])
             lowest_diversity_ward = min(ward_diversity.items(), key=lambda x: x[1])
