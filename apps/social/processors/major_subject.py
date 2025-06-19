@@ -36,7 +36,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
     def __init__(self):
         super().__init__()
         # Customize chart dimensions for major subject analysis
-        self.pie_chart_width = 1000
+        self.pie_chart_width = 600
         self.pie_chart_height = 600
         self.bar_chart_width = 1200
         self.bar_chart_height = 700
@@ -539,6 +539,8 @@ class MajorSubjectProcessor(BaseSocialProcessor):
             include_title=False,
             title_nepali=title,
             title_english="Population Distribution by Major Subject",
+            width=self.pie_chart_width,
+            height=self.pie_chart_height,
         )
 
     def generate_bar_chart(self, data, title="वडागत मुख्य विषय वितरण"):

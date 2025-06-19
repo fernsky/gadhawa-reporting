@@ -32,7 +32,7 @@
 
     <!-- Old Age and Single Women Section -->
     {% if all_social_data.old_age_and_single_women %}
-        {% include 'social/old_age_and_single_women/old_age_and_single_women_report_partial.html' with municipality_data=all_social_data.old_age_and_single_women.municipality_data ward_data=all_social_data.old_age_and_single_women.ward_data total_population=all_social_data.old_age_and_single_women.total_population coherent_analysis=all_social_data.old_age_and_single_women.report_content pdf_charts=all_social_data.old_age_and_single_women.charts %}
+        {% include 'social/old_age_and_single_women/old_age_and_single_women_report_partial.html' with municipality_data=all_social_data.old_age_and_single_women.municipality_data ward_data=all_social_data.old_age_and_single_women.ward_data total_population=all_social_data.old_age_and_single_women.total_population coherent_analysis=all_social_data.old_age_and_single_women.report_content pdf_charts=all_social_data.old_age_and_single_women.charts total_old_age_population=all_social_data.old_age_and_single_women.total_old_age_population %}
     {% endif %}
 
     <!-- Social Summary and Analysis Section -->

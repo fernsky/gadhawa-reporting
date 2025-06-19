@@ -1,0 +1,192 @@
+{% load nepali_filters %}
+
+<!-- Comprehensive Appendices Section -->
+<div class="appendices-section">
+    <h1 class="appendices-title" style="color: #dc2626; text-align: center; padding: 1em; page-break-before: always; font-size: 20pt; border-bottom: 3px solid #dc2626;">
+        अनुसूचिहरू
+    </h1>
+    
+    <div class="appendices-introduction">
+        <div class="content-paragraph">
+            यस खण्डमा लुङ्ग्री गाउँपालिकासँग सम्बन्धित महत्वपूर्ण सूचना र तथ्याङ्कहरू अनुसूचिको रूपमा प्रस्तुत गरिएको छ। यी अनुसूचिहरूले मुख्य प्रतिवेदनमा उल्लेख गरिएका विषयहरूको विस्तृत विवरण र सहायक जानकारी प्रदान गर्दछ।
+        </div>
+    </div>
+
+    <!-- Health Office Employees Appendix -->
+    <div class="appendix-section" id="appendix-health-employees">
+        {% include 'appendices/health-office-employees.html' %}
+    </div>
+
+    <!-- Office Employees Appendix -->
+    <div class="appendix-section" id="appendix-office-employees">
+        {% include 'appendices/office-employees.html' %}
+    </div>
+
+    <!-- Elected Representatives Appendix -->
+    <div class="appendix-section" id="appendix-elected-representatives">
+        {% include 'appendices/elected-representatives.html' %}
+    </div>
+
+    <!-- Municipal Executive Representatives Appendix -->
+    <div class="appendix-section" id="appendix-municipal-representatives">
+        {% include 'appendices/representatives.html' %}
+    </div>
+</div>
+
+<style>
+/* Appendices Section Styles */
+.appendices-section {
+    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    line-height: 1.4;
+    color: #1f2937;
+}
+
+.appendices-title {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #dc2626;
+    text-align: center;
+    padding: 1em;
+    page-break-before: always;
+    border-bottom: 3px solid #dc2626;
+    margin-bottom: 2em;
+}
+
+.appendices-introduction {
+    margin-bottom: 2em;
+}
+
+.appendix-section {
+    margin: 2em 0;
+    page-break-inside: avoid;
+}
+
+.summary-statistics-table,
+.abbreviations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+.summary-statistics-table th,
+.summary-statistics-table td,
+.abbreviations-table th,
+.abbreviations-table td {
+    border: 1px solid #333;
+    padding: 8px 10px;
+    vertical-align: top;
+}
+
+.summary-statistics-table th,
+.abbreviations-table th {
+    background-color: #1e40af;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 10pt;
+}
+
+.summary-statistics-table tbody tr:nth-child(even),
+.abbreviations-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.reference-list {
+    margin: 1.5em 0;
+}
+
+.reference-items {
+    padding-left: 2em;
+    margin: 1em 0;
+}
+
+.reference-item {
+    margin: 0.8em 0;
+    font-size: 11pt;
+    line-height: 1.5;
+}
+
+.content-paragraph {
+    text-align: justify;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+    text-indent: 1.5em;
+}
+
+.content-paragraph p {
+    margin: 0.8em 0;
+    text-indent: 0;
+}
+
+.content-paragraph strong {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.table-title {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #1e40af;
+    margin: 1.5em 0 0.5em 0;
+    text-align: center;
+}
+
+.content-section {
+    margin: 1.5em 0;
+}
+
+.table-section {
+    margin: 2em 0;
+    page-break-inside: avoid;
+}
+
+/* Print optimization */
+@media print {
+    .appendices-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .appendices-title {
+        page-break-before: always;
+        font-size: 18pt;
+    }
+    
+    .appendix-section {
+        page-break-inside: avoid;
+    }
+    
+    .summary-statistics-table,
+    .abbreviations-table {
+        page-break-inside: auto;
+        font-size: 9pt;
+    }
+    
+    .summary-statistics-table tr,
+    .abbreviations-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .summary-statistics-table th,
+    .summary-statistics-table td,
+    .abbreviations-table th,
+    .abbreviations-table td {
+        padding: 6px 8px;
+    }
+    
+    .content-paragraph {
+        font-size: 10pt;
+    }
+    
+    .reference-item {
+        font-size: 10pt;
+    }
+    
+    .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

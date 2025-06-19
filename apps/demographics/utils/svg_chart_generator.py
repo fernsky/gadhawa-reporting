@@ -187,7 +187,13 @@ class SVGChartGenerator:
             return DEFAULT_COLORS[color_keys[index % len(color_keys)]]
 
     def generate_pie_chart_svg(
-        self, demographic_data, include_title=False, title_nepali="", title_english=""
+        self,
+        demographic_data,
+        include_title=False,
+        title_nepali="",
+        title_english="",
+        width=600,
+        height=300,
     ):
         """Generate pie chart as SVG with proper font embedding"""
         try:
@@ -223,8 +229,6 @@ class SVGChartGenerator:
             percentages = [v / total * 100 for v in values]
             angles = [p / 100 * 360 for p in percentages]
 
-            # SVG dimensions - compact size without excessive padding
-            width, height = 600, 300
             center_x, center_y = width // 2, height // 2 - 10
             radius = 120
 

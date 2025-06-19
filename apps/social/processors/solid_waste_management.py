@@ -58,6 +58,8 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
                 or 0
             )
 
+            print(waste_households)
+
             if (
                 waste_households > 0
             ):  # Only include waste management types with households
