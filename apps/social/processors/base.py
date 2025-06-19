@@ -51,7 +51,9 @@ class BaseSocialProcessor(ABC):
         """Generate chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
             # Format municipality data for pie chart
-            formatted_data = self._format_municipality_data_for_pie_chart(data.get("municipality_data", {}))
+            formatted_data = self._format_municipality_data_for_pie_chart(
+                data.get("municipality_data", {})
+            )
             return self.chart_generator.generate_pie_chart_svg(
                 formatted_data,
                 include_title=False,
@@ -60,7 +62,9 @@ class BaseSocialProcessor(ABC):
             )
         elif chart_type == "bar":
             # Format ward data for bar chart
-            formatted_data = self._format_ward_data_for_bar_chart(data.get("ward_data", {}))
+            formatted_data = self._format_ward_data_for_bar_chart(
+                data.get("ward_data", {})
+            )
             return self.chart_generator.generate_bar_chart_svg(
                 formatted_data,
                 include_title=False,
@@ -73,98 +77,123 @@ class BaseSocialProcessor(ABC):
         """Format municipality data for pie chart generation"""
         if not municipality_data:
             return {}
-        
+
         formatted_data = {}
         for key, value in municipality_data.items():
             if isinstance(value, dict):
                 # If value is already properly formatted with name_nepali and population
-                if 'name_nepali' in value and 'population' in value:
+                if "name_nepali" in value and "population" in value:
                     formatted_data[key] = value
                 else:
                     # Try to extract population from various possible fields
-                    population = value.get('population', 0) or value.get('households', 0) or value.get('total', 0)
+                    population = (
+                        value.get("population", 0)
+                        or value.get("households", 0)
+                        or value.get("total", 0)
+                    )
                     if population > 0:
                         formatted_data[key] = {
-                            'name_nepali': value.get('name_nepali', key),
-                            'population': population,
-                            'percentage': value.get('percentage', 0)
+                            "name_nepali": value.get("name_nepali", key),
+                            "population": population,
+                            "percentage": value.get("percentage", 0),
                         }
             elif isinstance(value, (int, float)) and value > 0:
                 # If value is just a number
                 formatted_data[key] = {
-                    'name_nepali': key,
-                    'population': value,
-                    'percentage': 0
+                    "name_nepali": key,
+                    "population": value,
+                    "percentage": 0,
                 }
-        
+
         return formatted_data
 
     def _format_ward_data_for_bar_chart(self, ward_data):
         """Format ward data for bar chart generation"""
         if not ward_data:
             return {}
-        
+
         formatted_data = {}
         for ward_key, ward_info in ward_data.items():
             if isinstance(ward_info, dict):
                 ward_num = str(ward_key)
-                total_population = ward_info.get('total_population', 0) or ward_info.get('total_households', 0)
-                
+                total_population = ward_info.get(
+                    "total_population", 0
+                ) or ward_info.get("total_households", 0)
+
                 if total_population > 0:
                     formatted_data[ward_num] = {
-                        'ward_name': f'वडा नं. {ward_num}',
-                        'total_population': total_population,
-                        'demographics': self._extract_demographics_from_ward(ward_info)
+                        "ward_name": f"वडा नं. {ward_num}",
+                        "total_population": total_population,
+                        "demographics": self._extract_demographics_from_ward(ward_info),
                     }
-        
+
         return formatted_data
 
     def _extract_demographics_from_ward(self, ward_info):
         """Extract demographic breakdown from ward info"""
         demographics = {}
-        
+
         # Look for various possible demographic data structures
-        if 'toilet_types' in ward_info:
-            for toilet_type, toilet_data in ward_info['toilet_types'].items():
+        if "toilet_types" in ward_info:
+            for toilet_type, toilet_data in ward_info["toilet_types"].items():
                 demographics[toilet_type] = {
-                    'name_nepali': toilet_data.get('name_nepali', toilet_type),
-                    'population': toilet_data.get('population', 0),
-                    'percentage': toilet_data.get('percentage', 0)
+                    "name_nepali": toilet_data.get("name_nepali", toilet_type),
+                    "population": toilet_data.get("population", 0),
+                    "percentage": toilet_data.get("percentage", 0),
                 }
-        elif 'waste_methods' in ward_info:
-            for method, method_data in ward_info['waste_methods'].items():
+        elif "waste_methods" in ward_info:
+            for method, method_data in ward_info["waste_methods"].items():
                 demographics[method] = {
-                    'name_nepali': method_data.get('name_nepali', method),
-                    'population': method_data.get('population', 0),
-                    'percentage': method_data.get('percentage', 0)
+                    "name_nepali": method_data.get("name_nepali", method),
+                    "population": method_data.get("population", 0),
+                    "percentage": method_data.get("percentage", 0),
                 }
-        elif 'subjects' in ward_info:
-            for subject, subject_data in ward_info['subjects'].items():
+        elif "subjects" in ward_info:
+            for subject, subject_data in ward_info["subjects"].items():
                 demographics[subject] = {
-                    'name_nepali': subject_data.get('name_nepali', subject),
-                    'population': subject_data.get('population', 0),
-                    'percentage': subject_data.get('percentage', 0)
+                    "name_nepali": subject_data.get("name_nepali", subject),
+                    "population": subject_data.get("population", 0),
+                    "percentage": subject_data.get("percentage", 0),
                 }
-        elif 'dropout_causes' in ward_info:
-            for cause, cause_data in ward_info['dropout_causes'].items():
+        elif "dropout_causes" in ward_info:
+            for cause, cause_data in ward_info["dropout_causes"].items():
                 demographics[cause] = {
-                    'name_nepali': cause_data.get('name_nepali', cause),
-                    'population': cause_data.get('population', 0),
-                    'percentage': cause_data.get('percentage', 0)
+                    "name_nepali": cause_data.get("name_nepali", cause),
+                    "population": cause_data.get("population", 0),
+                    "percentage": cause_data.get("percentage", 0),
+                }
+        elif "literacy_types" in ward_info:
+            for literacy_type, literacy_data in ward_info["literacy_types"].items():
+                demographics[literacy_type] = {
+                    "name_nepali": literacy_data.get("name_nepali", literacy_type),
+                    "population": literacy_data.get("population", 0),
+                    "percentage": literacy_data.get("percentage", 0),
+                }
+        elif "old_age_data" in ward_info:
+            for age_type, age_data in ward_info["old_age_data"].items():
+                demographics[age_type] = {
+                    "name_nepali": age_data.get("name_nepali", age_type),
+                    "population": age_data.get("population", 0),
+                    "percentage": age_data.get("percentage", 0),
                 }
         else:
             # Generic extraction - look for any field that looks like demographic data
             for key, value in ward_info.items():
-                if key not in ['ward_number', 'ward_name', 'total_population', 'total_households'] and isinstance(value, dict):
-                    if 'population' in value or 'households' in value:
-                        pop = value.get('population', 0) or value.get('households', 0)
+                if key not in [
+                    "ward_number",
+                    "ward_name",
+                    "total_population",
+                    "total_households",
+                ] and isinstance(value, dict):
+                    if "population" in value or "households" in value:
+                        pop = value.get("population", 0) or value.get("households", 0)
                         if pop > 0:
                             demographics[key] = {
-                                'name_nepali': value.get('name_nepali', key),
-                                'population': pop,
-                                'percentage': value.get('percentage', 0)
+                                "name_nepali": value.get("name_nepali", key),
+                                "population": pop,
+                                "percentage": value.get("percentage", 0),
                             }
-        
+
         return demographics
 
     def generate_report_content(self, data):
@@ -185,10 +214,15 @@ class BaseSocialProcessor(ABC):
         # Calculate total population/households
         total_count = data.get("total_households", 0) or data.get("total_population", 0)
 
+        # Format ward data for template use (ensure demographics field exists)
+        formatted_ward_data = self._format_ward_data_for_template(
+            data.get("ward_data", {})
+        )
+
         return {
             "data": data,
             "municipality_data": data.get("municipality_data", {}),
-            "ward_data": data.get("ward_data", {}),
+            "ward_data": formatted_ward_data,
             "total_households": total_count,
             "total_population": total_count,
             "report_content": coherent_analysis,
@@ -196,6 +230,34 @@ class BaseSocialProcessor(ABC):
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
         }
+
+    def _format_ward_data_for_template(self, ward_data):
+        """Format ward data for template use - ensures demographics field exists"""
+        if not ward_data:
+            return {}
+
+        formatted_data = {}
+        for ward_key, ward_info in ward_data.items():
+            if isinstance(ward_info, dict):
+                ward_num = str(ward_key)
+                total_population = ward_info.get(
+                    "total_population", 0
+                ) or ward_info.get("total_households", 0)
+
+                # Create formatted ward data with demographics field
+                formatted_ward_info = {
+                    "ward_number": ward_num,
+                    "ward_name": f"वडा नं. {ward_num}",
+                    "total_population": total_population,
+                    "demographics": self._extract_demographics_from_ward(ward_info),
+                }
+
+                # Also preserve the original structure for backward compatibility
+                formatted_ward_info.update(ward_info)
+
+                formatted_data[ward_key] = formatted_ward_info
+
+        return formatted_data
 
     def get_category_name(self):
         """Get category name from class name"""
