@@ -72,7 +72,7 @@ def setup_chart_directories():
         from django.conf import settings
 
         # Create charts directory
-        charts_dir = Path(settings.STATIC_ROOT) / "images" / "charts"
+        charts_dir = Path(settings.STATICFILES_DIRS[0]) / "images" / "charts"
         charts_dir.mkdir(parents=True, exist_ok=True)
         print(f"✅ Charts directory created: {charts_dir}")
 

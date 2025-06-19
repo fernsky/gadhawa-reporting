@@ -23,19 +23,28 @@
                 {% chart_url "demographics_religion_pie" as pie_chart_url %}
                 {% if pie_chart_url %}
                     <img src="{{ pie_chart_url }}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% elif charts.pie_chart_url %}
+                    <!-- Use chart from processor context -->
+                    <img src="{{ charts.pie_chart_url }}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% elif pdf_charts.religion.pie_chart_png %}
+                    <!-- High-quality PNG chart -->
                     <img src="{% static pdf_charts.religion.pie_chart_png %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% elif pdf_charts.religion.pie_chart_svg %}
+                    <!-- SVG fallback chart -->
                     <img src="{% static pdf_charts.religion.pie_chart_svg %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% else %}
-                    <!-- Fallback to static chart -->
+                    <!-- Ultimate fallback to static chart -->
                     <img src="{% static 'images/charts/religion_pie_chart.png' %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% endif %}
                 
                 <!-- Chart management status info (for debugging, can be removed) -->
                 {% if chart_management_status and chart_management_status.all_current %}
                     <div class="chart-status" style="font-size: 8pt; color: #666; margin-top: 0.5em;">
-                        चार्ट अद्यावधिक छ (Chart Management System)
+                        📊 चार्ट अद्यावधिक छ (Chart Management System - High Quality)
+                    </div>
+                {% elif chart_management_status %}
+                    <div class="chart-status" style="font-size: 8pt; color: #666; margin-top: 0.5em;">
+                        🔄 चार्ट नयाँ बनाइएको छ (Chart Regenerated - High Quality)
                     </div>
                 {% endif %}
             </div>

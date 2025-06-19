@@ -39,7 +39,16 @@ class ChartFile(BaseModel):
     @property
     def full_path(self):
         """Get full filesystem path"""
-        return Path(settings.STATIC_ROOT) / "images" / "charts" / self.file_path
+        # Use same directory structure as chart service
+        if hasattr(settings, "STATICFILES_DIRS") and settings.STATICFILES_DIRS:
+            return (
+                Path(settings.STATICFILES_DIRS[0])
+                / "images"
+                / "charts"
+                / self.file_path
+            )
+        else:
+            return Path(settings.STATIC_ROOT) / "images" / "charts" / self.file_path
 
     @property
     def url(self):
