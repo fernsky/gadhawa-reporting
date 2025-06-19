@@ -56,3 +56,9 @@ class SimpleChartProcessor(ABC):
         """Check if chart needs to be generated"""
         chart_key = f"{self.get_chart_key()}_{chart_type}"
         return self.chart_service.needs_generation(chart_key)
+
+    def mark_generated(self, chart_type: str) -> bool:
+        """Mark chart as generated (alias for compatibility)"""
+        # This is handled automatically by track_chart_file
+        # Just return True to maintain compatibility
+        return True

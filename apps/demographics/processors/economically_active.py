@@ -4,6 +4,7 @@ Economically Active Population Demographics Processor
 Handles economically active population demographic data processing, chart generation, and report formatting.
 """
 
+from pathlib import Path
 from django.db import models
 from .base import BaseDemographicsProcessor, BaseReportFormatter
 from ..models import (
@@ -16,13 +17,30 @@ from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
 )
+from apps.chart_management.processors import SimpleChartProcessor
 
 
-class EconomicallyActiveProcessor(BaseDemographicsProcessor):
+class EconomicallyActiveProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
     """Processor for economically active population demographics"""
 
     def __init__(self):
         super().__init__()
+        SimpleChartProcessor.__init__(self)
+
+        # Ensure we use the same directory as the chart service
+        from django.conf import settings
+
+        if hasattr(settings, "STATICFILES_DIRS") and settings.STATICFILES_DIRS:
+            # Use same directory as chart management service
+            self.static_charts_dir = (
+                Path(settings.STATICFILES_DIRS[0]) / "images" / "charts"
+            )
+        else:
+            # Fallback to STATIC_ROOT
+            self.static_charts_dir = Path(settings.STATIC_ROOT) / "images" / "charts"
+
+        self.static_charts_dir.mkdir(parents=True, exist_ok=True)
+
         # Customize chart dimensions for economically active population
         self.pie_chart_width = 800
         self.pie_chart_height = 400
@@ -43,8 +61,8 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
         return "३.९"
 
     def get_chart_key(self):
-        """Get the key for storing charts in PDF context"""
-        return "economically_active"
+        """Return unique chart key for this processor"""
+        return "demographics_economically_active"
 
     def get_data(self):
         """Get economically active population data - both municipality-wide and ward-wise"""
@@ -283,36 +301,94 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor):
             title_english="",
         )
 
+    def generate_and_track_charts(self, data):
+        """Generate charts only if they don't exist and track them using simplified chart management"""
+        charts = {}
 
-class EconomicallyActiveReportFormatter(BaseReportFormatter):
-    """Report formatter for economically active population demographics"""
+        # Ensure static charts directory exists
+        self.static_charts_dir.mkdir(parents=True, exist_ok=True)
 
-    def __init__(self, processor_data):
-        super().__init__(processor_data)
+        # Check and generate pie chart only if needed
+        if self.needs_generation("pie"):
+            print(f"🔄 Generating economically active pie chart...")
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=data.get("age_group_data", {}),
+                output_name="economically_active_pie_chart",
+                static_dir=str(self.static_charts_dir),
+                chart_type="pie",
+                include_title=False,
+            )
 
-    def format_for_html(self):
-        """Format data for HTML template rendering"""
+            if success and png_path:
+                charts["pie_chart_png"] = f"images/charts/{Path(png_path).name}"
+                charts["pie_chart_url"] = f"images/charts/{Path(png_path).name}"
+                self.mark_generated("pie")
+                print(
+                    f"✅ Economically active pie chart generated successfully: {png_path}"
+                )
+            elif svg_path:
+                charts["pie_chart_svg"] = f"images/charts/{Path(svg_path).name}"
+                charts["pie_chart_url"] = f"images/charts/{Path(svg_path).name}"
+                self.mark_generated("pie")
+                print(f"✅ Economically active pie chart SVG generated: {svg_path}")
+        else:
+            # Chart already exists, get the URL
+            charts["pie_chart_url"] = f"images/charts/economically_active_pie_chart.png"
+            print(f"✅ Economically active pie chart already exists")
+
+        # Check and generate bar chart only if needed
+        if self.needs_generation("bar"):
+            print(f"🔄 Generating economically active bar chart...")
+            success, png_path, svg_path = self.chart_generator.generate_chart_image(
+                demographic_data=data.get("ward_data", {}),
+                output_name="economically_active_bar_chart",
+                static_dir=str(self.static_charts_dir),
+                chart_type="bar",
+                include_title=False,
+            )
+
+            if success and png_path:
+                charts["bar_chart_png"] = f"images/charts/{Path(png_path).name}"
+                charts["bar_chart_url"] = f"images/charts/{Path(png_path).name}"
+                self.mark_generated("bar")
+                print(
+                    f"✅ Economically active bar chart generated successfully: {png_path}"
+                )
+            elif svg_path:
+                charts["bar_chart_svg"] = f"images/charts/{Path(svg_path).name}"
+                charts["bar_chart_url"] = f"images/charts/{Path(svg_path).name}"
+                self.mark_generated("bar")
+                print(f"✅ Economically active bar chart SVG generated: {svg_path}")
+        else:
+            # Chart already exists, get the URL
+            charts["bar_chart_url"] = f"images/charts/economically_active_bar_chart.png"
+            print(f"✅ Economically active bar chart already exists")
+
+        return charts
+
+    def generate_and_save_charts(self, data):
+        """Legacy method - calls new chart management method"""
+        return self.generate_and_track_charts(data)
+
+    def process_for_pdf(self):
+        """Process economically active data for PDF generation with simplified chart management"""
+        # Get raw data
+        data = self.get_data()
+
+        # Generate report content
+        report_content = self.generate_report_content(data)
+
+        # Generate charts only if needed
+        charts = self.generate_and_track_charts(data)
+
+        # Calculate total population
+        total_population = data.get("total_population", 0)
+
         return {
-            "age_group_data": self.data["age_group_data"],
-            "gender_data": self.data["gender_data"],
-            "ward_data": self.data["ward_data"],
-            "total_population": self.data["total_population"],
-            "coherent_analysis": self.data["coherent_analysis"],
-            "pdf_charts": self.data["pdf_charts"],
-        }
-
-    def format_for_api(self):
-        """Format data for API response"""
-        return {
-            "section": self.data["section_number"],
-            "title": self.data["section_title"],
-            "summary": {
-                "total_population": self.data["total_population"],
-                "age_groups": len(self.data["age_group_data"]),
-                "wards": len(self.data["ward_data"]),
-            },
-            "age_group_breakdown": self.data["age_group_data"],
-            "gender_breakdown": self.data["gender_data"],
-            "ward_breakdown": self.data["ward_data"],
-            "analysis": self.data["coherent_analysis"],
+            "data": data,
+            "report_content": report_content,
+            "charts": charts,
+            "total_population": total_population,
+            "section_title": self.get_section_title(),
+            "section_number": self.get_section_number(),
         }

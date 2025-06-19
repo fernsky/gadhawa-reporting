@@ -1,5 +1,6 @@
 {% load nepali_filters %}
 {% load househead_filters %}
+{% load chart_tags %}
 
 <!-- Househead Demographics Report Partial for PDF -->
 <p class="section-content househead-demographics-section" id="section-househead-demographics">
@@ -13,6 +14,29 @@
     </div>
 
 
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if househead_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.७.१: घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                
+                <!-- Try chart management system first -->
+                {% chart_url "demographics_househead_pie" as pie_chart_url %}
+                {% if pie_chart_url %}
+                    <img src="{{ pie_chart_url }}" alt="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif charts.pie_chart_url %}
+                    <img src="{{ charts.pie_chart_url }}" alt="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.househead.pie_chart_png %}
+                    <img src="{% static pdf_charts.househead.pie_chart_png %}" alt="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.househead.pie_chart_svg %}
+                    <img src="{% static pdf_charts.househead.pie_chart_svg %}" alt="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% else %}
+                    <img src="{% static 'images/charts/househead_pie_chart.png' %}" alt="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 
     <!-- Bar Chart for Ward-wise Distribution -->
     {% if ward_data %}
@@ -20,7 +44,20 @@
             <h3 class="chart-title">चित्र ३.७.२: वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
+                
+                <!-- Try chart management system first -->
+                {% chart_url "demographics_househead_bar" as bar_chart_url %}
+                {% if bar_chart_url %}
+                    <img src="{{ bar_chart_url }}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif charts.bar_chart_url %}
+                    <img src="{{ charts.bar_chart_url }}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.househead.bar_chart_png %}
+                    <img src="{% static pdf_charts.househead.bar_chart_png %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.househead.bar_chart_svg %}
+                    <img src="{% static pdf_charts.househead.bar_chart_svg %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% else %}
                     <img src="{% static 'images/charts/househead_bar_chart.png' %}" alt="वडागत घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण" class="pdf-chart-image">
+                {% endif %}
             </div>
         </div>
     {% endif %}
