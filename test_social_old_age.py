@@ -131,7 +131,7 @@ def test_social_pdf_integration():
                     # Check if chart file exists
                     if chart_type.endswith("_png"):
                         chart_file = (
-                            f"static/images/{chart_path.split('/')[-1]}"
+                            f"static/images/charts/{chart_path.split('/')[-1]}"
                             if "/" in chart_path
                             else chart_path
                         )

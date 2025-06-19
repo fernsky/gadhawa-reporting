@@ -1,0 +1,39 @@
+<!-- Chart with fallback template -->
+<div class="chart-container" data-chart-key="{{ chart_key }}">
+    {% if png_url %}
+        <img src="{{ png_url }}" 
+             alt="{{ title }}" 
+             class="chart-image chart-png" 
+             style="width: {{ width }}px; height: {{ height }}px;"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+    {% endif %}
+    
+    {% if svg_url %}
+        <img src="{{ svg_url }}" 
+             alt="{{ title }}" 
+             class="chart-image chart-svg" 
+             style="width: {{ width }}px; height: {{ height }}px; {% if png_url %}display: none;{% endif %}"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+    {% endif %}
+    
+    <!-- Error fallback -->
+    <div class="chart-error" 
+         style="width: {{ width }}px; height: {{ height }}px; 
+                border: 2px dashed #ccc; 
+                display: {% if not png_url and not svg_url %}flex{% else %}none{% endif %}; 
+                align-items: center; 
+                justify-content: center; 
+                color: #666; 
+                font-family: 'Noto Sans Devanagari', sans-serif;
+                text-align: center;
+                padding: 20px;
+                box-sizing: border-box;">
+        <div>
+            <i class="fas fa-chart-pie" style="font-size: 2em; margin-bottom: 10px; opacity: 0.5;"></i>
+            <br>
+            चार्ट लोड गर्न सकिएन
+            <br>
+            <small>{{ title }}</small>
+        </div>
+    </div>
+</div>

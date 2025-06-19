@@ -818,7 +818,7 @@ class SVGChartGenerator:
         self,
         demographic_data,
         output_name,
-        static_dir="static/images",
+        static_dir="static/images/charts",
         chart_type="pie",
         include_title=False,
         title_nepali="",
@@ -953,7 +953,7 @@ class SVGChartGenerator:
         success, png_path, svg_path = generator.generate_chart_image(
             religion_data=religion_data,
             output_name=output_name,
-            static_dir="static/images",
+            static_dir="static/images/charts",
             chart_type="pie",
             include_title=False,
         )
@@ -973,7 +973,7 @@ class SVGChartGenerator:
 
         return charts_info
 
-    def test_font_rendering(self, output_dir="static/images"):
+    def test_font_rendering(self, output_dir="static/images/charts"):
         """
         Create a test chart to verify that Devanagari fonts are rendering properly
         """

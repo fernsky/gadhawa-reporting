@@ -295,7 +295,7 @@ class BaseSocialProcessor(ABC):
                     )
                     if png_path.exists():
                         charts_info["pie_chart_png"] = (
-                            f"images/{category_name}_pie_chart.png"
+                            f"images/charts/{category_name}_pie_chart.png"
                         )
                 except:
                     pass  # Use SVG fallback
@@ -308,7 +308,7 @@ class BaseSocialProcessor(ABC):
                     with open(bar_path, "w", encoding="utf-8") as f:
                         f.write(bar_svg)
                     charts_info["bar_chart_svg"] = (
-                        f"images/{category_name}_bar_chart.svg"
+                        f"images/charts/{category_name}_bar_chart.svg"
                     )
 
                     # Try to convert to PNG using subprocess
@@ -329,7 +329,7 @@ class BaseSocialProcessor(ABC):
                         )
                         if png_path.exists():
                             charts_info["bar_chart_png"] = (
-                                f"images/{category_name}_bar_chart.png"
+                                f"images/charts/{category_name}_bar_chart.png"
                             )
                     except:
                         pass  # Use SVG fallback

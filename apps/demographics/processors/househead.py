@@ -142,7 +142,7 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                 pie_path = self.static_charts_dir / "househead_pie_chart.svg"
                 with open(pie_path, "w", encoding="utf-8") as f:
                     f.write(pie_svg)
-                charts_info["pie_chart_svg"] = f"images/{pie_path.name}"
+                charts_info["pie_chart_svg"] = f"images/charts/{pie_path.name}"
 
                 # Try to convert to PNG
                 try:
@@ -159,7 +159,7 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                         timeout=30,
                     )
                     if png_path.exists():
-                        charts_info["pie_chart_png"] = f"images/{png_path.name}"
+                        charts_info["pie_chart_png"] = f"images/charts/{png_path.name}"
                 except:
                     pass  # Use SVG fallback
 
@@ -169,7 +169,7 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                 bar_path = self.static_charts_dir / "househead_bar_chart.svg"
                 with open(bar_path, "w", encoding="utf-8") as f:
                     f.write(bar_svg)
-                charts_info["bar_chart_svg"] = f"images/{bar_path.name}"
+                charts_info["bar_chart_svg"] = f"images/charts/{bar_path.name}"
 
                 # Try to convert to PNG
                 try:
@@ -186,7 +186,7 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                         timeout=30,
                     )
                     if png_path.exists():
-                        charts_info["bar_chart_png"] = f"images/{png_path.name}"
+                        charts_info["bar_chart_png"] = f"images/charts/{png_path.name}"
                 except:
                     pass  # Use SVG fallback
 
@@ -250,7 +250,9 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             for ward_num, ward_info in ward_data.items():
                 if "FEMALE" in ward_info["demographics"]:
                     if "percentage" in ward_info["demographics"]["FEMALE"]:
-                        female_percentage = ward_info["demographics"]["FEMALE"]["percentage"]
+                        female_percentage = ward_info["demographics"]["FEMALE"][
+                            "percentage"
+                        ]
                         if female_percentage > highest_female_percentage:
                             highest_female_percentage = female_percentage
                             highest_female_ward = ward_num

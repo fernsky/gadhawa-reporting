@@ -85,7 +85,7 @@ def test_infrastructure_charts():
     if static_dir.exists():
         print(f"✓ Static directory exists: {static_dir}")
 
-        images_dir = static_dir / "images"
+        images_dir = static_dir / "images" / "charts"
         if images_dir.exists():
             print(f"✓ Images directory exists: {images_dir}")
 
