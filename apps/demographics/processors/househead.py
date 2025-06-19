@@ -249,12 +249,11 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             highest_female_percentage = 0
             for ward_num, ward_info in ward_data.items():
                 if "FEMALE" in ward_info["demographics"]:
-                    female_percentage = ward_info["demographics"]["FEMALE"][
-                        "percentage"
-                    ]
-                    if female_percentage > highest_female_percentage:
-                        highest_female_percentage = female_percentage
-                        highest_female_ward = ward_num
+                    if "percentage" in ward_info["demographics"]["FEMALE"]:
+                        female_percentage = ward_info["demographics"]["FEMALE"]["percentage"]
+                        if female_percentage > highest_female_percentage:
+                            highest_female_percentage = female_percentage
+                            highest_female_ward = ward_num
 
             if highest_female_ward:
                 ward_nepali = format_nepali_number(highest_female_ward)
