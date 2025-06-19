@@ -13,12 +13,12 @@ from apps.demographics.utils.svg_chart_generator import SVGChartGenerator
 
 class BaseSocialProcessor(ABC):
     """Base class for all social data processors"""
-    
+
     def __init__(self):
         # Use proper static directory path
         self.static_charts_dir = Path("static/images")
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Initialize SVG chart generator
         self.chart_generator = SVGChartGenerator()
         # Default chart dimensions - can be overridden by subclasses
@@ -26,7 +26,7 @@ class BaseSocialProcessor(ABC):
         self.pie_chart_height = 450
         self.bar_chart_width = 800
         self.bar_chart_height = 500
-    
+
     @abstractmethod
     def get_section_title(self):
         """Return the section title for the social category"""
@@ -50,92 +50,241 @@ class BaseSocialProcessor(ABC):
     def generate_chart_svg(self, data, chart_type="pie"):
         """Generate chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
-            return self.chart_generator.generate_pie_chart_svg(data, include_title=False)
+            # Format municipality data for pie chart
+            formatted_data = self._format_municipality_data_for_pie_chart(data.get("municipality_data", {}))
+            return self.chart_generator.generate_pie_chart_svg(
+                formatted_data,
+                include_title=False,
+                title_nepali=self.get_section_title(),
+                title_english="Social Data Distribution",
+            )
         elif chart_type == "bar":
-            return self.chart_generator.generate_bar_chart_svg(data, include_title=False)
+            # Format ward data for bar chart
+            formatted_data = self._format_ward_data_for_bar_chart(data.get("ward_data", {}))
+            return self.chart_generator.generate_bar_chart_svg(
+                formatted_data,
+                include_title=False,
+                title_nepali=f"वडा अनुसार {self.get_section_title()}",
+                title_english="Ward-wise Social Data Distribution",
+            )
+        return None
+
+    def _format_municipality_data_for_pie_chart(self, municipality_data):
+        """Format municipality data for pie chart generation"""
+        if not municipality_data:
+            return {}
+        
+        formatted_data = {}
+        for key, value in municipality_data.items():
+            if isinstance(value, dict):
+                # If value is already properly formatted with name_nepali and population
+                if 'name_nepali' in value and 'population' in value:
+                    formatted_data[key] = value
+                else:
+                    # Try to extract population from various possible fields
+                    population = value.get('population', 0) or value.get('households', 0) or value.get('total', 0)
+                    if population > 0:
+                        formatted_data[key] = {
+                            'name_nepali': value.get('name_nepali', key),
+                            'population': population,
+                            'percentage': value.get('percentage', 0)
+                        }
+            elif isinstance(value, (int, float)) and value > 0:
+                # If value is just a number
+                formatted_data[key] = {
+                    'name_nepali': key,
+                    'population': value,
+                    'percentage': 0
+                }
+        
+        return formatted_data
+
+    def _format_ward_data_for_bar_chart(self, ward_data):
+        """Format ward data for bar chart generation"""
+        if not ward_data:
+            return {}
+        
+        formatted_data = {}
+        for ward_key, ward_info in ward_data.items():
+            if isinstance(ward_info, dict):
+                ward_num = str(ward_key)
+                total_population = ward_info.get('total_population', 0) or ward_info.get('total_households', 0)
+                
+                if total_population > 0:
+                    formatted_data[ward_num] = {
+                        'ward_name': f'वडा नं. {ward_num}',
+                        'total_population': total_population,
+                        'demographics': self._extract_demographics_from_ward(ward_info)
+                    }
+        
+        return formatted_data
+
+    def _extract_demographics_from_ward(self, ward_info):
+        """Extract demographic breakdown from ward info"""
+        demographics = {}
+        
+        # Look for various possible demographic data structures
+        if 'toilet_types' in ward_info:
+            for toilet_type, toilet_data in ward_info['toilet_types'].items():
+                demographics[toilet_type] = {
+                    'name_nepali': toilet_data.get('name_nepali', toilet_type),
+                    'population': toilet_data.get('population', 0),
+                    'percentage': toilet_data.get('percentage', 0)
+                }
+        elif 'waste_methods' in ward_info:
+            for method, method_data in ward_info['waste_methods'].items():
+                demographics[method] = {
+                    'name_nepali': method_data.get('name_nepali', method),
+                    'population': method_data.get('population', 0),
+                    'percentage': method_data.get('percentage', 0)
+                }
+        elif 'subjects' in ward_info:
+            for subject, subject_data in ward_info['subjects'].items():
+                demographics[subject] = {
+                    'name_nepali': subject_data.get('name_nepali', subject),
+                    'population': subject_data.get('population', 0),
+                    'percentage': subject_data.get('percentage', 0)
+                }
+        elif 'dropout_causes' in ward_info:
+            for cause, cause_data in ward_info['dropout_causes'].items():
+                demographics[cause] = {
+                    'name_nepali': cause_data.get('name_nepali', cause),
+                    'population': cause_data.get('population', 0),
+                    'percentage': cause_data.get('percentage', 0)
+                }
         else:
-            return None
+            # Generic extraction - look for any field that looks like demographic data
+            for key, value in ward_info.items():
+                if key not in ['ward_number', 'ward_name', 'total_population', 'total_households'] and isinstance(value, dict):
+                    if 'population' in value or 'households' in value:
+                        pop = value.get('population', 0) or value.get('households', 0)
+                        if pop > 0:
+                            demographics[key] = {
+                                'name_nepali': value.get('name_nepali', key),
+                                'population': pop,
+                                'percentage': value.get('percentage', 0)
+                            }
+        
+        return demographics
+
+    def generate_report_content(self, data):
+        """Generate report content - can be overridden by subclasses"""
+        return self.generate_analysis_text(data)
 
     def process_for_pdf(self):
         """Process category data for PDF generation including charts"""
         # Get raw data
         data = self.get_data()
-        
+
         # Generate analysis text
-        coherent_analysis = self.generate_analysis_text(data)
-        
+        coherent_analysis = self.generate_report_content(data)
+
         # Generate and save charts
         charts = self.generate_and_save_charts(data)
-        
+
         # Calculate total population/households
-        total_count = data.get('total_households', 0) or data.get('total_population', 0)
-        
+        total_count = data.get("total_households", 0) or data.get("total_population", 0)
+
         return {
-            'municipality_data': data.get('municipality_data', {}),
-            'ward_data': data.get('ward_data', {}),
-            'total_households': total_count,
-            'coherent_analysis': coherent_analysis,
-            'pdf_charts': {self.get_category_name(): charts},
-            'section_title': self.get_section_title(),
-            'section_number': self.get_section_number(),
+            "data": data,
+            "municipality_data": data.get("municipality_data", {}),
+            "ward_data": data.get("ward_data", {}),
+            "total_households": total_count,
+            "total_population": total_count,
+            "report_content": coherent_analysis,
+            "charts": charts,
+            "section_title": self.get_section_title(),
+            "section_number": self.get_section_number(),
         }
 
     def get_category_name(self):
         """Get category name from class name"""
-        return self.__class__.__name__.lower().replace('processor', '')
+        return self.__class__.__name__.lower().replace("processor", "")
 
     def generate_and_save_charts(self, data):
-        """Generate charts using SVGChartGenerator and save them as PNG files"""
-        charts = {}
+        """Generate and save both pie and bar charts"""
+        import subprocess
+
+        charts_info = {}
         category_name = self.get_category_name()
-        
-        # Use municipality data for charts
-        chart_data = data.get('municipality_data', {})
-        
-        # Generate pie chart using SVGChartGenerator
-        success, png_path, svg_path = self.chart_generator.generate_chart_image(
-            demographic_data=chart_data,
-            output_name=f'{category_name}_pie_chart',
-            static_dir=str(self.static_charts_dir),
-            chart_type="pie",
-            include_title=False
-        )
-        
-        if success and png_path:
-            charts['pie_chart_png'] = f'images/{category_name}_pie_chart.png'
-            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
-        elif svg_path:
-            # Fallback to SVG if PNG conversion fails
-            charts['pie_chart_svg'] = f'images/{category_name}_pie_chart.svg'
-        
-        # Generate bar chart for ward data if available
-        ward_data = data.get('ward_data', {})
-        if ward_data:
-            success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                demographic_data=ward_data,
-                output_name=f'{category_name}_bar_chart',
-                static_dir=str(self.static_charts_dir),
-                chart_type="bar",
-                include_title=False
-            )
-            
-            if success and png_path:
-                charts['bar_chart_png'] = f'images/{category_name}_bar_chart.png'
-                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
-            elif svg_path:
-                # Fallback to SVG if PNG conversion fails
-                charts['bar_chart_svg'] = f'images/{category_name}_bar_chart.svg'
-        
-        return charts
+
+        try:
+            # Generate pie chart for municipality-wide data
+            pie_svg = self.generate_chart_svg(data, chart_type="pie")
+            if pie_svg:
+                pie_path = self.static_charts_dir / f"{category_name}_pie_chart.svg"
+                with open(pie_path, "w", encoding="utf-8") as f:
+                    f.write(pie_svg)
+                charts_info["pie_chart_svg"] = f"images/{category_name}_pie_chart.svg"
+
+                # Try to convert to PNG using subprocess
+                try:
+                    png_path = self.static_charts_dir / f"{category_name}_pie_chart.png"
+                    subprocess.run(
+                        [
+                            "inkscape",
+                            "--export-filename",
+                            str(png_path),
+                            "--export-dpi=600",
+                            str(pie_path),
+                        ],
+                        check=True,
+                        timeout=30,
+                    )
+                    if png_path.exists():
+                        charts_info["pie_chart_png"] = (
+                            f"images/{category_name}_pie_chart.png"
+                        )
+                except:
+                    pass  # Use SVG fallback
+
+            # Generate bar chart for ward-wise data
+            if data.get("ward_data"):
+                bar_svg = self.generate_chart_svg(data, chart_type="bar")
+                if bar_svg:
+                    bar_path = self.static_charts_dir / f"{category_name}_bar_chart.svg"
+                    with open(bar_path, "w", encoding="utf-8") as f:
+                        f.write(bar_svg)
+                    charts_info["bar_chart_svg"] = (
+                        f"images/{category_name}_bar_chart.svg"
+                    )
+
+                    # Try to convert to PNG using subprocess
+                    try:
+                        png_path = (
+                            self.static_charts_dir / f"{category_name}_bar_chart.png"
+                        )
+                        subprocess.run(
+                            [
+                                "inkscape",
+                                "--export-filename",
+                                str(png_path),
+                                "--export-dpi=600",
+                                str(bar_path),
+                            ],
+                            check=True,
+                            timeout=30,
+                        )
+                        if png_path.exists():
+                            charts_info["bar_chart_png"] = (
+                                f"images/{category_name}_bar_chart.png"
+                            )
+                    except:
+                        pass  # Use SVG fallback
+
+        except Exception as e:
+            print(f"Error generating {category_name} charts: {e}")
+
+        return charts_info
 
 
 class BaseSocialReportFormatter(ABC):
     """Base report formatter for social categories with common functionality"""
-    
+
     def __init__(self, processor_data):
         self.data = processor_data
         self.municipality_name = "लुङ्ग्री गाउँपालिका"
-    
+
     @abstractmethod
     def format_for_html(self):
         """Format data for HTML template rendering"""

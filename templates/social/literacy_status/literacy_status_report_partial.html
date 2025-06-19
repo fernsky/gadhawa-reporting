@@ -1,216 +1,200 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Literacy Status Report Section (५.१.१) -->
-<div class="section-within-category" id="section-literacy-status">
-  <h2 class="section-header level-2" style="color: #1e40af; margin-top: 1.5em; margin-bottom: 1em; font-size: 16pt; font-weight: 600;">
+<div class="section-content literacy-status-section" id="section-literacy-status">
+  <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
     ५.१.१ पाँच वर्षभन्दा माथि र १५ बर्षभन्दा माथिको साक्षरता विवरण
   </h2>
 
   <!-- Analysis Content -->
-  {% if coherent_analysis %}
-    <div class="analysis-section" style="margin-bottom: 2em;">
-      {{ coherent_analysis|safe }}
-    </div>
-  {% endif %}
+  <div class="content-section">
+    <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+  </div>
 
-  <!-- Charts Section -->
-  {% if pdf_charts %}
-    <div class="charts-section" style="margin: 2em 0;">
-      <h3 style="color: #1e40af; font-size: 14pt; margin-bottom: 1em; font-weight: 600;">
-        तालिका र चार्टहरू
-      </h3>
-      
-      <div class="charts-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-bottom: 2em;">
-        <!-- Municipality Pie Chart -->
-        {% if pdf_charts.municipality_pie %}
-          <div class="chart-container" style="text-align: center; padding: 1em; border: 1px solid #e5e7eb; border-radius: 8px;">
-            <h4 style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em;">गाउँपालिकाको साक्षरता अवस्था</h4>
-            <img src="{{ pdf_charts.municipality_pie }}" alt="Municipality Literacy Pie Chart" style="max-width: 100%; height: auto;">
-          </div>
-        {% endif %}
-
-        <!-- Ward Literacy Rates Bar Chart -->
-        {% if pdf_charts.ward_bar %}
-          <div class="chart-container" style="text-align: center; padding: 1em; border: 1px solid #e5e7eb; border-radius: 8px;">
-            <h4 style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em;">वडागत साक्षरता दर</h4>
-            <img src="{{ pdf_charts.ward_bar }}" alt="Ward Literacy Rates Bar Chart" style="max-width: 100%; height: auto;">
-          </div>
-        {% endif %}
+  <!-- Pie Chart for Municipality-wide Distribution -->
+  {% if municipality_data %}
+    <div class="chart-section">
+      <h3 class="chart-title">चित्र ५.१.१.१: साक्षरता स्थिति अनुसार जनसंख्या वितरण</h3>
+      <div class="pdf-chart-container">
+        {% load static %}
+        <img src="{% static 'images/literacystatus_pie_chart.png' %}" alt="साक्षरता स्थिति अनुसार जनसंख्या वितरण" class="pdf-chart-image">
       </div>
-
-      <!-- Stacked Bar Chart (Full Width) -->
-      {% if pdf_charts.ward_stacked %}
-        <div class="chart-container" style="text-align: center; padding: 1em; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 2em;">
-          <h4 style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em;">वडागत साक्षरता विवरण</h4>
-          <img src="{{ pdf_charts.ward_stacked }}" alt="Ward Literacy Stacked Chart" style="max-width: 100%; height: auto;">
-        </div>
-      {% endif %}
     </div>
   {% endif %}
 
-  <!-- Data Tables Section -->
-  {% if municipality_data or ward_data %}
-    <div class="tables-section" style="margin-top: 2em;">
-      
-      <!-- Municipality Overview Table -->
-      {% if municipality_data %}
-        <div class="table-container" style="margin-bottom: 2em;">
-          <h3 style="color: #1e40af; font-size: 14pt; margin-bottom: 1em; font-weight: 600;">
-            गाउँपालिकाको साक्षरता सारांश
-          </h3>
-          <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 1em;">
-            <thead>
-              <tr style="background-color: #f3f4f6; border: 1px solid #d1d5db;">
-                <th style="padding: 0.75em; text-align: left; border: 1px solid #d1d5db; font-weight: 600;">साक्षरता प्रकार</th>
-                <th style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db; font-weight: 600;">जनसंख्या</th>
-                <th style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db; font-weight: 600;">प्रतिशत</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for literacy_type, population in municipality_data.items %}
-                <tr style="border: 1px solid #d1d5db;">
-                  <td style="padding: 0.75em; border: 1px solid #d1d5db;">
-                    {% if literacy_type == 'BOTH_READING_AND_WRITING' %}
-                      पढ्न र लेख्न दुवै
-                    {% elif literacy_type == 'READING_ONLY' %}
-                      पढ्न मात्र  
-                    {% elif literacy_type == 'ILLITERATE' %}
-                      निरक्षर
-                    {% else %}
-                      {{ literacy_type }}
-                    {% endif %}
+  <!-- Bar Chart for Ward-wise Distribution -->
+  {% if ward_data %}
+    <div class="chart-section">
+      <h3 class="chart-title">चित्र ५.१.१.२: वडागत साक्षरता स्थिति वितरण</h3>
+      <div class="pdf-chart-container">
+        {% load static %}
+        <img src="{% static 'images/literacystatus_bar_chart.png' %}" alt="वडागत साक्षरता स्थिति वितरण" class="pdf-chart-image">
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Ward-wise Detailed Table -->
+  {% if ward_data %}
+    <div class="table-section">
+      <h3 class="table-title">तालिका ५.१.१.१: वडागत साक्षरता स्थिति विस्तृत विवरण</h3>
+      <table class="pdf-data-table ward-literacy-table">
+        <thead>
+          <tr>
+            <th style="width: 25%; text-align: left; padding: 6px;">साक्षरता स्थिति</th>
+            {% for ward_num, ward_info in ward_data.items %}
+              <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+            {% endfor %}
+            <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+            <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for literacy_type, data in municipality_data.items %}
+            {% if data.population > 0 %}
+              <tr>
+                <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                {% for ward_num, ward_info in ward_data.items %}
+                  <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                    {% with ward_info.demographics|get_item:literacy_type as literacy_demo %}
+                      {{ literacy_demo.population|default:0|nepali_number }}
+                    {% endwith %}
                   </td>
-                  <td style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db;">
-                    {{ population|nepali_number }}
-                  </td>
-                  <td style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db;">
-                    {% widthratio population total_population 100 as percentage %}
-                    {{ percentage|floatformat:1|nepali_number }}%
-                  </td>
-                </tr>
-              {% endfor %}
-              <tr style="border: 2px solid #1e40af; background-color: #eff6ff; font-weight: 600;">
-                <td style="padding: 0.75em; border: 1px solid #d1d5db;">कुल</td>
-                <td style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db;">
-                  {{ total_population|nepali_number }}
+                {% endfor %}
+                <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                  {{ data.population|nepali_number }}
                 </td>
-                <td style="padding: 0.75em; text-align: right; border: 1px solid #d1d5db;">
-                  {{ 100|nepali_number }}%
+                <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                  {{ data.percentage|nepali_percentage }}
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-
-      <!-- Ward-wise Detailed Table -->
-      {% if ward_data %}
-        <div class="table-container" style="margin-bottom: 2em;">
-          <h3 style="color: #1e40af; font-size: 14pt; margin-bottom: 1em; font-weight: 600;">
-            वडागत साक्षरता विस्तृत विवरण
-          </h3>
-          <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 9pt;">
-            <thead>
-              <tr style="background-color: #f3f4f6; border: 1px solid #d1d5db;">
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">वडा नं.</th>
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">पढ्न र लेख्न दुवै</th>
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">पढ्न मात्र</th>
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">निरक्षर</th>
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">कुल</th>
-                <th style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">साक्षरता दर</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for ward_number, literacy_types in ward_data.items %}
-                {% with ward_total=literacy_types.BOTH_READING_AND_WRITING|default:0|add:literacy_types.READING_ONLY|default:0|add:literacy_types.ILLITERATE|default:0 %}
-                {% with literate_pop=literacy_types.BOTH_READING_AND_WRITING|default:0|add:literacy_types.READING_ONLY|default:0 %}
-                <tr style="border: 1px solid #d1d5db;">
-                  <td style="padding: 0.5em; text-align: center; border: 1px solid #d1d5db; font-weight: 600;">
-                    {{ ward_number|nepali_number }}
-                  </td>
-                  <td style="padding: 0.5em; text-align: right; border: 1px solid #d1d5db;">
-                    {{ literacy_types.BOTH_READING_AND_WRITING|default:0|nepali_number }}
-                  </td>
-                  <td style="padding: 0.5em; text-align: right; border: 1px solid #d1d5db;">
-                    {{ literacy_types.READING_ONLY|default:0|nepali_number }}
-                  </td>
-                  <td style="padding: 0.5em; text-align: right; border: 1px solid #d1d5db;">
-                    {{ literacy_types.ILLITERATE|default:0|nepali_number }}
-                  </td>
-                  <td style="padding: 0.5em; text-align: right; border: 1px solid #d1d5db; font-weight: 600;">
-                    {{ ward_total|nepali_number }}
-                  </td>
-                  <td style="padding: 0.5em; text-align: right; border: 1px solid #d1d5db; font-weight: 600;">
-                    {% if ward_total > 0 %}
-                      {% widthratio literate_pop ward_total 100 as literacy_rate %}
-                      {{ literacy_rate|floatformat:1|nepali_number }}%
-                    {% else %}
-                      {{ 0|nepali_number }}%
-                    {% endif %}
-                  </td>
-                </tr>
-                {% endwith %}
-                {% endwith %}
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-
-      <!-- Literacy Rate Summary -->
-      {% if ward_data %}
-        <div class="summary-stats" style="background-color: #f8fafc; padding: 1em; border-radius: 8px; margin-top: 1em;">
-          <h4 style="color: #1e40af; font-size: 12pt; margin-bottom: 0.5em; font-weight: 600;">
-            साक्षरता दर सारांश
-          </h4>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1em;">
-            <div style="text-align: center;">
-              <div style="font-size: 14pt; font-weight: 600; color: #059669;">
-                {% comment %} Calculate overall literacy rate {% endcomment %}
-                {% with total_literate=0 %}
-                  {% for ward_number, literacy_types in ward_data.items %}
-                    {% with literate_pop=literacy_types.BOTH_READING_AND_WRITING|default:0|add:literacy_types.READING_ONLY|default:0 %}
-                      {% with total_literate=total_literate|add:literate_pop %}
-                      {% endwith %}
-                    {% endwith %}
-                  {% endfor %}
-                  {% widthratio total_literate total_population 100 as overall_literacy_rate %}
-                  {{ overall_literacy_rate|floatformat:1|nepali_number }}%
-                {% endwith %}
-              </div>
-              <div style="font-size: 10pt; color: #6b7280;">समग्र साक्षरता दर</div>
-            </div>
-            <div style="text-align: center;">
-              <div style="font-size: 14pt; font-weight: 600; color: #dc2626;">
-                {% comment %} Calculate overall illiteracy rate {% endcomment %}
-                {% with total_illiterate=0 %}
-                  {% for ward_number, literacy_types in ward_data.items %}
-                    {% with illiterate_pop=literacy_types.ILLITERATE|default:0 %}
-                      {% with total_illiterate=total_illiterate|add:illiterate_pop %}
-                      {% endwith %}
-                    {% endwith %}
-                  {% endfor %}
-                  {% widthratio total_illiterate total_population 100 as overall_illiteracy_rate %}
-                  {{ overall_illiteracy_rate|floatformat:1|nepali_number }}%
-                {% endwith %}
-              </div>
-              <div style="font-size: 10pt; color: #6b7280;">निरक्षरता दर</div>
-            </div>
-          </div>
-        </div>
-      {% endif %}
+            {% endif %}
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
+            <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+            {% for ward_num, ward_info in ward_data.items %}
+              <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+            {% endfor %}
+            <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+            <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
   {% endif %}
 
   <!-- No Data Message -->
   {% if not municipality_data and not ward_data %}
     <div class="no-data-message" style="text-align: center; padding: 2em; background-color: #fef3c7; border-radius: 8px; margin: 1em 0;">
-      <p style="color: #92400e; font-size: 12pt; font-weight: 600;">
-        साक्षरता अवस्थाको तथ्याङ्क उपलब्ध छैन।
-      </p>
-      <p style="color: #b45309; font-size: 10pt;">
-        कृपया डाटा प्रविष्टि गरेर पुनः प्रयास गर्नुहोस्।
-      </p>
+      <p>साक्षरता सम्बन्धी डाटा उपलब्ध छैन</p>
     </div>
   {% endif %}
 </div>
+
+<style>
+/* PDF-specific styles */
+.literacy-status-section {
+    page-break-inside: avoid;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    color: #1e40af;
+}
+
+.ward-literacy-table th,
+.ward-literacy-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
+}
+
+.ward-literacy-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+.pdf-chart-container {
+    text-align: center;
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+.chart-title,
+.table-title {
+    color: #1e40af;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.content-paragraph {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.content-section {
+    margin-bottom: 2em;
+}
+
+.chart-section {
+    margin-bottom: 2em;
+}
+
+.table-section {
+    margin-bottom: 2em;
+}
+
+/* Enhanced table styling */
+.ward-literacy-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.ward-literacy-table tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+/* Print optimization */
+@media print {
+    .literacy-status-section {
+        page-break-inside: auto;
+    }
+    
+    .chart-section, .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

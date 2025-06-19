@@ -1,9 +1,10 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Major Subject Educational Report Partial for PDF -->
 <p class="section-content major-subject-section" id="section-major-subject">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ५.१.२ पाँच वर्ष र सोभन्दा माथिको शैक्षिक अवस्था (मुख्य विषय)
+        ५.१.२ मुख्य विषय अनुसार शैक्षिक योग्यता
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -11,21 +12,13 @@
         <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
     </div>
 
-    <!-- Pie Chart for Major Subject Distribution -->
+    <!-- Pie Chart for Municipality-wide Distribution -->
     {% if municipality_data %}
         <div class="chart-section">
             <h3 class="chart-title">चित्र ५.१.२.१: मुख्य विषय अनुसार जनसंख्या वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.major_subject.pie_chart_png %}
-                    <img src="{% static pdf_charts.major_subject.pie_chart_png %}" 
-                         alt="मुख्य विषय अनुसार जनसंख्या वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.major_subject.pie_chart_svg %}
-                    <div class="svg-chart-container">
-                        {{ pdf_charts.major_subject.pie_chart_svg|safe }}
-                    </div>
-                {% endif %}
+                <img src="{% static 'images/major_subject_pie_chart.png' %}" alt="मुख्य विषय अनुसार जनसंख्या वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
@@ -33,203 +26,61 @@
     <!-- Bar Chart for Ward-wise Distribution -->
     {% if ward_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ५.१.२.२: वडागत शैक्षिक जनसंख्या वितरण</h3>
+            <h3 class="chart-title">चित्र ५.१.२.२: वडागत मुख्य विषय वितरण</h3>
             <div class="pdf-chart-container">
-                {% if pdf_charts.major_subject.bar_chart_png %}
-                    <img src="{% static pdf_charts.major_subject.bar_chart_png %}" 
-                         alt="वडागत शैक्षिक जनसंख्या वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.major_subject.bar_chart_svg %}
-                    <div class="svg-chart-container">
-                        {{ pdf_charts.major_subject.bar_chart_svg|safe }}
-                    </div>
-                {% endif %}
+                {% load static %}
+                <img src="{% static 'images/major_subject_bar_chart.png' %}" alt="वडागत मुख्य विषय वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Subject Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.१.२.१: मुख्य विषय अनुसार जनसंख्या विस्तृत विवरण</h3>
-        <table class="pdf-data-table subject-summary-table">
-            <thead>
-                <tr>
-                    <th>क्र.स.</th>
-                    <th>मुख्य विषय</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>विषय क्षेत्र</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject_code, subject_info in municipality_data.items %}
-                <tr>
-                    <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
-                    <td>{{ subject_info.name_nepali }}</td>
-                    <td style="text-align: right;">{{ subject_info.population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ subject_info.percentage|nepali_percentage }}%</td>
-                    <td style="text-align: center;">
-                        {% if subject_code == 'SCIENCE' or subject_code == 'PHYSICS' or subject_code == 'CHEMISTRY' or subject_code == 'BIOLOGY' or subject_code == 'ENGINEERING' or subject_code == 'MEDICINE' or subject_code == 'INFORMATION_TECHNOLOGY' %}
-                            <span class="science-tech-field">विज्ञान/प्रविधि</span>
-                        {% elif subject_code == 'NEPALI' or subject_code == 'ENGLISH' or subject_code == 'HINDI' or subject_code == 'SANSKRIT' %}
-                            <span class="language-field">भाषा</span>
-                        {% elif subject_code == 'HISTORY' or subject_code == 'GEOGRAPHY' or subject_code == 'POLITICAL_SCIENCE' or subject_code == 'SOCIAL_SCIENCES' %}
-                            <span class="social-humanities-field">सामाजिक/मानविकी</span>
-                        {% elif subject_code == 'ECONOMICS' or subject_code == 'COMMERCE' or subject_code == 'MANAGEMENT' or subject_code == 'EDUCATION' %}
-                            <span class="professional-field">व्यावसायिक</span>
-                        {% elif subject_code == 'FORESTRY_AND_AGRICULTURE' or subject_code == 'RURAL_DEVELOPMENT' %}
-                            <span class="agriculture-field">कृषि/वन</span>
-                        {% else %}
-                            <span class="other-field">अन्य</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr style="background-color: #f0f8ff; font-weight: bold;">
-                    <td colspan="2" style="text-align: center;">कुल जम्मा</td>
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ "100.0"|nepali_percentage }}%</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Subject Field Analysis Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.१.२.२: विषय क्षेत्र अनुसार विश्लेषण</h3>
-        <table class="pdf-data-table subject-field-analysis-table">
-            <thead>
-                <tr>
-                    <th>विषय क्षेत्र</th>
-                    <th>विषयहरू</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>विकास प्राथमिकता</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% comment %} Field Distribution Analysis {% endcomment %}
-                {% for category_key, category_info in field_categories.items %}
-                    <tr {% if forloop.counter0|divisibleby:2 %}style="background-color: #f0f9ff;"{% endif %}>
-                        <td style="font-weight: 600;">{{ category_info.name }}</td>
-                        <td style="text-align: right;">{{ category_info.population|floatformat:0 }}</td>
-                        <td style="text-align: right;">{{ category_info.percentage|floatformat:1 }}%</td>
-                        <td>{{ category_info.priority }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ५.१.२.३: वडागत मुख्य विषय वितरण (शीर्ष ५ विषयहरू)</h3>
+        <h3 class="table-title">तालिका ५.१.२.१: वडागत मुख्य विषय अनुसार शैक्षिक योग्यता विस्तृत विवरण</h3>
         <table class="pdf-data-table ward-subject-table">
             <thead>
                 <tr>
-                    <th>वडा नं.</th>
-                    <th>कुल जनसंख्या</th>
-                    <th>शीर्ष विषयहरू (जनसंख्या)</th>
-                    <th>शैक्षिक विविधता</th>
+                    <th style="width: 30%; text-align: left; padding: 6px;">मुख्य विषय</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                    <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
-                    <td style="font-size: 8pt;">
-                        {% for subject_code, subject_info in ward_info.subject_types.items %}
-                            {% if forloop.counter <= 5 %}
-                                {{ subject_info.name_nepali }}: {{ subject_info.population|nepali_number }}
-                                {% if not forloop.last and forloop.counter < 5 %}<br>{% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td style="text-align: center;">
-                        {% with diversity_count=ward_info.subject_types|length %}
-                            {% if diversity_count >= 10 %}
-                                <span class="high-diversity">उच्च ({{ diversity_count|nepali_number }} विषय)</span>
-                            {% elif diversity_count >= 5 %}
-                                <span class="medium-diversity">मध्यम ({{ diversity_count|nepali_number }} विषय)</span>
-                            {% else %}
-                                <span class="low-diversity">न्यून ({{ diversity_count|nepali_number }} विषय)</span>
-                            {% endif %}
-                        {% endwith %}
-                    </td>
-                </tr>
+                {% for subject_type, data in municipality_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info.demographics|get_item:subject_type as subject_demo %}
+                                        {{ subject_demo.population|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.population|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                    <td colspan="2" style="text-align: center;">
-                        {% with total_subjects=municipality_data|length %}
-                            {{ total_subjects|nepali_number }} विषयहरूमा शिक्षित जनशक्ति
-                        {% endwith %}
-                    </td>
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Top 10 Subjects Detail Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.१.२.४: शीर्ष १० मुख्य विषयहरूको विस्तृत विवरण</h3>
-        <table class="pdf-data-table top-subjects-table">
-            <thead>
-                <tr>
-                    <th>स्थान</th>
-                    <th>मुख्य विषय</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>रोजगारी सम्भावना</th>
-                    <th>स्थानीय महत्त्व</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject_code, subject_info in municipality_data.items %}
-                    {% if forloop.counter <= 10 %}
-                    <tr>
-                        <td style="text-align: center; font-weight: bold;">{{ forloop.counter|nepali_number }}</td>
-                        <td>{{ subject_info.name_nepali }}</td>
-                        <td style="text-align: right;">{{ subject_info.population|nepali_number }}</td>
-                        <td style="text-align: right;">{{ subject_info.percentage|nepali_percentage }}%</td>
-                        <td style="text-align: center; font-size: 8pt;">
-                            {% if subject_code == 'ENGINEERING' or subject_code == 'MEDICINE' or subject_code == 'INFORMATION_TECHNOLOGY' %}
-                                <span class="high-employment">उच्च</span>
-                            {% elif subject_code == 'EDUCATION' or subject_code == 'MANAGEMENT' or subject_code == 'ECONOMICS' %}
-                                <span class="medium-employment">मध्यम</span>
-                            {% elif subject_code == 'FORESTRY_AND_AGRICULTURE' or subject_code == 'RURAL_DEVELOPMENT' %}
-                                <span class="local-employment">स्थानीय उच्च</span>
-                            {% else %}
-                                <span class="variable-employment">परिवर्तनशील</span>
-                            {% endif %}
-                        </td>
-                        <td style="text-align: center; font-size: 8pt;">
-                            {% if subject_code == 'FORESTRY_AND_AGRICULTURE' or subject_code == 'RURAL_DEVELOPMENT' %}
-                                <span class="very-high-local">अति उच्च</span>
-                            {% elif subject_code == 'EDUCATION' or subject_code == 'MEDICINE' %}
-                                <span class="high-local">उच्च</span>
-                            {% elif subject_code == 'NEPALI' or subject_code == 'GEOGRAPHY' %}
-                                <span class="medium-local">मध्यम</span>
-                            {% else %}
-                                <span class="general-local">सामान्य</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
         </table>
     </div>
     {% endif %}
@@ -247,422 +98,127 @@
     border-collapse: collapse;
     margin: 1em 0;
     font-size: 9pt;
-    page-break-inside: avoid;
 }
 
 .pdf-data-table th,
 .pdf-data-table td {
     border: 1px solid #333;
-    padding: 4px 6px;
-    text-align: left;
+    padding: 4px;
     vertical-align: top;
 }
 
 .pdf-data-table th {
-    background-color: #f0f0f0;
+    background-color: #f8fafc;
     font-weight: bold;
     text-align: center;
+    color: #1e40af;
 }
 
-.subject-summary-table th,
-.subject-summary-table td,
 .ward-subject-table th,
-.ward-subject-table td,
-.subject-field-analysis-table th,
-.subject-field-analysis-table td,
-.top-subjects-table th,
-.top-subjects-table td {
-    font-size: 10pt;
-    padding: 6px 8px;
+.ward-subject-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
 }
 
 .ward-subject-table th {
-    background-color: #e8f4f8;
-    font-size: 9pt;
-    padding: 4px 6px;
-}
-
-.subject-field-analysis-table th {
-    background-color: #f0f8ff;
-    font-size: 10pt;
-}
-
-.top-subjects-table th {
-    background-color: #fff5f5;
-    font-size: 10pt;
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
 }
 
 .pdf-chart-container {
     text-align: center;
-    margin: 1em 0;
+    margin: 1.5em 0;
     page-break-inside: avoid;
-}
-
-.pdf-chart-container svg {
-    max-width: 100%;
-    max-height: 450px;
-    height: auto;
 }
 
 .pdf-chart-image {
     max-width: 100%;
-    max-height: 450px;
     height: auto;
-}
-
-.svg-chart-container {
-    display: inline-block;
-    max-width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
 }
 
 .chart-title,
 .table-title {
-    font-size: 11pt;
+    color: #1e40af;
+    font-size: 12pt;
     font-weight: bold;
-    color: #333;
-    margin: 0.5em 0;
+    margin-bottom: 0.5em;
     text-align: center;
 }
 
 .content-paragraph {
+    margin-bottom: 1.5em;
     line-height: 1.6;
-    text-align: justify;
-    margin: 0.5em 0;
 }
 
 .content-paragraph p {
-    margin: 0.5em 0;
-    text-indent: 0;
+    margin-bottom: 1em;
+    text-align: justify;
 }
 
 .content-section {
-    margin: 1em 0;
+    margin-bottom: 2em;
 }
 
 .chart-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 .table-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 /* Subject field styling */
 .science-tech-field {
-    background-color: #E3F2FD;
-    color: #1976D2;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    color: #059669;
+    background-color: #ecfdf5;
 }
 
 .language-field {
-    background-color: #F3E5F5;
-    color: #7B1FA2;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    color: #0891b2;
+    background-color: #f0f9ff;
 }
 
 .social-humanities-field {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    color: #c2410c;
+    background-color: #fff7ed;
 }
 
 .professional-field {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    color: #7c2d12;
+    background-color: #fef3c7;
 }
 
 .agriculture-field {
-    background-color: #E0F2F1;
-    color: #00695C;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    color: #166534;
+    background-color: #f0fdf4;
 }
 
 .other-field {
-    background-color: #F5F5F5;
-    color: #616161;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-/* Priority level styling */
-.high-priority {
-    background-color: #FFEBEE;
-    color: #F44336;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.medium-priority {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.research-priority {
-    background-color: #F5F5F5;
-    color: #616161;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-/* Diversity level styling */
-.high-diversity {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.medium-diversity {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.low-diversity {
-    background-color: #FFEBEE;
-    color: #F44336;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-/* Employment potential styling */
-.high-employment {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.medium-employment {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.local-employment {
-    background-color: #E0F2F1;
-    color: #00695C;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.variable-employment {
-    background-color: #F5F5F5;
-    color: #616161;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-/* Local importance styling */
-.very-high-local {
-    background-color: #1B5E20;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.high-local {
-    background-color: #2E7D32;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.medium-local {
-    background-color: #E65100;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.general-local {
-    background-color: #616161;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
+    color: #6b7280;
+    background-color: #f9fafb;
 }
 
 /* Enhanced table styling */
 .ward-subject-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f9fafb;
 }
 
 .ward-subject-table tbody tr:hover {
-    background-color: #f0f8ff;
-}
-
-.subject-field-analysis-table tbody tr:nth-child(even) {
-    background-color: #fafafa;
-}
-
-.top-subjects-table tbody tr:nth-child(even) {
-    background-color: #fefefe;
+    background-color: #f3f4f6;
 }
 
 /* Print optimization */
 @media print {
     .major-subject-section {
-        page-break-inside: avoid;
-        margin-bottom: 1.5em;
+        page-break-inside: auto;
     }
     
-    .pdf-data-table {
-        font-size: 7pt;
+    .chart-section, .table-section {
         page-break-inside: avoid;
     }
-    
-    .pdf-data-table tr {
-        page-break-inside: avoid;
-    }
-    
-    .chart-section {
-        page-break-inside: avoid;
-        margin: 1em 0;
-    }
-    
-    .table-section {
-        page-break-inside: avoid;
-        margin: 1em 0;
-    }
-    
-    .pdf-chart-container {
-        page-break-inside: avoid;
-    }
-    
-    .content-paragraph {
-        page-break-inside: avoid;
-    }
-    
-    .ward-subject-table th,
-    .ward-subject-table td {
-        font-size: 6pt;
-        padding: 2px 3px;
-    }
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .pdf-data-table {
-        font-size: 8pt;
-    }
-    
-    .ward-subject-table th,
-    .ward-subject-table td {
-        padding: 2px 3px;
-        font-size: 7pt;
-    }
-    
-    .chart-title,
-    .table-title {
-        font-size: 10pt;
-    }
-    
-    .field-tag {
-        font-size: 7pt;
-        padding: 1px 4px;
-    }
-}
-
-/* Accessibility improvements */
-.pdf-data-table th {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-
-.pdf-data-table tbody tr:focus {
-    outline: 2px solid #2196F3;
-    outline-offset: -2px;
-}
-
-/* Subject ranking styling */
-.subject-rank-1, .subject-rank-2, .subject-rank-3 {
-    font-weight: bold;
-}
-
-.subject-rank-1 {
-    background-color: #FFD700;
-    color: #B8860B;
-}
-
-.subject-rank-2 {
-    background-color: #C0C0C0;
-    color: #696969;
-}
-
-.subject-rank-3 {
-    background-color: #CD7F32;
-    color: #8B4513;
-}
-
-/* Educational impact indicators */
-.high-impact {
-    background-color: #4CAF50;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.medium-impact {
-    background-color: #FF9800;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-.low-impact {
-    background-color: #F44336;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
 }
 </style>

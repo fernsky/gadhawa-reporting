@@ -1,0 +1,241 @@
+{% load nepali_filters %}
+
+<!-- Social Full Report Partial for PDF -->
+<div class="social-full-section">
+    
+    <!-- Social Chapter Introduction -->
+    <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+            सामाजिक विकास कुनै पनि स्थानीय तहको दिगो विकासको आधारशिला हो । लुङ्ग्री गाउँपालिकाको सामाजिक अवस्थाको यो खण्डमा शिक्षा, स्वास्थ्य, खानेपानी तथा सरसफाई, र सामाजिक समावेशीकरणका विभिन्न पक्षहरूको विस्तृत विश्लेषण प्रस्तुत गरिएको छ । मानव विकास सूचकांकहरू, जीवनयापनको गुणस्तर, र सामाजिक न्यायका आधारमा गाउँपालिकाको सामाजिक प्रगतिको मूल्याङ्कन गरिएको छ । यस अध्ययनले गाउँपालिकाको सामाजिक क्षमता, उपलब्धि र भविष्यका चुनौतीहरूको समग्र चित्रण गरेको छ ।
+        </div>
+    </div>
+
+    <!-- Literacy Status Section -->
+    {% if all_social_data.literacy_status %}
+        {% include 'social/literacy_status/literacy_status_report_partial.html' with municipality_data=all_social_data.literacy_status.municipality_data ward_data=all_social_data.literacy_status.ward_data total_population=all_social_data.literacy_status.total_population coherent_analysis=all_social_data.literacy_status.report_content pdf_charts=all_social_data.literacy_status.charts %}
+    {% endif %}
+
+    <!-- Major Subject Section -->
+    {% if all_social_data.major_subject %}
+        {% include 'social/major_subject/major_subject_report_partial.html' with municipality_data=all_social_data.major_subject.municipality_data ward_data=all_social_data.major_subject.ward_data total_population=all_social_data.major_subject.total_population coherent_analysis=all_social_data.major_subject.report_content pdf_charts=all_social_data.major_subject.charts %}
+    {% endif %}
+
+    <!-- Toilet Type Section -->
+    {% if all_social_data.toilet_type %}
+        {% include 'social/toilet_type/toilet_type_report_partial.html' with municipality_data=all_social_data.toilet_type.municipality_data ward_data=all_social_data.toilet_type.ward_data total_population=all_social_data.toilet_type.total_population coherent_analysis=all_social_data.toilet_type.report_content pdf_charts=all_social_data.toilet_type.charts %}
+    {% endif %}
+
+    <!-- Solid Waste Management Section -->
+    {% if all_social_data.solid_waste_management %}
+        {% include 'social/solid_waste_management/solid_waste_management_report_partial.html' with municipality_data=all_social_data.solid_waste_management.municipality_data ward_data=all_social_data.solid_waste_management.ward_data total_population=all_social_data.solid_waste_management.total_population coherent_analysis=all_social_data.solid_waste_management.report_content pdf_charts=all_social_data.solid_waste_management.charts %}
+    {% endif %}
+
+    <!-- Old Age and Single Women Section -->
+    {% if all_social_data.old_age_and_single_women %}
+        {% include 'social/old_age_and_single_women/old_age_and_single_women_report_partial.html' with municipality_data=all_social_data.old_age_and_single_women.municipality_data ward_data=all_social_data.old_age_and_single_women.ward_data total_population=all_social_data.old_age_and_single_women.total_population coherent_analysis=all_social_data.old_age_and_single_women.report_content pdf_charts=all_social_data.old_age_and_single_women.charts %}
+    {% endif %}
+
+    <!-- Social Summary and Analysis Section -->
+    <div class="social-summary-section" id="section-social-summary">
+        <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+            ५.८ सामाजिक अवस्थाको समग्र विश्लेषण
+        </h2>
+        
+        <div class="content-section">
+            <div class="content-paragraph">
+                <p>लुङ्ग्री गाउँपालिकाको सामाजिक विश्लेषणले देखाउँछ कि साक्षरताको स्थिति, शैक्षिक उपलब्धि, स्वास्थ्य सेवाको पहुँच, र पूर्वाधार विकासमा उत्साहजनक प्रगति भएको छ । विशेष गरी शिक्षाको क्षेत्रमा गुणात्मक सुधार र स्वास्थ्य सेवामा पहुँच वृद्धिले जीवनयापनको गुणस्तरमा सकारात्मक प्रभाव पारेको छ । तथापि, केही क्षेत्रमा अझै सुधारको आवश्यकता रहेको छ ।</p>
+            </div>
+        </div>
+
+        <!-- Combined Social Impact Analysis -->
+        {% if all_social_data %}
+        <div class="table-section">
+            <h3 class="table-title">तालिका ५.८.१: सामाजिक क्षेत्रको समग्र प्रभाव विश्लेषण</h3>
+            <table class="pdf-data-table social-summary-table">
+                <thead>
+                    <tr>
+                        <th>सामाजिक घटक</th>
+                        <th>मुख्य विशेषताहरू</th>
+                        <th>सकारात्मक प्रभाव</th>
+                        <th>चुनौतीहरू</th>
+                        <th>सिफारिसहरू</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if all_social_data.literacy_status %}
+                    <tr style="background-color: #f0f8ff;">
+                        <td style="font-weight: bold; color: #1e40af;">साक्षरता स्थिति</td>
+                        <td style="font-size: 9pt;">
+                            • आधारभूत साक्षरता दर<br>
+                            • लैङ्गिक समानता<br>
+                            • उमेर समूह अनुसार वितरण
+                        </td>
+                        <td style="font-size: 9pt; color: #166534;">
+                            • मानव विकास सूचकांक सुधार<br>
+                            • शिक्षामा पहुँच वृद्धि<br>
+                            • सामाजिक सचेतना बृद्धि
+                        </td>
+                        <td style="font-size: 9pt; color: #991b1b;">
+                            • गुणस्तरीय शिक्षाको अभाव<br>
+                            • डिजिटल साक्षरताको कमी<br>
+                            • भौगोलिक पहुँचमा समस्या
+                        </td>
+                        <td style="font-size: 9pt; color: #92400e;">
+                            • गुणस्तरीय शिक्षा कार्यक्रम<br>
+                            • डिजिटल साक्षरता अभियान<br>
+                            • सामुदायिक शिक्षा केन्द्र
+                        </td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if all_social_data.toilet_type %}
+                    <tr style="background-color: #f0fdf4;">
+                        <td style="font-weight: bold; color: #166534;">स्वच्छता व्यवस्थापन</td>
+                        <td style="font-size: 9pt;">
+                            • शौचालयको पहुँच<br>
+                            • स्वच्छता अभ्यास<br>
+                            • फोहोर व्यवस्थापन
+                        </td>
+                        <td style="font-size: 9pt; color: #166534;">
+                            • सार्वजनिक स्वास्थ्य सुधार<br>
+                            • वातावरणीय संरक्षण<br>
+                            • गुणस्तरीय जीवन
+                        </td>
+                        <td style="font-size: 9pt; color: #991b1b;">
+                            • आधुनिक प्रविधिको अभाव<br>
+                            • मर्मत सम्भारमा समस्या<br>
+                            • जनचेतनाको कमी
+                        </td>
+                        <td style="font-size: 9pt; color: #92400e;">
+                            • आधुनिक स्वच्छता प्रविधि<br>
+                            • नियमित मर्मत कार्यक्रम<br>
+                            • स्वच्छता शिक्षा अभियान
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% if all_social_data.old_age_and_single_women %}
+                    <tr style="background-color: #fef3c7;">
+                        <td style="font-weight: bold; color: #d97706;">सामाजिक संरक्षण</td>
+                        <td style="font-size: 9pt;">
+                            • जेष्ठ नागरिक कल्याण<br>
+                            • एकल महिला सहायता<br>
+                            • सामाजिक सुरक्षा व्यवस्था
+                        </td>
+                        <td style="font-size: 9pt; color: #166534;">
+                            • सामाजिक न्याय<br>
+                            • समावेशी विकास<br>
+                            • मानवीय गरिमा संरक्षण
+                        </td>
+                        <td style="font-size: 9pt; color: #991b1b;">
+                            • आर्थिक निर्भरता<br>
+                            • स्वास्थ्य सेवामा पहुँच<br>
+                            • सामाजिक एकीकरण
+                        </td>
+                        <td style="font-size: 9pt; color: #92400e;">
+                            • सामाजिक सुरक्षा विस्तार<br>
+                            • आर्थिक सशक्तिकरण<br>
+                            • स्वास्थ्य सेवा पहुँच
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Social Development Recommendations -->
+        <div class="content-section">
+            <h3 style="color: #1e40af; font-size: 14pt; margin-bottom: 1em;">सामाजिक विकासका मुख्य सिफारिसहरू</h3>
+            <div class="content-paragraph">
+                <p><strong>शिक्षा क्षेत्र:</strong> गुणस्तरीय शिक्षाको पहुँच बढाउन विद्यालयको पूर्वाधार सुधार, शिक्षकको क्षमता विकास र डिजिटल शिक्षाको प्रवर्द्धन गर्नुपर्छ ।</p>
+                
+                <p><strong>स्वास्थ्य सेवा:</strong> प्राथमिक स्वास्थ्य सेवाको विस्तार, मातृ तथा बाल स्वास्थ्य कार्यक्रम र निवारणमूलक स्वास्थ्य सेवामा जोड दिनुपर्छ ।</p>
+                
+                <p><strong>खानेपानी तथा सरसफाई:</strong> सुरक्षित खानेपानीको पहुँच र आधुनिक सरसफाई प्रविधिको प्रयोगमा विशेष ध्यान दिनुपर्छ ।</p>
+                
+                <p><strong>सामाजिक समावेशीकरण:</strong> महिला, बालबालिका, जेष्ठ नागरिक र सीमान्तकृत समुदायको सामाजिक तथा आर्थिक सशक्तिकरणमा प्राथमिकता दिनुपर्छ ।</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Social Full Report Styles */
+.social-full-section {
+    page-break-inside: avoid;
+    margin-bottom: 2em;
+}
+
+.social-summary-section {
+    margin-top: 3em;
+    page-break-inside: avoid;
+}
+
+.social-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+}
+
+.social-summary-table th,
+.social-summary-table td {
+    border: 1px solid #333;
+    padding: 8px;
+    vertical-align: top;
+}
+
+.social-summary-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    color: #1e40af;
+}
+
+.content-paragraph {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.content-paragraph strong {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.table-title {
+    color: #1e40af;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.content-section {
+    margin-bottom: 2em;
+}
+
+.table-section {
+    margin-bottom: 2em;
+}
+
+/* Print optimization */
+@media print {
+    .social-full-section {
+        page-break-inside: auto;
+    }
+    
+    .social-summary-section {
+        page-break-before: auto;
+    }
+    
+    .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

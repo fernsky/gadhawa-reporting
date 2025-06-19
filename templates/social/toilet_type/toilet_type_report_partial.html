@@ -1,4 +1,5 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Toilet Type Social Report Partial for PDF -->
 <p class="section-content toilet-type-social-section" id="section-toilet-type-social">
@@ -17,137 +18,67 @@
             <h3 class="chart-title">चित्र ५.३.३.१: शौचालयको प्रकार अनुसार घरपरिवार वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.toilet_type.pie_chart_png %}
-                    <img src="{% static pdf_charts.toilet_type.pie_chart_png %}" alt="शौचालयको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
-                {% elif pdf_charts.toilet_type.pie_chart_svg %}
-                    <img src="{% static pdf_charts.toilet_type.pie_chart_svg %}" alt="शौचालयको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
-                {% else %}
-                    <img src="{% static 'images/charts/toilet_type_pie_chart.png' %}" alt="शौचालयको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
-                {% endif %}
+                <img src="{% static 'images/toilettype_pie_chart.png' %}" alt="शौचालयको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Bar Chart for Ward-wise Distribution -->
+    {% if ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ५.३.३.२: वडागत शौचालय प्रकार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/toilettype_bar_chart.png' %}" alt="वडागत शौचालय प्रकार वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Toilet Type Summary Table -->
-    {% if municipality_data %}
+    <!-- Ward-wise Detailed Table -->
+    {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ५.३.३.१: शौचालयको प्रकार अनुसार घरपरिवार विस्तृत विवरण</h3>
-        <table class="pdf-data-table toilet-type-summary-table">
+        <h3 class="table-title">तालिका ५.३.३.१: वडागत शौचालयको प्रकार विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-toilet-type-table">
             <thead>
                 <tr>
-                    <th>शौचालयको प्रकार</th>
-                    <th>घरपरिवार</th>
-                    <th>प्रतिशत</th>
+                    <th style="width: 25%; text-align: left; padding: 6px;">शौचालयको प्रकार</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
                 {% for toilet_type, data in municipality_data.items %}
                     {% if data.population > 0 %}
                         <tr>
-                            <td style="text-align: left;">{{ data.name_nepali }}</td>
-                            <td style="text-align: right;">{{ data.population|nepali_number }}</td>
-                            <td style="text-align: right;">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info.demographics|get_item:toilet_type as toilet_demo %}
+                                        {{ toilet_demo.population|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.population|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
                         </tr>
                     {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
-                    <td style="text-align: right;">१००.०%</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Ward-wise Detailed Table -->
-    {% if ward_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.३.३.२: वडागत शौचालयको प्रकार अनुसार घरपरिवार विस्तृत विवरण</h3>
-        <table class="pdf-data-table ward-toilet-type-table">
-            <thead>
-                <tr>
-                    <th rowspan="2">वडा नं.</th>
-                    <th colspan="4">शौचालयको प्रकार</th>
-                    <th rowspan="2">कुल घरपरिवार</th>
-                </tr>
-                <tr>
-                    <th>फ्लस र सेप्टिक ट्याङ्क</th>
-                    <th>सामान्य</th>
-                    <th>सार्वजनिक एलानी</th>
-                    <th>शौचालय छैन</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                    <tr>
-                        <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                        <td style="text-align: right;">
-                            {% if ward_info.toilet_types.FLUSH_WITH_SEPTIC_TANK %}
-                                {{ ward_info.toilet_types.FLUSH_WITH_SEPTIC_TANK.population|nepali_number }}
-                            {% else %}
-                                ०
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% if ward_info.toilet_types.NORMAL %}
-                                {{ ward_info.toilet_types.NORMAL.population|nepali_number }}
-                            {% else %}
-                                ०
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% if ward_info.toilet_types.PUBLIC_EILANI %}
-                                {{ ward_info.toilet_types.PUBLIC_EILANI.population|nepali_number }}
-                            {% else %}
-                                ०
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right;">
-                            {% if ward_info.toilet_types.NO_TOILET %}
-                                {{ ward_info.toilet_types.NO_TOILET.population|nepali_number }}
-                            {% else %}
-                                ०
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.FLUSH_WITH_SEPTIC_TANK %}
-                            {{ municipality_data.FLUSH_WITH_SEPTIC_TANK.population|nepali_number }}
-                        {% else %}
-                            ०
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.NORMAL %}
-                            {{ municipality_data.NORMAL.population|nepali_number }}
-                        {% else %}
-                            ०
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.PUBLIC_EILANI %}
-                            {{ municipality_data.PUBLIC_EILANI.population|nepali_number }}
-                        {% else %}
-                            ०
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">
-                        {% if municipality_data.NO_TOILET %}
-                            {{ municipality_data.NO_TOILET.population|nepali_number }}
-                        {% else %}
-                            ०
-                        {% endif %}
-                    </td>
-                    <td style="text-align: right;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
         </table>
@@ -167,118 +98,100 @@
     border-collapse: collapse;
     margin: 1em 0;
     font-size: 9pt;
-    page-break-inside: avoid;
 }
 
 .pdf-data-table th,
 .pdf-data-table td {
     border: 1px solid #333;
-    padding: 4px 6px;
-    text-align: left;
+    padding: 4px;
     vertical-align: top;
 }
 
 .pdf-data-table th {
-    background-color: #f0f0f0;
+    background-color: #f8fafc;
     font-weight: bold;
     text-align: center;
+    color: #1e40af;
 }
 
-.toilet-type-summary-table th,
-.toilet-type-summary-table td,
 .ward-toilet-type-table th,
 .ward-toilet-type-table td {
-    font-size: 10pt;
-    padding: 6px 8px;
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
 }
 
 .ward-toilet-type-table th {
-    background-color: #e8f4f8;
-    font-size: 9pt;
-    padding: 4px 6px;
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
 }
 
 .pdf-chart-container {
     text-align: center;
-    margin: 1em 0;
+    margin: 1.5em 0;
     page-break-inside: avoid;
 }
 
 .pdf-chart-container svg {
     max-width: 100%;
-    max-height: 400px;
     height: auto;
 }
 
 .pdf-chart-image {
     max-width: 100%;
-    max-height: 400px;
     height: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
 }
 
 .chart-title,
 .table-title {
-    font-size: 11pt;
+    color: #1e40af;
+    font-size: 12pt;
     font-weight: bold;
-    color: #333;
-    margin: 0.5em 0;
+    margin-bottom: 0.5em;
     text-align: center;
 }
 
 .content-paragraph {
+    margin-bottom: 1.5em;
     line-height: 1.6;
-    text-align: justify;
-    margin: 0.5em 0;
 }
 
 .content-paragraph p {
-    margin: 0.5em 0;
-    text-indent: 0;
+    margin-bottom: 1em;
+    text-align: justify;
 }
 
 .content-section {
-    margin: 1em 0;
+    margin-bottom: 2em;
 }
 
 .chart-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 .table-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 /* Enhanced table styling */
 .ward-toilet-type-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f9fafb;
 }
 
 .ward-toilet-type-table tbody tr:hover {
-    background-color: #f0f8ff;
+    background-color: #f3f4f6;
 }
 
 /* Print optimization */
 @media print {
     .toilet-type-social-section {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    
-    .pdf-data-table {
         page-break-inside: auto;
     }
     
-    .pdf-data-table tr {
-        page-break-inside: avoid;
-    }
-    
-    .chart-section {
-        page-break-inside: avoid;
-    }
-    
-    .table-section {
+    .chart-section, .table-section {
         page-break-inside: avoid;
     }
 }

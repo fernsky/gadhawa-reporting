@@ -1,9 +1,10 @@
 {% load nepali_filters %}
+{% load househead_filters %}
 
 <!-- Old Age Population and Single Women Social Report Partial for PDF -->
 <p class="section-content old-age-single-women-social-section" id="section-old-age-single-women-social">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ५.४.१० जेष्ठ नागरिक तथा एकल महिला
+        ५.४.३ जेष्ठ नागरिक र एकल महिलाको अवस्था
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -11,21 +12,13 @@
         <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
     </div>
 
-    <!-- Pie Chart for Gender Distribution of Elderly -->
+    <!-- Pie Chart for Municipality-wide Distribution -->
     {% if municipality_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ५.४.१०.१: जेष्ठ नागरिकको लैङ्गिक वितरण</h3>
+            <h3 class="chart-title">चित्र ५.४.३.१: जेष्ठ नागरिकको लैङ्गिक वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.old_age_and_single_women.pie_chart_png %}
-                    <img src="{% static pdf_charts.old_age_and_single_women.pie_chart_png %}" 
-                         alt="जेष्ठ नागरिकको लैङ्गिक वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.old_age_and_single_women.pie_chart_svg %}
-                    <div class="svg-chart-container">
-                        {{ pdf_charts.old_age_and_single_women.pie_chart_svg|safe }}
-                    </div>
-                {% endif %}
+                <img src="{% static 'images/oldageandsinglewomen_pie_chart.png' %}" alt="जेष्ठ नागरिकको लैङ्गिक वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
@@ -33,205 +26,61 @@
     <!-- Bar Chart for Ward-wise Distribution -->
     {% if ward_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ५.४.१०.२: वडागत जेष्ठ नागरिक र एकल महिला वितरण</h3>
+            <h3 class="chart-title">चित्र ५.४.३.२: वडागत जेष्ठ नागरिक र एकल महिला वितरण</h3>
             <div class="pdf-chart-container">
-                {% if pdf_charts.old_age_and_single_women.bar_chart_png %}
-                    <img src="{% static pdf_charts.old_age_and_single_women.bar_chart_png %}" 
-                         alt="वडागत जेष्ठ नागरिक र एकल महिला वितरण" 
-                         class="pdf-chart-image">
-                {% elif pdf_charts.old_age_and_single_women.bar_chart_svg %}
-                    <div class="svg-chart-container">
-                        {{ pdf_charts.old_age_and_single_women.bar_chart_svg|safe }}
-                    </div>
-                {% endif %}
+                {% load static %}
+                <img src="{% static 'images/oldageandsinglewomen_bar_chart.png' %}" alt="वडागत जेष्ठ नागरिक र एकल महिला वितरण" class="pdf-chart-image">
             </div>
         </div>
     {% endif %}
     
-    <!-- Municipality-wide Summary Table -->
-    {% if municipality_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.४.१०.१: जेष्ठ नागरिकको लैङ्गिक वितरण विस्तृत विवरण</h3>
-        <table class="pdf-data-table elderly-gender-summary-table">
-            <thead>
-                <tr>
-                    <th>क्र.स.</th>
-                    <th>लिङ्ग</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>सामाजिक सुरक्षा प्राथमिकता</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gender_code, gender_info in municipality_data.items %}
-                <tr>
-                    <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
-                    <td>{{ gender_info.name_nepali }}</td>
-                    <td style="text-align: right;">{{ gender_info.population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ gender_info.percentage|nepali_percentage }}%</td>
-                    <td style="text-align: center;">
-                        {% if gender_code == 'female_old_age' %}
-                            <span class="high-priority">उच्च</span>
-                        {% else %}
-                            <span class="medium-priority">मध्यम</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr style="background-color: #f0f8ff; font-weight: bold;">
-                    <td colspan="2" style="text-align: center;">कुल जम्मा</td>
-                    <td style="text-align: right;">{{ total_old_age_population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ "100.0"|nepali_percentage }}%</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Single Women Summary -->
-    {% if single_women_data %}
-    <div class="table-section">
-        <h3 class="table-title">तालिका ५.४.१०.२: एकल महिलाको विवरण</h3>
-        <table class="pdf-data-table single-women-summary-table">
-            <thead>
-                <tr>
-                    <th>विवरण</th>
-                    <th>संख्या</th>
-                    <th>विशेष सहायता आवश्यकता</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for women_code, women_info in single_women_data.items %}
-                <tr>
-                    <td>{{ women_info.name_nepali }}</td>
-                    <td style="text-align: right;">{{ women_info.population|nepali_number }}</td>
-                    <td style="text-align: center;">
-                        <span class="high-priority">आर्थिक सहायता, सामाजिक सुरक्षा</span>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
     <!-- Ward-wise Detailed Table -->
     {% if ward_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ५.४.१०.३: वडागत जेष्ठ नागरिक र एकल महिला विस्तृत विवरण</h3>
+        <h3 class="table-title">तालिका ५.४.३.१: वडागत जेष्ठ नागरिक र एकल महिला विस्तृत विवरण</h3>
         <table class="pdf-data-table ward-elderly-table">
             <thead>
                 <tr>
-                    <th rowspan="2">वडा नं.</th>
-                    <th colspan="3">जेष्ठ नागरिक</th>
-                    <th rowspan="2">एकल महिला</th>
-                    <th rowspan="2">कुल विशेष सेवा आवश्यक</th>
-                </tr>
-                <tr>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>जम्मा</th>
+                    <th style="width: 25%; text-align: left; padding: 6px;">श्रेणी</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                    <td style="text-align: right;">{{ ward_info.male_old_age_population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ ward_info.female_old_age_population|nepali_number }}</td>
-                    <td style="text-align: right; font-weight: bold;">{{ ward_info.total_old_age_population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ ward_info.single_women_population|nepali_number }}</td>
-                    <td style="text-align: right; font-weight: bold;">
-                        {% with total_special_care=ward_info.total_old_age_population|add:ward_info.single_women_population %}
-                            {{ total_special_care|nepali_number }}
-                        {% endwith %}
-                    </td>
-                </tr>
+                {% for category_type, data in municipality_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info.demographics|get_item:category_type as category_demo %}
+                                        {{ category_demo.population|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.population|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    <td style="text-align: right;">{{ total_male_old_age|nepali_number }}</td>
-                    <td style="text-align: right;">{{ total_female_old_age|nepali_number }}</td>
-                    <td style="text-align: right;">{{ total_old_age_population|nepali_number }}</td>
-                    <td style="text-align: right;">{{ total_single_women|nepali_number }}</td>
-                    <td style="text-align: right;">
-                        {% with total_all_special_care=total_old_age_population|add:total_single_women %}
-                            {{ total_all_special_care|nepali_number }}
-                        {% endwith %}
-                    </td>
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
                 </tr>
             </tfoot>
-        </table>
-    </div>
-    {% endif %}
-
-    <!-- Gender Analysis Summary -->
-    {% if municipality_data %}
-    <div class="content-section">
-        <h3 class="table-title">लैङ्गिक विश्लेषण तथा प्राथमिकता</h3>
-        <table class="pdf-data-table gender-analysis-table">
-            <thead>
-                <tr>
-                    <th>लैङ्गिक समूह</th>
-                    <th>जनसंख्या</th>
-                    <th>प्रतिशत</th>
-                    <th>मुख्य आवश्यकताहरू</th>
-                    <th>सेवा प्राथमिकता</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="background-color: #E3F2FD;">
-                    <td>पुरुष जेष्ठ नागरिक</td>
-                    <td style="text-align: right;">{{ total_male_old_age|nepali_number }}</td>
-                    <td style="text-align: right;">
-                        {% if total_old_age_population > 0 %}
-                            {% with male_percentage=total_male_old_age|floatdiv:total_old_age_population %}
-                                {{ male_percentage|floatformat:1|nepali_percentage }}%
-                            {% endwith %}
-                        {% else %}
-                            ०.०%
-                        {% endif %}
-                    </td>
-                    <td>स्वास्थ्य सेवा, सामाजिक सुरक्षा</td>
-                    <td style="text-align: center;"><span class="medium-priority">मध्यम</span></td>
-                </tr>
-                <tr style="background-color: #FCE4EC;">
-                    <td>महिला जेष्ठ नागरिक</td>
-                    <td style="text-align: right;">{{ total_female_old_age|nepali_number }}</td>
-                    <td style="text-align: right;">
-                        {% if total_old_age_population > 0 %}
-                            {% with female_percentage=total_female_old_age|floatdiv:total_old_age_population %}
-                                {{ female_percentage|floatformat:1|nepali_percentage }}%
-                            {% endwith %}
-                        {% else %}
-                            ०.०%
-                        {% endif %}
-                    </td>
-                    <td>स्वास्थ्य सेवा, सुरक्षा, पोषण</td>
-                    <td style="text-align: center;"><span class="high-priority">उच्च</span></td>
-                </tr>
-                <tr style="background-color: #FFF3E0;">
-                    <td>एकल महिला</td>
-                    <td style="text-align: right;">{{ total_single_women|nepali_number }}</td>
-                    <td style="text-align: right;">-</td>
-                    <td>आर्थिक सहायता, सामाजिक सुरक्षा, आवास</td>
-                    <td style="text-align: center;"><span class="high-priority">उच्च</span></td>
-                </tr>
-                <tr style="background-color: #E8F5E8;">
-                    <td><strong>कुल विशेष सेवा आवश्यक</strong></td>
-                    <td style="text-align: right; font-weight: bold;">
-                        {% with total_special=total_old_age_population|add:total_single_women %}
-                            {{ total_special|nepali_number }}
-                        {% endwith %}
-                    </td>
-                    <td style="text-align: right;">-</td>
-                    <td><strong>समग्र सामाजिक सुरक्षा</strong></td>
-                    <td style="text-align: center;"><span class="high-priority">उच्च</span></td>
-                </tr>
-            </tbody>
         </table>
     </div>
     {% endif %}
@@ -249,314 +98,133 @@
     border-collapse: collapse;
     margin: 1em 0;
     font-size: 9pt;
-    page-break-inside: avoid;
 }
 
 .pdf-data-table th,
 .pdf-data-table td {
     border: 1px solid #333;
-    padding: 4px 6px;
-    text-align: left;
+    padding: 4px;
     vertical-align: top;
 }
 
 .pdf-data-table th {
-    background-color: #f0f0f0;
+    background-color: #f8fafc;
     font-weight: bold;
     text-align: center;
+    color: #1e40af;
 }
 
-.elderly-gender-summary-table th,
-.elderly-gender-summary-table td,
 .ward-elderly-table th,
-.ward-elderly-table td,
-.gender-analysis-table th,
-.gender-analysis-table td,
-.single-women-summary-table th,
-.single-women-summary-table td {
-    font-size: 10pt;
-    padding: 6px 8px;
+.ward-elderly-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
 }
 
 .ward-elderly-table th {
-    background-color: #e8f4f8;
-    font-size: 9pt;
-    padding: 4px 6px;
-}
-
-.gender-analysis-table th {
-    background-color: #f0f8ff;
-    font-size: 10pt;
-}
-
-.single-women-summary-table th {
-    background-color: #fff0f5;
-    font-size: 10pt;
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
 }
 
 .pdf-chart-container {
     text-align: center;
-    margin: 1em 0;
+    margin: 1.5em 0;
     page-break-inside: avoid;
-}
-
-.pdf-chart-container svg {
-    max-width: 100%;
-    max-height: 400px;
-    height: auto;
 }
 
 .pdf-chart-image {
     max-width: 100%;
-    max-height: 400px;
     height: auto;
-}
-
-.svg-chart-container {
-    display: inline-block;
-    max-width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
 }
 
 .chart-title,
 .table-title {
-    font-size: 11pt;
+    color: #1e40af;
+    font-size: 12pt;
     font-weight: bold;
-    color: #333;
-    margin: 0.5em 0;
+    margin-bottom: 0.5em;
     text-align: center;
 }
 
 .content-paragraph {
+    margin-bottom: 1.5em;
     line-height: 1.6;
-    text-align: justify;
-    margin: 0.5em 0;
 }
 
 .content-paragraph p {
-    margin: 0.5em 0;
-    text-indent: 0;
+    margin-bottom: 1em;
+    text-align: justify;
 }
 
 .content-section {
-    margin: 1em 0;
+    margin-bottom: 2em;
 }
 
 .chart-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 .table-section {
-    margin: 1.5em 0;
-    page-break-inside: avoid;
+    margin-bottom: 2em;
 }
 
 /* Priority level styling */
 .high-priority {
-    background-color: #FFEBEE;
-    color: #F44336;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    background-color: #fecaca;
+    color: #991b1b;
 }
 
 .medium-priority {
-    background-color: #FFF3E0;
-    color: #E65100;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    background-color: #fef3c7;
+    color: #d97706;
 }
 
 .low-priority {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
+    background-color: #dcfce7;
+    color: #166534;
 }
 
 /* Enhanced table styling */
 .ward-elderly-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f9fafb;
 }
 
 .ward-elderly-table tbody tr:hover {
-    background-color: #f0f8ff;
+    background-color: #f3f4f6;
 }
 
-.gender-analysis-table tbody tr:nth-child(even) {
-    background-color: #fafafa;
+/* Special care indicator */
+.special-care-indicator {
+    font-style: italic;
+    color: #dc2626;
+    font-size: 8pt;
 }
 
-.elderly-gender-summary-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+/* Gender-specific styling */
+.male-elderly {
+    color: #2563eb;
+}
+
+.female-elderly {
+    color: #dc2626;
+}
+
+.single-women {
+    color: #7c2d12;
+    font-weight: bold;
 }
 
 /* Print optimization */
 @media print {
     .old-age-single-women-social-section {
-        page-break-inside: avoid;
-        margin-bottom: 1.5em;
+        page-break-inside: auto;
     }
     
-    .pdf-data-table {
-        font-size: 7pt;
+    .chart-section, .table-section {
         page-break-inside: avoid;
     }
-    
-    .pdf-data-table tr {
-        page-break-inside: avoid;
-    }
-    
-    .chart-section {
-        page-break-inside: avoid;
-        margin: 1em 0;
-    }
-    
-    .table-section {
-        page-break-inside: avoid;
-        margin: 1em 0;
-    }
-    
-    .pdf-chart-container {
-        page-break-inside: avoid;
-    }
-    
-    .content-paragraph {
-        page-break-inside: avoid;
-    }
-    
-    .ward-elderly-table th,
-    .ward-elderly-table td {
-        font-size: 6pt;
-        padding: 2px 3px;
-    }
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .pdf-data-table {
-        font-size: 8pt;
-    }
-    
-    .ward-elderly-table th,
-    .ward-elderly-table td {
-        padding: 2px 3px;
-        font-size: 7pt;
-    }
-    
-    .chart-title,
-    .table-title {
-        font-size: 10pt;
-    }
-    
-    .priority-tag {
-        font-size: 7pt;
-        padding: 1px 4px;
-    }
-}
-
-/* Accessibility improvements */
-.pdf-data-table th {
-    font-weight: bold;
-    background-color: #f5f5f5;
-}
-
-.pdf-data-table tbody tr:focus {
-    outline: 2px solid #2196F3;
-    outline-offset: -2px;
-}
-
-/* Special care indicator */
-.special-care-indicator {
-    background-color: #E8F5E8;
-    color: #2E7D32;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 8pt;
-    font-weight: bold;
-}
-
-/* Gender-specific styling */
-.male-elderly {
-    background-color: #E3F2FD;
-    color: #1976D2;
-}
-
-.female-elderly {
-    background-color: #FCE4EC;
-    color: #C2185B;
-}
-
-.single-women {
-    background-color: #FFF3E0;
-    color: #E65100;
-}
-
-/* Ward comparison styling */
-.highest-elderly-ward {
-    background-color: #FFEBEE;
-    font-weight: bold;
-}
-
-.lowest-elderly-ward {
-    background-color: #E8F5E8;
-    font-weight: bold;
-}
-
-/* Summary statistics styling */
-.summary-stats {
-    background-color: #f8fafc;
-    padding: 10px;
-    border-left: 4px solid #2196F3;
-    margin: 1em 0;
-}
-
-.summary-stats h4 {
-    margin: 0 0 8px 0;
-    color: #1976D2;
-}
-
-.summary-stats .stat-item {
-    display: inline-block;
-    margin-right: 20px;
-    font-weight: bold;
-}
-
-/* Legend for charts */
-.chart-legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 10px 0;
-    font-size: 9pt;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.legend-color {
-    width: 15px;
-    height: 15px;
-    border-radius: 3px;
-}
-
-.legend-male {
-    background-color: #2196F3;
-}
-
-.legend-female {
-    background-color: #E91E63;
-}
-
-.legend-single-women {
-    background-color: #FF9800;
 }
 </style>
