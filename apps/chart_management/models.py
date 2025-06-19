@@ -16,6 +16,7 @@ from apps.core.models import BaseModel
 
 class ChartTypeChoice(models.TextChoices):
     """Chart type choices"""
+
     PIE = "pie", _("पाई चार्ट")
     BAR = "bar", _("बार चार्ट")
     LINE = "line", _("लाइन चार्ट")
@@ -24,6 +25,7 @@ class ChartTypeChoice(models.TextChoices):
 
 class ChartStatusChoice(models.TextChoices):
     """Chart generation status choices"""
+
     PENDING = "pending", _("पेन्डिङ")
     GENERATING = "generating", _("जेनेरेट हुँदै")
     COMPLETED = "completed", _("पूरा भयो")
@@ -34,110 +36,88 @@ class ChartCache(BaseModel):
     """
     Model to track generated charts and provide efficient caching
     """
-    
+
     # Chart identification
     chart_key = models.CharField(
         max_length=255,
         verbose_name=_("चार्ट की"),
-        help_text=_("Unique identifier for the chart")
+        help_text=_("Unique identifier for the chart"),
     )
-    
+
     chart_type = models.CharField(
-        max_length=20,
-        choices=ChartTypeChoice.choices,
-        verbose_name=_("चार्ट प्रकार")
+        max_length=20, choices=ChartTypeChoice.choices, verbose_name=_("चार्ट प्रकार")
     )
-    
+
     # Content tracking
     content_hash = models.CharField(
         max_length=64,
         verbose_name=_("कन्टेन्ट ह्यास"),
-        help_text=_("SHA-256 hash of the chart data")
+        help_text=_("SHA-256 hash of the chart data"),
     )
-    
+
     svg_content_hash = models.CharField(
         max_length=64,
         verbose_name=_("SVG कन्टेन्ट ह्यास"),
-        help_text=_("SHA-256 hash of the generated SVG content")
+        help_text=_("SHA-256 hash of the generated SVG content"),
     )
-    
+
     # File paths
     svg_path = models.CharField(
         max_length=500,
         verbose_name=_("SVG फाइल पथ"),
-        help_text=_("Relative path to the SVG file")
+        help_text=_("Relative path to the SVG file"),
     )
-    
+
     png_path = models.CharField(
         max_length=500,
         blank=True,
         null=True,
         verbose_name=_("PNG फाइल पथ"),
-        help_text=_("Relative path to the PNG file")
+        help_text=_("Relative path to the PNG file"),
     )
-    
+
     # Generation status
     status = models.CharField(
         max_length=20,
         choices=ChartStatusChoice.choices,
         default=ChartStatusChoice.PENDING,
-        verbose_name=_("स्थिति")
+        verbose_name=_("स्थिति"),
     )
-    
+
     # Metadata
-    title = models.CharField(
-        max_length=255,
-        verbose_name=_("शीर्षक")
-    )
-    
-    width = models.IntegerField(
-        verbose_name=_("चौडाइ")
-    )
-    
-    height = models.IntegerField(
-        verbose_name=_("उचाइ")
-    )
-    
+    title = models.CharField(max_length=255, verbose_name=_("शीर्षक"))
+
+    width = models.IntegerField(verbose_name=_("चौडाइ"))
+
+    height = models.IntegerField(verbose_name=_("उचाइ"))
+
     # Processing info
     svg_generated_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_("SVG जेनेरेशन समय")
+        null=True, blank=True, verbose_name=_("SVG जेनेरेशन समय")
     )
-    
+
     png_generated_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_("PNG जेनेरेशन समय")
+        null=True, blank=True, verbose_name=_("PNG जेनेरेशन समय")
     )
-    
-    error_message = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name=_("त्रुटि सन्देश")
-    )
-    
+
+    error_message = models.TextField(blank=True, null=True, verbose_name=_("त्रुटि सन्देश"))
+
     # Usage tracking
-    access_count = models.IntegerField(
-        default=0,
-        verbose_name=_("पहुँच गणना")
-    )
-    
+    access_count = models.IntegerField(default=0, verbose_name=_("पहुँच गणना"))
+
     last_accessed = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_("अन्तिम पहुँच")
+        null=True, blank=True, verbose_name=_("अन्तिम पहुँच")
     )
 
     class Meta:
         verbose_name = _("चार्ट क्यास")
         verbose_name_plural = _("चार्ट क्यासहरू")
-        unique_together = ['chart_key', 'content_hash']
+        unique_together = ["chart_key", "content_hash"]
         indexes = [
-            models.Index(fields=['chart_key']),
-            models.Index(fields=['content_hash']),
-            models.Index(fields=['status']),
-            models.Index(fields=['created_at']),
+            models.Index(fields=["chart_key"]),
+            models.Index(fields=["content_hash"]),
+            models.Index(fields=["status"]),
+            models.Index(fields=["created_at"]),
         ]
 
     def __str__(self):
@@ -191,72 +171,61 @@ class ChartCache(BaseModel):
             content_str = str(sorted(data.items()))
         else:
             content_str = str(data)
-        
-        return hashlib.sha256(content_str.encode('utf-8')).hexdigest()
+
+        return hashlib.sha256(content_str.encode("utf-8")).hexdigest()
 
     @staticmethod
     def generate_svg_content_hash(svg_content):
         """Generate SHA-256 hash from SVG content"""
-        return hashlib.sha256(svg_content.encode('utf-8')).hexdigest()
+        return hashlib.sha256(svg_content.encode("utf-8")).hexdigest()
 
     def mark_accessed(self):
         """Mark chart as accessed and increment counter"""
         from django.utils import timezone
+
         self.access_count += 1
         self.last_accessed = timezone.now()
-        self.save(update_fields=['access_count', 'last_accessed'])
+        self.save(update_fields=["access_count", "last_accessed"])
 
 
 class ChartGenerationLog(BaseModel):
     """
     Log of chart generation attempts and results
     """
-    
+
     chart_cache = models.ForeignKey(
         ChartCache,
         on_delete=models.CASCADE,
-        related_name='generation_logs',
-        verbose_name=_("चार्ट क्यास")
+        related_name="generation_logs",
+        verbose_name=_("चार्ट क्यास"),
     )
-    
+
     operation_type = models.CharField(
         max_length=20,
         choices=[
-            ('svg_generation', _('SVG जेनेरेशन')),
-            ('png_conversion', _('PNG रूपान्तरण')),
-            ('cleanup', _('सफाई')),
+            ("svg_generation", _("SVG जेनेरेशन")),
+            ("png_conversion", _("PNG रूपान्तरण")),
+            ("cleanup", _("सफाई")),
         ],
-        verbose_name=_("अपरेशन प्रकार")
+        verbose_name=_("अपरेशन प्रकार"),
     )
-    
+
     status = models.CharField(
-        max_length=20,
-        choices=ChartStatusChoice.choices,
-        verbose_name=_("स्थिति")
+        max_length=20, choices=ChartStatusChoice.choices, verbose_name=_("स्थिति")
     )
-    
+
     processing_time = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name=_("प्रोसेसिङ समय (सेकेन्ड)")
+        null=True, blank=True, verbose_name=_("प्रोसेसिङ समय (सेकेन्ड)")
     )
-    
-    error_message = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name=_("त्रुटि सन्देश")
-    )
-    
-    metadata = models.JSONField(
-        default=dict,
-        blank=True,
-        verbose_name=_("मेटाडेटा")
-    )
+
+    error_message = models.TextField(blank=True, null=True, verbose_name=_("त्रुटि सन्देश"))
+
+    metadata = models.JSONField(default=dict, blank=True, verbose_name=_("मेटाडेटा"))
 
     class Meta:
         verbose_name = _("चार्ट जेनेरेशन लग")
         verbose_name_plural = _("चार्ट जेनेरेशन लगहरू")
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.chart_cache.chart_key} - {self.operation_type} - {self.status}"
