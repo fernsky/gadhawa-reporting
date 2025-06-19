@@ -16,7 +16,7 @@ class BaseSocialProcessor(ABC):
 
     def __init__(self):
         # Use proper static directory path
-        self.static_charts_dir = Path("static/images")
+        self.static_charts_dir = Path("static/images/charts")
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
 
         # Initialize SVG chart generator
