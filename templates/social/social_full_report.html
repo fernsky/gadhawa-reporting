@@ -27,7 +27,7 @@
 
     <!-- Solid Waste Management Section -->
     {% if all_social_data.solid_waste_management %}
-        {% include 'social/solid_waste_management/solid_waste_management_report_partial.html' with municipality_data=all_social_data.solid_waste_management.municipality_data ward_data=all_social_data.solid_waste_management.ward_data total_population=all_social_data.solid_waste_management.total_population coherent_analysis=all_social_data.solid_waste_management.report_content pdf_charts=all_social_data.solid_waste_management.charts %}
+        {% include 'social/solid_waste_management/solid_waste_management_report_partial.html' with municipality_data=all_social_data.solid_waste_management.municipality_data ward_data=all_social_data.solid_waste_management.ward_data total_households=all_social_data.solid_waste_management.total_households coherent_analysis=all_social_data.solid_waste_management.report_content pdf_charts=all_social_data.solid_waste_management.charts %}
     {% endif %}
 
     <!-- Old Age and Single Women Section -->
