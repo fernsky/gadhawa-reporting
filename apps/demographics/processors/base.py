@@ -16,7 +16,9 @@ class BaseDemographicsProcessor(ABC):
 
     def __init__(self):
         # Use proper static directory path
-        self.static_charts_dir = Path("static/images/charts")
+        from django.conf import settings
+
+        self.static_charts_dir = Path(settings.STATIC_ROOT) / "images" / "charts"
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
 
         # Initialize SVG chart generator

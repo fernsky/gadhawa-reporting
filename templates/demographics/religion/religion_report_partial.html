@@ -1,4 +1,5 @@
 {% load nepali_filters %}
+{% load chart_tags %}
 
 <!-- Religion Demographics Report Partial for PDF -->
 <p class="section-content religion-demographics-section" id="section-religion-demographics">
@@ -17,12 +18,25 @@
             <h3 class="chart-title">चित्र ३.५.१: धर्म अनुसार जनसंख्या वितरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
-                {% if pdf_charts.religion.pie_chart_png %}
+                
+                <!-- Try chart management system first -->
+                {% chart_url "demographics_religion_pie" as pie_chart_url %}
+                {% if pie_chart_url %}
+                    <img src="{{ pie_chart_url }}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.religion.pie_chart_png %}
                     <img src="{% static pdf_charts.religion.pie_chart_png %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% elif pdf_charts.religion.pie_chart_svg %}
                     <img src="{% static pdf_charts.religion.pie_chart_svg %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
                 {% else %}
+                    <!-- Fallback to static chart -->
                     <img src="{% static 'images/charts/religion_pie_chart.png' %}" alt="धर्म अनुसार जनसंख्या वितरण" class="pdf-chart-image">
+                {% endif %}
+                
+                <!-- Chart management status info (for debugging, can be removed) -->
+                {% if chart_management_status and chart_management_status.all_current %}
+                    <div class="chart-status" style="font-size: 8pt; color: #666; margin-top: 0.5em;">
+                        चार्ट अद्यावधिक छ (Chart Management System)
+                    </div>
                 {% endif %}
             </div>
         </div>

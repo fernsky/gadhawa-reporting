@@ -15,15 +15,15 @@ from .occupation import OccupationProcessor
 
 class DemographicsManager:
     """Manager for all demographic processors"""
-    
+
     def __init__(self):
         self.processors = {
-            'religion': ReligionProcessor(),
-            'language': LanguageProcessor(),
-            'caste': CasteProcessor(),
-            'househead': HouseheadProcessor(),
-            'occupation': OccupationProcessor(),
-            'economically_active': EconomicallyActiveProcessor(),
+            "religion": ReligionProcessor(),
+            "language": LanguageProcessor(),
+            "caste": CasteProcessor(),
+            "househead": HouseheadProcessor(),
+            "occupation": OccupationProcessor(),
+            "economically_active": EconomicallyActiveProcessor(),
         }
 
     def get_processor(self, category):
@@ -45,11 +45,18 @@ class DemographicsManager:
         return None
 
     def generate_all_charts(self):
-        """Generate and save all charts for all categories"""
+        """Generate and save all charts for all categories using chart management"""
         chart_urls = {}
         for category, processor in self.processors.items():
             data = processor.get_data()
-            charts = processor.generate_and_save_charts(data)
+
+            # Use chart management if processor supports it
+            if hasattr(processor, "generate_and_track_charts"):
+                charts = processor.generate_and_track_charts(data)
+            else:
+                # Fallback to original method
+                charts = processor.generate_and_save_charts(data)
+
             chart_urls[category] = charts
         return chart_urls
 
@@ -63,19 +70,23 @@ class DemographicsManager:
         combined_content = []
 
         # Introduction
-        combined_content.append("""लुङ्ग्री गाउँपालिकामा जनसांख्यिकीय विविधताको स्पष्ट चित्र देखिन्छ । विभिन्न धर्म, मातृभाषा र जातजातिका मानिसहरूको बसोबास रहेको यस गाउँपालिकाले नेपाली समाजको बहुआयामिक विशेषताहरूको प्रतिनिधित्व गर्छ ।""")
+        combined_content.append(
+            """लुङ्ग्री गाउँपालिकामा जनसांख्यिकीय विविधताको स्पष्ट चित्र देखिन्छ । विभिन्न धर्म, मातृभाषा र जातजातिका मानिसहरूको बसोबास रहेको यस गाउँपालिकाले नेपाली समाजको बहुआयामिक विशेषताहरूको प्रतिनिधित्व गर्छ ।"""
+        )
 
         # Add each category's content
         for category, processed_data in all_data.items():
-            if processed_data and 'report_content' in processed_data:
-                combined_content.append(processed_data['report_content'])
+            if processed_data and "report_content" in processed_data:
+                combined_content.append(processed_data["report_content"])
 
         # Overall conclusion
-        combined_content.append("""
+        combined_content.append(
+            """
 
-समग्रमा, यस गाउँपालिकामा रहेको जनसांख्यिकीय विविधता नेपाली समाजको समृद्ध सांस्कृतिक परम्पराको झलक हो । विभिन्न समुदायहरूबीचको सद्भावना र एकताले यस क्षेत्रको सामाजिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । घरमुखियाको लिङ्गीय वितरणले लिङ्गीय समानताको दिशामा प्रगति भएको संकेत गर्छ ।""")
+समग्रमा, यस गाउँपालिकामा रहेको जनसांख्यिकीय विविधता नेपाली समाजको समृद्ध सांस्कृतिक परम्पराको झलक हो । विभिन्न समुदायहरूबीचको सद्भावना र एकताले यस क्षेत्रको सामाजिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । घरमुखियाको लिङ्गीय वितरणले लिङ्गीय समानताको दिशामा प्रगति भएको संकेत गर्छ ।"""
+        )
 
-        return ' '.join(combined_content)
+        return " ".join(combined_content)
 
 
 # Convenience function for easy access
