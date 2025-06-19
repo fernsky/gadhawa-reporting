@@ -59,7 +59,7 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_obj.total_old_age_population
                     + ward_obj.single_women_population,
-                    "old_age_data": {
+                    "demographics": {
                         "male_old_age": {
                             "name_nepali": "पुरुष जेष्ठ नागरिक",
                             "population": ward_obj.male_old_age_population,
@@ -221,10 +221,10 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
 
             for ward_num, ward_info in ward_data.items():
                 ward_elderly_counts[ward_num] = (
-                    ward_info["old_age_data"]["male_old_age"]["population"]
-                    + ward_info["old_age_data"]["female_old_age"]["population"]
+                    ward_info["demographics"]["male_old_age"]["population"]
+                    + ward_info["demographics"]["female_old_age"]["population"]
                 )
-                ward_single_women_counts[ward_num] = ward_info["old_age_data"][
+                ward_single_women_counts[ward_num] = ward_info["demographics"][
                     "single_women"
                 ]["population"]
 
@@ -322,14 +322,14 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
         for ward_num, ward_info in data["ward_data"].items():
             chart_data[f"ward_{ward_num}"] = {
                 "name_nepali": f"वडा {ward_num}",
-                "male_elderly": ward_info["old_age_data"]["male_old_age"]["population"],
-                "female_elderly": ward_info["old_age_data"]["female_old_age"][
+                "male_elderly": ward_info["demographics"]["male_old_age"]["population"],
+                "female_elderly": ward_info["demographics"]["female_old_age"][
                     "population"
                 ],
-                "single_women": ward_info["old_age_data"]["single_women"]["population"],
+                "single_women": ward_info["demographics"]["single_women"]["population"],
                 "total_elderly": (
-                    ward_info["old_age_data"]["male_old_age"]["population"]
-                    + ward_info["old_age_data"]["female_old_age"]["population"]
+                    ward_info["demographics"]["male_old_age"]["population"]
+                    + ward_info["demographics"]["female_old_age"]["population"]
                 ),
             }
 
