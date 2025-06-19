@@ -15,7 +15,7 @@ class ChartFileAdmin(admin.ModelAdmin):
 
     list_display = [
         "chart_key",
-        "chart_type", 
+        "chart_type",
         "title",
         "file_exists",
         "created_at",
@@ -29,30 +29,22 @@ class ChartFileAdmin(admin.ModelAdmin):
     search_fields = ["chart_key", "title"]
 
     readonly_fields = [
-        "content_hash",
         "created_at",
         "updated_at",
         "file_preview",
     ]
 
     fieldsets = (
-        ("Basic Info", {
-            "fields": ("chart_key", "chart_type", "title")
-        }),
-        ("File Info", {
-            "fields": ("file_path", "content_hash")
-        }),
-        ("Timestamps", {
-            "fields": ("created_at", "updated_at")
-        }),
-        ("Preview", {
-            "fields": ("file_preview",)
-        }),
+        ("Basic Info", {"fields": ("chart_key", "chart_type", "title")}),
+        ("File Info", {"fields": ("file_path",)}),
+        ("Timestamps", {"fields": ("created_at", "updated_at")}),
+        ("Preview", {"fields": ("file_preview",)}),
     )
 
     def file_exists(self, obj):
         """Show if file exists"""
         return "✅" if obj.exists() else "❌"
+
     file_exists.short_description = "File Exists"
     file_exists.boolean = True
 
@@ -65,6 +57,7 @@ class ChartFileAdmin(admin.ModelAdmin):
                 obj.title or obj.chart_key,
             )
         return "No preview available"
+
     file_preview.short_description = "Preview"
 
     actions = ["cleanup_missing_files"]
@@ -76,6 +69,7 @@ class ChartFileAdmin(admin.ModelAdmin):
             if not chart_file.exists():
                 chart_file.delete()
                 count += 1
-        
+
         self.message_user(request, f"Removed {count} entries for missing files.")
+
     cleanup_missing_files.short_description = "Remove entries for missing files"

@@ -12,18 +12,11 @@ from apps.chart_management.services import get_chart_service
 class ChartFileTestCase(TestCase):
     """Test chart file model"""
 
-    def setUp(self):
-        self.test_data = {
-            "category_a": {"count": 100, "percentage": 50.0},
-            "category_b": {"count": 100, "percentage": 50.0},
-        }
-
     def test_chart_file_creation(self):
         """Test creating a chart file record"""
         chart_file = ChartFile.objects.create(
             chart_key="test_chart",
             chart_type="pie",
-            content_hash="test_hash",
             file_path="test_chart.svg",
             title="Test Chart",
         )
@@ -32,31 +25,12 @@ class ChartFileTestCase(TestCase):
         self.assertEqual(chart_file.chart_type, "pie")
         self.assertEqual(chart_file.title, "Test Chart")
 
-    def test_content_hash_generation(self):
-        """Test content hash generation"""
-        hash1 = ChartFile.generate_content_hash(self.test_data)
-        hash2 = ChartFile.generate_content_hash(self.test_data)
-
-        # Same data should produce same hash
-        self.assertEqual(hash1, hash2)
-
-        # Different data should produce different hash
-        different_data = self.test_data.copy()
-        different_data["category_a"]["count"] = 101
-        hash3 = ChartFile.generate_content_hash(different_data)
-
-        self.assertNotEqual(hash1, hash3)
-
 
 class SimpleChartServiceTestCase(TestCase):
     """Test simple chart service"""
 
     def setUp(self):
         self.chart_service = get_chart_service()
-        self.test_data = {
-            "category_a": {"count": 100, "percentage": 50.0},
-            "category_b": {"count": 100, "percentage": 50.0},
-        }
 
     def test_service_initialization(self):
         """Test service initialization"""
@@ -69,7 +43,6 @@ class SimpleChartServiceTestCase(TestCase):
         url = self.chart_service.track_chart(
             chart_key="test_chart",
             chart_type="pie",
-            data=self.test_data,
             file_path="test_chart.svg",
             title="Test Chart",
         )
@@ -79,23 +52,20 @@ class SimpleChartServiceTestCase(TestCase):
         self.assertIsNotNone(chart_file)
         self.assertEqual(chart_file.chart_type, "pie")
 
-    def test_chart_currency_check(self):
-        """Test checking if chart is current"""
+    def test_chart_existence_check(self):
+        """Test checking if chart exists"""
         # Create a chart record
         ChartFile.objects.create(
             chart_key="test_chart",
             chart_type="pie",
-            content_hash=ChartFile.generate_content_hash(self.test_data),
             file_path="test_chart.svg",
             title="Test Chart",
         )
 
-        # Should be current with same data (but file doesn't exist)
-        is_current = self.chart_service.is_chart_current("test_chart", self.test_data)
-        self.assertFalse(is_current)  # False because file doesn't exist
+        # Should not exist because file doesn't exist on filesystem
+        exists = self.chart_service.chart_exists("test_chart")
+        self.assertFalse(exists)  # False because file doesn't exist
 
-        # Different data should not be current
-        different_data = self.test_data.copy()
-        different_data["category_a"]["count"] = 101
-        is_current = self.chart_service.is_chart_current("test_chart", different_data)
-        self.assertFalse(is_current)
+        # Should need generation
+        needs_gen = self.chart_service.needs_generation("test_chart")
+        self.assertTrue(needs_gen)

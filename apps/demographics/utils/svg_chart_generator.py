@@ -848,16 +848,10 @@ class SVGChartGenerator:
             if chart_type == "pie":
                 svg_content = self.generate_pie_chart_svg(
                     demographic_data,
-                    include_title=include_title,
-                    title_nepali=title_nepali,
-                    title_english=title_english,
                 )
             elif chart_type == "bar":
                 svg_content = self.generate_bar_chart_svg(
                     demographic_data,
-                    include_title=include_title,
-                    title_nepali=title_nepali,
-                    title_english=title_english,
                 )
             else:
                 raise ValueError(f"Unsupported chart type: {chart_type}")

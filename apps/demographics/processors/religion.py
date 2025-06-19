@@ -80,7 +80,8 @@ class ReligionProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                     (data["population"] / total_population) * 100, 2
                 )
 
-        return religion_data
+        # Sort by religion key for consistent ordering (important for caching)
+        return dict(sorted(religion_data.items()))
 
     def generate_report_content(self, data):
         """Generate religion-specific report content"""
@@ -106,155 +107,124 @@ class ReligionProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         return None
 
     def generate_and_track_charts(self, data):
-        """Generate charts and track them using chart management system with high-quality output"""
+        """Generate charts only if they don't exist and track them using simplified chart management"""
         charts = {}
 
         # Ensure static charts directory exists
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
 
-        # Generate pie chart using the full chart generation pipeline
-        print("🎨 Generating pie chart with high-quality output...")
-        success_pie, png_path_pie, svg_path_pie = (
-            self.chart_generator.generate_chart_image(
-                demographic_data=data,
-                output_name="religion_pie_chart",
-                static_dir=str(self.static_charts_dir),
-                chart_type="pie",
-                include_title=False,
-                title_nepali="धर्म अनुसार जनसंख्या वितरण",
-                title_english="Population Distribution by Religion",
+        # Check and generate pie chart only if needed
+        if self.needs_generation("pie"):
+            print("🎨 Generating pie chart (file doesn't exist)...")
+            success_pie, png_path_pie, svg_path_pie = (
+                self.chart_generator.generate_chart_image(
+                    demographic_data=data,
+                    output_name="religion_pie_chart",
+                    static_dir=str(self.static_charts_dir),
+                    chart_type="pie",
+                    include_title=False,
+                    title_nepali="धर्म अनुसार जनसंख्या वितरण",
+                    title_english="Population Distribution by Religion",
+                )
             )
-        )
 
-        if success_pie and png_path_pie:
-            # Use PNG file for high quality
-            pie_file_path = "religion_pie_chart.png"
-            print(f"✓ Generated high-quality pie chart: {png_path_pie}")
+            if success_pie and png_path_pie:
+                pie_file_path = "religion_pie_chart.png"
+                print(f"✓ Generated high-quality pie chart: {png_path_pie}")
 
-            # Track with chart management system
-            pie_url = self.track_chart_file(
-                chart_type="pie",
-                data=data,
-                file_path=pie_file_path,
-                title="धर्म अनुसार जनसंख्या वितरण (पाई चार्ट)",
-            )
+                # Track with simplified chart management system
+                pie_url = self.track_chart_file(
+                    chart_type="pie",
+                    file_path=pie_file_path,
+                    title="धर्म अनुसार जनसंख्या वितरण (पाई चार्ट)",
+                )
+                if pie_url:
+                    charts["pie_chart_url"] = pie_url
+                    charts["pie_chart_png"] = pie_file_path
+                    print(f"✓ Pie chart URL: {pie_url}")
+
+            elif svg_path_pie:
+                pie_file_path = "religion_pie_chart.svg"
+                print(f"⚠ Using SVG fallback for pie chart: {svg_path_pie}")
+
+                pie_url = self.track_chart_file(
+                    chart_type="pie",
+                    file_path=pie_file_path,
+                    title="धर्म अनुसार जनसंख्या वितरण (पाई चार्ट)",
+                )
+                if pie_url:
+                    charts["pie_chart_url"] = pie_url
+                    charts["pie_chart_svg"] = pie_file_path
+            else:
+                print("❌ Failed to generate pie chart")
+        else:
+            # Use existing pie chart
+            pie_url = self.get_chart_url("pie")
             if pie_url:
                 charts["pie_chart_url"] = pie_url
-                charts["pie_chart_png"] = pie_file_path
-                print(f"✓ Pie chart URL: {pie_url}")
+                print("✓ Using existing pie chart")
 
-        elif svg_path_pie:
-            # Fallback to SVG if PNG generation failed
-            pie_file_path = "religion_pie_chart.svg"
-            print(f"⚠ Using SVG fallback for pie chart: {svg_path_pie}")
-
-            pie_url = self.track_chart_file(
-                chart_type="pie",
-                data=data,
-                file_path=pie_file_path,
-                title="धर्म अनुसार जनसंख्या वितरण (पाई चार्ट)",
+        # Check and generate bar chart only if needed
+        if self.needs_generation("bar"):
+            print("🎨 Generating bar chart (file doesn't exist)...")
+            success_bar, png_path_bar, svg_path_bar = (
+                self.chart_generator.generate_chart_image(
+                    demographic_data=data,
+                    output_name="religion_bar_chart",
+                    static_dir=str(self.static_charts_dir),
+                    chart_type="bar",
+                    include_title=False,
+                    title_nepali="धर्म अनुसार जनसंख्या वितरण",
+                    title_english="Population Distribution by Religion",
+                )
             )
-            if pie_url:
-                charts["pie_chart_url"] = pie_url
-                charts["pie_chart_svg"] = pie_file_path
+
+            if success_bar and png_path_bar:
+                bar_file_path = "religion_bar_chart.png"
+                print(f"✓ Generated high-quality bar chart: {png_path_bar}")
+
+                # Track with simplified chart management system
+                bar_url = self.track_chart_file(
+                    chart_type="bar",
+                    file_path=bar_file_path,
+                    title="धर्म अनुसार जनसंख्या वितरण (बार चार्ट)",
+                )
+                if bar_url:
+                    charts["bar_chart_url"] = bar_url
+                    charts["bar_chart_png"] = bar_file_path
+                    print(f"✓ Bar chart URL: {bar_url}")
+
+            elif svg_path_bar:
+                bar_file_path = "religion_bar_chart.svg"
+                print(f"⚠ Using SVG fallback for bar chart: {svg_path_bar}")
+
+                bar_url = self.track_chart_file(
+                    chart_type="bar",
+                    file_path=bar_file_path,
+                    title="धर्म अनुसार जनसंख्या वितरण (बार चार्ट)",
+                )
+                if bar_url:
+                    charts["bar_chart_url"] = bar_url
+                    charts["bar_chart_svg"] = bar_file_path
+            else:
+                print("❌ Failed to generate bar chart")
         else:
-            print("❌ Failed to generate pie chart")
-
-        # Generate bar chart using the full chart generation pipeline
-        print("🎨 Generating bar chart with high-quality output...")
-        success_bar, png_path_bar, svg_path_bar = (
-            self.chart_generator.generate_chart_image(
-                demographic_data=data,
-                output_name="religion_bar_chart",
-                static_dir=str(self.static_charts_dir),
-                chart_type="bar",
-                include_title=False,
-                title_nepali="धर्म अनुसार जनसंख्या वितरण",
-                title_english="Population Distribution by Religion",
-            )
-        )
-
-        if success_bar and png_path_bar:
-            # Use PNG file for high quality
-            bar_file_path = "religion_bar_chart.png"
-            print(f"✓ Generated high-quality bar chart: {png_path_bar}")
-
-            # Track with chart management system
-            bar_url = self.track_chart_file(
-                chart_type="bar",
-                data=data,
-                file_path=bar_file_path,
-                title="धर्म अनुसार जनसंख्या वितरण (बार चार्ट)",
-            )
+            # Use existing bar chart
+            bar_url = self.get_chart_url("bar")
             if bar_url:
                 charts["bar_chart_url"] = bar_url
-                charts["bar_chart_png"] = bar_file_path
-                print(f"✓ Bar chart URL: {bar_url}")
-
-        elif svg_path_bar:
-            # Fallback to SVG if PNG generation failed
-            bar_file_path = "religion_bar_chart.svg"
-            print(f"⚠ Using SVG fallback for bar chart: {svg_path_bar}")
-
-            bar_url = self.track_chart_file(
-                chart_type="bar",
-                data=data,
-                file_path=bar_file_path,
-                title="धर्म अनुसार जनसंख्या वितरण (बार चार्ट)",
-            )
-            if bar_url:
-                charts["bar_chart_url"] = bar_url
-                charts["bar_chart_svg"] = bar_file_path
-        else:
-            print("❌ Failed to generate bar chart")
-
         return charts
 
-    def check_charts_current(self, data):
-        """Check if existing charts are still current"""
-        pie_current = self.is_chart_current("pie", data)
-        bar_current = self.is_chart_current("bar", data)
-        return {
-            "pie_current": pie_current,
-            "bar_current": bar_current,
-            "all_current": pie_current and bar_current,
-        }
-
     def process_for_pdf(self):
-        """Process religion data for PDF generation with chart management"""
+        """Process religion data for PDF generation with simplified chart management"""
         # Get raw data
         data = self.get_data()
 
         # Generate report content
         report_content = self.generate_report_content(data)
 
-        # Check if charts need to be regenerated
-        chart_status = self.check_charts_current(data)
-
-        # Generate charts only if needed or get existing URLs
-        if not chart_status["all_current"]:
-            charts = self.generate_and_track_charts(data)
-        else:
-            # Get existing chart URLs - check for both PNG and SVG
-            charts = {}
-
-            pie_url = self.get_chart_url("pie")
-            if pie_url:
-                charts["pie_chart_url"] = pie_url
-                # Determine file type from URL
-                if pie_url.endswith(".png"):
-                    charts["pie_chart_png"] = "religion_pie_chart.png"
-                else:
-                    charts["pie_chart_svg"] = "religion_pie_chart.svg"
-
-            bar_url = self.get_chart_url("bar")
-            if bar_url:
-                charts["bar_chart_url"] = bar_url
-                # Determine file type from URL
-                if bar_url.endswith(".png"):
-                    charts["bar_chart_png"] = "religion_bar_chart.png"
-                else:
-                    charts["bar_chart_svg"] = "religion_bar_chart.svg"
+        # Generate charts only if needed
+        charts = self.generate_and_track_charts(data)
 
         # Calculate total population
         total_population = sum(
@@ -267,7 +237,6 @@ class ReligionProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             "data": data,
             "report_content": report_content,
             "charts": charts,
-            "chart_management_status": chart_status,
             "total_population": total_population,
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),

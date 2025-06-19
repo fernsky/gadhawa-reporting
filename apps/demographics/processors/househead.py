@@ -12,13 +12,15 @@ from apps.reports.utils.nepali_numbers import (
     format_nepali_number,
     format_nepali_percentage,
 )
+from apps.chart_management.processors import SimpleChartProcessor
 
 
-class HouseheadProcessor(BaseDemographicsProcessor):
+class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
     """Processor for househead demographics"""
 
     def __init__(self):
         super().__init__()
+        SimpleChartProcessor.__init__(self)
         # Customize chart dimensions for househead
         self.pie_chart_width = 800
         self.pie_chart_height = 450
@@ -31,6 +33,10 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             "FEMALE": "#ff7f0e",  # Orange
             "OTHER": "#2ca02c",  # Green
         }
+
+    def get_chart_key(self):
+        """Return unique chart key for this processor"""
+        return "demographics_househead"
 
     def get_section_title(self):
         return "घरमूलीको विवरण"
@@ -131,20 +137,34 @@ class HouseheadProcessor(BaseDemographicsProcessor):
             )
         return None
 
-    def generate_and_save_charts(self, data):
-        """Generate and save both pie and bar charts for househead data"""
-        charts_info = {}
+    def generate_and_track_charts(self, data):
+        """Generate charts only if they don't exist and track them using simplified chart management"""
+        charts = {}
 
-        try:
-            # Generate pie chart for municipality-wide data
+        # Check and generate pie chart only if needed
+        if self.needs_generation("pie"):
+            print("🎨 Generating househead pie chart (file doesn't exist)...")
             pie_svg = self.generate_chart_svg(data, chart_type="pie")
             if pie_svg:
                 pie_path = self.static_charts_dir / "househead_pie_chart.svg"
                 with open(pie_path, "w", encoding="utf-8") as f:
                     f.write(pie_svg)
-                charts_info["pie_chart_svg"] = f"images/charts/{pie_path.name}"
 
-                # Try to convert to PNG
+                pie_file_path = "househead_pie_chart.svg"
+                print(f"✓ Generated househead pie chart: {pie_path}")
+
+                # Track with simplified chart management system
+                pie_url = self.track_chart_file(
+                    chart_type="pie",
+                    file_path=pie_file_path,
+                    title="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण",
+                )
+                if pie_url:
+                    charts["pie_chart_url"] = pie_url
+                    charts["pie_chart_svg"] = pie_file_path
+                    print(f"✓ Pie chart URL: {pie_url}")
+
+                # Try to convert to PNG for better quality
                 try:
                     png_path = self.static_charts_dir / "househead_pie_chart.png"
                     subprocess.run(
@@ -152,26 +172,59 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                             "inkscape",
                             "--export-filename",
                             str(png_path),
-                            "--export-dpi=600",  # High quality for PDF
+                            "--export-dpi=600",
                             str(pie_path),
                         ],
                         check=True,
                         timeout=30,
                     )
                     if png_path.exists():
-                        charts_info["pie_chart_png"] = f"images/charts/{png_path.name}"
+                        png_file_path = "househead_pie_chart.png"
+                        # Update tracking with PNG version
+                        png_url = self.track_chart_file(
+                            chart_type="pie",
+                            file_path=png_file_path,
+                            title="घरमूलीको लिङ्गको आधारमा घरपरिवार वितरण",
+                        )
+                        if png_url:
+                            charts["pie_chart_url"] = png_url
+                            charts["pie_chart_png"] = png_file_path
+                            print(f"✓ Updated with PNG version: {png_url}")
                 except:
                     pass  # Use SVG fallback
+            else:
+                print("❌ Failed to generate househead pie chart")
+        else:
+            # Use existing pie chart
+            pie_url = self.get_chart_url("pie")
+            if pie_url:
+                charts["pie_chart_url"] = pie_url
+                print("✓ Using existing househead pie chart")
 
-            # Generate bar chart for ward-wise data
+        # Check and generate bar chart only if needed
+        if self.needs_generation("bar"):
+            print("🎨 Generating househead bar chart (file doesn't exist)...")
             bar_svg = self.generate_chart_svg(data, chart_type="bar")
             if bar_svg:
                 bar_path = self.static_charts_dir / "househead_bar_chart.svg"
                 with open(bar_path, "w", encoding="utf-8") as f:
                     f.write(bar_svg)
-                charts_info["bar_chart_svg"] = f"images/charts/{bar_path.name}"
 
-                # Try to convert to PNG
+                bar_file_path = "househead_bar_chart.svg"
+                print(f"✓ Generated househead bar chart: {bar_path}")
+
+                # Track with simplified chart management system
+                bar_url = self.track_chart_file(
+                    chart_type="bar",
+                    file_path=bar_file_path,
+                    title="वडा अनुसार घरमूलीको लिङ्गको वितरण",
+                )
+                if bar_url:
+                    charts["bar_chart_url"] = bar_url
+                    charts["bar_chart_svg"] = bar_file_path
+                    print(f"✓ Bar chart URL: {bar_url}")
+
+                # Try to convert to PNG for better quality
                 try:
                     png_path = self.static_charts_dir / "househead_bar_chart.png"
                     subprocess.run(
@@ -179,19 +232,40 @@ class HouseheadProcessor(BaseDemographicsProcessor):
                             "inkscape",
                             "--export-filename",
                             str(png_path),
-                            "--export-dpi=600",  # High quality for PDF
+                            "--export-dpi=600",
                             str(bar_path),
                         ],
                         check=True,
                         timeout=30,
                     )
                     if png_path.exists():
-                        charts_info["bar_chart_png"] = f"images/charts/{png_path.name}"
+                        png_file_path = "househead_bar_chart.png"
+                        # Update tracking with PNG version
+                        png_url = self.track_chart_file(
+                            chart_type="bar",
+                            file_path=png_file_path,
+                            title="वडा अनुसार घरमूलीको लिङ्गको वितरण",
+                        )
+                        if png_url:
+                            charts["bar_chart_url"] = png_url
+                            charts["bar_chart_png"] = png_file_path
+                            print(f"✓ Updated with PNG version: {png_url}")
                 except:
                     pass  # Use SVG fallback
+            else:
+                print("❌ Failed to generate househead bar chart")
+        else:
+            # Use existing bar chart
+            bar_url = self.get_chart_url("bar")
+            if bar_url:
+                charts["bar_chart_url"] = bar_url
+                print("✓ Using existing househead bar chart")
 
-        except Exception as e:
-            print(f"Error generating househead charts: {e}")
+        return charts
+
+    def generate_and_save_charts(self, data):
+        """Legacy method - calls new chart management method"""
+        return self.generate_and_track_charts(data)
 
         return charts_info
 

@@ -45,19 +45,56 @@ class DemographicsManager:
         return None
 
     def generate_all_charts(self):
-        """Generate and save all charts for all categories using chart management"""
+        """Generate and save charts only if they don't exist using simple chart management"""
         chart_urls = {}
-        for category, processor in self.processors.items():
-            data = processor.get_data()
 
-            # Use chart management if processor supports it
-            if hasattr(processor, "generate_and_track_charts"):
-                charts = processor.generate_and_track_charts(data)
-            else:
-                # Fallback to original method
+        for category, processor in self.processors.items():
+            print(f"\n📊 Processing charts for {category}...")
+
+            # Check if processor supports chart management
+            if hasattr(processor, "needs_generation") and hasattr(
+                processor, "generate_and_track_charts"
+            ):
+                # Get data first to check what charts are needed
+                data = processor.get_data()
+                charts_needed = []
+
+                # Check what chart types this processor supports
+                chart_types = ["pie", "bar"]  # Most processors support these
+
+                for chart_type in chart_types:
+                    if processor.needs_generation(chart_type):
+                        charts_needed.append(chart_type)
+                        print(f"  📈 {chart_type} chart needs generation")
+                    else:
+                        print(f"  ✓ {chart_type} chart already exists")
+
+                # Generate only needed charts
+                if charts_needed:
+                    print(f"  🎨 Generating {len(charts_needed)} charts...")
+                    charts = processor.generate_and_track_charts(data)
+                else:
+                    # Get existing chart URLs
+                    charts = {}
+                    for chart_type in chart_types:
+                        url = processor.get_chart_url(chart_type)
+                        if url:
+                            chart_key = f"{chart_type}_chart_url"
+                            charts[chart_key] = url
+                    print(f"  ✓ Using existing charts")
+
+            elif hasattr(processor, "generate_and_save_charts"):
+                # Fallback to original method for processors without chart management
+                print(f"  📈 Using fallback chart generation...")
+                data = processor.get_data()
                 charts = processor.generate_and_save_charts(data)
+            else:
+                print(f"  ⚠ No chart generation method available")
+                charts = {}
 
             chart_urls[category] = charts
+
+        print(f"\n✅ Chart generation completed for all categories")
         return chart_urls
 
     def get_available_categories(self):
