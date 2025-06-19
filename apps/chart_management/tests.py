@@ -25,7 +25,7 @@ class ChartFileTestCase(TestCase):
             chart_type="pie",
             content_hash="test_hash",
             file_path="test_chart.svg",
-            title="Test Chart"
+            title="Test Chart",
         )
 
         self.assertEqual(chart_file.chart_key, "test_chart")
@@ -71,7 +71,7 @@ class SimpleChartServiceTestCase(TestCase):
             chart_type="pie",
             data=self.test_data,
             file_path="test_chart.svg",
-            title="Test Chart"
+            title="Test Chart",
         )
 
         # Check if record was created
@@ -87,7 +87,7 @@ class SimpleChartServiceTestCase(TestCase):
             chart_type="pie",
             content_hash=ChartFile.generate_content_hash(self.test_data),
             file_path="test_chart.svg",
-            title="Test Chart"
+            title="Test Chart",
         )
 
         # Should be current with same data (but file doesn't exist)
