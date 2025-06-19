@@ -1,7 +1,7 @@
 """
-Chart Management Template Tags
+Simple Chart Template Tags
 
-Provides template tags for easy chart generation and display.
+Basic template tags for chart file display.
 """
 
 from django import template
@@ -12,137 +12,32 @@ register = template.Library()
 
 
 @register.simple_tag
-def chart_image(chart_key, chart_type, data, title, width=800, height=400, **kwargs):
+def chart_url(chart_key):
     """
-    Generate and display chart image
+    Get chart URL by key
 
     Usage:
-        {% chart_image "demographics_religion" "pie" religion_data "धर्म अनुसार जनसंख्या" width=900 height=450 %}
+        {% chart_url "demographics_religion_pie" as chart_url %}
+        {% if chart_url %}<img src="{{ chart_url }}" alt="Chart" />{% endif %}
     """
-
     chart_service = get_chart_service()
+    return chart_service.get_chart_url(chart_key) or ""
 
-    svg_url, png_url = chart_service.get_or_generate_chart(
-        chart_key=chart_key,
-        chart_type=chart_type,
-        data=data,
-        title=title,
-        width=width,
-        height=height,
-        **kwargs,
-    )
 
-    if png_url:
-        # Prefer PNG for better compatibility
-        return mark_safe(
-            f'<img src="{png_url}" alt="{title}" class="chart-image" '
-            f'style="width: {width}px; height: {height}px;" />'
-        )
-    elif svg_url:
-        # Fallback to SVG
-        return mark_safe(
-            f'<img src="{svg_url}" alt="{title}" class="chart-image" '
-            f'style="width: {width}px; height: {height}px;" />'
-        )
+@register.simple_tag
+def chart_image(chart_key, alt_text="Chart", css_class="chart-image"):
+    """
+    Display chart image with fallback
+
+    Usage:
+        {% chart_image "demographics_religion_pie" "Religion Distribution" "pie-chart" %}
+    """
+    chart_service = get_chart_service()
+    url = chart_service.get_chart_url(chart_key)
+
+    if url:
+        return mark_safe(f'<img src="{url}" alt="{alt_text}" class="{css_class}" />')
     else:
-        # Error placeholder
         return mark_safe(
-            f'<div class="chart-error" style="width: {width}px; height: {height}px; '
-            f"border: 2px dashed #ccc; display: flex; align-items: center; "
-            f'justify-content: center; color: #666;">'
-            f"चार्ट लोड गर्न सकिएन: {title}</div>"
+            f'<div class="chart-placeholder {css_class}">चार्ट उपलब्ध छैन: {alt_text}</div>'
         )
-
-
-@register.simple_tag
-def chart_svg_url(chart_key, chart_type, data, title, width=800, height=400, **kwargs):
-    """
-    Get SVG URL for chart
-
-    Usage:
-        {% chart_svg_url "demographics_religion" "pie" religion_data "धर्म अनुसार जनसंख्या" as svg_url %}
-    """
-
-    chart_service = get_chart_service()
-
-    svg_url, _ = chart_service.get_or_generate_chart(
-        chart_key=chart_key,
-        chart_type=chart_type,
-        data=data,
-        title=title,
-        width=width,
-        height=height,
-        **kwargs,
-    )
-
-    return svg_url or ""
-
-
-@register.simple_tag
-def chart_png_url(chart_key, chart_type, data, title, width=800, height=400, **kwargs):
-    """
-    Get PNG URL for chart
-
-    Usage:
-        {% chart_png_url "demographics_religion" "pie" religion_data "धर्म अनुसार जनसंख्या" as png_url %}
-    """
-
-    chart_service = get_chart_service()
-
-    _, png_url = chart_service.get_or_generate_chart(
-        chart_key=chart_key,
-        chart_type=chart_type,
-        data=data,
-        title=title,
-        width=width,
-        height=height,
-        **kwargs,
-    )
-
-    return png_url or ""
-
-
-@register.inclusion_tag("chart_management/chart_with_fallback.html")
-def chart_with_fallback(
-    chart_key, chart_type, data, title, width=800, height=400, **kwargs
-):
-    """
-    Render chart with fallback options
-
-    Usage:
-        {% chart_with_fallback "demographics_religion" "pie" religion_data "धर्म अनुसार जनसंख्या" width=900 height=450 %}
-    """
-
-    chart_service = get_chart_service()
-
-    svg_url, png_url = chart_service.get_or_generate_chart(
-        chart_key=chart_key,
-        chart_type=chart_type,
-        data=data,
-        title=title,
-        width=width,
-        height=height,
-        **kwargs,
-    )
-
-    return {
-        "svg_url": svg_url,
-        "png_url": png_url,
-        "title": title,
-        "width": width,
-        "height": height,
-        "chart_key": chart_key,
-    }
-
-
-@register.simple_tag
-def chart_stats():
-    """
-    Get chart generation statistics
-
-    Usage:
-        {% chart_stats as stats %}
-    """
-
-    chart_service = get_chart_service()
-    return chart_service.get_chart_stats()

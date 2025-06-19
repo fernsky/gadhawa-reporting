@@ -11,8 +11,3 @@ class ChartManagementConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.chart_management"
     verbose_name = "Chart Management"
-
-    def ready(self):
-        """App ready signal handler"""
-        # Import signals to ensure they are registered
-        from . import signals

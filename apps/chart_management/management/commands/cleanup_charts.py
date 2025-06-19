@@ -1,58 +1,24 @@
 """
-Chart Management Management Commands
+Simple Chart Cleanup Command
 
-Provides command-line utilities for chart management.
+Clean up chart file entries for missing files.
 """
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
-from datetime import timedelta
 from apps.chart_management.services import get_chart_service
 
 
 class Command(BaseCommand):
-    """Clean up old chart files and database entries"""
+    """Clean up chart entries for missing files"""
 
-    help = "Clean up old unused chart files and database entries"
-
-    def add_arguments(self, parser):
-        parser.add_argument(
-            "--days",
-            type=int,
-            default=30,
-            help="Number of days to keep charts (default: 30)",
-        )
-
-        parser.add_argument(
-            "--dry-run",
-            action="store_true",
-            help="Show what would be deleted without actually deleting",
-        )
+    help = "Remove chart entries for files that no longer exist"
 
     def handle(self, *args, **options):
-        days = options["days"]
-        dry_run = options["dry_run"]
-
-        self.stdout.write(
-            self.style.SUCCESS(f"Cleaning up charts older than {days} days...")
-        )
-
-        if dry_run:
-            self.stdout.write(
-                self.style.WARNING("DRY RUN MODE - No files will be deleted")
-            )
+        self.stdout.write("Cleaning up missing chart files...")
 
         chart_service = get_chart_service()
+        deleted_count = chart_service.cleanup_missing_files()
 
-        if not dry_run:
-            deleted_count = chart_service.cleanup_old_charts(days)
-            self.stdout.write(
-                self.style.SUCCESS(f"Cleaned up {deleted_count} old charts")
-            )
-        else:
-            # For dry run, just show stats
-            stats = chart_service.get_chart_stats()
-            self.stdout.write(f"Total charts: {stats['total_charts']}")
-            self.stdout.write(f"Completed charts: {stats['completed_charts']}")
-            self.stdout.write(f"Failed charts: {stats['failed_charts']}")
-            self.stdout.write(f"Cache hit rate: {stats['cache_hit_rate']}%")
+        self.stdout.write(
+            self.style.SUCCESS(f"Removed {deleted_count} entries for missing files")
+        )
