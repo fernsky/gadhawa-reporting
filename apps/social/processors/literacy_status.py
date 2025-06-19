@@ -2,7 +2,7 @@
 Literacy Status Processor for Social Domain
 
 This processor handles Ward Wise Literacy Status data (५.१.१) providing:
-- Municipality-wide and ward-wise literacy statistics  
+- Municipality-wide and ward-wise literacy statistics
 - Detailed Nepali language analysis
 - Chart generation using base class functionality
 - Literacy rate calculations and comparisons
@@ -33,7 +33,9 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
     def get_data(self) -> Dict[str, Any]:
         """Get literacy status data aggregated by municipality and ward"""
         try:
-            all_records = WardWiseLiteracyStatus.objects.all().order_by("ward_number", "literacy_type")
+            all_records = WardWiseLiteracyStatus.objects.all().order_by(
+                "ward_number", "literacy_type"
+            )
 
             if not all_records.exists():
                 return self._empty_data_structure()
@@ -47,8 +49,10 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
                 literacy_name = literacy_choice[1]
 
                 literacy_population = (
-                    WardWiseLiteracyStatus.objects.filter(literacy_type=literacy_code)
-                    .aggregate(total=models.Sum("population"))["total"] or 0
+                    WardWiseLiteracyStatus.objects.filter(
+                        literacy_type=literacy_code
+                    ).aggregate(total=models.Sum("population"))["total"]
+                    or 0
                 )
 
                 if literacy_population > 0:
@@ -64,15 +68,19 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
             for literacy_code in municipality_data:
                 if total_population > 0:
                     municipality_data[literacy_code]["percentage"] = (
-                        municipality_data[literacy_code]["population"] / total_population * 100
+                        municipality_data[literacy_code]["population"]
+                        / total_population
+                        * 100
                     )
 
             # Ward-wise data
             ward_data = {}
             for ward_num in range(1, 8):  # Wards 1-7
                 ward_population = (
-                    WardWiseLiteracyStatus.objects.filter(ward_number=ward_num)
-                    .aggregate(total=models.Sum("population"))["total"] or 0
+                    WardWiseLiteracyStatus.objects.filter(
+                        ward_number=ward_num
+                    ).aggregate(total=models.Sum("population"))["total"]
+                    or 0
                 )
 
                 if ward_population > 0:
@@ -91,7 +99,8 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
                         literacy_population_ward = (
                             WardWiseLiteracyStatus.objects.filter(
                                 ward_number=ward_num, literacy_type=literacy_code
-                            ).aggregate(total=models.Sum("population"))["total"] or 0
+                            ).aggregate(total=models.Sum("population"))["total"]
+                            or 0
                         )
 
                         if literacy_population_ward > 0:
@@ -134,11 +143,14 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
         total_population = data["total_population"]
 
         # Calculate literacy rates
-        literate_population = (
-            municipality_data.get("BOTH_READING_AND_WRITING", {}).get("population", 0) + 
-            municipality_data.get("READING_ONLY", {}).get("population", 0)
+        literate_population = municipality_data.get("BOTH_READING_AND_WRITING", {}).get(
+            "population", 0
+        ) + municipality_data.get("READING_ONLY", {}).get("population", 0)
+        literacy_rate = (
+            (literate_population / total_population * 100)
+            if total_population > 0
+            else 0
         )
-        literacy_rate = (literate_population / total_population * 100) if total_population > 0 else 0
 
         return f"""
         <div class="analysis-content">

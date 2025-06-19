@@ -224,9 +224,7 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
             for ward_num, ward_info in ward_data.items():
                 # Calculate eco-friendly percentage for this ward
                 eco_friendly_count = sum(
-                    ward_info["waste_methods"]
-                    .get(method, {})
-                    .get("population", 0)
+                    ward_info["waste_methods"].get(method, {}).get("population", 0)
                     for method in [
                         "COMPOST_MANURE",
                         "HOME_COLLECTION",

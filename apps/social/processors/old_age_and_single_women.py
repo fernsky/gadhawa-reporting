@@ -57,13 +57,18 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
-                    "total_population": ward_obj.total_old_age_population + ward_obj.single_women_population,
+                    "total_population": ward_obj.total_old_age_population
+                    + ward_obj.single_women_population,
                     "old_age_data": {
                         "male_old_age": {
                             "name_nepali": "पुरुष जेष्ठ नागरिक",
                             "population": ward_obj.male_old_age_population,
                             "percentage": (
-                                (ward_obj.male_old_age_population / ward_obj.total_old_age_population * 100)
+                                (
+                                    ward_obj.male_old_age_population
+                                    / ward_obj.total_old_age_population
+                                    * 100
+                                )
                                 if ward_obj.total_old_age_population > 0
                                 else 0
                             ),
@@ -72,7 +77,11 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
                             "name_nepali": "महिला जेष्ठ नागरिक",
                             "population": ward_obj.female_old_age_population,
                             "percentage": (
-                                (ward_obj.female_old_age_population / ward_obj.total_old_age_population * 100)
+                                (
+                                    ward_obj.female_old_age_population
+                                    / ward_obj.total_old_age_population
+                                    * 100
+                                )
                                 if ward_obj.total_old_age_population > 0
                                 else 0
                             ),
@@ -212,10 +221,12 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
 
             for ward_num, ward_info in ward_data.items():
                 ward_elderly_counts[ward_num] = (
-                    ward_info["old_age_data"]["male_old_age"]["population"] +
-                    ward_info["old_age_data"]["female_old_age"]["population"]
+                    ward_info["old_age_data"]["male_old_age"]["population"]
+                    + ward_info["old_age_data"]["female_old_age"]["population"]
                 )
-                ward_single_women_counts[ward_num] = ward_info["old_age_data"]["single_women"]["population"]
+                ward_single_women_counts[ward_num] = ward_info["old_age_data"][
+                    "single_women"
+                ]["population"]
 
             # Elderly population analysis
             if ward_elderly_counts:
@@ -312,11 +323,13 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
             chart_data[f"ward_{ward_num}"] = {
                 "name_nepali": f"वडा {ward_num}",
                 "male_elderly": ward_info["old_age_data"]["male_old_age"]["population"],
-                "female_elderly": ward_info["old_age_data"]["female_old_age"]["population"],
+                "female_elderly": ward_info["old_age_data"]["female_old_age"][
+                    "population"
+                ],
                 "single_women": ward_info["old_age_data"]["single_women"]["population"],
                 "total_elderly": (
-                    ward_info["old_age_data"]["male_old_age"]["population"] +
-                    ward_info["old_age_data"]["female_old_age"]["population"]
+                    ward_info["old_age_data"]["male_old_age"]["population"]
+                    + ward_info["old_age_data"]["female_old_age"]["population"]
                 ),
             }
 
