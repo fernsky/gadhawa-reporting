@@ -56,7 +56,7 @@
                             <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
                             {% for ward_num, ward_info in ward_data.items %}
                                 <td style="text-align: center; font-size: 9pt; padding: 4px;">
-                                    {% with ward_info.demographics|get_item:waste_type as waste_demo %}
+                                    {% with ward_info.waste_methods|get_item:waste_type as waste_demo %}
                                         {{ waste_demo.population|default:0|nepali_number }}
                                     {% endwith %}
                                 </td>
@@ -201,7 +201,11 @@ border: none;    text-align: center;
         page-break-inside: auto;
     }
     
-    .chart-section, .table-section {
+    .chart-section {
+        page-break-inside: avoid;
+    }
+
+    .table-section {
         page-break-inside: auto;
     }
 }
