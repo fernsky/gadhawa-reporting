@@ -14,54 +14,8 @@
             गाउँपालिका/नगरपालिकाको चिनारी भनेको स्थानीय तहको भौगोलिक, ऐतिहासिक, सामाजिक र सांस्कृतिक पहिचानको समग्र चित्रण हो । लुङ्ग्री गाउँपालिकाको यो खण्डमा भौगोलिक अवस्थिति, ऐतिहासिक पृष्ठभूमि, प्राकृतिक सम्पदा र विकासका सम्भावनाहरूको विस्तृत विवरण प्रस्तुत गरिएको छ । यस अध्ययनले गाउँपालिकाको विशिष्टता, पहिचान र भविष्यका चुनौतीहरूको समग्र मूल्याङ्कन गरेको छ ।
         </div>
     </div>
-
-    <!-- Geographical Location Section -->
-    {% if geographical_location_data %}
-        {% include 'municipality_introduction/geographical_location/geographical_location_report_partial.html' with coherent_analysis=geographical_location_data.report_content %}
-    {% endif %}
-
-    <!-- Historical Background Section -->
-    {% if historical_background_data %}
-        {% include 'municipality_introduction/historical_background/historical_background_report_partial.html' with coherent_analysis=historical_background_data.report_content %}
-    {% endif %}
-
-    <!-- Additional sections can be added here when available -->
-    {% comment %}
-    <!-- Political Status Section -->
-    {% if political_status_data %}
-        {% include 'municipality_introduction/political_status/political_status_report_partial.html' with coherent_analysis=political_status_data.report_content %}
-    {% endif %}
-
-    <!-- Topographical Status Section -->
-    {% if topographical_status_data %}
-        {% include 'municipality_introduction/topographical_status/topographical_status_report_partial.html' with coherent_analysis=topographical_status_data.report_content %}
-    {% endif %}
-
-    <!-- Natural Resources Section -->
-    {% if natural_resources_data %}
-        {% include 'municipality_introduction/natural_resources/natural_resources_report_partial.html' with coherent_analysis=natural_resources_data.report_content %}
-    {% endif %}
-
-    <!-- Cultural Excellence Section -->
-    {% if cultural_excellence_data %}
-        {% include 'municipality_introduction/cultural_excellence/cultural_excellence_report_partial.html' with coherent_analysis=cultural_excellence_data.report_content %}
-    {% endif %}
-
-    <!-- Development Possibilities Section -->
-    {% if development_possibilities_data %}
-        {% include 'municipality_introduction/development_possibilities/development_possibilities_report_partial.html' with coherent_analysis=development_possibilities_data.report_content %}
-    {% endif %}
-
-    <!-- Domestic Production Section -->
-    {% if domestic_production_data %}
-        {% include 'municipality_introduction/domestic_production/domestic_production_report_partial.html' with coherent_analysis=domestic_production_data.report_content %}
-    {% endif %}
-
-    <!-- Human Development Index Section -->
-    {% if human_development_index_data %}
-        {% include 'municipality_introduction/human_development_index/human_development_index_report_partial.html' with coherent_analysis=human_development_index_data.report_content %}
-    {% endif %}
-    {% endcomment %}
+    
+    {% include 'municipality_introduction/geographical_location/geographical_location_report_partial.html' %}
 
 </div>
 
