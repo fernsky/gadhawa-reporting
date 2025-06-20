@@ -71,8 +71,8 @@
       h4,
       h5,
       h6 {
-        page-break-after: avoid;
-        page-break-inside: avoid;
+        page-break-after: auto;
+        page-break-inside: auto;
       }
 
       h1 {
@@ -125,8 +125,8 @@
       /* Category sections - only break before first category */
       .section-break {
         page-break-before: auto;
-        page-break-after: avoid;
-        page-break-inside: avoid;
+        page-break-after: auto;
+        page-break-inside: auto;
       }
 
       .section-break:first-of-type {
@@ -134,7 +134,7 @@
       }
 
       .section-content {
-        page-break-inside: avoid;
+        page-break-inside: auto;
         orphans: 3;
         widows: 3;
         margin-top: 1.5em;
@@ -146,13 +146,13 @@
         color: #dc2626;
         margin: 2em 0 1em 0;
         padding: 0.5em;
-        page-break-after: avoid;
+        page-break-after: auto;
       }
 
       /* Appendices section styling */
       .appendices-break {
         page-break-before: always;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       /* Section hierarchy */
@@ -206,7 +206,7 @@
         margin-bottom: 0.4em;
         padding: 0.2em 0;
         border-bottom: 1px dotted #d1d5db;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .toc-item .toc-link {
@@ -279,7 +279,7 @@
         margin-bottom: 0.5em;
         padding: 0.3em 0;
         border-bottom: 1px solid #e5e7eb;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .list-item .title {
@@ -293,7 +293,7 @@
       /* Figures and tables */
       .figure-container {
         margin: 1.5em 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
         text-align: center;
       }
 
@@ -313,7 +313,7 @@
 
       .table-container {
         margin: 1.5em 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .data-table {
@@ -400,7 +400,7 @@
         border-radius: 4px;
         padding: 1em;
         margin: 1em 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .note {
@@ -409,7 +409,7 @@
         border-radius: 4px;
         padding: 1em;
         margin: 1em 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .warning {
@@ -418,7 +418,7 @@
         border-radius: 4px;
         padding: 1em;
         margin: 1em 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       .highlight {
@@ -433,7 +433,7 @@
         padding: 1em;
         margin: 1em 0;
         font-style: italic;
-        page-break-inside: avoid;
+        page-break-inside: auto;
       }
 
       /* Print optimization */

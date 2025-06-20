@@ -204,7 +204,7 @@ li {
   margin-left: 2em;
   margin-top: 1em;
   margin-bottom: 0.5em;
-  page-break-after: avoid;
+  page-break-after: auto;
 }
 
 .content-section {

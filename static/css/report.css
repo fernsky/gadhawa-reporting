@@ -7,7 +7,12 @@ body {
     line-height: 1.7;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 700;
     margin-top: 2.5rem;
     margin-bottom: 1.25rem;
@@ -32,7 +37,8 @@ h4 {
     font-size: 1.25rem;
 }
 
-h5, h6 {
+h5,
+h6 {
     font-size: 1.1rem;
 }
 
@@ -42,7 +48,8 @@ h5, h6 {
     margin-bottom: 2rem;
 }
 
-section, article {
+section,
+article {
     margin-bottom: 3rem;
 }
 
@@ -55,7 +62,7 @@ section, article {
 }
 
 .shadow-sm {
-    box-shadow: 0 2px 12px 0 rgba(60,60,60,0.07) !important;
+    box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.07) !important;
 }
 
 .p-4 {
@@ -99,7 +106,8 @@ section, article {
     --bs-gutter-y: 2rem;
 }
 
-ul, ol {
+ul,
+ol {
     margin-bottom: 1.5rem;
 }
 
@@ -110,7 +118,7 @@ ul.list-unstyled {
 article {
     background: #fff;
     border-radius: 1rem;
-    box-shadow: 0 2px 12px 0 rgba(60,60,60,0.07);
+    box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.07);
     padding: 2rem;
     margin-bottom: 2rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -118,7 +126,7 @@ article {
 
 article:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px 0 rgba(60,60,60,0.12);
+    box-shadow: 0 4px 20px 0 rgba(60, 60, 60, 0.12);
 }
 
 article header {
@@ -147,7 +155,8 @@ article .btn {
     color: #1976d2;
 }
 
-.btn-outline-primary:hover, .btn-primary {
+.btn-outline-primary:hover,
+.btn-primary {
     background: #1976d2;
     color: #fff;
     border-color: #1976d2;
@@ -171,7 +180,7 @@ article .btn {
 }
 
 .shadow {
-    box-shadow: 0 4px 24px 0 rgba(60,60,60,0.09) !important;
+    box-shadow: 0 4px 24px 0 rgba(60, 60, 60, 0.09) !important;
 }
 
 .text-center {
@@ -210,7 +219,7 @@ article .btn {
 
 /* Navigation */
 .navbar {
-    box-shadow: 0 2px 8px 0 rgba(60,60,60,0.07);
+    box-shadow: 0 2px 8px 0 rgba(60, 60, 60, 0.07);
 }
 
 .navbar-brand {
@@ -235,7 +244,8 @@ article .btn {
     transition: all 0.2s ease;
 }
 
-.sidebar .nav-link.active, .sidebar .nav-link:hover {
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
     background: #e3f2fd;
     color: #1976d2;
 }
@@ -303,7 +313,7 @@ footer a:hover {
     font-size: 1rem;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     content: "/";
     color: #bdbdbd;
     margin: 0 0.5rem;
@@ -330,10 +340,11 @@ footer a:hover {
     border-radius: 0.5rem;
     margin-bottom: 2rem;
     overflow: hidden;
-    box-shadow: 0 2px 12px 0 rgba(60,60,60,0.07);
+    box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.07);
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 0.75rem 1rem;
     border-color: #e0e0e0;
 }
@@ -353,15 +364,15 @@ footer a:hover {
     .main-content {
         padding: 2rem 1rem;
     }
-    
+
     h1 {
         font-size: 2rem;
     }
-    
+
     h2 {
         font-size: 1.5rem;
     }
-    
+
     .sidebar {
         min-height: auto;
         padding-top: 1rem;
@@ -372,23 +383,23 @@ footer a:hover {
     .main-content {
         padding: 1rem 0.5rem;
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     h2 {
         font-size: 1.25rem;
     }
-    
+
     .p-4 {
         padding: 1rem !important;
     }
-    
+
     .display-4 {
         font-size: 1.75rem;
     }
-    
+
     .sidebar {
         display: none;
         position: fixed;
@@ -399,7 +410,7 @@ footer a:hover {
         z-index: 1050;
         background: #f4f6fa;
     }
-    
+
     .sidebar.show {
         display: block;
     }
@@ -409,11 +420,11 @@ footer a:hover {
     .main-content {
         padding: 0.5rem 0.25rem;
     }
-    
+
     .display-4 {
         font-size: 1.5rem;
     }
-    
+
     .btn-lg {
         font-size: 1rem;
         padding: 0.75rem 1.25rem;
@@ -425,29 +436,38 @@ footer a:hover {
     .no-print {
         display: none !important;
     }
-    
-    .navbar, .sidebar, footer {
+
+    .navbar,
+    .sidebar,
+    footer {
         display: none !important;
     }
-    
+
     .main-content {
         padding: 0;
         background: #fff;
     }
-    
-    article, .card {
+
+    article,
+    .card {
         box-shadow: none;
         border: 1px solid #e0e0e0;
-        break-inside: avoid;
+        break-inside: auto;
     }
-    
-    h1, h2, h3, h4, h5, h6 {
-        break-after: avoid;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        break-after: auto;
     }
 }
 
 /* Accessibility */
-.btn:focus, .nav-link:focus {
+.btn:focus,
+.nav-link:focus {
     outline: 2px solid #1976d2;
     outline-offset: 2px;
 }
@@ -458,6 +478,7 @@ footer a:hover {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

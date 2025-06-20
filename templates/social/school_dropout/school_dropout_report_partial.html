@@ -151,7 +151,7 @@
 <style>
 /* PDF-specific styles */
 .school-dropout-social-section {
-    page-break-inside: avoid;
+    page-break-inside: auto;
     margin-bottom: 2em;
 }
 
@@ -218,9 +218,10 @@
 }
 
 .pdf-chart-container {
-border: none;    text-align: center;
+    border: none;    
+    text-align: center;
     margin: 1em 0;
-    page-break-inside: avoid;
+    page-break-inside: auto;
 }
 
 .pdf-chart-image {
@@ -255,7 +256,7 @@ border: none;    text-align: center;
 
 .chart-section {
     margin-bottom: 1.5em;
-    page-break-inside: avoid;
+    page-break-inside: auto;
 }
 
 .table-section {
@@ -295,7 +296,7 @@ border: none;    text-align: center;
 /* Print optimization */
 @media print {
     .school-dropout-social-section {
-        page-break-inside: avoid;
+        page-break-inside: auto;
     }
     
     .ward-school-dropout-table {
