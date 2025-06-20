@@ -287,11 +287,7 @@
 
   <!-- Municipality Introduction Chapter -->
   <div class="category-break" id="category-municipality-introduction">
-    {% if municipality_introduction_data %}
-      {% include 'municipality_introduction/municipality_introduction_full_report.html' with geographical_location_data=municipality_introduction_data.geographical_location_data historical_background_data=municipality_introduction_data.historical_background_data %}
-    {% else %}
       {% include 'municipality_introduction/municipality_introduction_full_report.html' %}
-    {% endif %}
   </div>
  
   <!-- Demographics Chapter -->
