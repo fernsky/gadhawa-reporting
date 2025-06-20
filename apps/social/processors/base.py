@@ -266,6 +266,7 @@ class BaseSocialProcessor(ABC):
     def generate_and_save_charts(self, data):
         """Generate and save both pie and bar charts"""
         import subprocess
+        import os
 
         charts_info = {}
         category_name = self.get_category_name()
@@ -273,8 +274,8 @@ class BaseSocialProcessor(ABC):
         try:
             # Generate pie chart for municipality-wide data
             pie_svg = self.generate_chart_svg(data, chart_type="pie")
-            if pie_svg:
-                pie_path = self.static_charts_dir / f"{category_name}_pie_chart.svg"
+            pie_path = self.static_charts_dir / f"{category_name}_pie_chart.svg"
+            if pie_svg and not os.path.exists(pie_path):
                 with open(pie_path, "w", encoding="utf-8") as f:
                     f.write(pie_svg)
                 charts_info["pie_chart_svg"] = f"images/{category_name}_pie_chart.svg"
@@ -301,10 +302,15 @@ class BaseSocialProcessor(ABC):
                     pass  # Use SVG fallback
 
             # Generate bar chart for ward-wise data
+            print(category_name)
             if data.get("ward_data"):
+
                 bar_svg = self.generate_chart_svg(data, chart_type="bar")
-                if bar_svg:
-                    bar_path = self.static_charts_dir / f"{category_name}_bar_chart.svg"
+                bar_path = self.static_charts_dir / f"{category_name}_bar_chart.svg"
+                if category_name == "majorsubject" or category_name == "toilettype":
+                    print(bar_svg)
+                    print(data)
+                if bar_svg and not os.path.exists(bar_path):
                     with open(bar_path, "w", encoding="utf-8") as f:
                         f.write(bar_svg)
                     charts_info["bar_chart_svg"] = (

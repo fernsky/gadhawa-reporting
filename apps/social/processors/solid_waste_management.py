@@ -95,7 +95,7 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_households,  # Using households
-                    "demographics": {},
+                    "waste_methods": {},
                 }
 
                 # Waste management type breakdown for this ward
@@ -111,7 +111,7 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
                     )
 
                     if waste_households_ward > 0:
-                        ward_data[ward_num]["demographics"][waste_code] = {
+                        ward_data[ward_num]["waste_methods"][waste_code] = {
                             "name_nepali": waste_name,
                             "population": waste_households_ward,
                             "percentage": (
@@ -226,7 +226,7 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
             for ward_num, ward_info in ward_data.items():
                 # Calculate eco-friendly percentage for this ward
                 eco_friendly_count = sum(
-                    ward_info["demographics"].get(method, {}).get("population", 0)
+                    ward_info["waste_methods"].get(method, {}).get("population", 0)
                     for method in [
                         "COMPOST_MANURE",
                         "HOME_COLLECTION",

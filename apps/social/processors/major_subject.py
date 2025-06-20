@@ -19,7 +19,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
     for ward_num, ward_info in data["ward_data"].items():
         # Find top 3 subjects in each ward
         sorted_ward_subjects = sorted(
-            ward_info["demographics"].items(),
+            ward_info["subjects"].items(),
             key=lambda x: x[1]["population"],
             reverse=True,
         )[:3]
@@ -135,7 +135,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
                     "total_population": ward_population,
-                    "demographics": {},
+                    "subjects": {},
                 }
 
                 # Subject type breakdown for this ward
@@ -151,7 +151,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     )
 
                     if subject_population_ward > 0:
-                        ward_data[ward_num]["demographics"][subject_code] = {
+                        ward_data[ward_num]["subjects"][subject_code] = {
                             "name_nepali": subject_name,
                             "population": subject_population_ward,
                             "percentage": (
@@ -450,7 +450,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
             # Find wards with highest and lowest educational diversity
             ward_diversity = {}
             for ward_num, ward_info in ward_data.items():
-                ward_diversity[ward_num] = len(ward_info["demographics"])
+                ward_diversity[ward_num] = len(ward_info["subjects"])
 
             highest_diversity_ward = max(ward_diversity.items(), key=lambda x: x[1])
             lowest_diversity_ward = min(ward_diversity.items(), key=lambda x: x[1])

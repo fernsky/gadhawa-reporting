@@ -45,7 +45,8 @@ def test_template_integration():
         {
             "charts": pdf_data["charts"],
             "religion_data": pdf_data["data"],
-            "chart_management_status": pdf_data["chart_management_status"],
+            "coherent_analysis": pdf_data["coherent_analysis"],
+            "total_population": pdf_data["total_population"],
         }
     )
 
