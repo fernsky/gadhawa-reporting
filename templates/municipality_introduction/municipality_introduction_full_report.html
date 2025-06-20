@@ -1,0 +1,177 @@
+{% load nepali_filters %}
+
+<!-- Municipality Introduction Full Report for PDF -->
+<div class="municipality-introduction-full-section">
+    
+    <!-- Municipality Introduction Chapter Header -->
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
+        परिच्छेद – २: गाउँपालिका/नगरपालिकाको चिनारी
+    </h1>
+    
+    <!-- Municipality Introduction Chapter Introduction -->
+    <div class="content-section">
+        <div class="content-paragraph" style="font-size: 11pt; margin-bottom: 2em;">
+            गाउँपालिका/नगरपालिकाको चिनारी भनेको स्थानीय तहको भौगोलिक, ऐतिहासिक, सामाजिक र सांस्कृतिक पहिचानको समग्र चित्रण हो । लुङ्ग्री गाउँपालिकाको यो खण्डमा भौगोलिक अवस्थिति, ऐतिहासिक पृष्ठभूमि, प्राकृतिक सम्पदा र विकासका सम्भावनाहरूको विस्तृत विवरण प्रस्तुत गरिएको छ । यस अध्ययनले गाउँपालिकाको विशिष्टता, पहिचान र भविष्यका चुनौतीहरूको समग्र मूल्याङ्कन गरेको छ ।
+        </div>
+    </div>
+
+    <!-- Geographical Location Section -->
+    {% if geographical_location_data %}
+        {% include 'municipality_introduction/geographical_location/geographical_location_report_partial.html' with coherent_analysis=geographical_location_data.report_content %}
+    {% endif %}
+
+    <!-- Historical Background Section -->
+    {% if historical_background_data %}
+        {% include 'municipality_introduction/historical_background/historical_background_report_partial.html' with coherent_analysis=historical_background_data.report_content %}
+    {% endif %}
+
+    <!-- Additional sections can be added here when available -->
+    {% comment %}
+    <!-- Political Status Section -->
+    {% if political_status_data %}
+        {% include 'municipality_introduction/political_status/political_status_report_partial.html' with coherent_analysis=political_status_data.report_content %}
+    {% endif %}
+
+    <!-- Topographical Status Section -->
+    {% if topographical_status_data %}
+        {% include 'municipality_introduction/topographical_status/topographical_status_report_partial.html' with coherent_analysis=topographical_status_data.report_content %}
+    {% endif %}
+
+    <!-- Natural Resources Section -->
+    {% if natural_resources_data %}
+        {% include 'municipality_introduction/natural_resources/natural_resources_report_partial.html' with coherent_analysis=natural_resources_data.report_content %}
+    {% endif %}
+
+    <!-- Cultural Excellence Section -->
+    {% if cultural_excellence_data %}
+        {% include 'municipality_introduction/cultural_excellence/cultural_excellence_report_partial.html' with coherent_analysis=cultural_excellence_data.report_content %}
+    {% endif %}
+
+    <!-- Development Possibilities Section -->
+    {% if development_possibilities_data %}
+        {% include 'municipality_introduction/development_possibilities/development_possibilities_report_partial.html' with coherent_analysis=development_possibilities_data.report_content %}
+    {% endif %}
+
+    <!-- Domestic Production Section -->
+    {% if domestic_production_data %}
+        {% include 'municipality_introduction/domestic_production/domestic_production_report_partial.html' with coherent_analysis=domestic_production_data.report_content %}
+    {% endif %}
+
+    <!-- Human Development Index Section -->
+    {% if human_development_index_data %}
+        {% include 'municipality_introduction/human_development_index/human_development_index_report_partial.html' with coherent_analysis=human_development_index_data.report_content %}
+    {% endif %}
+    {% endcomment %}
+
+</div>
+
+<style>
+/* Municipality Introduction Full Report Styles */
+.municipality-introduction-full-section {
+    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    line-height: 1.4;
+    color: #1f2937;
+}
+
+.municipality-introduction-summary-section {
+    margin-top: 2em;
+    page-break-inside: auto;
+}
+
+.municipality-introduction-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 1em 0;
+}
+
+.municipality-introduction-summary-table th,
+.municipality-introduction-summary-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    vertical-align: top;
+}
+
+.municipality-introduction-summary-table th {
+    background-color: #1e40af;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 9pt;
+}
+
+.content-paragraph {
+    text-align: justify;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+    text-indent: 1.5em;
+}
+
+.content-paragraph p {
+    margin: 0.8em 0;
+}
+
+.content-paragraph strong {
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #1e40af;
+    margin: 1.5em 0 0.5em 0;
+    text-align: center;
+}
+
+.content-section {
+    margin: 1.5em 0;
+}
+
+.table-section {
+    margin: 2em 0;
+    page-break-inside: auto;
+}
+
+.category-title {
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    color: #dc2626;
+    border-bottom: 3px solid #dc2626;
+    padding-bottom: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+/* Print optimization */
+@media print {
+    .municipality-introduction-full-section {
+        page-break-inside: auto;
+    }
+    
+    .municipality-introduction-summary-table {
+        font-size: 8pt;
+        page-break-inside: auto;
+    }
+    
+    .municipality-introduction-summary-table th,
+    .municipality-introduction-summary-table td {
+        padding: 4px 6px;
+    }
+    
+    .content-paragraph {
+        font-size: 10pt;
+        page-break-inside: auto;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+    
+    .category-title {
+        font-size: 16pt;
+        page-break-before: always;
+    }
+}
+</style>

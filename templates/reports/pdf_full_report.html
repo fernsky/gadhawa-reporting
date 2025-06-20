@@ -187,6 +187,22 @@
     <span class="page-ref"><a href="#section-scope-of-report"></a></span>
   </div>
 
+  <!-- Municipality Introduction Chapter TOC -->
+  <div class="toc-item level-1">
+    <span class="toc-link">२. गाउँपालिका/नगरपालिकाको चिनारी</span>
+    <span class="page-ref"><a href="#category-municipality-introduction"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">२.१ भौगोलिक अवस्थिति</span>
+    <span class="page-ref"><a href="#section-geographical-location"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">२.२ ऐतिहासिक पृष्ठभूमि तथा नामाकरण</span>
+    <span class="page-ref"><a href="#section-historical-background"></a></span>
+  </div>
+
   <!-- Demographics Chapter TOC -->
   <div class="toc-item level-1">
     <span class="toc-link">३. पारिवारिक विवरण तथा जनसंख्याको अवस्था</span>
@@ -267,6 +283,15 @@
   <!-- Include Hardcoded Introduction Chapter -->
   <div class="category-break" id="category-introduction">
     {% include 'reports/partials/introduction/introduction_complete.html' %}
+  </div>
+
+  <!-- Municipality Introduction Chapter -->
+  <div class="category-break" id="category-municipality-introduction">
+    {% if municipality_introduction_data %}
+      {% include 'municipality_introduction/municipality_introduction_full_report.html' with geographical_location_data=municipality_introduction_data.geographical_location_data historical_background_data=municipality_introduction_data.historical_background_data %}
+    {% else %}
+      {% include 'municipality_introduction/municipality_introduction_full_report.html' %}
+    {% endif %}
   </div>
  
   <!-- Demographics Chapter -->

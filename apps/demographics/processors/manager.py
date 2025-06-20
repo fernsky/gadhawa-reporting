@@ -10,7 +10,7 @@ from .caste import CasteProcessor
 from .househead import HouseheadProcessor
 from .occupation import OccupationProcessor
 from .economically_active import EconomicallyActiveProcessor
-from .occupation import OccupationProcessor
+from .ward_settlement import WardSettlementProcessor
 
 
 class DemographicsManager:
@@ -18,6 +18,7 @@ class DemographicsManager:
 
     def __init__(self):
         self.processors = {
+            "ward_settlement": WardSettlementProcessor(),
             "religion": ReligionProcessor(),
             "language": LanguageProcessor(),
             "caste": CasteProcessor(),

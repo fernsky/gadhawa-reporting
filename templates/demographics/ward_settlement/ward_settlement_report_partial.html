@@ -1,0 +1,166 @@
+{% load nepali_filters %}
+
+<!-- Ward Settlement Demographics Report Partial for PDF -->
+<p class="section-content ward-settlement-demographics-section" id="section-ward-settlement-demographics">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ३.१ मुख्य बस्ती र घरपरिवारको विवरण
+    </h2>
+    
+    <h3 class="section-header level-3" style="color: #1e40af; font-size: 14pt; margin-top: 1.5em; margin-bottom: 1em;">
+        ३.१.१ मुख्य बस्ती
+    </h3>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Ward-wise Settlement Table -->
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१.१: वडागत मुख्य बस्तीहरूको विवरण</h3>
+        <table class="pdf-data-table ward-settlement-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%; text-align: center;">वडा नं.</th>
+                    <th style="width: 85%; text-align: center;">मुख्य बस्तीहरूको विवरण</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in ward_data.items %}
+                <tr>
+                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
+                    <td style="text-align: left; padding: 8px;">
+                        {% if ward_info.settlement_areas %}
+                            {% for settlement in ward_info.settlement_areas %}
+                                {{ settlement }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <em>विवरण उपलब्ध छैन</em>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="background-color: #f0f8ff; font-weight: bold;">
+                    <td style="text-align: center;">जम्मा</td>
+                    <td style="text-align: left; padding: 8px;">
+                        कुल {{ total_wards|nepali_number }} वडामा {{ total_settlements|nepali_number }} भन्दा बढी मुख्य बस्तीहरु
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.ward-settlement-demographics-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-settlement-table th,
+.ward-settlement-table td {
+    font-size: 10pt;
+    padding: 8px;
+    line-height: 1.4;
+}
+
+.ward-settlement-table td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Specific styling for settlement names */
+.ward-settlement-table tbody td:last-child {
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.ward-settlement-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ward-settlement-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.ward-settlement-table tfoot tr {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+
+/* Print optimization */
+@media print {
+    .ward-settlement-demographics-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>

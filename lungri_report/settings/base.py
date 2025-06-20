@@ -43,6 +43,7 @@ LOCAL_APPS = [
     "apps.core",
     "apps.users",
     "apps.demographics",
+    "apps.municipality_introduction",
     "apps.economics",
     "apps.social",
     "apps.environment",

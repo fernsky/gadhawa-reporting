@@ -22,6 +22,9 @@ from apps.demographics.processors.manager import get_demographics_manager
 from apps.social.processors.manager import get_social_manager
 from apps.infrastructure.processors.manager import get_infrastructure_manager
 from apps.economics.processors.manager import get_economics_manager
+from apps.municipality_introduction.processors.complete import (
+    CompleteMunicipalityIntroductionProcessor,
+)
 
 
 class PDFGeneratorMixin:
@@ -124,6 +127,9 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         social_manager = get_social_manager()
         infrastructure_manager = get_infrastructure_manager()
         economics_manager = get_economics_manager()
+        municipality_introduction_processor = (
+            CompleteMunicipalityIntroductionProcessor()
+        )
 
         # Generate all charts before processing data
         demographics_manager.generate_all_charts()
@@ -136,6 +142,9 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         all_social_data = social_manager.process_all_for_pdf()
         all_infrastructure_data = infrastructure_manager.process_all_for_pdf()
         all_economics_data = economics_manager.process_all_for_pdf()
+        municipality_introduction_data = (
+            municipality_introduction_processor.process_for_pdf()
+        )
 
         # Extract chart URLs for template use
         pdf_charts = {}
@@ -165,6 +174,11 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
             "all_social_data": all_social_data,
             "all_infrastructure_data": all_infrastructure_data,
             "all_economics_data": all_economics_data,
+            "municipality_introduction_data": (
+                municipality_introduction_data.get("context")
+                if municipality_introduction_data.get("success")
+                else None
+            ),
             "pdf_charts": pdf_charts,
         }
 
