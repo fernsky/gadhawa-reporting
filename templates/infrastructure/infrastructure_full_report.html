@@ -1,18 +1,10 @@
 {% load nepali_filters %}
 
 <!-- Infrastructure Report Section for PDF -->
-<div class="infrastructure-section" id="section-infrastructure">
+<p class="infrastructure-section" id="section-infrastructure">
     <h1 class="section-header level-1" style="color: #1e40af; border-bottom: 3px solid #0ea5e9; padding-bottom: 0.5em; font-size: 18pt; margin-top: 3em; page-break-before: always;">
         ७. भौतिक पूर्वाधारको अवस्था
     </h1>
-    
-    <!-- Infrastructure Introduction -->
-    <div class="content-section">
-        <p class="content-paragraph">
-            लुङ्ग्री गाउँपालिकाको भौतिक पूर्वाधारको अवस्था विश्लेषण गर्दा यातायात, सडक, सार्वजनिक यातायात र बजार पहुँचको क्षेत्रमा 
-            विभिन्न प्रकारका सुविधाहरू उपलब्ध रहेको देखिन्छ। यस खण्डमा गाउँपालिकाको पूर्वाधारको विस्तृत विवरण प्रस्तुत गरिएको छ।
-        </p>
-    </div>
 
     <!-- Road Status Section -->
     {% if all_infrastructure_data.road_status %}
@@ -34,12 +26,13 @@
             {% include 'infrastructure/market_center_time/market_center_time_report_partial.html' with section_number=market_data.section_number section_title=market_data.section_title coherent_analysis=market_data.coherent_analysis municipality_data=market_data.municipality_data ward_data=market_data.ward_data pdf_charts=market_data.pdf_charts total_households=market_data.total_households %}
         {% endwith %}
     {% endif %}
-</div>
+</p>
 
 <style>
 /* Infrastructure section styles */
 .infrastructure-section {
     margin: 2em 0;
+    page-break-before: auto;
 }
 
 .pdf-data-table {
