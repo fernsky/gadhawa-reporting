@@ -256,7 +256,7 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             # Other castes present
             if len(major_castes) > 5:
                 other_castes = [
-                    caste[0] for caste in major_castes[5:10]
+                    str(caste[0]) for caste in major_castes[5:10]
                 ]  # Next 5 castes
                 if other_castes:
                     content.append(

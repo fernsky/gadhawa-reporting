@@ -136,9 +136,6 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
         all_social_data = social_manager.process_all_for_pdf()
         all_infrastructure_data = infrastructure_manager.process_all_for_pdf()
         all_economics_data = economics_manager.process_all_for_pdf()
-        municipality_introduction_data = (
-            municipality_introduction_processor.process_for_pdf()
-        )
 
         # Extract chart URLs for template use
         pdf_charts = {}
@@ -168,11 +165,6 @@ class GenerateFullReportPDFView(PDFGeneratorMixin, TemplateView):
             "all_social_data": all_social_data,
             "all_infrastructure_data": all_infrastructure_data,
             "all_economics_data": all_economics_data,
-            "municipality_introduction_data": (
-                municipality_introduction_data.get("context")
-                if municipality_introduction_data.get("success")
-                else None
-            ),
             "pdf_charts": pdf_charts,
         }
 
