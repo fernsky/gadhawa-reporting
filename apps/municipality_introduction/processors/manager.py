@@ -62,7 +62,6 @@ class MunicipalityIntroductionManager:
         # Overall conclusion
         combined_content.append(
             """
-
 समग्रमा, यस गाउँपालिकामा रहेको आर्थिक विविधता नेपाली ग्रामीण अर्थतन्त्रको समृद्ध परम्पराको झलक हो । विभिन्न आर्थिक क्षेत्रहरूबीचको सहकार्य र एकताले यस क्षेत्रको आर्थिक स्थिरता र विकासमा महत्वपूर्ण योगदान पुर्‍याइरहेको छ । रेमिटेन्स खर्चको ढाँचाले आर्थिक प्राथमिकता र भविष्यको दिशाको संकेत गर्छ ।"""
         )
 
@@ -70,6 +69,6 @@ class MunicipalityIntroductionManager:
 
 
 # Convenience function for easy access
-def get_economics_manager():
-    """Get configured economics manager instance"""
-    return EconomicsManager()
+def get_municipality_introduction_manager():
+    """Get configured municipality introduction manager instance"""
+    return MunicipalityIntroductionManager()
