@@ -73,8 +73,8 @@ h3,
 h4,
 h5,
 h6 {
-  page-break-after: avoid;
-  page-break-inside: avoid;
+  page-break-after: auto;
+  page-break-inside: auto;
 }
 
 h1 {
@@ -135,8 +135,8 @@ li {
 /* Category sections - always break before each category */
 .category-break {
   page-break-before: always;
-  page-break-after: avoid;
-  page-break-inside: avoid;
+  page-break-after: auto;
+  page-break-inside: auto;
   break-before: page;
 }
 
@@ -146,18 +146,18 @@ li {
 }
 
 .section-content {
-  page-break-inside: auto;
+  /* page-break-inside: auto;
   break-inside: auto;
   orphans: 2;
-  widows: 2;
+  widows: 2; */
   margin-top: 1.5em;
 }
 
 /* Sections within categories should NOT break */
 .section-within-category {
-  page-break-before: auto;
+  /* page-break-before: auto;
   page-break-after: avoid;
-  page-break-inside: auto;
+  page-break-inside: auto; */
   margin-top: 2em;
 }
 
@@ -172,7 +172,7 @@ li {
   color: #dc2626;
   margin: 1em 0 2em 0;
   padding: 0.5em;
-  page-break-after: avoid;
+  page-break-after: auto;
   page-break-before: avoid;
 }
 
@@ -184,7 +184,7 @@ li {
   padding-bottom: 0.3em;
   margin-top: 2em;
   margin-bottom: 1em;
-  page-break-after: avoid;
+  page-break-after: auto;
 }
 
 .section-header.level-3 {
@@ -195,7 +195,7 @@ li {
   margin-left: 1em;
   margin-top: 1.5em;
   margin-bottom: 0.75em;
-  page-break-after: avoid;
+  page-break-after: auto;
 }
 
 .section-header.level-4 {
@@ -233,7 +233,7 @@ li {
   margin-bottom: 0.4em;
   padding: 0.2em 0;
   border-bottom: 1px dotted #d1d5db;
-  page-break-inside: avoid;
+  page-break-inside: auto;
 }
 
 .toc-item .toc-link {
@@ -322,7 +322,7 @@ li {
   margin-bottom: 0.5em;
   padding: 0.3em 0;
   border-bottom: 1px solid #e5e7eb;
-  page-break-inside: avoid;
+  page-break-inside: auto;
 }
 
 .list-item .title {
@@ -339,7 +339,7 @@ li {
 
 .figure-container {
   margin: 1.5em 0;
-  page-break-inside: avoid;
+  page-break-inside: auto;
   text-align: center;
   border: none;
 }
@@ -520,8 +520,8 @@ blockquote {
 /* For dynamically generated categories in loops */
 .category-container {
   page-break-before: always;
-  page-break-after: avoid;
-  page-break-inside: avoid;
+  page-break-after: auto;
+  page-break-inside: auto;
 }
 
 /* Exception for first category */
@@ -532,24 +532,16 @@ blockquote {
 /* Ensure sections within categories don't create unwanted breaks */
 .category-container .section-header {
   page-break-before: auto;
-  page-break-after: avoid;
+  page-break-after: auto;
 }
 
 /* For template-based category loops */
 .pdf-category-item {
   page-break-before: always;
-  page-break-after: avoid;
-  page-break-inside: avoid;
+  page-break-after: auto;
+  page-break-inside: auto;
 }
 
 .pdf-category-item:first-child {
   page-break-before: auto;
 }
-
-/* Ensure proper spacing between sections within a category */
-.section-within-category+.section-within-category {
-  margin-top: 2em;
-  page-break-before: auto;
-}
-
-/* ======================================== */
