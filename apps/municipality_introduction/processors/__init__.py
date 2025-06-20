@@ -2,11 +2,12 @@
 Economics processors package for Lungri Rural Municipality.
 """
 
-from .remittance_expenses import RemittanceExpensesProcessor
-from .manager import EconomicsManager, get_economics_manager
+from .manager import (
+    MunicipalityIntroductionManager,
+    get_municipality_introduction_manager,
+)
 
 __all__ = [
-    "RemittanceExpensesProcessor",
-    "EconomicsManager",
-    "get_economics_manager",
+    "MunicipalityIntroductionManager",
+    "get_municipality_introduction_manager",
 ]
