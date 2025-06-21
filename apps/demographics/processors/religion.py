@@ -59,8 +59,12 @@ class ReligionProcessor(BaseDemographicsProcessor):
                     (data["population"] / total_population) * 100, 2
                 )
 
-        # Sort by religion key for consistent ordering (important for caching)
-        sorted_religion_data = dict(sorted(religion_data.items()))
+        # Sort by population in descending order
+        sorted_religion_data = dict(
+            sorted(
+                religion_data.items(), key=lambda x: x[1]["population"], reverse=True
+            )
+        )
 
         # Return structured format similar to househead/economically_active
         return {
@@ -138,7 +142,7 @@ class ReligionProcessor(BaseDemographicsProcessor):
 
         return {
             "data": data,
-            "religion_data": data,  # For template compatibility
+            "religion_data": data["municipality_data"],  # For template compatibility
             "report_content": coherent_analysis,
             "coherent_analysis": coherent_analysis,  # For template compatibility
             "charts": charts,

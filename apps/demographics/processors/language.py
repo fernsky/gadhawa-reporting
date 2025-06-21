@@ -80,9 +80,16 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                     (data["population"] / total_population) * 100, 2
                 )
 
+        # Sort by population in descending order
+        sorted_language_data = dict(
+            sorted(
+                language_data.items(), key=lambda x: x[1]["population"], reverse=True
+            )
+        )
+
         # Return structured format similar to househead/economically_active
         return {
-            "municipality_data": language_data,
+            "municipality_data": sorted_language_data,
             "total_population": total_population,
         }
 
@@ -190,7 +197,9 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         return {
             "data": data,
+            "language_data": data["municipality_data"],  # For template compatibility
             "report_content": report_content,
+            "coherent_analysis": report_content,  # For template compatibility
             "charts": charts,
             "total_population": total_population,
             "section_title": self.get_section_title(),

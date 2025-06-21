@@ -78,11 +78,18 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         if total_population > 0:
             for caste, data in caste_data.items():
                 if data["population"] > 0:
-                    data["percentage"] = data["population"] / total_population * 100
+                    data["percentage"] = round(
+                        (data["population"] / total_population) * 100, 2
+                    )
+
+        # Sort by population in descending order
+        sorted_caste_data = dict(
+            sorted(caste_data.items(), key=lambda x: x[1]["population"], reverse=True)
+        )
 
         # Return structured format similar to househead/economically_active
         return {
-            "municipality_data": caste_data,
+            "municipality_data": sorted_caste_data,
             "total_population": total_population,
         }
 
@@ -190,7 +197,9 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         return {
             "data": data,
+            "caste_data": data["municipality_data"],  # For template compatibility
             "report_content": report_content,
+            "coherent_analysis": report_content,  # For template compatibility
             "charts": charts,
             "total_population": total_population,
             "section_title": self.get_section_title(),
