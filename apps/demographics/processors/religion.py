@@ -33,7 +33,7 @@ class ReligionProcessor(BaseDemographicsProcessor):
         return "३.५"
 
     def get_data(self):
-        """Get religion population data"""
+        """Get religion population data - municipality-wide format similar to househead/economically_active"""
         religion_data = {}
 
         # Initialize all religions
@@ -60,25 +60,31 @@ class ReligionProcessor(BaseDemographicsProcessor):
                 )
 
         # Sort by religion key for consistent ordering (important for caching)
-        return dict(sorted(religion_data.items()))
+        sorted_religion_data = dict(sorted(religion_data.items()))
+
+        # Return structured format similar to househead/economically_active
+        return {
+            "municipality_data": sorted_religion_data,
+            "total_population": total_population,
+        }
 
     def generate_report_content(self, data):
         """Generate religion-specific report content"""
         formatter = self.ReligionReportFormatter()
-        return formatter.generate_formal_report(data)
+        return formatter.generate_formal_report(data["municipality_data"])
 
     def generate_chart_svg(self, data, chart_type="pie"):
         """Generate religion chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
             return self.chart_generator.generate_pie_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="धर्म अनुसार जनसंख्या वितरण",
                 title_english="Population Distribution by Religion",
             )
         elif chart_type == "bar":
             return self.chart_generator.generate_bar_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="धर्म अनुसार जनसंख्या वितरण",
                 title_english="Population Distribution by Religion",
@@ -90,8 +96,8 @@ class ReligionProcessor(BaseDemographicsProcessor):
         charts = {}
         category_name = "religion"
 
-        # Use the data as is for pie chart (simple format)
-        pie_data = data
+        # Use the municipality_data for charts (structured format)
+        pie_data = data["municipality_data"]
         bar_data = None  # Religion doesn't have ward data
 
         # Generate pie chart using SVGChartGenerator
@@ -128,11 +134,7 @@ class ReligionProcessor(BaseDemographicsProcessor):
         charts = self.generate_and_save_charts(data)
 
         # Calculate total population
-        total_population = sum(
-            item["population"]
-            for item in data.values()
-            if isinstance(item, dict) and "population" in item
-        )
+        total_population = data.get("total_population", 0)
 
         return {
             "data": data,

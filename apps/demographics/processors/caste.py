@@ -54,7 +54,7 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         return "३.६"
 
     def get_data(self):
-        """Get caste population data"""
+        """Get caste population data - municipality-wide format similar to househead/economically_active"""
         caste_data = {}
 
         # Initialize all castes
@@ -80,25 +80,29 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 if data["population"] > 0:
                     data["percentage"] = data["population"] / total_population * 100
 
-        return caste_data
+        # Return structured format similar to househead/economically_active
+        return {
+            "municipality_data": caste_data,
+            "total_population": total_population,
+        }
 
     def generate_report_content(self, data):
         """Generate caste-specific report content"""
         formatter = self.CasteReportFormatter()
-        return formatter.generate_formal_report(data)
+        return formatter.generate_formal_report(data["municipality_data"])
 
     def generate_chart_svg(self, data, chart_type="pie"):
         """Generate caste chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
             return self.chart_generator.generate_pie_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="जातजातीको आधारमा जनसंख्या वितरण",
                 title_english="Population Distribution by Caste",
             )
         elif chart_type == "bar":
             return self.chart_generator.generate_bar_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="जातजातीको आधारमा जनसंख्या वितरण",
                 title_english="Population Distribution by Caste",
@@ -116,7 +120,7 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         if self.needs_generation("pie"):
             print(f"🔄 Generating caste pie chart...")
             success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                demographic_data=data,
+                demographic_data=data["municipality_data"],
                 output_name="caste_pie_chart",
                 static_dir=str(self.static_charts_dir),
                 chart_type="pie",
@@ -142,7 +146,7 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         if self.needs_generation("bar"):
             print(f"🔄 Generating caste bar chart...")
             success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                demographic_data=data,
+                demographic_data=data["municipality_data"],
                 output_name="caste_bar_chart",
                 static_dir=str(self.static_charts_dir),
                 chart_type="bar",
@@ -182,7 +186,7 @@ class CasteProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         charts = self.generate_and_track_charts(data)
 
         # Calculate total population
-        total_population = sum(caste_data["population"] for caste_data in data.values())
+        total_population = data.get("total_population", 0)
 
         return {
             "data": data,

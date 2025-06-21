@@ -54,7 +54,7 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         return "३.४"
 
     def get_data(self):
-        """Get language population data"""
+        """Get language population data - municipality-wide format similar to househead/economically_active"""
         language_data = {}
 
         # Initialize all languages
@@ -80,25 +80,29 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                     (data["population"] / total_population) * 100, 2
                 )
 
-        return language_data
+        # Return structured format similar to househead/economically_active
+        return {
+            "municipality_data": language_data,
+            "total_population": total_population,
+        }
 
     def generate_report_content(self, data):
         """Generate language-specific report content"""
         formatter = self.LanguageReportFormatter()
-        return formatter.generate_formal_report(data)
+        return formatter.generate_formal_report(data["municipality_data"])
 
     def generate_chart_svg(self, data, chart_type="pie"):
         """Generate language chart SVG using SVGChartGenerator"""
         if chart_type == "pie":
             return self.chart_generator.generate_pie_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="मातृभाषाको आधारमा जनसंख्या वितरण",
                 title_english="Population Distribution by Mother Tongue",
             )
         elif chart_type == "bar":
             return self.chart_generator.generate_bar_chart_svg(
-                data,
+                data["municipality_data"],
                 include_title=False,
                 title_nepali="मातृभाषाको आधारमा जनसंख्या वितरण",
                 title_english="Population Distribution by Mother Tongue",
@@ -116,7 +120,7 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         if self.needs_generation("pie"):
             print(f"🔄 Generating language pie chart...")
             success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                demographic_data=data,
+                demographic_data=data["municipality_data"],
                 output_name="language_pie_chart",
                 static_dir=str(self.static_charts_dir),
                 chart_type="pie",
@@ -142,7 +146,7 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         if self.needs_generation("bar"):
             print(f"🔄 Generating language bar chart...")
             success, png_path, svg_path = self.chart_generator.generate_chart_image(
-                demographic_data=data,
+                demographic_data=data["municipality_data"],
                 output_name="language_bar_chart",
                 static_dir=str(self.static_charts_dir),
                 chart_type="bar",
@@ -182,7 +186,7 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         charts = self.generate_and_track_charts(data)
 
         # Calculate total population
-        total_population = sum(lang_data["population"] for lang_data in data.values())
+        total_population = data.get("total_population", 0)
 
         return {
             "data": data,
