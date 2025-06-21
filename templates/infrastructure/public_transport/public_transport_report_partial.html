@@ -12,7 +12,7 @@
     </div>
 
     <!-- Pie Chart for Time Duration Distribution -->
-    {% if time_duration_data %}
+    {% if municipality_data %}
         <div class="chart-section">
             <h3 class="chart-title">चित्र ७.१.६.१: सार्वजनिक यातायातमा पहुँचको समय वितरण</h3>
             <div class="pdf-chart-container">
@@ -86,29 +86,29 @@
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
                     <td style="text-align: center;">जम्मा</td>
                     <td style="text-align: right; color: #22C55E;">
-                        {% if time_duration_data.UNDER_15_MIN %}
-                            {{ time_duration_data.UNDER_15_MIN.population|nepali_number }}
+                        {% if municipality_data.UNDER_15_MIN %}
+                            {{ municipality_data.UNDER_15_MIN.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right; color: #84CC16;">
-                        {% if time_duration_data.UNDER_30_MIN %}
-                            {{ time_duration_data.UNDER_30_MIN.population|nepali_number }}
+                        {% if municipality_data.UNDER_30_MIN %}
+                            {{ municipality_data.UNDER_30_MIN.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right; color: #F59E0B;">
-                        {% if time_duration_data.UNDER_1_HOUR %}
-                            {{ time_duration_data.UNDER_1_HOUR.population|nepali_number }}
+                        {% if municipality_data.UNDER_1_HOUR %}
+                            {{ municipality_data.UNDER_1_HOUR.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right; color: #EF4444;">
-                        {% if time_duration_data.1_HOUR_OR_MORE %}
-                            {{ time_duration_data.1_HOUR_OR_MORE.population|nepali_number }}
+                        {% if municipality_data.1_HOUR_OR_MORE %}
+                            {{ municipality_data.1_HOUR_OR_MORE.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
@@ -121,7 +121,7 @@
     {% endif %}
 
     <!-- Accessibility Summary -->
-    {% if time_duration_data %}
+    {% if municipality_data %}
     <div class="table-section">
         <h3 class="table-title">तालिका ७.१.६.३: पहुँचको गुणस्तर अनुसार सारांश</h3>
         <table class="pdf-data-table accessibility-summary-table">
@@ -139,21 +139,21 @@
                     <td style="text-align: left; color: #22C55E; font-weight: bold;">उत्कृष्ट पहुँच</td>
                     <td style="text-align: center;">१५ मिनेट भन्दा कम</td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_15_MIN %}
-                            {{ time_duration_data.UNDER_15_MIN.population|nepali_number }}
+                        {% if municipality_data.UNDER_15_MIN %}
+                            {{ municipality_data.UNDER_15_MIN.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_15_MIN %}
-                            {{ time_duration_data.UNDER_15_MIN.percentage|floatformat:1|nepali_number }}%
+                        {% if municipality_data.UNDER_15_MIN %}
+                            {{ municipality_data.UNDER_15_MIN.percentage|floatformat:1|nepali_number }}%
                         {% else %}
                             ०.०%
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
-                        {% if time_duration_data.UNDER_15_MIN and time_duration_data.UNDER_15_MIN.percentage >= 30 %}
+                        {% if municipality_data.UNDER_15_MIN and municipality_data.UNDER_15_MIN.percentage >= 30 %}
                             <span style="color: #22C55E;">✓ उत्कृष्ट</span>
                         {% else %}
                             <span style="color: #F59E0B;">△ सुधार आवश्यक</span>
@@ -164,34 +164,34 @@
                     <td style="text-align: left; color: #84CC16; font-weight: bold;">राम्रो पहुँच</td>
                     <td style="text-align: center;">३० मिनेट भन्दा कम (कुल)</td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_15_MIN and time_duration_data.UNDER_30_MIN %}
-                            {% with good_access=time_duration_data.UNDER_15_MIN.population|add:time_duration_data.UNDER_30_MIN.population %}
+                        {% if municipality_data.UNDER_15_MIN and municipality_data.UNDER_30_MIN %}
+                            {% with good_access=municipality_data.UNDER_15_MIN.population|add:municipality_data.UNDER_30_MIN.population %}
                                 {{ good_access|nepali_number }}
                             {% endwith %}
-                        {% elif time_duration_data.UNDER_15_MIN %}
-                            {{ time_duration_data.UNDER_15_MIN.population|nepali_number }}
-                        {% elif time_duration_data.UNDER_30_MIN %}
-                            {{ time_duration_data.UNDER_30_MIN.population|nepali_number }}
+                        {% elif municipality_data.UNDER_15_MIN %}
+                            {{ municipality_data.UNDER_15_MIN.population|nepali_number }}
+                        {% elif municipality_data.UNDER_30_MIN %}
+                            {{ municipality_data.UNDER_30_MIN.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_15_MIN and time_duration_data.UNDER_30_MIN %}
-                            {% with good_percentage=time_duration_data.UNDER_15_MIN.percentage|add:time_duration_data.UNDER_30_MIN.percentage %}
+                        {% if municipality_data.UNDER_15_MIN and municipality_data.UNDER_30_MIN %}
+                            {% with good_percentage=municipality_data.UNDER_15_MIN.percentage|add:municipality_data.UNDER_30_MIN.percentage %}
                                 {{ good_percentage|floatformat:1|nepali_number }}%
                             {% endwith %}
-                        {% elif time_duration_data.UNDER_15_MIN %}
-                            {{ time_duration_data.UNDER_15_MIN.percentage|floatformat:1|nepali_number }}%
-                        {% elif time_duration_data.UNDER_30_MIN %}
-                            {{ time_duration_data.UNDER_30_MIN.percentage|floatformat:1|nepali_number }}%
+                        {% elif municipality_data.UNDER_15_MIN %}
+                            {{ municipality_data.UNDER_15_MIN.percentage|floatformat:1|nepali_number }}%
+                        {% elif municipality_data.UNDER_30_MIN %}
+                            {{ municipality_data.UNDER_30_MIN.percentage|floatformat:1|nepali_number }}%
                         {% else %}
                             ०.०%
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
-                        {% if time_duration_data.UNDER_15_MIN and time_duration_data.UNDER_30_MIN %}
-                            {% with good_percentage=time_duration_data.UNDER_15_MIN.percentage|add:time_duration_data.UNDER_30_MIN.percentage %}
+                        {% if municipality_data.UNDER_15_MIN and municipality_data.UNDER_30_MIN %}
+                            {% with good_percentage=municipality_data.UNDER_15_MIN.percentage|add:municipality_data.UNDER_30_MIN.percentage %}
                                 {% if good_percentage >= 80 %}
                                     <span style="color: #22C55E;">✓ उत्कृष्ट</span>
                                 {% elif good_percentage >= 60 %}
@@ -209,15 +209,15 @@
                     <td style="text-align: left; color: #F59E0B; font-weight: bold;">मध्यम पहुँच</td>
                     <td style="text-align: center;">१ घण्टा भन्दा कम</td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_1_HOUR %}
-                            {{ time_duration_data.UNDER_1_HOUR.population|nepali_number }}
+                        {% if municipality_data.UNDER_1_HOUR %}
+                            {{ municipality_data.UNDER_1_HOUR.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.UNDER_1_HOUR %}
-                            {{ time_duration_data.UNDER_1_HOUR.percentage|floatformat:1|nepali_number }}%
+                        {% if municipality_data.UNDER_1_HOUR %}
+                            {{ municipality_data.UNDER_1_HOUR.percentage|floatformat:1|nepali_number }}%
                         {% else %}
                             ०.०%
                         {% endif %}
@@ -228,23 +228,23 @@
                     <td style="text-align: left; color: #EF4444; font-weight: bold;">कमजोर पहुँच</td>
                     <td style="text-align: center;">१ घण्टा वा बढी</td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.1_HOUR_OR_MORE %}
-                            {{ time_duration_data.1_HOUR_OR_MORE.population|nepali_number }}
+                        {% if municipality_data.1_HOUR_OR_MORE %}
+                            {{ municipality_data.1_HOUR_OR_MORE.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if time_duration_data.1_HOUR_OR_MORE %}
-                            {{ time_duration_data.1_HOUR_OR_MORE.percentage|floatformat:1|nepali_number }}%
+                        {% if municipality_data.1_HOUR_OR_MORE %}
+                            {{ municipality_data.1_HOUR_OR_MORE.percentage|floatformat:1|nepali_number }}%
                         {% else %}
                             ०.०%
                         {% endif %}
                     </td>
                     <td style="text-align: center;">
-                        {% if time_duration_data.1_HOUR_OR_MORE and time_duration_data.1_HOUR_OR_MORE.percentage <= 10 %}
+                        {% if municipality_data.1_HOUR_OR_MORE and municipality_data.1_HOUR_OR_MORE.percentage <= 10 %}
                             <span style="color: #22C55E;">✓ न्यूनतम</span>
-                        {% elif time_duration_data.1_HOUR_OR_MORE and time_duration_data.1_HOUR_OR_MORE.percentage <= 20 %}
+                        {% elif municipality_data.1_HOUR_OR_MORE and municipality_data.1_HOUR_OR_MORE.percentage <= 20 %}
                             <span style="color: #F59E0B;">△ ध्यान आवश्यक</span>
                         {% else %}
                             <span style="color: #EF4444;">✗ तत्काल सुधार आवश्यक</span>
