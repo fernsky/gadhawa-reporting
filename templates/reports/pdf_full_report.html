@@ -457,12 +457,12 @@
       
       <!-- Educational Institution Section -->
       {% if all_social_data.educational_institution %}
-          {% include 'social/educational_institution/educational_institution_report_partial.html' with municipality_data=all_social_data.educational_institution.municipality_data ward_data=all_social_data.educational_institution.ward_data historical_data=all_social_data.educational_institution.historical_data total_institutions=all_social_data.educational_institution.total_institutions total_students=all_social_data.educational_institution.total_students total_male_students=all_social_data.educational_institution.total_male_students total_female_students=all_social_data.educational_institution.total_female_students coherent_analysis=all_social_data.educational_institution.coherent_analysis pdf_charts=all_social_data.educational_institution.charts %}
+          {% include 'social/educational_institution/educational_institution_report_partial.html' with municipality_data=all_social_data.educational_institution.municipality_data ward_data=all_social_data.educational_institution.ward_data historical_data=all_social_data.educational_institution.historical_data total_institutions=all_social_data.educational_institution.total_institutions total_students=all_social_data.educational_institution.total_students total_male_students=all_social_data.educational_institution.total_male_students total_female_students=all_social_data.educational_institution.total_female_students coherent_analysis=all_social_data.educational_institution.coherent_analysis %}
       {% endif %}
 
       <!-- Teacher Staffing Section (5.1.5) -->
       {% if all_social_data.teacher_staffing %}
-          {% include 'social/teacher_staffing/teacher_staffing_report_partial.html' with municipality_data_by_level=all_social_data.teacher_staffing.municipality_data_by_level municipality_data_by_position=all_social_data.teacher_staffing.municipality_data_by_position ward_data=all_social_data.teacher_staffing.ward_data detailed_breakdown=all_social_data.teacher_staffing.detailed_breakdown total_teachers=all_social_data.teacher_staffing.total_teachers coherent_analysis=all_social_data.teacher_staffing.report_content pdf_charts=all_social_data.teacher_staffing.charts %}
+          {% include 'social/teacher_staffing/teacher_staffing_report_partial.html' with municipality_data_by_level=all_social_data.teacher_staffing.municipality_data_by_level municipality_data_by_position=all_social_data.teacher_staffing.municipality_data_by_position ward_data=all_social_data.teacher_staffing.ward_data detailed_breakdown=all_social_data.teacher_staffing.detailed_breakdown total_teachers=all_social_data.teacher_staffing.total_teachers coherent_analysis=all_social_data.teacher_staffing.coherent_analysis %}
       {% endif %}
 
       <!-- Major Subject Section -->

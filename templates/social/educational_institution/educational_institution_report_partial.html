@@ -1,7 +1,14 @@
-{% load nepali_fil  <!-- Pie Chart for Municipality-wide Distribution by School Level -->
+{% load nepali_filters %}
+
+<!-- Educational Institution Report Section (५.१.२) -->
+<div class="section-content educational-institution-section" id="section-educational-institution">
+  <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+    ५.१.२ तहगत रुपमा शैक्षिक संस्था/विद्यालय र विद्यार्थी विवरण
+  </h2>
+
   {% if municipality_data %}
   <div class="chart-section">
-    <div class="chart-title">विद्यालयको तह अनुसार विद्यार्थी वितरण</div>
+    <h3 class="chart-title">चित्र ५.१.२.१: विद्यालयको तह अनुसार विद्यार्थी वितरण</h3>
     <div class="pdf-chart-container">
       {% load static %}
       <img src="{% static 'images/charts/educational_institution_pie_chart.png' %}" alt="विद्यालयको तह अनुसार विद्यार्थी वितरण" class="pdf-chart-image">
@@ -12,19 +19,16 @@
   <!-- Bar Chart for Ward-wise Distribution -->
   {% if ward_data %}
   <div class="chart-section">
-    <div class="chart-title">वडागत शैक्षिक संस्था र विद्यार्थी वितरण</div>
+    <h3 class="chart-title">चित्र ५.१.२.२: वडागत शैक्षिक संस्था र विद्यार्थी वितरण</h3>
     <div class="pdf-chart-container">
       {% load static %}
       <img src="{% static 'images/charts/educational_institution_bar_chart.png' %}" alt="वडागत शैक्षिक संस्था र विद्यार्थी वितरण" class="pdf-chart-image">
     </div>
   </div>
-  {% endif %}sehead_filters %}
+  {% endif %}
 
-<!-- Educational Institution Report Section (५.१.२) -->
-<div class="section-content educational-institution-section" id="section-educational-institution">
-  <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-    ५.१.२ तहगत रुपमा शैक्षिक संस्था/विद्यालय र विद्यार्थी विवरण
-  </h2>
+
+
 
   <!-- Analysis Content -->
   <div class="content-section">

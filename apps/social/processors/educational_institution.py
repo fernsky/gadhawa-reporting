@@ -49,6 +49,10 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
         """Return the section number for educational institutions"""
         return "5.1.2"
 
+    def get_category_name(self):
+        """Return category name for file naming"""
+        return "educational_institution"
+
     def get_data(self) -> Dict[str, Any]:
         """Get educational institution data aggregated by municipality and ward"""
         try:
@@ -254,7 +258,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             "यस गाउँपालिकाको शैक्षिक अवस्थालाई हेर्दा यहाँ ४३ वटा सामुदायिक विद्यालयहरु सञ्चालनमा रहेका छन्। "
             "यस बाहेक यहाँ कुनैपनि किसिमका धार्मिक विद्यालय, प्राविधिक विद्यालय, सामुदायिक सिकाई केन्द्रहरु "
             "सञ्चालनमा रहेका छैनन्। उच्च शिक्षा प्राप्तिका लागि यहाँबाट अन्य स्थानहरुमा जानुपर्ने बाध्यता रहेको छ। "
-            "यसैले स्थानीय शैक्षिक संस्थाहरूको सुदृढीकरण र विकास नीतिगत प्राथमिकताको रूपमा देखिन्छ।"
+            "यसैले स्थानीय शैक्षिक संस्थाहरूको सुदृढीकरण र विकास नीतिगत प्राथमिकताको रूपमा देखिन्छ।<br>"
         )
 
         # Current statistics
@@ -270,7 +274,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             f"यसमध्ये {format_nepali_number(male_students)} जना पुरुष र "
             f"{format_nepali_number(female_students)} जना महिला विद्यार्थीहरू छन्। "
             f"महिला विद्यार्थीहरूको अनुपात {format_nepali_percentage(gender_ratio)} रहेको छ। "
-            f"यो तथ्याङ्कले गाउँपालिकामा शैक्षिक पहुँच र भागीदारीको स्थितिलाई स्पष्ट रूपमा देखाउँछ।"
+            f"यो तथ्याङ्कले गाउँपालिकामा शैक्षिक पहुँच र भागीदारीको स्थितिलाई स्पष्ट रूपमा देखाउँछ।<br>"
         )
 
         # School level analysis
@@ -295,7 +299,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     f"यस तहका {format_nepali_number(level_institutions)} वटा संस्थामा "
                     f"{format_nepali_number(level_students)} जना विद्यार्थीहरू अध्ययन गरिरहेका छन्। "
                     f"यो कुल विद्यार्थी संख्याको {format_nepali_percentage(level_percentage)} प्रतिनिधित्व गर्छ। "
-                    f"यसले शैक्षिक संरचनामा यो तहको प्रभुत्व र महत्त्वलाई स्पष्ट पार्छ।"
+                    f"यसले शैक्षिक संरचनामा यो तहको प्रभुत्व र महत्त्वलाई स्पष्ट पार्छ।<br>"
                 )
 
             # Analyze second most common level
@@ -310,7 +314,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     f"दोस्रो स्थानमा {second_name}हरू छन् जसमा {format_nepali_number(second_institutions)} वटा संस्थामा "
                     f"{format_nepali_number(second_students)} जना विद्यार्थीहरू अध्ययनरत छन्। "
                     f"यो कुल विद्यार्थी संख्याको {format_nepali_percentage(second_percentage)} हो। "
-                    f"यसले शैक्षिक संरचनामा विविधता र विभिन्न तहको आवश्यकतालाई दर्शाउँछ।"
+                    f"यसले शैक्षिक संरचनामा विविधता र विभिन्न तहको आवश्यकतालाई दर्शाउँछ।<br>"
                 )
 
             # Analyze all levels comprehensively
@@ -331,7 +335,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                 f"शैक्षिक पिरामिडको संरचनालाई हेर्दा प्राथमिक तहमा {format_nepali_number(primary_count)} जना, "
                 f"माध्यमिक तहमा {format_nepali_number(secondary_count)} जना र "
                 f"बाल विकास तहमा {format_nepali_number(early_childhood_count)} जना विद्यार्थीहरू छन्। "
-                f"यसले शैक्षिक पहुँचको क्रमिक विकास र विभिन्न उमेर समूहका बालबालिकाहरूको शिक्षामा पहुँचको स्थितिलाई प्रकट गर्छ।"
+                f"यसले शैक्षिक पहुँचको क्रमिक विकास र विभिन्न उमेर समूहका बालबालिकाहरूको शिक्षामा पहुँचको स्थितिलाई प्रकट गर्छ।<br>"
             )
 
         # Ward-wise distribution analysis
@@ -354,11 +358,14 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                 f"वडागत शैक्षिक वितरणको विश्लेषण गर्दा वडा नं. {format_nepali_number(ward_num)} मा सबैभन्दा बढी "
                 f"{format_nepali_number(ward_students)} जना विद्यार्थीहरू "
                 f"{format_nepali_number(ward_institutions)} वटा शैक्षिक संस्थामा अध्ययनरत छन्। "
-                f"यस वडामा महिला विद्यार्थीहरूको अनुपात {format_nepali_percentage(ward_gender_ratio)} रहेको छ। "
+                f"यस वडामा महिला विद्यार्थीहरूको अनुपात {format_nepali_percentage(ward_gender_ratio)} रहेको छ।<br>"
+            )
+
+            content.append(
                 f"अर्कोतर्फ वडा नं. {format_nepali_number(min_ward_num)} मा सबैभन्दा कम "
                 f"{format_nepali_number(min_ward_students)} जना विद्यार्थीहरू "
                 f"{format_nepali_number(min_ward_institutions)} वटा संस्थामा अध्ययनरत छन्। "
-                f"यसले वडाहरूबीच शैक्षिक पहुँच र संस्थागत क्षमतामा असमानता रहेको संकेत गर्छ।"
+                f"यसले वडाहरूबीच शैक्षिक पहुँच र संस्थागत क्षमतामा असमानता रहेको संकेत गर्छ।<br>"
             )
 
             # Analyze geographic distribution
@@ -374,7 +381,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                 f"गाउँपालिकाका {format_nepali_number(ward_count)} वटा वडामा शैक्षिक संस्थाहरू फैलिएका छन्। "
                 f"प्रति वडा औसत {format_nepali_number(int(avg_students_per_ward))} जना विद्यार्थीहरू छन्। "
                 f"{format_nepali_number(above_avg_wards)} वटा वडामा औसतभन्दा बढी विद्यार्थीहरू छन्। "
-                f"यसले शैक्षिक संसाधनको वितरण र पहुँचमा क्षेत्रीय भिन्नतालाई देखाउँछ।"
+                f"यसले शैक्षिक संसाधनको वितरण र पहुँचमा क्षेत्रीय भिन्नतालाई देखाउँछ।<br>"
             )
 
         # Historical trends analysis
@@ -397,11 +404,15 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     inst_trend = "वृद्धि" if inst_change > 0 else "कमी"
 
                     content.append(
-                        f"ऐतिहासिक प्रवृत्तिको विश्लेषण गर्दा वि.सं. {first_year} देखि {last_year} सम्मको अवधिमा "
+                        f"ऐतिहासिक प्रवृत्तिको विश्लेषण गर्दा वि.सं. {format_nepali_number(first_year)} देखि {format_nepali_number(last_year)} सम्मको अवधिमा "
                         f"विद्यार्थी संख्यामा {format_nepali_percentage(abs(change_percent))} को {trend} देखिएको छ। "
-                        f"यसैगरी शैक्षिक संस्थाहरूको संख्यामा {format_nepali_number(abs(inst_change))} को {inst_trend} भएको छ। "
-                        f"यो प्रवृत्तिले गाउँपालिकामा शैक्षिक क्षेत्रको विकास र परिवर्तनको गतिलाई स्पष्ट पार्छ।"
+                        f"यो प्रवृत्तिले गाउँपालिकामा शैक्षिक क्षेत्रको विकास र परिवर्तनको गतिलाई स्पष्ट पार्छ।<br>"
                     )
+
+                    if inst_change > 0:
+                        content.append(
+                            f"यसैगरी शैक्षिक संस्थाहरूको संख्यामा {format_nepali_number(abs(inst_change))} को {inst_trend} भएको छ।<br>"
+                        )
 
                 # Gender ratio trends
                 first_gender_ratio = historical_data[first_year]["gender_ratio"]
@@ -413,7 +424,7 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     content.append(
                         f"लैङ्गिक समानताको दृष्टिकोणले हेर्दा यस अवधिमा महिला विद्यार्थीहरूको अनुपातमा "
                         f"{format_nepali_percentage(abs(gender_change))} को {gender_trend} देखिएको छ। "
-                        f"यसले लैङ्गिक समानताको क्षेत्रमा भएको प्रगति वा चुनौतीलाई प्रकट गर्छ।"
+                        f"यसले लैङ्गिक समानताको क्षेत्रमा भएको प्रगति वा चुनौतीलाई प्रकट गर्छ।<br>"
                     )
 
         # Comprehensive gender equity analysis
@@ -421,19 +432,19 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             content.append(
                 "लैङ्गिक समानताको विश्लेषण गर्दा महिला विद्यार्थीहरूको अनुपात पुरुषको तुलनामा उच्च रहेको सकारात्मक संकेत छ। "
                 "यसले महिला शिक्षामा समुदायको सकारात्मक दृष्टिकोण र नीतिगत प्रयासहरूको सफलतालाई दर्शाउँछ। "
-                "तर यसैसाथ पुरुष विद्यार्थीहरूको कम संख्याको कारण खोजी गरेर सन्तुलित विकास गर्नुपर्ने देखिन्छ।"
+                "तर यसैसाथ पुरुष विद्यार्थीहरूको कम संख्याको कारण खोजी गरेर सन्तुलित विकास गर्नुपर्ने देखिन्छ।<br>"
             )
         elif gender_ratio >= 45 and gender_ratio <= 52:
             content.append(
                 "लैङ्गिक समानताको दृष्टिकोणले हेर्दा यस गाउँपालिकामा पुरुष र महिला विद्यार्थीहरूको संख्यामा उत्कृष्ट सन्तुलन रहेको देखिन्छ। "
                 "यो अनुपात राष्ट्रिय र अन्तर्राष्ट्रिय मापदण्डको दृष्टिकोणले आदर्श मानिन्छ। "
-                "यसले शैक्षिक पहुँचमा लैङ्गिक भेदभावको न्यूनीकरण र समान अवसरको सुनिश्चितताको प्रमाण हो।"
+                "यसले शैक्षिक पहुँचमा लैङ्गिक भेदभावको न्यूनीकरण र समान अवसरको सुनिश्चितताको प्रमाण हो।<br>"
             )
         else:
             content.append(
                 "महिला विद्यार्थीहरूको अनुपात अपेक्षाकृत कम रहेकोले लैङ्गिक समानताका लागि विशेष प्रयासहरू आवश्यक छ। "
                 "महिला शिक्षामा विशेष छात्रवृत्ति, सुरक्षित शैक्षिक वातावरण, र सामुदायिक जागरूकता कार्यक्रमहरू सञ्चालन गर्नुपर्ने देखिन्छ। "
-                "यसले दीर्घकालीन सामाजिक विकास र लैङ्गिक न्यायमा महत्त्वपूर्ण योगदान गर्नेछ।"
+                "यसले दीर्घकालीन सामाजिक विकास र लैङ्गिक न्यायमा महत्त्वपूर्ण योगदान गर्नेछ।<br>"
             )
 
         # Institutional capacity analysis
@@ -442,14 +453,14 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             content.append(
                 f"संस्थागत क्षमताको विश्लेषण गर्दा प्रति संस्था औसत {format_nepali_number(int(avg_students_per_institution))} जना विद्यार्थीहरू छन्। "
                 f"यो अनुपातले शैक्षिक संस्थाहरूको आकार र शिक्षकदेखि विद्यार्थी अनुपातको सन्दर्भमा महत्त्वपूर्ण जानकारी प्रदान गर्छ। "
-                f"गुणस्तरीय शिक्षाका लागि यो अनुपात उपयुक्त छ कि छैन भनेर मूल्याङ्कन गर्नुपर्ने देखिन्छ।"
+                f"गुणस्तरीय शिक्षाका लागि यो अनुपात उपयुक्त छ कि छैन भनेर मूल्याङ्कन गर्नुपर्ने देखिन्छ।<br>"
             )
 
         # Challenges and opportunities
         content.append(
             "शैक्षिक क्षेत्रका चुनौतीहरूलाई हेर्दा उच्च शिक्षाका लागि स्थानीय सुविधाको अभाव प्रमुख समस्या हो। "
             "यसका साथै प्राविधिक र व्यावसायिक शिक्षाका कार्यक्रमहरूको अभाव, गुणस्तरीय शिक्षकको कमी, र आधुनिक शैक्षिक प्रविधिको पहुँचमा कमी रहेको छ। "
-            "तर सामुदायिक विद्यालयहरूको बलियो आधार र बढ्दो साक्षरता दरले भविष्यका लागि आशाजनक सम्भावनाहरू सिर्जना गरेको छ।"
+            "तर सामुदायिक विद्यालयहरूको बलियो आधार र बढ्दो साक्षरता दरले भविष्यका लागि आशाजनक सम्भावनाहरू सिर्जना गरेको छ।<br>"
         )
 
         # Future recommendations and conclusion
@@ -457,11 +468,15 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             "भविष्यका लागि उच्च माध्यमिक शिक्षा र व्यावसायिक तालिमका कार्यक्रमहरू स्थापना गर्नुपर्ने देखिन्छ। "
             "डिजिटल साक्षरता कार्यक्रम, शिक्षक क्षमता विकास, र शैक्षिक पूर्वाधार सुधारमा विशेष जोड दिनुपर्छ। "
             "समग्रमा यस गाउँपालिकाको शैक्षिक क्षेत्रले निरन्तर प्रगति गरिरहेको छ र उचित नीतिगत हस्तक्षेप र लगानीमार्फत "
-            "यसलाई थप उन्नत बनाउन सकिने सम्भावना छ। सामुदायिक सहभागिता र स्थानीय सरकारको प्रतिबद्धताले शैक्षिक गुणस्तर र पहुँचमा "
+            "यसलाई थप उन्नत बनाउन सकिने सम्भावना छ।<br>"
+        )
+
+        content.append(
+            "सामुदायिक सहभागिता र स्थानीय सरकारको प्रतिबद्धताले शैक्षिक गुणस्तर र पहुँचमा "
             "उल्लेखनीय सुधार ल्याउन सक्छ।"
         )
 
-        return " ".join(content)
+        return "".join(content)
 
     def generate_pie_chart(self, data, title="विद्यालयको तह अनुसार विद्यार्थी वितरण"):
         """Generate pie chart for school level distribution"""
@@ -494,8 +509,83 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
             "total_female_students": data["total_female_students"],
             "gender_ratio": data["gender_ratio"],
             "coherent_analysis": analysis_text,
-            "pdf_charts": {"educational_institution": charts},
+            "charts": charts,
         }
+
+    def generate_chart_svg(self, data, chart_type="pie"):
+        """Generate chart SVG based on chart type"""
+        if chart_type == "pie":
+            # Format data for pie chart - municipality data by school level
+            municipality_data = data.get("municipality_data", {})
+            formatted_data = {}
+
+            for level_code, level_data in municipality_data.items():
+                if (
+                    isinstance(level_data, dict)
+                    and level_data.get("total_students", 0) > 0
+                ):
+                    formatted_data[level_code] = {
+                        "name_nepali": level_data.get("name_nepali", level_code),
+                        "population": level_data.get("total_students", 0),
+                        "percentage": level_data.get("percentage", 0),
+                    }
+
+            return self.chart_generator.generate_pie_chart_svg(
+                formatted_data,
+                include_title=False,
+                title_nepali="विद्यालयको तह अनुसार विद्यार्थी वितरण",
+                title_english="Student Distribution by School Level",
+            )
+
+        elif chart_type == "bar":
+            # Format data for bar chart - ward-wise data
+            ward_data = data.get("ward_data", {})
+            formatted_data = {}
+
+            for ward_num, ward_info in ward_data.items():
+                if (
+                    isinstance(ward_info, dict)
+                    and ward_info.get("total_students", 0) > 0
+                ):
+                    formatted_data[str(ward_num)] = {
+                        "ward_name": f"वडा नं. {ward_num}",
+                        "total_population": ward_info.get("total_students", 0),
+                        "demographics": {
+                            "male_students": {
+                                "name_nepali": "पुरुष",
+                                "population": ward_info.get("male_students", 0),
+                                "percentage": round(
+                                    (
+                                        ward_info.get("male_students", 0)
+                                        / ward_info.get("total_students", 1)
+                                    )
+                                    * 100,
+                                    1,
+                                ),
+                            },
+                            "female_students": {
+                                "name_nepali": "महिला",
+                                "population": ward_info.get("female_students", 0),
+                                "percentage": round(
+                                    (
+                                        ward_info.get("female_students", 0)
+                                        / ward_info.get("total_students", 1)
+                                    )
+                                    * 100,
+                                    1,
+                                ),
+                            },
+                        },
+                    }
+
+            return self.chart_generator.generate_bar_chart_svg(
+                formatted_data,
+                include_title=False,
+                title_nepali="वडागत शैक्षिक संस्था र विद्यार्थी वितरण",
+                title_english="Ward-wise Educational Institution and Student Distribution",
+            )
+
+        return None
 
     def _format_municipality_data_for_pie_chart(self, municipality_data):
         """Format municipality data for pie chart generation"""

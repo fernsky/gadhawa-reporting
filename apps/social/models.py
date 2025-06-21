@@ -194,7 +194,7 @@ class WardWiseMajorSubject(BaseModel):
         return f"वडा {self.ward_number} - {self.get_subject_type_display()}"
 
 
-# ५.१.३ तहगत रुपमा शैक्षिक संस्था÷विद्यालय (सामुदायिक, संस्थागत, मदरसा, गुम्बा) र विद्यार्थी विवरण
+# ५.१.३ तहगत रुपमा शैक्षिक संस्था/विद्यालय (सामुदायिक, संस्थागत, मदरसा, गुम्बा) र विद्यार्थी विवरण
 # School/Institution type enums
 class SchoolTypeChoice(models.TextChoices):
     COMMUNITY = "COMMUNITY", _("सामुदायिक")
