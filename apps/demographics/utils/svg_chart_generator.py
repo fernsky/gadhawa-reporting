@@ -825,7 +825,7 @@ class SVGChartGenerator:
         title_english="",
     ):
         """
-        Generate chart image using Inkscape conversion
+        Generate chart image using Inkscape conversion (only if files don't exist)
 
         Args:
             demographic_data: Data for the chart (any demographic data)
@@ -844,14 +844,29 @@ class SVGChartGenerator:
             static_path = Path(static_dir)
             static_path.mkdir(parents=True, exist_ok=True)
 
+            # Define file paths
+            svg_path = static_path / f"{output_name}.svg"
+            png_path = static_path / f"{output_name}.png"
+
+            # Check if PNG file already exists
+            if png_path.exists():
+                print(f"✓ Chart already exists, skipping generation: {png_path}")
+                return True, str(png_path), str(svg_path)
+
             # Generate SVG
             if chart_type == "pie":
                 svg_content = self.generate_pie_chart_svg(
                     demographic_data,
+                    include_title=include_title,
+                    title_nepali=title_nepali,
+                    title_english=title_english,
                 )
             elif chart_type == "bar":
                 svg_content = self.generate_bar_chart_svg(
                     demographic_data,
+                    include_title=include_title,
+                    title_nepali=title_nepali,
+                    title_english=title_english,
                 )
             else:
                 raise ValueError(f"Unsupported chart type: {chart_type}")
@@ -859,13 +874,10 @@ class SVGChartGenerator:
             if not svg_content:
                 return False, None, None
 
-            # Define file paths
-            svg_path = static_path / f"{output_name}.svg"
-            png_path = static_path / f"{output_name}.png"
-
-            # Save SVG file
-            if not self.save_svg_to_file(svg_content, str(svg_path)):
-                return False, None, None
+            # Save SVG file only if it doesn't exist
+            if not svg_path.exists():
+                if not self.save_svg_to_file(svg_content, str(svg_path)):
+                    return False, None, None
 
             # Convert to PNG using Inkscape
             try:

@@ -1,0 +1,511 @@
+{% load nepali_filters %}
+{% load househead_filters %}
+
+<!-- Teacher Staffing Report Section (५.१.५) -->
+<div class="section-content teacher-staffing-section" id="section-teacher-staffing">
+  <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+    ५.१.५ शिक्षक तथा शैक्षिक जनशक्ति सम्बन्धी विवरण
+  </h2>
+
+  <!-- Analysis Content -->
+  <div class="content-section">
+    {% if coherent_analysis %}
+      <div class="content-paragraph">
+        {{ coherent_analysis|safe }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Pie Chart for Teacher Distribution by Level -->
+  {% if municipality_data_by_level and pdf_charts.pie_chart %}
+  <div class="chart-section">
+    <div class="chart-title">शिक्षकको तह अनुसार वितरण</div>
+    <div class="pdf-chart-container">
+      {{ pdf_charts.pie_chart|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Bar Chart for Ward-wise Teacher Distribution -->
+  {% if ward_data and pdf_charts.bar_chart %}
+  <div class="chart-section">
+    <div class="chart-title">वडागत शिक्षक वितरण</div>
+    <div class="pdf-chart-container">
+      {{ pdf_charts.bar_chart|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Summary Table by Level -->
+  {% if municipality_data_by_level %}
+  <div class="table-section">
+    <div class="table-title">शिक्षकको तह अनुसार सारांश</div>
+    <table class="pdf-data-table teacher-level-summary-table">
+      <thead>
+        <tr>
+          <th>शिक्षकको तह</th>
+          <th>शिक्षक संख्या</th>
+          <th>प्रतिशत</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for level, data in municipality_data_by_level.items %}
+        <tr>
+          <td class="level-cell">{{ data.name_nepali }}</td>
+          <td class="number-cell">{{ data.teacher_count|nepali_number }}</td>
+          <td class="percentage-cell">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td class="total-label"><strong>कुल योग</strong></td>
+          <td class="number-cell total-cell"><strong>{{ total_teachers|nepali_number }}</strong></td>
+          <td class="percentage-cell"><strong>१००.०%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Summary Table by Position Type -->
+  {% if municipality_data_by_position %}
+  <div class="table-section">
+    <div class="table-title">पदको प्रकार अनुसार सारांश</div>
+    <table class="pdf-data-table teacher-position-summary-table">
+      <thead>
+        <tr>
+          <th>पदको प्रकार</th>
+          <th>शिक्षक संख्या</th>
+          <th>प्रतिशत</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for position, data in municipality_data_by_position.items %}
+        <tr>
+          <td class="position-cell">{{ data.name_nepali }}</td>
+          <td class="number-cell">{{ data.teacher_count|nepali_number }}</td>
+          <td class="percentage-cell">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td class="total-label"><strong>कुल योग</strong></td>
+          <td class="number-cell total-cell"><strong>{{ total_teachers|nepali_number }}</strong></td>
+          <td class="percentage-cell"><strong>१००.०%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Detailed Breakdown Table -->
+  {% if detailed_breakdown %}
+  <div class="table-section">
+    <div class="table-title">तालिका नं. ५१ : शिक्षक तथा शैक्षिक जनशक्ति सम्बन्धी विवरण</div>
+    <table class="pdf-data-table teacher-detailed-breakdown-table">
+      <thead>
+        <tr>
+          <th rowspan="2">शिक्षकको तह</th>
+          <th colspan="5">पदको प्रकार</th>
+          <th rowspan="2">जम्मा</th>
+        </tr>
+        <tr>
+          <th>स्वीकृत दरबन्दी</th>
+          <th>राहत</th>
+          <th>संघीय अनुदान</th>
+          <th>गाउँपालिका अनुदान</th>
+          <th>निजी स्रोत</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for level, level_data in detailed_breakdown.items %}
+        <tr>
+          <td class="level-cell">{{ level_data.name_nepali }}</td>
+          <td class="number-cell">
+            {% if level_data.positions.APPROVED_QUOTA %}
+              {{ level_data.positions.APPROVED_QUOTA.count|nepali_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="number-cell">
+            {% if level_data.positions.RELIEF %}
+              {{ level_data.positions.RELIEF.count|nepali_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="number-cell">
+            {% if level_data.positions.FEDERAL_GRANT %}
+              {{ level_data.positions.FEDERAL_GRANT.count|nepali_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="number-cell">
+            {% if level_data.positions.RM_GRANT %}
+              {{ level_data.positions.RM_GRANT.count|nepali_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="number-cell">
+            {% if level_data.positions.PRIVATE_SOURCE %}
+              {{ level_data.positions.PRIVATE_SOURCE.count|nepali_number }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td class="number-cell total-cell">{{ level_data.total|nepali_number }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td class="total-label"><strong>जम्मा</strong></td>
+          <td class="number-cell total-cell">
+            <strong>
+              {% if municipality_data_by_position.APPROVED_QUOTA %}
+                {{ municipality_data_by_position.APPROVED_QUOTA.teacher_count|nepali_number }}
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </td>
+          <td class="number-cell total-cell">
+            <strong>
+              {% if municipality_data_by_position.RELIEF %}
+                {{ municipality_data_by_position.RELIEF.teacher_count|nepali_number }}
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </td>
+          <td class="number-cell total-cell">
+            <strong>
+              {% if municipality_data_by_position.FEDERAL_GRANT %}
+                {{ municipality_data_by_position.FEDERAL_GRANT.teacher_count|nepali_number }}
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </td>
+          <td class="number-cell total-cell">
+            <strong>
+              {% if municipality_data_by_position.RM_GRANT %}
+                {{ municipality_data_by_position.RM_GRANT.teacher_count|nepali_number }}
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </td>
+          <td class="number-cell total-cell">
+            <strong>
+              {% if municipality_data_by_position.PRIVATE_SOURCE %}
+                {{ municipality_data_by_position.PRIVATE_SOURCE.teacher_count|nepali_number }}
+              {% else %}
+                -
+              {% endif %}
+            </strong>
+          </td>
+          <td class="number-cell grand-total-cell"><strong>{{ total_teachers|nepali_number }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Ward-wise School Details Table -->
+  {% if ward_data %}
+  <div class="table-section">
+    <div class="table-title">वडागत विद्यालय र शिक्षक विवरण</div>
+    <table class="pdf-data-table ward-teacher-detail-table">
+      <thead>
+        <tr>
+          <th>वडा नं.</th>
+          <th>विद्यालयको नाम</th>
+          <th>संस्थाको तह</th>
+          <th>कुल शिक्षक</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ward_num, ward_info in ward_data.items %}
+          {% for school_name, school_info in ward_info.schools.items %}
+          <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ ward_info.schools|length }}" class="ward-number">{{ ward_num|nepali_number }}</td>
+            {% endif %}
+            <td class="school-name">{{ school_name }}</td>
+            <td class="institution-level">{{ school_info.institution_level }}</td>
+            <td class="number-cell">{{ school_info.total_teachers|nepali_number }}</td>
+          </tr>
+          {% endfor %}
+          <!-- Ward subtotal -->
+          <tr class="ward-subtotal">
+            <td colspan="3" class="subtotal-label"><strong>वडा {{ ward_num|nepali_number }} को कुल योग</strong></td>
+            <td class="number-cell subtotal-cell"><strong>{{ ward_info.total_teachers|nepali_number }}</strong></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- No Data Message -->
+  {% if not municipality_data_by_level and not ward_data %}
+  <div class="no-data-message">
+    <p>शिक्षक तथा शैक्षिक जनशक्ति सम्बन्धी तथ्याङ्क उपलब्ध छैन।</p>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+/* PDF-specific styles for Teacher Staffing */
+.teacher-staffing-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    color: #1e40af;
+}
+
+.teacher-level-summary-table th,
+.teacher-level-summary-table td,
+.teacher-position-summary-table th,
+.teacher-position-summary-table td,
+.teacher-detailed-breakdown-table th,
+.teacher-detailed-breakdown-table td,
+.ward-teacher-detail-table th,
+.ward-teacher-detail-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.teacher-level-summary-table th,
+.teacher-position-summary-table th,
+.teacher-detailed-breakdown-table th,
+.ward-teacher-detail-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
+    font-size: 8pt;
+}
+
+.level-cell,
+.position-cell {
+    text-align: left !important;
+    font-weight: 500;
+}
+
+.school-name {
+    text-align: left !important;
+    font-size: 8pt;
+}
+
+.institution-level {
+    text-align: center;
+    font-size: 8pt;
+}
+
+.number-cell {
+    text-align: center;
+    font-weight: 500;
+}
+
+.percentage-cell {
+    text-align: center;
+    font-weight: 500;
+}
+
+.ward-number {
+    font-weight: bold;
+    background-color: #f1f5f9;
+    vertical-align: middle;
+}
+
+.total-row {
+    background-color: #e2e8f0;
+    font-weight: bold;
+}
+
+.ward-subtotal {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+.total-label,
+.subtotal-label {
+    text-align: center;
+    font-weight: bold;
+}
+
+.total-cell {
+    background-color: #f8fafc;
+    font-weight: bold;
+}
+
+.subtotal-cell {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+.grand-total-cell {
+    background-color: #dbeafe;
+    font-weight: bold;
+}
+
+.pdf-chart-container {
+    border: none;    
+    text-align: center;
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    height: auto;
+    border: none;
+}
+
+.chart-title,
+.table-title {
+    color: #1e40af;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.content-paragraph {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.content-section {
+    margin-bottom: 2em;
+}
+
+.chart-section {
+    margin-bottom: 2em;
+}
+
+.table-section {
+    margin-bottom: 2em;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 2em;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    margin: 1em 0;
+}
+
+/* Position type specific styling */
+.approved-quota {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.relief-position {
+    color: #FF9800;
+    font-weight: bold;
+}
+
+.federal-grant {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.rm-grant {
+    color: #9C27B0;
+    font-weight: bold;
+}
+
+.private-source {
+    color: #795548;
+    font-weight: bold;
+}
+
+/* Teacher level specific styling */
+.child-development {
+    color: #FF9800;
+    font-weight: bold;
+}
+
+.basic-primary {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.basic-lower-secondary {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.basic-secondary {
+    color: #9C27B0;
+    font-weight: bold;
+}
+
+.basic-higher-secondary {
+    color: #F44336;
+    font-weight: bold;
+}
+
+/* Enhanced table styling */
+.teacher-level-summary-table tbody tr:nth-child(even),
+.teacher-position-summary-table tbody tr:nth-child(even),
+.teacher-detailed-breakdown-table tbody tr:nth-child(even),
+.ward-teacher-detail-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.teacher-level-summary-table tbody tr:hover,
+.teacher-position-summary-table tbody tr:hover,
+.teacher-detailed-breakdown-table tbody tr:hover,
+.ward-teacher-detail-table tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+/* Print optimization */
+@media print {
+    .teacher-staffing-section {
+        page-break-inside: auto;
+    }
+
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+
+    .teacher-detailed-breakdown-table {
+        page-break-inside: auto;
+    }
+}
+</style>

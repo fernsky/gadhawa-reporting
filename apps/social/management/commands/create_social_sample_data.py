@@ -38,6 +38,16 @@ class Command(BaseCommand):
                 "Literacy Status Sample Data",
                 "reset",
             ),
+            (
+                "create_educational_institution_sample_data",
+                "Educational Institution Sample Data",
+                "reset",
+            ),
+            (
+                "create_teacher_staffing_sample_data",
+                "Teacher Staffing Sample Data",
+                "reset",
+            ),
             ("create_major_subject_sample_data", "Major Subject Sample Data", None),
             (
                 "create_old_age_single_women_sample_data",

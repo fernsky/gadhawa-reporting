@@ -137,18 +137,6 @@
                 {% endif %}
             </tbody>
         </table>
-        
-        <!-- Summary Statistics -->
-        <div class="summary-statistics">
-            <p><strong>कुल विद्यालय छोडेका बालबालिका:</strong> {{ total_population.total|default:0|nepali_digits }} जना</p>
-            <p><strong>मुख्य कारण:</strong> 
-                {% if municipality_data %}
-                    {% for cause, data in municipality_data.items %}
-                        {% if forloop.counter == 1 %}{{ cause|title }}{% endif %}
-                    {% endfor %}
-                {% endif %}
-            </p>
-        </div>
     </div>
     {% endif %}
 </p>

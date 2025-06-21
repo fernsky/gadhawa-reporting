@@ -457,9 +457,9 @@ class MajorSubjectProcessor(BaseSocialProcessor):
 
             if highest_diversity_ward[0] != lowest_diversity_ward[0]:
                 analysis_parts.append(
-                    f"वडागत विश्लेषणमा, वडा नं. {highest_diversity_ward[0]} मा सबैभन्दा बढी "
+                    f"वडागत विश्लेषणमा, वडा नं. {to_nepali_digits(highest_diversity_ward[0])} मा सबैभन्दा बढी "
                     f"{highest_diversity_ward[1]} विषयहरूमा शिक्षा ग्रहण गरेको विविधता देखिन्छ "
-                    f"भने वडा नं. {lowest_diversity_ward[0]} मा {lowest_diversity_ward[1]} विषयहरूमा मात्र शिक्षा ग्रहण गरेको छ।"
+                    f"भने वडा नं. {lowest_diversity_ward[0]} मा {to_nepali_digits(lowest_diversity_ward[1])} विषयहरूमा मात्र शिक्षा ग्रहण गरेको छ।"
                 )
 
             # Population distribution analysis

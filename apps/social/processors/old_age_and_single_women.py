@@ -239,7 +239,7 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
 
                 if highest_elderly_ward[0] != lowest_elderly_ward[0]:
                     analysis_parts.append(
-                        f"वडागत विश्लेषणमा, वडा नं. {highest_elderly_ward[0]} मा सबैभन्दा बढी "
+                        f"वडागत विश्लेषणमा, वडा नं. {to_nepali_digits(highest_elderly_ward[0])} मा सबैभन्दा बढी "
                         f"{format_nepali_number(highest_elderly_ward[1])} जना जेष्ठ नागरिकहरू छन् "
                         f"भने वडा नं. {lowest_elderly_ward[0]} मा सबैभन्दा कम "
                         f"{format_nepali_number(lowest_elderly_ward[1])} जना जेष्ठ नागरिकहरू छन्।"

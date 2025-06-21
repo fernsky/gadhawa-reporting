@@ -811,3 +811,221 @@ class WardWiseOldAgePopulationAndSingleWomen(BaseModel):
 # ५.४.११ अल्पसंख्यक सीमान्तकृत वर्गको विवरण
 # ५.४.१२ वार्षिक कार्यक्रमबाट लक्षित कार्यक्रमतर्फ भएको विनियोजन तथा खर्चको अवस्था
 # ५.४.१३ स्रोत नक्शा
+
+
+# Educational Institution Type Choices for 5.1.2
+class EducationalInstitutionTypeChoice(models.TextChoices):
+    COMMUNITY_SCHOOL = "COMMUNITY_SCHOOL", _("सामुदायिक विद्यालय")
+    RELIGIOUS_SCHOOL = "RELIGIOUS_SCHOOL", _("धार्मिक विद्यालय")
+    TECHNICAL_SCHOOL = "TECHNICAL_SCHOOL", _("प्राविधिक विद्यालय")
+    COMMUNITY_LEARNING_CENTER = "COMMUNITY_LEARNING_CENTER", _("सामुदायिक सिकाई केन्द्र")
+    PRIVATE_SCHOOL = "PRIVATE_SCHOOL", _("निजी विद्यालय")
+    OTHER = "OTHER", _("अन्य")
+
+
+# School Level Choices
+class SchoolLevelChoice(models.TextChoices):
+    PRIMARY = "PRIMARY", _("प्राथमिक")  # प्रा.वि.
+    LOWER_SECONDARY = "LOWER_SECONDARY", _("निम्न माध्यमिक")  # आ.वि.
+    SECONDARY = "SECONDARY", _("माध्यमिक")  # मा.वि.
+    HIGHER_SECONDARY = "HIGHER_SECONDARY", _("उच्च माध्यमिक")
+    EARLY_CHILDHOOD = "EARLY_CHILDHOOD", _("बाल विकास केन्द्र")  # बा.वि.के.
+    OTHER = "OTHER", _("अन्य")
+
+
+class WardWiseEducationalInstitution(BaseModel):
+    """Ward wise educational institutions and student details (5.1.2)
+
+    This model handles data for community schools and their student enrollment
+    across different years and wards.
+    """
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    data_year = models.CharField(
+        max_length=10,
+        verbose_name=_("डेटा वर्ष"),
+        help_text=_("Nepali year (e.g., २०७९, २०८०, २०८१)"),
+    )
+    institution_name = models.CharField(
+        max_length=255,
+        verbose_name=_("शैक्षिक संस्थाको नाम"),
+        help_text=_("Full name of the educational institution"),
+    )
+    institution_type = models.CharField(
+        max_length=50,
+        choices=EducationalInstitutionTypeChoice.choices,
+        default=EducationalInstitutionTypeChoice.COMMUNITY_SCHOOL,
+        verbose_name=_("संस्थाको प्रकार"),
+    )
+    school_level = models.CharField(
+        max_length=50,
+        choices=SchoolLevelChoice.choices,
+        verbose_name=_("विद्यालयको तह"),
+        null=True,
+        blank=True,
+    )
+    male_students = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("पुरुष विद्यार्थी संख्या"),
+    )
+    female_students = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("महिला विद्यार्थी संख्या"),
+    )
+    total_teachers = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("कुल शिक्षक संख्या"),
+        null=True,
+        blank=True,
+    )
+    is_operational = models.BooleanField(
+        default=True,
+        verbose_name=_("सञ्चालनमा छ/छैन"),
+    )
+
+    class Meta:
+        verbose_name = _("वडागत शैक्षिक संस्था र विद्यार्थी विवरण")
+        verbose_name_plural = _("वडागत शैक्षिक संस्था र विद्यार्थी विवरण")
+        unique_together = ["ward_number", "data_year", "institution_name"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.institution_name} ({self.data_year})"
+
+    @property
+    def total_students(self):
+        """Calculate total students (male + female)"""
+        return self.male_students + self.female_students
+
+    @property
+    def gender_ratio(self):
+        """Calculate gender ratio (female percentage)"""
+        if self.total_students == 0:
+            return 0
+        return round((self.female_students / self.total_students) * 100, 2)
+
+    def get_school_level_from_name(self):
+        """Automatically determine school level from institution name"""
+        name = self.institution_name.lower()
+        if "मा.वि." in self.institution_name or "माध्यमिक" in name:
+            return SchoolLevelChoice.SECONDARY
+        elif "प्रा.वि." in self.institution_name or "प्राथमिक" in name:
+            return SchoolLevelChoice.PRIMARY
+        elif "आ.वि." in self.institution_name:
+            return SchoolLevelChoice.LOWER_SECONDARY
+        elif "बा.वि.के." in self.institution_name:
+            return SchoolLevelChoice.EARLY_CHILDHOOD
+        else:
+            return SchoolLevelChoice.OTHER
+
+    def save(self, *args, **kwargs):
+        """Auto-populate school level if not provided"""
+        if not self.school_level:
+            self.school_level = self.get_school_level_from_name()
+        super().save(*args, **kwargs)
+
+
+# Teacher Position Types for 5.1.5
+class TeacherPositionTypeChoice(models.TextChoices):
+    APPROVED_QUOTA = "APPROVED_QUOTA", _("स्वीकृत दरबन्दी")
+    RELIEF = "RELIEF", _("राहत")
+    FEDERAL_GRANT = "FEDERAL_GRANT", _("संघीय अनुदान")
+    RM_GRANT = "RM_GRANT", _("गाउँपालिका अनुदान")
+    PRIVATE_SOURCE = "PRIVATE_SOURCE", _("निजी स्रोत")
+
+
+# Teacher Level Assignment Choices for 5.1.5
+class TeacherLevelChoice(models.TextChoices):
+    CHILD_DEVELOPMENT = "CHILD_DEVELOPMENT", _("बाल विकास")
+    BASIC_1_5 = "BASIC_1_5", _("आधारभूत १-५")
+    BASIC_6_8 = "BASIC_6_8", _("आधारभूत ६-८")
+    BASIC_9_10 = "BASIC_9_10", _("आधारभूत ९-१०")
+    BASIC_11_12 = "BASIC_11_12", _("आधारभूत ११-१२")
+
+
+class WardWiseTeacherStaffing(BaseModel):
+    """Ward wise teacher and educational manpower details (5.1.5)
+
+    This model handles data for teachers and educational staff across different
+    schools, levels, and position types.
+    """
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    school_name = models.CharField(
+        max_length=255,
+        verbose_name=_("विद्यालयको नाम"),
+    )
+    institution_level = models.CharField(
+        max_length=20,
+        choices=SchoolLevelChoice.choices,
+        verbose_name=_("संस्थाको तह"),
+    )
+    teacher_level = models.CharField(
+        max_length=30,
+        choices=TeacherLevelChoice.choices,
+        verbose_name=_("शिक्षकको तह"),
+    )
+    position_type = models.CharField(
+        max_length=30,
+        choices=TeacherPositionTypeChoice.choices,
+        verbose_name=_("पदको प्रकार"),
+    )
+    teacher_count = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("शिक्षक संख्या"),
+    )
+
+    class Meta:
+        db_table = "social_ward_wise_teacher_staffing"
+        verbose_name = _("वडागत शिक्षक र शैक्षिक जनशक्ति")
+        verbose_name_plural = _("वडागत शिक्षक र शैक्षिक जनशक्ति")
+        unique_together = [
+            "ward_number",
+            "school_name",
+            "teacher_level",
+            "position_type",
+        ]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.school_name} - {self.get_teacher_level_display()}"
+
+    @property
+    def school_display_name(self):
+        """Return shortened school name for display"""
+        return self.school_name.replace("लुङ्ग्री-", "").replace("लुग्री-", "")
+
+
+class WardWiseTeacherSummary(BaseModel):
+    """Summary of teacher staffing by level and type for reporting (5.1.5)
+
+    This model aggregates teacher counts for summary reporting and analysis.
+    """
+
+    teacher_level = models.CharField(
+        max_length=30,
+        choices=TeacherLevelChoice.choices,
+        verbose_name=_("शिक्षकको तह"),
+    )
+    position_type = models.CharField(
+        max_length=30,
+        choices=TeacherPositionTypeChoice.choices,
+        verbose_name=_("पदको प्रकार"),
+    )
+    total_teachers = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("कुल शिक्षक"),
+    )
+
+    class Meta:
+        db_table = "social_ward_wise_teacher_summary"
+        verbose_name = _("शिक्षक र शैक्षिक जनशक्ति सारांश")
+        verbose_name_plural = _("शिक्षक र शैक्षिक जनशक्ति सारांश")
+        unique_together = ["teacher_level", "position_type"]
+
+    def __str__(self):
+        return f"{self.get_teacher_level_display()} - {self.get_position_type_display()}: {self.total_teachers}"

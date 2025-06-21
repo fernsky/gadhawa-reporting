@@ -10,6 +10,8 @@ from .old_age_and_single_women import OldAgeAndSingleWomenProcessor
 from .major_subject import MajorSubjectProcessor
 from .literacy_status import LiteracyStatusProcessor
 from .school_dropout import SchoolDropoutProcessor
+from .educational_institution import EducationalInstitutionProcessor
+from .teacher_staffing import TeacherStaffingProcessor
 
 
 class SocialManager:
@@ -17,12 +19,14 @@ class SocialManager:
 
     def __init__(self):
         self.processors = {
+            "literacy_status": LiteracyStatusProcessor(),
+            "educational_institution": EducationalInstitutionProcessor(),
+            "teacher_staffing": TeacherStaffingProcessor(),
+            "major_subject": MajorSubjectProcessor(),
+            "school_dropout": SchoolDropoutProcessor(),
             "toilet_type": ToiletTypeProcessor(),
             "solid_waste_management": SolidWasteManagementProcessor(),
             "old_age_and_single_women": OldAgeAndSingleWomenProcessor(),
-            "major_subject": MajorSubjectProcessor(),
-            "literacy_status": LiteracyStatusProcessor(),
-            "school_dropout": SchoolDropoutProcessor(),
         }
 
     def get_processor(self, category):

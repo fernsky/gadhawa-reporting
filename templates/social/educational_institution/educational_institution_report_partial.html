@@ -1,0 +1,407 @@
+{% load nepali_fil  <!-- Pie Chart for Municipality-wide Distribution by School Level -->
+  {% if municipality_data %}
+  <div class="chart-section">
+    <div class="chart-title">विद्यालयको तह अनुसार विद्यार्थी वितरण</div>
+    <div class="pdf-chart-container">
+      {% load static %}
+      <img src="{% static 'images/charts/educational_institution_pie_chart.png' %}" alt="विद्यालयको तह अनुसार विद्यार्थी वितरण" class="pdf-chart-image">
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Bar Chart for Ward-wise Distribution -->
+  {% if ward_data %}
+  <div class="chart-section">
+    <div class="chart-title">वडागत शैक्षिक संस्था र विद्यार्थी वितरण</div>
+    <div class="pdf-chart-container">
+      {% load static %}
+      <img src="{% static 'images/charts/educational_institution_bar_chart.png' %}" alt="वडागत शैक्षिक संस्था र विद्यार्थी वितरण" class="pdf-chart-image">
+    </div>
+  </div>
+  {% endif %}sehead_filters %}
+
+<!-- Educational Institution Report Section (५.१.२) -->
+<div class="section-content educational-institution-section" id="section-educational-institution">
+  <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+    ५.१.२ तहगत रुपमा शैक्षिक संस्था/विद्यालय र विद्यार्थी विवरण
+  </h2>
+
+  <!-- Analysis Content -->
+  <div class="content-section">
+    {% if coherent_analysis %}
+      <div class="content-paragraph">
+        {{ coherent_analysis|safe }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Pie Chart for Municipality-wide Distribution by School Level -->
+  {% if municipality_data and pdf_charts.pie_chart %}
+  <div class="chart-section">
+    <div class="chart-title">विद्यालयको तह अनुसार विद्यार्थी वितरण</div>
+    <div class="pdf-chart-container">
+      {{ pdf_charts.pie_chart|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Bar Chart for Ward-wise Distribution -->
+  {% if ward_data and pdf_charts.bar_chart %}
+  <div class="chart-section">
+    <div class="chart-title">वडागत शैक्षिक संस्था र विद्यार्थी वितरण</div>
+    <div class="pdf-chart-container">
+      {{ pdf_charts.bar_chart|safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Municipality-wide Summary Table -->
+  {% if municipality_data %}
+  <div class="table-section">
+    <div class="table-title">शैक्षिक संस्थाको तह अनुसार विवरण</div>
+    <table class="pdf-data-table ward-educational-table">
+      <thead>
+        <tr>
+          <th>विद्यालयको तह</th>
+          <th>संस्था संख्या</th>
+          <th>पुरुष विद्यार्थी</th>
+          <th>महिला विद्यार्थी</th>
+          <th>कुल विद्यार्थी</th>
+          <th>प्रतिशत</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for level, data in municipality_data.items %}
+        <tr>
+          <td class="school-level-cell">{{ data.name_nepali }}</td>
+          <td class="number-cell">{{ data.institution_count|nepali_number }}</td>
+          <td class="number-cell">{{ data.male_students|nepali_number }}</td>
+          <td class="number-cell">{{ data.female_students|nepali_number }}</td>
+          <td class="number-cell total-cell">{{ data.total_students|nepali_number }}</td>
+          <td class="percentage-cell">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+          <td class="total-label"><strong>कुल योग</strong></td>
+          <td class="number-cell total-cell"><strong>{{ total_institutions|nepali_number }}</strong></td>
+          <td class="number-cell total-cell"><strong>{{ total_male_students|nepali_number }}</strong></td>
+          <td class="number-cell total-cell"><strong>{{ total_female_students|nepali_number }}</strong></td>
+          <td class="number-cell grand-total-cell"><strong>{{ total_students|nepali_number }}</strong></td>
+          <td class="percentage-cell"><strong>१००.०%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Ward-wise Detailed Table -->
+  {% if ward_data %}
+  <div class="table-section">
+    <div class="table-title">वडागत शैक्षिक संस्था र विद्यार्थी विवरण</div>
+    <table class="pdf-data-table ward-educational-detail-table">
+      <thead>
+        <tr>
+          <th rowspan="2">वडा नं.</th>
+          <th rowspan="2">शैक्षिक संस्थाको नाम</th>
+          <th rowspan="2">तह</th>
+          <th colspan="3">विद्यार्थी संख्या</th>
+          <th rowspan="2">लैङ्गिक अनुपात (%)</th>
+        </tr>
+        <tr>
+          <th>पुरुष</th>
+          <th>महिला</th>
+          <th>कुल</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ward_num, ward_info in ward_data.items %}
+          {% for institution in ward_info.institutions %}
+          <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ ward_info.institutions|length }}" class="ward-number">{{ ward_num|nepali_number }}</td>
+            {% endif %}
+            <td class="institution-name">{{ institution.name }}</td>
+            <td class="school-level-cell">{{ institution.level_nepali }}</td>
+            <td class="number-cell">{{ institution.male_students|nepali_number }}</td>
+            <td class="number-cell">{{ institution.female_students|nepali_number }}</td>
+            <td class="number-cell total-cell">{{ institution.total_students|nepali_number }}</td>
+            <td class="percentage-cell">
+              {% if institution.total_students > 0 %}
+                {{ institution.female_students|nepali_percentage:institution.total_students|floatformat:1|nepali_number }}%
+              {% else %}
+                ०.०%
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          <!-- Ward subtotal -->
+          <tr class="ward-subtotal">
+            <td colspan="3" class="subtotal-label"><strong>वडा {{ ward_num|nepali_number }} को कुल योग</strong></td>
+            <td class="number-cell subtotal-cell"><strong>{{ ward_info.male_students|nepali_number }}</strong></td>
+            <td class="number-cell subtotal-cell"><strong>{{ ward_info.female_students|nepali_number }}</strong></td>
+            <td class="number-cell subtotal-cell"><strong>{{ ward_info.total_students|nepali_number }}</strong></td>
+            <td class="percentage-cell"><strong>{{ ward_info.gender_ratio|floatformat:1|nepali_number }}%</strong></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Historical Trends Table -->
+  {% if historical_data %}
+  <div class="table-section">
+    <div class="table-title">बर्षगत विद्यार्थी संख्याको प्रवृत्ति</div>
+    <table class="pdf-data-table historical-trends-table">
+      <thead>
+        <tr>
+          <th>वर्ष (वि.सं.)</th>
+          <th>पुरुष विद्यार्थी</th>
+          <th>महिला विद्यार्थी</th>
+          <th>कुल विद्यार्थी</th>
+          <th>महिला प्रतिशत</th>
+          <th>कुल संस्था</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for year, data in historical_data.items %}
+        <tr>
+          <td class="year-cell">{{ year|nepali_number }}</td>
+          <td class="number-cell">{{ data.male_students|nepali_number }}</td>
+          <td class="number-cell">{{ data.female_students|nepali_number }}</td>
+          <td class="number-cell total-cell">{{ data.total_students|nepali_number }}</td>
+          <td class="percentage-cell">{{ data.gender_ratio|floatformat:1|nepali_number }}%</td>
+          <td class="number-cell">{{ data.total_institutions|nepali_number }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- No Data Message -->
+  {% if not municipality_data and not ward_data %}
+  <div class="no-data-message">
+    <p>शैक्षिक संस्था र विद्यार्थी सम्बन्धी तथ्याङ्क उपलब्ध छैन।</p>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+/* PDF-specific styles for Educational Institution */
+.educational-institution-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    color: #1e40af;
+}
+
+.ward-educational-table th,
+.ward-educational-table td,
+.ward-educational-detail-table th,
+.ward-educational-detail-table td,
+.historical-trends-table th,
+.historical-trends-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.ward-educational-table th,
+.ward-educational-detail-table th,
+.historical-trends-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
+    font-size: 8pt;
+}
+
+.institution-name {
+    text-align: left !important;
+    font-size: 8pt;
+}
+
+.school-level-cell {
+    text-align: center;
+    font-size: 8pt;
+}
+
+.number-cell {
+    text-align: center;
+    font-weight: 500;
+}
+
+.percentage-cell {
+    text-align: center;
+    font-weight: 500;
+}
+
+.ward-number {
+    font-weight: bold;
+    background-color: #f1f5f9;
+    vertical-align: middle;
+}
+
+.total-row {
+    background-color: #e2e8f0;
+    font-weight: bold;
+}
+
+.ward-subtotal {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+.total-label,
+.subtotal-label {
+    text-align: center;
+    font-weight: bold;
+}
+
+.total-cell {
+    background-color: #f8fafc;
+    font-weight: bold;
+}
+
+.subtotal-cell {
+    background-color: #f1f5f9;
+    font-weight: bold;
+}
+
+.grand-total-cell {
+    background-color: #dbeafe;
+    font-weight: bold;
+}
+
+.year-cell {
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8fafc;
+}
+
+.pdf-chart-container {
+    border: none;    
+    text-align: center;
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    height: auto;
+    border: none;
+}
+
+.chart-title,
+.table-title {
+    color: #1e40af;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.content-paragraph {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.content-section {
+    margin-bottom: 2em;
+}
+
+.chart-section {
+    margin-bottom: 2em;
+}
+
+.table-section {
+    margin-bottom: 2em;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 2em;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    margin: 1em 0;
+}
+
+/* School level specific styling */
+.secondary-level {
+    color: #1976D2;
+    font-weight: bold;
+}
+
+.primary-level {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.lower-secondary-level {
+    color: #FF9800;
+    font-weight: bold;
+}
+
+.early-childhood-level {
+    color: #9C27B0;
+    font-weight: bold;
+}
+
+/* Enhanced table styling */
+.ward-educational-table tbody tr:nth-child(even),
+.ward-educational-detail-table tbody tr:nth-child(even),
+.historical-trends-table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.ward-educational-table tbody tr:hover,
+.ward-educational-detail-table tbody tr:hover,
+.historical-trends-table tbody tr:hover {
+    background-color: #f3f4f6;
+}
+
+/* Print optimization */
+@media print {
+    .educational-institution-section {
+        page-break-inside: auto;
+    }
+
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+
+    .ward-educational-detail-table {
+        page-break-inside: auto;
+    }
+}
+</style>

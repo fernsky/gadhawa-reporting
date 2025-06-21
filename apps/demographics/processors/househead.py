@@ -141,12 +141,14 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         """Generate charts only if they don't exist and track them using simplified chart management"""
         charts = {}
 
-        # Check and generate pie chart only if needed
-        if self.needs_generation("pie"):
+        # Check if pie chart file exists first, then use chart management
+        pie_path = self.static_charts_dir / "househead_pie_chart.svg"
+        pie_png_path = self.static_charts_dir / "househead_pie_chart.png"
+
+        if not pie_path.exists() and not pie_png_path.exists():
             print("🎨 Generating househead pie chart (file doesn't exist)...")
             pie_svg = self.generate_chart_svg(data, chart_type="pie")
             if pie_svg:
-                pie_path = self.static_charts_dir / "househead_pie_chart.svg"
                 with open(pie_path, "w", encoding="utf-8") as f:
                     f.write(pie_svg)
 
@@ -166,19 +168,18 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
                 # Try to convert to PNG for better quality
                 try:
-                    png_path = self.static_charts_dir / "househead_pie_chart.png"
                     subprocess.run(
                         [
                             "inkscape",
                             "--export-filename",
-                            str(png_path),
+                            str(pie_png_path),
                             "--export-dpi=600",
                             str(pie_path),
                         ],
                         check=True,
                         timeout=30,
                     )
-                    if png_path.exists():
+                    if pie_png_path.exists():
                         png_file_path = "househead_pie_chart.png"
                         # Update tracking with PNG version
                         png_url = self.track_chart_file(
@@ -196,17 +197,23 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 print("❌ Failed to generate househead pie chart")
         else:
             # Use existing pie chart
+            if pie_png_path.exists():
+                charts["pie_chart_png"] = "househead_pie_chart.png"
+            if pie_path.exists():
+                charts["pie_chart_svg"] = "househead_pie_chart.svg"
             pie_url = self.get_chart_url("pie")
             if pie_url:
                 charts["pie_chart_url"] = pie_url
-                print("✓ Using existing househead pie chart")
+            print("✓ Using existing househead pie chart")
 
-        # Check and generate bar chart only if needed
-        if self.needs_generation("bar"):
+        # Check if bar chart file exists first, then use chart management
+        bar_path = self.static_charts_dir / "househead_bar_chart.svg"
+        bar_png_path = self.static_charts_dir / "househead_bar_chart.png"
+
+        if not bar_path.exists() and not bar_png_path.exists():
             print("🎨 Generating househead bar chart (file doesn't exist)...")
             bar_svg = self.generate_chart_svg(data, chart_type="bar")
             if bar_svg:
-                bar_path = self.static_charts_dir / "househead_bar_chart.svg"
                 with open(bar_path, "w", encoding="utf-8") as f:
                     f.write(bar_svg)
 
@@ -226,19 +233,18 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
                 # Try to convert to PNG for better quality
                 try:
-                    png_path = self.static_charts_dir / "househead_bar_chart.png"
                     subprocess.run(
                         [
                             "inkscape",
                             "--export-filename",
-                            str(png_path),
+                            str(bar_png_path),
                             "--export-dpi=600",
                             str(bar_path),
                         ],
                         check=True,
                         timeout=30,
                     )
-                    if png_path.exists():
+                    if bar_png_path.exists():
                         png_file_path = "househead_bar_chart.png"
                         # Update tracking with PNG version
                         png_url = self.track_chart_file(
@@ -256,10 +262,14 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 print("❌ Failed to generate househead bar chart")
         else:
             # Use existing bar chart
+            if bar_png_path.exists():
+                charts["bar_chart_png"] = "househead_bar_chart.png"
+            if bar_path.exists():
+                charts["bar_chart_svg"] = "househead_bar_chart.svg"
             bar_url = self.get_chart_url("bar")
             if bar_url:
                 charts["bar_chart_url"] = bar_url
-                print("✓ Using existing househead bar chart")
+            print("✓ Using existing househead bar chart")
 
         return charts
 

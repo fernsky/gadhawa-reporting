@@ -273,72 +273,95 @@ class BaseSocialProcessor(ABC):
 
         try:
             # Generate pie chart for municipality-wide data
-            pie_svg = self.generate_chart_svg(data, chart_type="pie")
-            pie_path = self.static_charts_dir / f"{category_name}_pie_chart.svg"
-            if pie_svg and not os.path.exists(pie_path):
-                with open(pie_path, "w", encoding="utf-8") as f:
-                    f.write(pie_svg)
-                charts_info["pie_chart_svg"] = f"images/{category_name}_pie_chart.svg"
+            pie_svg_path = self.static_charts_dir / f"{category_name}_pie_chart.svg"
+            pie_png_path = self.static_charts_dir / f"{category_name}_pie_chart.png"
 
-                # Try to convert to PNG using subprocess
-                try:
-                    png_path = self.static_charts_dir / f"{category_name}_pie_chart.png"
-                    subprocess.run(
-                        [
-                            "inkscape",
-                            "--export-filename",
-                            str(png_path),
-                            "--export-dpi=600",
-                            str(pie_path),
-                        ],
-                        check=True,
-                        timeout=30,
-                    )
-                    if png_path.exists():
-                        charts_info["pie_chart_png"] = (
-                            f"images/charts/{category_name}_pie_chart.png"
-                        )
-                except:
-                    pass  # Use SVG fallback
-
-            # Generate bar chart for ward-wise data
-            print(category_name)
-            if data.get("ward_data"):
-
-                bar_svg = self.generate_chart_svg(data, chart_type="bar")
-                bar_path = self.static_charts_dir / f"{category_name}_bar_chart.svg"
-                if category_name == "majorsubject" or category_name == "toilettype":
-                    print(bar_svg)
-                    print(data)
-                if bar_svg and not os.path.exists(bar_path):
-                    with open(bar_path, "w", encoding="utf-8") as f:
-                        f.write(bar_svg)
-                    charts_info["bar_chart_svg"] = (
-                        f"images/charts/{category_name}_bar_chart.svg"
+            # Only generate if PNG doesn't exist
+            if not pie_png_path.exists():
+                pie_svg = self.generate_chart_svg(data, chart_type="pie")
+                if pie_svg:
+                    with open(pie_svg_path, "w", encoding="utf-8") as f:
+                        f.write(pie_svg)
+                    charts_info["pie_chart_svg"] = (
+                        f"images/charts/{category_name}_pie_chart.svg"
                     )
 
                     # Try to convert to PNG using subprocess
                     try:
-                        png_path = (
-                            self.static_charts_dir / f"{category_name}_bar_chart.png"
-                        )
                         subprocess.run(
                             [
                                 "inkscape",
                                 "--export-filename",
-                                str(png_path),
+                                str(pie_png_path),
                                 "--export-dpi=600",
-                                str(bar_path),
+                                str(pie_svg_path),
                             ],
                             check=True,
                             timeout=30,
                         )
-                        if png_path.exists():
-                            charts_info["bar_chart_png"] = (
-                                f"images/charts/{category_name}_bar_chart.png"
+                        if pie_png_path.exists():
+                            charts_info["pie_chart_png"] = (
+                                f"images/charts/{category_name}_pie_chart.png"
                             )
                     except:
                         pass  # Use SVG fallback
+            else:
+                # PNG exists, just add paths to charts_info
+                charts_info["pie_chart_png"] = (
+                    f"images/charts/{category_name}_pie_chart.png"
+                )
+                if pie_svg_path.exists():
+                    charts_info["pie_chart_svg"] = (
+                        f"images/charts/{category_name}_pie_chart.svg"
+                    )
+
+            # Generate bar chart for ward-wise data
+            print(category_name)
+            if data.get("ward_data"):
+                bar_svg_path = self.static_charts_dir / f"{category_name}_bar_chart.svg"
+                bar_png_path = self.static_charts_dir / f"{category_name}_bar_chart.png"
+
+                # Only generate if PNG doesn't exist
+                if not bar_png_path.exists():
+                    bar_svg = self.generate_chart_svg(data, chart_type="bar")
+                    if category_name == "majorsubject" or category_name == "toilettype":
+                        print(bar_svg)
+                        print(data)
+                    if bar_svg:
+                        with open(bar_svg_path, "w", encoding="utf-8") as f:
+                            f.write(bar_svg)
+                        charts_info["bar_chart_svg"] = (
+                            f"images/charts/{category_name}_bar_chart.svg"
+                        )
+
+                        # Try to convert to PNG using subprocess
+                        try:
+                            subprocess.run(
+                                [
+                                    "inkscape",
+                                    "--export-filename",
+                                    str(bar_png_path),
+                                    "--export-dpi=600",
+                                    str(bar_svg_path),
+                                ],
+                                check=True,
+                                timeout=30,
+                            )
+                            if bar_png_path.exists():
+                                charts_info["bar_chart_png"] = (
+                                    f"images/charts/{category_name}_bar_chart.png"
+                                )
+                        except:
+                            pass  # Use SVG fallback
+                else:
+                    # PNG exists, just add paths to charts_info
+                    charts_info["bar_chart_png"] = (
+                        f"images/charts/{category_name}_bar_chart.png"
+                    )
+                    if bar_svg_path.exists():
+                        charts_info["bar_chart_svg"] = (
+                            f"images/charts/{category_name}_bar_chart.svg"
+                        )
 
         except Exception as e:
             print(f"Error generating {category_name} charts: {e}")
