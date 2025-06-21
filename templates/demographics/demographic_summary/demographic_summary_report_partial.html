@@ -1,0 +1,122 @@
+{% load nepali_filters %}
+
+<!-- Demographic Summary Report Partial for PDF -->
+<p class="section-content demographic-summary-section" id="section-demographic-summary">
+</p>
+
+<style>
+/* PDF-specific styles */
+.demographic-summary-section {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    font-size: 11px;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.demographic-summary-table th,
+.demographic-summary-table td {
+    padding: 10px 8px;
+}
+
+.demographic-summary-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.demographic-summary-table td:first-child {
+    font-weight: normal;
+    text-align: left;
+    width: 50%;
+}
+
+.demographic-summary-table td:nth-child(2) {
+    text-align: right;
+    width: 25%;
+    font-weight: bold;
+}
+
+.demographic-summary-table td:nth-child(3) {
+    text-align: right;
+    width: 25%;
+}
+
+.demographic-summary-table .age-group-header td {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.demographic-summary-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.demographic-summary-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.table-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.content-paragraph {
+    margin: 15px 0;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin: 10px 0;
+    text-indent: 2em;
+    font-size: 12px;
+}
+
+.content-section {
+    margin-bottom: 20px;
+}
+
+.table-section {
+    margin: 20px 0;
+    page-break-inside: avoid;
+}
+
+/* Enhanced table styling for demographic summary */
+.demographic-summary-table tbody tr td:first-child {
+    color: #2c3e50;
+}
+
+.demographic-summary-table tbody tr td[colspan] {
+    text-align: center;
+    font-weight: bold;
+    background-color: #e8f4f8;
+}
+
+/* Specific styling for nested indicators */
+.demographic-summary-table tbody tr td:first-child:contains("&nbsp;&nbsp;") {
+    padding-left: 20px;
+    font-style: italic;
+}
+</style>

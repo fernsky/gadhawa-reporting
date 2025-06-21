@@ -102,10 +102,12 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                     (record.male_population or 0) / record.female_population * 100
                 )
 
-            # Calculate population density
+            # Calculate population density (rounded to nearest integer)
             density = 0
             if record.area_sq_km and record.area_sq_km > 0:
-                density = (record.total_population or 0) / float(record.area_sq_km)
+                density = round(
+                    (record.total_population or 0) / float(record.area_sq_km)
+                )
 
             ward_info = {
                 "ward_number": ward_num,
@@ -257,10 +259,10 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 ward_info = ward_data[ward_num]
                 formatted_ward_data[ward_num] = {
                     "ward_name": ward_info.get("ward_name", f"वडा नं. {ward_num}"),
-                    "total_population": ward_info.get("population_density", 0),
+                    "total_population": round(ward_info.get("population_density", 0)),
                     "demographics": {
                         "density": {
-                            "population": ward_info.get("population_density", 0),
+                            "population": round(ward_info.get("population_density", 0)),
                             "name_nepali": "जनघनत्व",
                         }
                     },
@@ -275,61 +277,105 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         return None
 
-    def generate_and_track_charts(self, data):
-        """Generate charts only if they don't exist and track them using simplified chart management"""
+    def generate_and_save_charts(self, data):
+        """Generate and save charts for ward household demographics"""
         charts = {}
 
         # Ensure static charts directory exists
         self.static_charts_dir.mkdir(parents=True, exist_ok=True)
 
-        # Check and generate population comparison bar chart
-        pop_bar_path = self.static_charts_dir / "ward_household_population_bar.svg"
-        pop_bar_png_path = self.static_charts_dir / "ward_household_population_bar.png"
+        # Generate population comparison bar chart
+        ward_data = data["ward_data"]
+        formatted_population_data = {}
 
-        if not pop_bar_path.exists():
-            svg_content = self.generate_chart_svg(data, chart_type="bar")
-            if svg_content:
-                # Save SVG
-                with open(pop_bar_path, "w", encoding="utf-8") as f:
-                    f.write(svg_content)
-                print(f"✅ Created population bar chart: {pop_bar_path}")
+        for ward_num in sorted(ward_data.keys()):
+            ward_info = ward_data[ward_num]
+            formatted_population_data[ward_num] = {
+                "ward_name": ward_info.get("ward_name", f"वडा नं. {ward_num}"),
+                "total_population": ward_info.get("total_population", 0),
+                "demographics": {
+                    "population": {
+                        "population": ward_info.get("total_population", 0),
+                        "name_nepali": "जनसंख्या",
+                    }
+                },
+            }
 
-                # Track with chart management
-                chart_url = self.track_chart_file(
-                    chart_type="population_bar",
-                    file_path="ward_household_population_bar.svg",
-                    title="वडागत जनसंख्या तुलना",
-                )
-                charts["population_bar_chart_url"] = chart_url
-        else:
-            charts["population_bar_chart_url"] = f"/static/charts/{pop_bar_path.name}"
+        # Generate population bar chart
+        success, png_path, svg_path = self.chart_generator.generate_chart_image(
+            demographic_data=formatted_population_data,
+            output_name="ward_household_population_bar",
+            static_dir=str(self.static_charts_dir),
+            chart_type="bar",
+            include_title=False,
+            title_nepali="वडागत जनसंख्या तुलना",
+            title_english="Ward-wise Population Comparison",
+        )
 
-        # Check and generate density comparison bar chart
-        density_bar_path = self.static_charts_dir / "ward_household_density_bar.svg"
+        if success and png_path:
+            charts["population_bar_chart_png"] = (
+                f"/static/charts/ward_household_population_bar.png"
+            )
+            charts["population_bar_chart_svg"] = (
+                f"/static/charts/ward_household_population_bar.svg"
+            )
+            charts["population_bar_chart_url"] = (
+                f"/static/charts/ward_household_population_bar.png"
+            )
+        elif svg_path:
+            charts["population_bar_chart_svg"] = (
+                f"/static/charts/ward_household_population_bar.svg"
+            )
+            charts["population_bar_chart_url"] = (
+                f"/static/charts/ward_household_population_bar.svg"
+            )
 
-        if not density_bar_path.exists():
-            svg_content = self.generate_chart_svg(data, chart_type="density_bar")
-            if svg_content:
-                # Save SVG
-                with open(density_bar_path, "w", encoding="utf-8") as f:
-                    f.write(svg_content)
-                print(f"✅ Created density bar chart: {density_bar_path}")
+        # Generate density comparison bar chart
+        formatted_density_data = {}
 
-                # Track with chart management
-                chart_url = self.track_chart_file(
-                    chart_type="density_bar",
-                    file_path="ward_household_density_bar.svg",
-                    title="वडागत जनसंख्या घनत्व तुलना",
-                )
-                charts["density_bar_chart_url"] = chart_url
-        else:
-            charts["density_bar_chart_url"] = f"/static/charts/{density_bar_path.name}"
+        for ward_num in sorted(ward_data.keys()):
+            ward_info = ward_data[ward_num]
+            formatted_density_data[ward_num] = {
+                "ward_name": ward_info.get("ward_name", f"वडा नं. {ward_num}"),
+                "total_population": round(ward_info.get("population_density", 0)),
+                "demographics": {
+                    "density": {
+                        "population": round(ward_info.get("population_density", 0)),
+                        "name_nepali": "जनघनत्व",
+                    }
+                },
+            }
+
+        # Generate density bar chart
+        success, png_path, svg_path = self.chart_generator.generate_chart_image(
+            demographic_data=formatted_density_data,
+            output_name="ward_household_density_bar",
+            static_dir=str(self.static_charts_dir),
+            chart_type="bar",
+            include_title=False,
+            title_nepali="वडागत जनसंख्या घनत्व तुलना",
+            title_english="Ward-wise Population Density Comparison",
+        )
+
+        if success and png_path:
+            charts["density_bar_chart_png"] = (
+                f"/static/charts/ward_household_density_bar.png"
+            )
+            charts["density_bar_chart_svg"] = (
+                f"/static/charts/ward_household_density_bar.svg"
+            )
+            charts["density_bar_chart_url"] = (
+                f"/static/charts/ward_household_density_bar.png"
+            )
+        elif svg_path:
+            charts["density_bar_chart_svg"] = (
+                f"/static/charts/ward_household_density_bar.svg"
+            )
+            charts["density_bar_chart_url"] = (
+                f"/static/charts/ward_household_density_bar.svg"
+            )
 
         return charts
-
-    def generate_and_save_charts(self, data):
-        """Generate and save charts for ward household demographics"""
-        return self.generate_and_track_charts(data)
 
     def process_for_pdf(self):
         """Process ward household data for PDF generation"""
@@ -377,7 +423,7 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 f"लुङ्ग्री गाउँपालिकाको वडागत जनसंख्या र घरपरिवारको विस्तृत विश्लेषण गर्दा गाउँपालिकामा कुल "
                 f"{format_nepali_number(summary_stats.get('total_population', 0))} जनसंख्या र "
                 f"{format_nepali_number(summary_stats.get('total_households', 0))} घरपरिवार रहेका छन् । "
-                f"गाउँपालिकाको औसत घरपरिवारको आकार {summary_stats.get('overall_avg_household_size', 0):.2f} व्यक्ति प्रति घरपरिवार रहेको छ ।"
+                f"गाउँपालिकाको औसत घरपरिवारको आकार {format_nepali_number(round(summary_stats.get('overall_avg_household_size', 0), 2))} व्यक्ति प्रति घरपरिवार रहेको छ ।"
             )
 
             # Population distribution analysis
@@ -386,21 +432,21 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             if max_pop_ward and min_pop_ward:
                 analysis_parts.append(
-                    f"जनसंख्याको वितरणको आधारमा हेर्दा सबैभन्दा धेरै जनसंख्या वडा नं. {max_pop_ward.get('ward_number')} मा रहेको छ "
+                    f"जनसंख्याको वितरणको आधारमा हेर्दा सबैभन्दा धेरै जनसंख्या वडा नं. {format_nepali_number(max_pop_ward.get('ward_number'))} मा रहेको छ "
                     f"जसमा कुल {format_nepali_number(max_pop_ward.get('total_population', 0))} जनसंख्या "
                     f"(पुरुष {format_nepali_number(max_pop_ward.get('male_population', 0))} जना र "
                     f"महिला {format_nepali_number(max_pop_ward.get('female_population', 0))} जना) रहेका छन् । "
                     f"यस वडामा {format_nepali_number(max_pop_ward.get('total_households', 0))} घरपरिवार रहेका छन् "
-                    f"र औसत घरपरिवारको आकार {max_pop_ward.get('average_household_size', 0):.1f} व्यक्ति रहेको छ ।"
+                    f"र औसत घरपरिवारको आकार {format_nepali_number(round(max_pop_ward.get('average_household_size', 0), 1))} व्यक्ति रहेको छ ।"
                 )
 
                 analysis_parts.append(
-                    f"त्यसैगरी सबैभन्दा कम जनसंख्या वडा नं. {min_pop_ward.get('ward_number')} मा रहेको छ "
+                    f"त्यसैगरी सबैभन्दा कम जनसंख्या वडा नं. {format_nepali_number(min_pop_ward.get('ward_number'))} मा रहेको छ "
                     f"जसमा कुल {format_nepali_number(min_pop_ward.get('total_population', 0))} जनसंख्या "
                     f"(पुरुष {format_nepali_number(min_pop_ward.get('male_population', 0))} जना र "
                     f"महिला {format_nepali_number(min_pop_ward.get('female_population', 0))} जना) रहेका छन् । "
                     f"यस वडामा {format_nepali_number(min_pop_ward.get('total_households', 0))} घरपरिवार रहेका छन् "
-                    f"र औसत घरपरिवारको आकार {min_pop_ward.get('average_household_size', 0):.1f} व्यक्ति रहेको छ ।"
+                    f"र औसत घरपरिवारको आकार {format_nepali_number(round(min_pop_ward.get('average_household_size', 0), 1))} व्यक्ति रहेको छ ।"
                 )
 
             # Population density analysis
@@ -409,11 +455,11 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             if max_density_ward and min_density_ward:
                 analysis_parts.append(
-                    f"जनसंख्या घनत्वको विश्लेषण गर्दा सबैभन्दा बढी जनघनत्व वडा नं. {max_density_ward.get('ward_number')} मा "
-                    f"{max_density_ward.get('population_density', 0):.2f} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ । "
-                    f"यस वडाको क्षेत्रफल {max_density_ward.get('area_sq_km', 0):.2f} वर्ग किलोमिटर रहेको छ । "
-                    f"त्यसैगरी सबैभन्दा कम जनघनत्व वडा नं. {min_density_ward.get('ward_number')} मा "
-                    f"{min_density_ward.get('population_density', 0):.2f} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ ।"
+                    f"जनसंख्या घनत्वको विश्लेषण गर्दा सबैभन्दा बढी जनघनत्व वडा नं. {format_nepali_number(max_density_ward.get('ward_number'))} मा "
+                    f"{format_nepali_number(round(max_density_ward.get('population_density', 0)))} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ । "
+                    f"यस वडाको क्षेत्रफल {format_nepali_number(round(max_density_ward.get('area_sq_km', 0), 2))} वर्ग किलोमिटर रहेको छ । "
+                    f"त्यसैगरी सबैभन्दा कम जनघनत्व वडा नं. {format_nepali_number(min_density_ward.get('ward_number'))} मा "
+                    f"{format_nepali_number(round(min_density_ward.get('population_density', 0)))} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ ।"
                 )
 
             # Gender composition analysis
@@ -425,7 +471,7 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 analysis_parts.append(
                     f"लिङ्गीय संरचनाको आधारमा विश्लेषण गर्दा गाउँपालिकामा कुल पुरुष जनसंख्या "
                     f"{format_nepali_number(total_male)} जना र महिला जनसंख्या {format_nepali_number(total_female)} जना रहेको छ । "
-                    f"लिङ्ग अनुपात {sex_ratio:.2f} (प्रति १०० महिलामा {sex_ratio:.1f} पुरुष) रहेको छ । "
+                    f"लिङ्ग अनुपात {format_nepali_number(round(sex_ratio, 2))} (प्रति १०० महिलामा {format_nepali_number(round(sex_ratio, 1))} पुरुष) रहेको छ । "
                     f"यो अनुपातले गाउँपालिकामा {'पुरुष' if sex_ratio > 100 else 'महिला'} जनसंख्याको "
                     f"{'प्रभुत्व' if abs(sex_ratio - 100) > 10 else 'सन्तुलित वितरण'} रहेको देखाउँछ ।"
                 )
@@ -443,10 +489,10 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             for i, (ward_num, ward_info) in enumerate(sorted_wards[:3]):  # Top 3 wards
                 ranking = ["पहिलो", "दोस्रो", "तेस्रो"][i]
                 analysis_parts.append(
-                    f"{ranking} स्थानमा रहेको वडा नं. {ward_num} मा "
+                    f"{ranking} स्थानमा रहेको वडा नं. {format_nepali_number(ward_num)} मा "
                     f"{format_nepali_number(ward_info.get('total_population', 0))} जनसंख्या र "
                     f"{format_nepali_number(ward_info.get('total_households', 0))} घरपरिवार रहेका छन् । "
-                    f"यस वडाको जनघनत्व {ward_info.get('population_density', 0):.2f} व्यक्ति प्रति वर्ग किमी छ ।"
+                    f"यस वडाको जनघनत्व {format_nepali_number(round(ward_info.get('population_density', 0)))} व्यक्ति प्रति वर्ग किमी छ ।"
                 )
 
             # Growth and development trends (if time series data available)
@@ -472,7 +518,7 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                     ) * 100
                     analysis_parts.append(
                         f"वर्ष {format_nepali_number(previous_year)} देखि वर्ष {format_nepali_number(latest_year)} सम्मको "
-                        f"जनसंख्या वृद्धि दर {growth_rate:.2f}% रहेको छ । "
+                        f"जनसंख्या वृद्धि दर {format_nepali_number(round(growth_rate, 2))}% रहेको छ । "
                         f"यो {'सकारात्मक' if growth_rate > 0 else 'नकारात्मक'} वृद्धि दरले गाउँपालिकाको "
                         f"{'विकास र बसाइसराइको अनुकूल वातावरण' if growth_rate > 0 else 'बसाइसराइको चुनौती'} रहेको देखाउँछ ।"
                     )
@@ -488,8 +534,8 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 min_household_size = min(household_sizes)
 
                 analysis_parts.append(
-                    f"घरपरिवारको आकारको विश्लेषण गर्दा सबैभन्दा ठूलो घरपरिवारको औसत आकार {max_household_size:.2f} व्यक्ति "
-                    f"र सबैभन्दा सानो घरपरिवारको औसत आकार {min_household_size:.2f} व्यक्ति रहेको छ । "
+                    f"घरपरिवारको आकारको विश्लेषण गर्दा सबैभन्दा ठूलो घरपरिवारको औसत आकार {format_nepali_number(round(max_household_size, 2))} व्यक्ति "
+                    f"र सबैभन्दा सानो घरपरिवारको औसत आकार {format_nepali_number(round(min_household_size, 2))} व्यक्ति रहेको छ । "
                     f"यसले गाउँपालिकामा पारिवारिक संरचनामा {'एकरूपता' if abs(max_household_size - min_household_size) < 1 else 'विविधता'} "
                     f"रहेको देखाउँछ ।"
                 )

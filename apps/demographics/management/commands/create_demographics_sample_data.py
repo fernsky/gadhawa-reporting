@@ -33,6 +33,7 @@ class Command(BaseCommand):
 
         # List of all demographic commands to run
         demographic_commands = [
+            ("create_demographic_summary_sample_data", "Demographic Summary"),
             ("create_ward_settlement_sample_data", "Ward Settlement Demographics"),
             ("create_religion_sample_data", "Religion Demographics"),
             ("create_language_sample_data", "Language Demographics"),
