@@ -4,7 +4,17 @@ Teacher Staffing Processor for Social Domain
 This processor handles Ward Wise Teacher Staffing data (५.१.५) providing:
 - Municipality-wide and ward-wise teacher statistics
 - Detailed analysis by level and position type
-- Chart generation using base class functionality
+- Chart         # Introduction an                content.append(
+                    f"शैक्षिक तहको आधारमा शिक्षकहरूको वितरणलाई विश्लेषण गर्दा {dominant_level_name} मा सबैभन्दा बढी "
+                    f"{format_nepali_number(dominant_count)} जना शिक्षक÷शिक्षिका कार्यरत छन् जुन कुल शिक्षकहरूको "
+                    f"{format_nepali_percentage(dominant_percentage)} प्रतिनिधित्व गर्छ। यसले उक्त तहमा शैक्षिक सेवाको व्यापकता र "
+                    f"महत्त्वलाई प्रकट गर्छ। "
+                )ext
+        content.append(
+            f"यस गाउँपालिकाको शैक्षिक गुणस्तर र शिक्षण सिकाइ प्रक्रियाको मेरुदण्ड भनिने शिक्षक तथा शैक्षिक जनशक्तिको स्थितिको विश्लेषण गर्दा यो क्षेत्रमा उल्लेखनीय प्रगति देखिएको छ। "
+            f"आर्थिक वर्ष २०८०÷०८१ को अन्त्य सम्ममा गाउँपालिकामा रहेका शिक्षक तथा शैक्षिक जनशक्तिको अध्ययन गर्दा कुल {format_nepali_number(total_teachers)} जना शिक्षक÷शिक्षिका कार्यरत रहेका छन्। "
+            f"यो संख्याले गाउँपालिकाको शैक्षिक पहुँच र गुणस्तरमा प्रत्यक्ष प्रभाव पारिरहेको छ र स्थानीय बालबालिकाहरूको शैक्षिक भविष्यका लागि महत्त्वपूर्ण आधार प्रदान गरिरहेको छ।<br>"
+        )tion using base class functionality
 - Teacher distribution and staffing pattern analysis
 """
 
@@ -307,7 +317,7 @@ class TeacherStaffingProcessor(BaseSocialProcessor):
             content.append(
                 f"समग्रमा शैक्षिक तहको वितरणलाई हेर्दा प्रारम्भिक शिक्षादेखि उच्च माध्यमिक शिक्षासम्म शिक्षकहरूको उपस्थितिले "
                 f"शैक्षिक निरन्तरताको सुनिश्चितता गरेको छ। यसले विद्यार्थीहरूलाई स्थानीय रूपमै गुणस्तरीय शिक्षा प्राप्त गर्ने "
-                f"अवसर प्रदान गरेको छ।"
+                f"अवसर प्रदान गरेको छ।<br>"
             )
 
         # Position type and funding source analysis
@@ -370,7 +380,7 @@ class TeacherStaffingProcessor(BaseSocialProcessor):
                 content.append(
                     f"कुल शिक्षकहरूमध्ये {format_nepali_percentage(permanent_ratio)} स्थायी प्रकृतिका छन् भने "
                     f"{format_nepali_percentage(100 - permanent_ratio)} अस्थायी वा अनुदानमा आधारित छन्। "
-                    f"यसले शैक्षिक स्थिरता र दीर्घकालीन योजनाका लागि चुनौती र अवसर दुवै सिर्जना गरेको छ।"
+                    f"यसले शैक्षिक स्थिरता र दीर्घकालीन योजनाका लागि चुनौती र अवसर दुवै सिर्जना गरेको छ।<br>"
                 )
 
         # Ward-wise distribution analysis
@@ -406,50 +416,38 @@ class TeacherStaffingProcessor(BaseSocialProcessor):
             content.append(
                 f"{format_nepali_number(above_avg_wards)} वटा वडामा औसतभन्दा बढी शिक्षकहरू छन् भने "
                 f"{format_nepali_number(below_avg_wards)} वटा वडामा औसतभन्दा कम छन्। यसले शैक्षिक संसाधनको "
-                f"भौगोलिक वितरणमा सुधारको आवश्यकतालाई देखाउँछ।"
+                f"भौगोलिक वितरणमा सुधारको आवश्यकतालाई देखाउँछ।<br>"
             )
 
-        # Teacher-student ratio analysis (if we had student data)
+        # Teacher-student ratio and quality analysis
         content.append(
             f"शिक्षक-विद्यार्थी अनुपातको दृष्टिकोणले हेर्दा कुल {format_nepali_number(total_teachers)} जना "
             f"शिक्षक/शिक्षिकाले गाउँपालिकाका सबै शैक्षिक संस्थाहरूमा शैक्षिक सेवा प्रदान गरिरहेका छन्। "
-            f"यो अनुपात राष्ट्रिय र अन्तर्राष्ट्रिय मापदण्डको आधारमा मूल्याङ्कन गर्दा सामान्यतया उपयुक्त देखिन्छ।"
-        )
-
-        # Quality and capacity analysis
-        content.append(
+            f"यो अनुपात राष्ट्रिय र अन्तर्राष्ट्रिय मापदण्डको आधारमा मूल्याङ्कन गर्दा सामान्यतया उपयुक्त देखिन्छ। "
             f"शैक्षिक गुणस्तरको दृष्टिकोणले हेर्दा शिक्षकहरूको संख्यामात्र नभएर तिनीहरूको योग्यता, तालिम र "
             f"अनुभव पनि महत्त्वपूर्ण कारक हुन्। विभिन्न तहमा कार्यरत शिक्षकहरूले आ-आफ्ना विषयगत दक्षता र "
-            f"शैक्षणिक विधिमा निरन्तर सुधार गर्दै गुणस्तरीय शिक्षा प्रदान गर्ने प्रयास गरिरहेका छन्।"
+            f"शैक्षणिक विधिमा निरन्तर सुधार गर्दै गुणस्तरीय शिक्षा प्रदान गर्ने प्रयास गरिरहेका छन्।<br>"
         )
 
-        # Professional development and training needs
+        # Professional development and infrastructure needs
         content.append(
             f"शिक्षकहरूको व्यावसायिक विकासका लागि नियमित तालिम, कार्यशाला र क्षमता विकास कार्यक्रमहरूको "
             f"आवश्यकता रहन्छ। आधुनिक शिक्षण विधि, प्रविधिको प्रयोग र बालमैत्री शिक्षण वातावरण सिर्जना गर्न "
-            f"शिक्षकहरूलाई निरन्तर सहयोग र मार्गदर्शन आवश्यक छ।"
-        )
-
-        # Infrastructure and resource support
-        content.append(
+            f"शिक्षकहरूलाई निरन्तर सहयोग र मार्गदर्शन आवश्यक छ। "
             f"शिक्षकहरूको प्रभावकारी कार्यसम्पादनका लागि उपयुक्त भौतिक पूर्वाधार, शैक्षिक सामग्री र प्राविधिक "
             f"सहयोगको आवश्यकता छ। कक्षाकोठा, पुस्तकालय, प्रयोगशाला र खेलकुद सुविधाहरूले शिक्षकहरूलाई "
-            f"बहुआयामिक शिक्षा प्रदान गर्न सहयोग गर्छ।"
+            f"बहुआयामिक शिक्षा प्रदान गर्न सहयोग गर्छ।<br>"
         )
 
-        # Challenges and issues
+        # Challenges and future planning
         content.append(
             f"शिक्षक व्यवस्थापनमा केही चुनौतीहरू पनि रहेका छन्। दुर्गम क्षेत्रमा शिक्षकहरूको कमी, विषयगत "
             f"विशेषज्ञ शिक्षकको अभाव, नियमित तालिमको कमी र कार्य सुरक्षाका मुद्दाहरूले शैक्षिक गुणस्तरमा "
-            f"प्रभाव पारेको छ। यसका साथै राहत र अस्थायी शिक्षकहरूको दीर्घकालीन समाधानको आवश्यकता छ।"
-        )
-
-        # Future planning and recommendations
-        content.append(
+            f"प्रभाव पारेको छ। यसका साथै राहत र अस्थायी शिक्षकहरूको दीर्घकालीन समाधानको आवश्यकता छ। "
             f"भविष्यका लागि शिक्षक दरबन्दीको वैज्ञानिक विश्लेषण, योग्यताका आधारमा भर्ना, नियमित क्षमता विकास "
             f"कार्यक्रम र कार्यसम्पादनमा आधारित मूल्याङ्कन प्रणालीको विकास आवश्यक छ। डिजिटल शिक्षाका लागि "
             f"शिक्षकहरूको क्षमता विकास, अनुसन्धानमूलक शिक्षण र सामुदायिक सहभागितामा आधारित शैक्षिक "
-            f"कार्यक्रमहरूमा जोड दिनुपर्छ।"
+            f"कार्यक्रमहरूमा जोड दिनुपर्छ। "
         )
 
         # Comprehensive conclusion
@@ -463,8 +461,6 @@ class TeacherStaffingProcessor(BaseSocialProcessor):
         )
 
         return " ".join(content)
-
-        return "".join(content)
 
     def _format_municipality_data_for_pie_chart(self, municipality_data_by_level):
         """Format municipality data for pie chart generation"""
