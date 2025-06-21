@@ -49,7 +49,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for language_type, data in language_data.items %}
+                {% for language_type, data in language_data.municipality_data.items %}
                     {% if data.population > 0 %}
                         <tr>
                             <td style="text-align: left;">{{ data.name_nepali }}</td>
