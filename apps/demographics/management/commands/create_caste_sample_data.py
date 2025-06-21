@@ -27,93 +27,50 @@ class Command(BaseCommand):
             "Creating caste demographics data based on actual municipality-wide data..."
         )
 
-        # Raw ward-wise caste data from actual census
-        raw_ward_data = [
-            (1, "कामी", 441),
-            (1, "क्षेत्री", 1234),
-            (1, "गुरुङ", 5),
-            (1, "दमाई/ढोली", 115),
-            (1, "मगर", 3764),
-            (1, "सार्की", 3),
-            (1, "सुनुवार", 41),
-            (2, "कामी", 557),
-            (2, "क्षेत्री", 2118),
-            (2, "दमाई/ढोली", 131),
-            (2, "ब्राह्मण पहाड", 30),
-            (2, "मगर", 1287),
-            (2, "सार्की", 142),
-            (3, "कामी", 84),
-            (3, "क्षेत्री", 1417),
-            (3, "गुरुङ", 51),
-            (3, "दमाई/ढोली", 23),
-            (3, "नेवार", 5),
-            (3, "ब्राह्मण पहाड", 51),
-            (3, "मगर", 1392),
-            (3, "सार्की", 15),
-            (4, "कामी", 894),
-            (4, "क्षेत्री", 3007),
-            (4, "गुरुङ", 3),
-            (4, "दमाई/ढोली", 49),
-            (4, "ब्राह्मण पहाड", 4),
-            (4, "मगर", 102),
-            (5, "कामी", 422),
-            (5, "क्षेत्री", 1545),
-            (5, "गुरुङ", 75),
-            (5, "दमाई/ढोली", 41),
-            (5, "ब्राह्मण पहाड", 85),
-            (5, "मगर", 1117),
-            (5, "माझी", 3),
-            (5, "सुनुवार", 118),
-            (6, "कामी", 596),
-            (6, "क्षेत्री", 3056),
-            (6, "गुरुङ", 21),
-            (6, "दमाई/ढोली", 119),
-            (6, "मगर", 719),
-            (7, "कामी", 685),
-            (7, "क्षेत्री", 263),
-            (7, "गुरुङ", 41),
-            (7, "थकाली", 6),
-            (7, "दमाई/ढोली", 122),
-            (7, "मगर", 1438),
-            (7, "माझी", 58),
+        # Actual municipality-wide caste population data
+        municipality_caste_data = [
+            (3679, "कामी"),
+            (12640, "क्षेत्री"),
+            (196, "गुरुङ"),
+            (6, "थकाली"),
+            (600, "दमाई/ढोली"),
+            (5, "नेवार"),
+            (170, "ब्राह्मण पहाड"),
+            (9819, "मगर"),
+            (61, "माझी"),
+            (160, "सार्की"),
+            (159, "सुनार"),
         ]
 
-        # Mapping Nepali caste names to model enum choices
+        # Mapping Nepali caste names to specific model enum choices
         caste_mapping = {
-            "कामी": "DALIT",  # Kami is traditionally considered Dalit
+            "कामी": "KAMI",  # Direct mapping to KAMI enum
             "क्षेत्री": "CHHETRI",
             "गुरुङ": "GURUNG",
-            "दमाई/ढोली": "DALIT",  # Damai/Dholi is traditionally considered Dalit
-            "मगर": "MAGAR",
-            "सार्की": "DALIT",  # Sarki is traditionally considered Dalit
-            "सुनुवार": "OTHER",  # Sunuwar not in enum, categorized as OTHER
-            "ब्राह्मण पहाड": "BRAHMIN",
+            "थकाली": "THAKALI",  # Direct mapping to THAKALI enum
+            "दमाई/ढोली": "DAMAI",  # Direct mapping to DAMAI enum
             "नेवार": "NEWAR",
-            "माझी": "OTHER",  # Majhi not in enum, categorized as OTHER
-            "थकाली": "OTHER",  # Thakali not in enum, categorized as OTHER
+            "ब्राह्मण पहाड": "BRAHMIN_HILL",  # Direct mapping to BRAHMIN_HILL enum
+            "मगर": "MAGAR",
+            "माझी": "MAJHI",  # Direct mapping to MAJHI enum
+            "सार्की": "SARKI",  # Direct mapping to SARKI enum
+            "सुनार": "SONAR",  # Direct mapping to SONAR enum
         }
 
-        # Aggregate data by caste type for municipality-wide totals
-        caste_totals = {}
-        for ward, nepali_caste, population in raw_ward_data:
-            enum_caste = caste_mapping.get(nepali_caste, "OTHER")
-            if enum_caste not in caste_totals:
-                caste_totals[enum_caste] = 0
-            caste_totals[enum_caste] += population
-
-        # Convert to the format expected by the rest of the code
+        # Use direct municipality-wide data with specific caste enums
         caste_data = []
-        for caste_enum, total_population in caste_totals.items():
+        for population, nepali_caste in municipality_caste_data:
+            enum_caste = caste_mapping.get(nepali_caste, "OTHER")
             caste_data.append(
                 {
                     "id": str(uuid.uuid4()),
-                    "caste": caste_enum,
-                    "population": total_population,
+                    "caste": enum_caste,
+                    "population": population,
                 }
             )
 
         self.stdout.write(
-            f"Processing {len(raw_ward_data)} ward-level records into {len(caste_data)} municipality-wide caste categories..."
+            f"Processing {len(municipality_caste_data)} municipality-wide caste records..."
         )
 
         existing_count = MunicipalityWideCastePopulation.objects.count()

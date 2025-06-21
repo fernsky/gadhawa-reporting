@@ -26,7 +26,6 @@ class Command(BaseCommand):
         # Sample data based on provided information
         sample_data = [
             # Ward 1
-            (1, "OTHER", 3027),  # Combined OTHER entries
             (1, "SEWING_RELATED", 21),
             (1, "TEACHING_RELATED", 20),
             (1, "CARPENTERY_RELATED", 19),
@@ -42,7 +41,6 @@ class Command(BaseCommand):
             (1, "ENGINEERING_DESIGN_RELATED", 4),
             (1, "COMPUTER_SCIENCE_RELATED", 1),
             # Ward 2
-            (2, "OTHER", 214),  # Combined OTHER entries
             (2, "CARPENTERY_RELATED", 146),
             (2, "TEACHING_RELATED", 145),
             (2, "AGRICULTURE_RELATED", 125),
@@ -64,7 +62,6 @@ class Command(BaseCommand):
             (2, "RADIO_TELEVISION_ELECTRICAL_REPAIR", 2),
             (2, "LAND_SURVEY_RELATED", 1),
             # Ward 3
-            (3, "OTHER", 244),  # Combined OTHER entries
             (3, "TEACHING_RELATED", 46),
             (3, "AGRICULTURE_RELATED", 34),
             (3, "CARPENTERY_RELATED", 18),
@@ -82,7 +79,6 @@ class Command(BaseCommand):
             (3, "LAND_SURVEY_RELATED", 1),
             (3, "PHOTOGRAPHY_RELATED", 1),
             # Ward 4
-            (4, "OTHER", 351),  # Combined OTHER entries
             (4, "TEACHING_RELATED", 61),
             (4, "CARPENTERY_RELATED", 44),
             (4, "HOTEL_RESTAURANT_RELATED", 25),
@@ -102,7 +98,6 @@ class Command(BaseCommand):
             (4, "LITERARY_CREATION_RELATED", 2),
             (4, "BEUATICIAN_RELATED", 1),
             # Ward 5
-            (5, "OTHER", 1446),
             (5, "TEACHING_RELATED", 88),
             (5, "DRIVING_RELATED", 30),
             (5, "NONE", 29),
@@ -120,7 +115,6 @@ class Command(BaseCommand):
             (5, "MECHANICS_RELATED", 2),
             (5, "BEUATICIAN_RELATED", 1),
             # Ward 6
-            (6, "OTHER", 948),  # Combined OTHER entries
             (6, "TEACHING_RELATED", 389),
             (6, "SEWING_RELATED", 18),
             (6, "NONE", 13),
@@ -140,7 +134,6 @@ class Command(BaseCommand):
             (6, "MECHANICS_RELATED", 1),
             (6, "PHOTOGRAPHY_RELATED", 1),
             # Ward 7
-            (7, "OTHER", 827),
             (7, "TEACHING_RELATED", 21),
             (7, "SEWING_RELATED", 16),
             (7, "HUMAN_HEALTH_RELATED", 11),

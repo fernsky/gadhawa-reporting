@@ -283,32 +283,6 @@ li {
   color: #60a5fa;
 }
 
-/* Special styling for maps TOC entries */
-.toc-item.maps-toc {
-  background-color: #f0f9ff;
-  border-left: 3px solid #0ea5e9;
-  padding-left: 0.5em;
-  margin: 0.3em 0;
-  border-radius: 3px;
-}
-
-.toc-item.maps-toc .toc-link {
-  color: #0c4a6e;
-  font-style: italic;
-  font-weight: 500;
-}
-
-.toc-item.maps-toc.level-1 .toc-link {
-  color: #0c4a6e;
-  font-weight: 700;
-  font-size: 12pt;
-}
-
-.toc-item.maps-toc.level-2 .toc-link {
-  color: #075985;
-  font-size: 10pt;
-  margin-left: 0.5em;
-}
 
 /* Page reference functionality - USING ANCHOR LINKS */
 .page-ref {

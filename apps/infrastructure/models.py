@@ -125,7 +125,8 @@ class HouseMapStatusChoice(models.TextChoices):
 
 # ७.१ यातायात पूर्वाधार
 # ७.१.१ सडक संजालको विद्यमान अवस्था
-    
+
+
 class WardWiseTimeToActiveRoad(BaseModel):
     """Ward wise time to active road (7.1.6 - from TypeScript schema)"""
 
@@ -147,6 +148,7 @@ class WardWiseTimeToActiveRoad(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+
 
 # ७.१.२ निर्माणाधीन गाउँ वा नगरस्तरीय सडकहरु
 class WardWiseRoadStatus(BaseModel):
@@ -171,26 +173,31 @@ class WardWiseRoadStatus(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_road_status_display()}"
 
+
 # ७.१.३ सवारी सुबिधा र रुट
 # ७.१.४ गाउँ/नगर क्षेत्रभित्र चल्ने सवारी साधन
+
 
 # ७.१.५ झोलुंगे पुल तथा पुलपुलेसा
 class BridgeInfo(BaseModel):
     """Information about bridges (7.1.5)"""
-    
+
     name = models.CharField(max_length=100, verbose_name=_("पुलको नाम"))
     ward_number = models.CharField(max_length=30, verbose_name=_("वडा नं"))
-    address = models.CharField(max_length=150, verbose_name=_("ठेगाना"), blank=True, null=True)
-    
+    address = models.CharField(
+        max_length=150, verbose_name=_("ठेगाना"), blank=True, null=True
+    )
+
     class Meta:
         verbose_name = _("झोलुंगे पुल तथा पुलपुलेसा")
         verbose_name_plural = _("झोलुंगे पुल तथा पुलपुलेसाहरू")
-        
+
     def __str__(self):
         return f"{self.name} - {self.ward_number}"
-    
 
-# ७.१.६ टाढाको बस्तीबाट सम्बन्धित गाउँ÷नगरपालिकाको केन्द्र पुग्न लाग्ने अनुमानित समय
+
+# ७.१.६ टाढाको बस्तीबाट सम्बन्धित गाउँ/नगरपालिकाको केन्द्र पुग्न लाग्ने अनुमानित समय
+
 
 class WardWiseTimeToMarketCenter(BaseModel):
     """Ward wise time to market center (7.1.6 - from TypeScript schema)"""
@@ -217,6 +224,7 @@ class WardWiseTimeToMarketCenter(BaseModel):
 
 # ७.१.७ वसपार्क तथा वस विसौनी सम्बन्धी विवरण
 
+
 class WardWiseTimeToPublicTransport(BaseModel):
     """Ward wise time to public transport (7.1.6 - from TypeScript schema)"""
 
@@ -238,6 +246,7 @@ class WardWiseTimeToPublicTransport(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_time_duration_display()}"
+
 
 # ७.१.८ स्रोत नक्शा
 # ७.२ विद्युत तथा बैकल्पिक उर्जा
@@ -267,6 +276,7 @@ class WardWiseCookingFuel(BaseModel):
 
 # ७.२.२ बत्ति बाल्ने इन्धनको प्रयोगको आधारमा घरपरिवार
 
+
 class WardWiseElectricitySource(BaseModel):
     """Ward wise electricity source (7.2.2 - from TypeScript schema)"""
 
@@ -288,6 +298,7 @@ class WardWiseElectricitySource(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_electricity_source_display()}"
+
 
 # ७.२.३ जलविद्युत, सौर्य उर्जा, वायु उर्जाबाट विद्युत उत्पादन विवरण
 # ७.२.४ विद्युत उपलब्ध घरपरिवार विवरण
@@ -320,8 +331,10 @@ class WardWiseFacilities(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_facility_display()}"
 
+
 # ७.३.५ स्रोतनक्शाहरु
 # ७.४ आवास तथा भवन
+
 
 class WardWiseHouseholdFloor(BaseModel):
     """Ward wise household floor type (7.4.1 - from TypeScript schema)"""
@@ -344,7 +357,6 @@ class WardWiseHouseholdFloor(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_floor_type_display()}"
-
 
 
 class WardWiseHouseMapPassed(BaseModel):
@@ -373,6 +385,7 @@ class WardWiseHouseMapPassed(BaseModel):
 # ७.४.१ विद्यमान सतह ढलको अवस्था
 # ७.४.२ छानोको प्रकारका आधारमा घरधुरी
 
+
 class WardWiseHouseholdRoof(BaseModel):
     """Ward wise household roof type (7.4.2 - from TypeScript schema)"""
 
@@ -395,8 +408,9 @@ class WardWiseHouseholdRoof(BaseModel):
     def __str__(self):
         return f"वडा {self.ward_number} - {self.get_roof_type_display()}"
 
-# ७.४.३ गाउँ÷नगरपालिका अन्तर्गतका सरकारी भवन सम्बन्धी विवरण
-# ७.४.४ गाउँ÷नगरपालिका कार्यालयदेखि प्रत्येक वडा केन्द्रसम्मको दूरी
+
+# ७.४.३ गाउँ/नगरपालिका अन्तर्गतका सरकारी भवन सम्बन्धी विवरण
+# ७.४.४ गाउँ/नगरपालिका कार्यालयदेखि प्रत्येक वडा केन्द्रसम्मको दूरी
 # ७.४.५ पशुवधशालाको विवरण
 # ७.४.६ शव दाहस्थल सम्बन्धी विवरण
 # ७.४.८ स्रोत नक्शा

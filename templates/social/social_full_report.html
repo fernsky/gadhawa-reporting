@@ -15,11 +15,6 @@
         {% include 'social/literacy_status/literacy_status_report_partial.html' with municipality_data=all_social_data.literacy_status.municipality_data ward_data=all_social_data.literacy_status.ward_data total_population=all_social_data.literacy_status.total_population coherent_analysis=all_social_data.literacy_status.report_content pdf_charts=all_social_data.literacy_status.charts %}
     {% endif %}
 
-    <!-- Major Subject Section -->
-    {% if all_social_data.major_subject %}
-        {% include 'social/major_subject/major_subject_report_partial.html' with municipality_data=all_social_data.major_subject.municipality_data ward_data=all_social_data.major_subject.ward_data total_population=all_social_data.major_subject.total_population coherent_analysis=all_social_data.major_subject.report_content pdf_charts=all_social_data.major_subject.charts %}
-    {% endif %}
-
     <!-- Toilet Type Section -->
     {% if all_social_data.toilet_type %}
         {% include 'social/toilet_type/toilet_type_report_partial.html' with municipality_data=all_social_data.toilet_type.municipality_data ward_data=all_social_data.toilet_type.ward_data total_population=all_social_data.toilet_type.total_population coherent_analysis=all_social_data.toilet_type.report_content pdf_charts=all_social_data.toilet_type.charts %}

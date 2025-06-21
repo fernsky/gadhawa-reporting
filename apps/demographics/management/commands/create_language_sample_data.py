@@ -30,44 +30,27 @@ class Command(BaseCommand):
             "Creating language demographics data based on actual municipality-wide data..."
         )
 
-        # Raw ward-wise language data from actual census
-        raw_ward_data = [
-            (1, "MAGAR", 45),
-            (1, "NEPALI", 5530),
-            (1, "OTHER", 28),
-            (2, "MAGAR", 23),
-            (2, "NEPALI", 4242),
-            (3, "NEPALI", 3031),
-            (3, "OTHER", 7),
-            (4, "MAGAR", 2),
-            (4, "NEPALI", 4057),
-            (5, "NEPALI", 3406),
-            (6, "NEPALI", 4511),
-            (7, "MAGAR", 4),
-            (7, "NEPALI", 2557),
-            (7, "OTHER", 52),
+        # Actual municipality-wide language population data
+        municipality_language_data = [
+            (35, "GURUNG"),
+            (74, "MAGAR"),
+            (52, "MAJHI"),
+            (27334, "NEPALI"),
         ]
-
-        # Aggregate data by language for municipality-wide totals
-        language_totals = {}
-        for ward, language, population in raw_ward_data:
-            if language not in language_totals:
-                language_totals[language] = 0
-            language_totals[language] += population
 
         # Convert to the format expected by the rest of the code
         language_data = []
-        for language_enum, total_population in language_totals.items():
+        for population, language_enum in municipality_language_data:
             language_data.append(
                 {
                     "id": str(uuid.uuid4()),
                     "language": language_enum,
-                    "population": total_population,
+                    "population": population,
                 }
             )
 
         self.stdout.write(
-            f"Processing {len(raw_ward_data)} ward-level records into {len(language_data)} municipality-wide language categories..."
+            f"Processing {len(municipality_language_data)} municipality-wide language records into {len(language_data)} language categories..."
         )
 
         existing_count = MunicipalityWideMotherTonguePopulation.objects.count()

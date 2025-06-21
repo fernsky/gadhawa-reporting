@@ -68,30 +68,12 @@
                                 </td>
                             {% endif %}
                         {% endfor %}
-                        <td style="text-align: right; font-weight: bold;">{{ ward_info.total_population|nepali_number }}</td>
+                        <td style="text-align: right; font-weight: bold;">
+                            {{ ward_info.demographics|calculate_ward_total|nepali_number }}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
-                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: center;">जम्मा</td>
-                    {% for gender_type, data in househead_data.items %}
-                        {% if data.population > 0 %}
-                            <td style="text-align: right;">{{ data.population|nepali_number }}</td>
-                        {% endif %}
-                    {% endfor %}
-                    <td style="text-align: right;">{{ total_population|nepali_number }}</td>
-                </tr>
-                <tr style="font-weight: bold; background-color: #e5f3ff; border-top: 1px solid #333;">
-                    <td style="text-align: center;">प्रतिशत</td>
-                    {% for gender_type, data in househead_data.items %}
-                        {% if data.population > 0 %}
-                            <td style="text-align: right;">{{ data.percentage|nepali_percentage }}</td>
-                        {% endif %}
-                    {% endfor %}
-                    <td style="text-align: right;">१००.०%</td>
-                </tr>
-            </tfoot>
         </table>
     </div>
     {% endif %}
