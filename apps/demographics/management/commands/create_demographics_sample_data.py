@@ -44,6 +44,7 @@ class Command(BaseCommand):
                 "create_economically_active_sample_data",
                 "Economically Active Demographics",
             ),
+            ("create_age_gender_sample_data", "Age Gender Sample Data"),
         ]
 
         successful_commands = []

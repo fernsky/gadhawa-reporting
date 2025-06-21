@@ -217,7 +217,19 @@
   <div class="toc-item level-1">
     <span class="toc-link">३. पारिवारिक विवरण तथा जनसंख्याको अवस्था</span>
     <span class="page-ref"><a href="#category-demographics"></a></span>
-  </div>  <div class="toc-item level-2">
+  </div>
+  
+  <div class="toc-item level-2">
+    <span class="toc-link">३.२ जनसंख्या वितरणको अवस्था</span>
+    <span class="page-ref"><a href="#section-demographic-summary"></a></span>
+  </div>
+  
+  <div class="toc-item level-2">
+    <span class="toc-link">३.३ उमेर तथा लिङ्गको आधारमा जनसंख्या विवरण</span>
+    <span class="page-ref"><a href="#section-age-gender-demographics"></a></span>
+  </div>
+  
+  <div class="toc-item level-2">
     <span class="toc-link">३.४ मातृभाषाको आधारमा जनसंख्या विवरण</span>
     <span class="page-ref"><a href="#section-language-demographics"></a></span>
   </div>
@@ -394,12 +406,22 @@
         </div>
       </div>
       
+      <!-- Demographic Summary Section -->
+      {% if all_demographics_data.demographic_summary %}
+        {% include 'demographics/demographic_summary/demographic_summary_report_partial.html' with data=all_demographics_data.demographic_summary.data report_content=all_demographics_data.demographic_summary.report_content %}
+      {% endif %}
+      
       <!-- Ward Settlement Demographics Section -->
       {% include 'demographics/ward_settlement/ward_settlement_report_partial.html' with ward_data=all_demographics_data.ward_settlement.data total_settlements=all_demographics_data.ward_settlement.total_settlements total_wards=all_demographics_data.ward_settlement.total_wards report_content=all_demographics_data.ward_settlement.report_content %}
 
       <!-- Ward Household Demographics Section -->
       {% if all_demographics_data.ward_household %}
         {% include 'demographics/ward_household/ward_household_report_partial.html' with data=all_demographics_data.ward_household.data summary_stats=all_demographics_data.ward_household.summary_stats charts=all_demographics_data.ward_household.charts report_content=all_demographics_data.ward_household.report_content %}
+      {% endif %}
+
+      <!-- Age-Gender Demographics Section -->
+      {% if all_demographics_data.age_gender %}
+        {% include 'demographics/age_gender/age_gender_report_partial.html' with age_gender_data=all_demographics_data.age_gender.data ward_data=all_demographics_data.age_gender.ward_data total_population=all_demographics_data.age_gender.total_population total_male=all_demographics_data.age_gender.total_male total_female=all_demographics_data.age_gender.total_female male_percentage=all_demographics_data.age_gender.male_percentage female_percentage=all_demographics_data.age_gender.female_percentage demographic_indicators=all_demographics_data.age_gender.demographic_indicators dependency_ratios=all_demographics_data.age_gender.dependency_ratios coherent_analysis=all_demographics_data.age_gender.report_content charts=all_demographics_data.age_gender.charts %}
       {% endif %}
 
       <!-- Language Demographics Section -->

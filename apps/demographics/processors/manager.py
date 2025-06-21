@@ -13,6 +13,7 @@ from .economically_active import EconomicallyActiveProcessor
 from .ward_settlement import WardSettlementProcessor
 from .ward_household import WardHouseholdProcessor
 from .demographic_summary import DemographicSummaryProcessor
+from .age_gender import AgeGenderProcessor
 
 
 class DemographicsManager:
@@ -23,6 +24,7 @@ class DemographicsManager:
             "demographic_summary": DemographicSummaryProcessor(),
             "ward_settlement": WardSettlementProcessor(),
             "ward_household": WardHouseholdProcessor(),
+            "age_gender": AgeGenderProcessor(),
             "religion": ReligionProcessor(),
             "language": LanguageProcessor(),
             "caste": CasteProcessor(),

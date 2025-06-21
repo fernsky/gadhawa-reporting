@@ -1,0 +1,274 @@
+{% load nepali_filters %}
+{% load chart_tags %}
+
+<!-- Age-Gender Demographics Report Partial for PDF -->
+<p class="section-content age-gender-demographics-section" id="section-age-gender-demographics">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ३.३ उमेर तथा लिङ्गको आधारमा जनसंख्या विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Population Pyramid Chart -->
+    {% if age_gender_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.३.१: उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                
+                <!-- Try chart management system first, prioritizing PNG -->
+                {% chart_url "demographics_age_gender_pyramid" as pyramid_chart_url %}
+                {% if pyramid_chart_url %}
+                    <img src="{{ pyramid_chart_url }}" alt="उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_png %}
+                    <img src="{% static charts.pyramid_chart_png %}" alt="उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_url %}
+                    <img src="{{ charts.pyramid_chart_url }}" alt="उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_svg %}
+                    <img src="{% static charts.pyramid_chart_svg %}" alt="उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% else %}
+                    <img src="{% static 'images/charts/demographics_age_gender_pyramid.png' %}" alt="उमेर तथा लिङ्गको आधारमा जनसंख्या पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Ward-wise Age-Gender Table (Matrix) -->
+    {% if ward_data and age_gender_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.३.१: वडागत उमेर समूह र लिङ्ग अनुसार जनसंख्या विवरण</h3>
+        <table class="pdf-data-table ward-age-gender-block-table">
+            <thead>
+                <tr>
+                    <th>वडा नं.</th>
+                    <th>उमेर समूह</th>
+                    <th>पुरुष</th>
+                    <th>महिला</th>
+                    <th>जम्मा</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in ward_data.items %}
+                    <tr style="background-color: #e0e7ef; font-weight: bold;">
+                        <td colspan="5" style="text-align: left;">वडा {{ ward_num|nepali_number }}</td>
+                    </tr>
+                    {% for age_group, data in age_gender_data.items %}
+                        <tr>
+                            <td></td>
+                            <td>{{ data.name_nepali }}</td>
+                            <td style="text-align: right;">{{ ward_info.age_groups|get_item:age_group|get_item:'male'|nepali_number }}</td>
+                            <td style="text-align: right;">{{ ward_info.age_groups|get_item:age_group|get_item:'female'|nepali_number }}</td>
+                            <td style="text-align: right; font-weight: bold;">{{ ward_info.age_groups|get_item:age_group|get_item:'total'|nepali_number }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr style="font-weight: bold; background-color: #f3f4f6;">
+                        <td></td>
+                        <td>जम्मा</td>
+                        <td style="text-align: right;">{{ ward_info.male|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.female|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.total|nepali_number }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Demographic Indicators Summary -->
+    {% if demographic_indicators %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.३.३: जनसांख्यिकीय सूचकांकहरू</h3>
+        <table class="pdf-data-table demographic-indicators-table">
+            <thead>
+                <tr>
+                    <th>सूचकांक</th>
+                    <th>मान</th>
+                    <th>टिप्पणी</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left;">लिङ्गीय अनुपात</td>
+                    <td style="text-align: right;">{{ demographic_indicators.gender_ratio|floatformat:1|nepali_number }}</td>
+                    <td style="text-align: left;">प्रति सय महिलामा पुरुष</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">युवा जनसंख्या प्रतिशत</td>
+                    <td style="text-align: right;">{{ demographic_indicators.youth_percentage|floatformat:1|nepali_number }}%</td>
+                    <td style="text-align: left;">१५-३९ वर्ष उमेर समूह</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">प्रजनन उमेरका महिला</td>
+                    <td style="text-align: right;">{{ demographic_indicators.reproductive_women_percentage|floatformat:1|nepali_number }}%</td>
+                    <td style="text-align: left;">१५-४९ वर्ष उमेरका महिला</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">बाल निर्भरता अनुपात</td>
+                    <td style="text-align: right;">{{ dependency_ratios.child_dependency_ratio|floatformat:1|nepali_number }}</td>
+                    <td style="text-align: left;">प्रति सय कामदार उमेरमा बालबालिका</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">वृद्ध निर्भरता अनुपात</td>
+                    <td style="text-align: right;">{{ dependency_ratios.elderly_dependency_ratio|floatformat:1|nepali_number }}</td>
+                    <td style="text-align: left;">प्रति सय कामदार उमेरमा वृद्धवृद्धा</td>
+                </tr>
+                <tr style="font-weight: bold; background-color: #f8fafc;">
+                    <td style="text-align: left;">कुल निर्भरता अनुपात</td>
+                    <td style="text-align: right;">{{ dependency_ratios.total_dependency_ratio|floatformat:1|nepali_number }}</td>
+                    <td style="text-align: left;">प्रति सय कामदार उमेरमा निर्भर जनसंख्या</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.age-gender-demographics-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.age-gender-summary-table th,
+.age-gender-summary-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+}
+
+.ward-age-gender-table th,
+.ward-age-gender-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+.demographic-indicators-table th,
+.demographic-indicators-table td {
+    font-size: 10pt;
+    padding: 6px 8px;
+    border: 1px solid #333;
+}
+
+.demographic-indicators-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pdf-chart-container {
+    border: none;
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 600px;
+    height: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 600px;
+    height: auto;
+}
+
+.pyramid-chart {
+    max-height: 800px !important;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.ward-age-gender-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ward-age-gender-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Print optimization */
+@media print {
+    .age-gender-demographics-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>
