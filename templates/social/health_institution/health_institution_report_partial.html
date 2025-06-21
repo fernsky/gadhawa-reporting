@@ -1,0 +1,271 @@
+{% load nepali_filters %}
+{% load househead_filters %}
+
+<!-- Health Institution Report Section (५.२.१) -->
+<div class="section-content health-institution-section" id="section-health-institution">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        {{ section_title|default:"५.२.१ स्वास्थ्य संस्था (अस्पताल, प्राथमिक स्वास्थ्य केन्द्र, स्वास्थ्य चौकी र आयुर्वेद केन्द्र) को विवरण" }}
+    </h2>
+
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        {{ coherent_analysis|linebreaks|safe }}
+    </div>
+
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if municipality_data %}
+    <div class="chart-section">
+        <h3 class="chart-title">गाउँपालिकामा स्वास्थ्य संस्थाको प्रकार अनुसार वितरण</h3>
+        {% if municipality_chart_path %}
+        <div class="pdf-chart-container">
+            <img src="{{ municipality_chart_path }}" alt="Health Institution Distribution Chart" class="pdf-chart-image">
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Bar Chart for Ward-wise Distribution -->
+    {% if ward_data %}
+    <div class="chart-section">
+        <h3 class="chart-title">वडागत स्वास्थ्य संस्थाको वितरण</h3>
+        {% if ward_chart_path %}
+        <div class="pdf-chart-container">
+            <img src="{{ ward_chart_path }}" alt="Ward-wise Health Institution Chart" class="pdf-chart-image">
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Detailed Institution Table -->
+    {% if detailed_data %}
+    <div class="table-section">
+        <h3 class="table-title">स्वास्थ्य संस्थाहरूको विस्तृत विवरण</h3>
+        <table class="pdf-data-table health-institution-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">क्र.सं.</th>
+                    <th style="width: 12%;">वडा नं.</th>
+                    <th style="width: 50%;">संस्थाको नाम</th>
+                    <th style="width: 30%;">संस्थाको प्रकार</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for institution in detailed_data %}
+                <tr>
+                    <td style="text-align: center;">{{ forloop.counter|to_nepali_digits }}</td>
+                    <td style="text-align: center;">{{ institution.ward_number|to_nepali_digits }}</td>
+                    <td>{{ institution.name }}</td>
+                    <td>{{ institution.type_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Summary Statistics Table -->
+    {% if municipality_data %}
+    <div class="table-section">
+        <h3 class="table-title">संस्था प्रकार अनुसार सारांश</h3>
+        <table class="pdf-data-table summary-table">
+            <thead>
+                <tr>
+                    <th style="width: 70%;">संस्थाको प्रकार</th>
+                    <th style="width: 15%;">संख्या</th>
+                    <th style="width: 15%;">प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type, count in municipality_data.items %}
+                <tr>
+                    <td>{{ type|get_choice_display:'HealthInstitutionTypeChoice' }}</td>
+                    <td style="text-align: center;">{{ count|to_nepali_digits }}</td>
+                    <td style="text-align: center;">
+                        {% widthratio count total_institutions 100 as percentage %}
+                        {{ percentage|to_nepali_digits }}%
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr class="total-row">
+                    <td><strong>कुल जम्मा</strong></td>
+                    <td style="text-align: center;"><strong>{{ total_institutions|to_nepali_digits }}</strong></td>
+                    <td style="text-align: center;"><strong>{{ "100"|to_nepali_digits }}%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Ward-wise Summary Table -->
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">वडागत स्वास्थ्य संस्था वितरण</h3>
+        <table class="pdf-data-table ward-summary-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">वडा नं.</th>
+                    <th style="width: 20%;">स्वास्थ्य चौकी</th>
+                    <th style="width: 25%;">सामुदायिक स्वास्थ्य इकाइ</th>
+                    <th style="width: 25%;">प्राथमिक स्वास्थ्य केन्द्र</th>
+                    <th style="width: 15%;">कुल जम्मा</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num in ward_data.keys|sort_list %}
+                <tr>
+                    <td style="text-align: center;">{{ ward_num|to_nepali_digits }}</td>
+                    <td style="text-align: center;">
+                        {{ ward_data|dict_get:ward_num|dict_get:"HEALTH_POST"|default:0|to_nepali_digits }}
+                    </td>
+                    <td style="text-align: center;">
+                        {{ ward_data|dict_get:ward_num|dict_get:"COMMUNITY_HEALTH_UNIT"|default:0|to_nepali_digits }}
+                    </td>
+                    <td style="text-align: center;">
+                        {{ ward_data|dict_get:ward_num|dict_get:"PRIMARY_HEALTH_CENTER"|default:0|to_nepali_digits }}
+                    </td>
+                    <td style="text-align: center;">
+                        {% ward_total_institutions ward_data ward_num as ward_total %}
+                        <strong>{{ ward_total|to_nepali_digits }}</strong>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- No Data Message -->
+    {% if not municipality_data and not ward_data %}
+    <div class="no-data-message">
+        <p><em>स्वास्थ्य संस्था सम्बन्धी तथ्यांक उपलब्ध छैन।</em></p>
+    </div>
+    {% endif %}
+
+    <!-- No Analysis Message -->
+    {% if not coherent_analysis %}
+    <div class="no-analysis-message">
+        <p><em>स्वास्थ्य संस्था विश्लेषण उपलब्ध छैन।</em></p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* PDF-specific styles */
+.health-institution-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    color: #1e40af;
+}
+
+.health-institution-table th,
+.health-institution-table td {
+    border: 1px solid #333;
+    padding: 3px;
+    vertical-align: middle;
+}
+
+.health-institution-table th {
+    background-color: #f8fafc;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+.summary-table .total-row {
+    background-color: #f0f9ff;
+    border-top: 2px solid #1e40af;
+}
+
+.ward-summary-table th,
+.ward-summary-table td {
+    text-align: center;
+    padding: 4px;
+}
+
+.pdf-chart-container {
+    border: none;    
+    text-align: center;
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    height: auto;
+    border: none;
+}
+
+.chart-title,
+.table-title {
+    color: #1e40af;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.content-paragraph {
+    margin-bottom: 1.5em;
+    line-height: 1.6;
+}
+
+.content-paragraph p {
+    margin-bottom: 1em;
+    text-align: justify;
+}
+
+.content-section {
+    margin-bottom: 2em;
+}
+
+.chart-section {
+    margin-bottom: 2em;
+}
+
+.table-section {
+    margin-bottom: 2em;
+}
+
+.no-data-message,
+.no-analysis-message {
+    text-align: center;
+    font-style: italic;
+    color: #6b7280;
+    margin: 2em 0;
+}
+
+/* Print optimization */
+@media print {
+    .health-institution-section {
+        page-break-inside: avoid;
+    }
+    
+    .pdf-data-table {
+        font-size: 8pt;
+    }
+    
+    .chart-section,
+    .table-section {
+        page-break-inside: avoid;
+    }
+}
+</style>

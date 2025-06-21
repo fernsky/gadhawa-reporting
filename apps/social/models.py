@@ -414,41 +414,69 @@ class WardWiseSchoolDropout(BaseModel):
 # ५.२ स्वास्थ्य तथा पोषण
 # ५.२.१ स्वास्थ्य संस्था (अस्पताल, प्राथमिक स्वास्थ्य केन्द्र, स्वास्थ्य चौकी र आयुर्वेद केन्द्र) को विवरण
 class HealthInstitutionTypeChoice(models.TextChoices):
-    HEALTH_POST = "HEALTH_POST", _("स्वास्थ्य चौकी")
+    HOSPITAL = "HOSPITAL", _("अस्पताल")
     PRIMARY_HEALTH_CENTER = "PRIMARY_HEALTH_CENTER", _("प्राथमिक स्वास्थ्य केन्द्र")
-    COMMUNITY_HEALTH_UNIT = "COMMUNITY_HEALTH_UNIT", _("सामुदायिक स्वास्थ्य इकाई")
+    HEALTH_POST = "HEALTH_POST", _("स्वास्थ्य चौकी")
+    AYURVEDA_CENTER = "AYURVEDA_CENTER", _("आयुर्वेद केन्द्र")
+    COMMUNITY_HEALTH_UNIT = "COMMUNITY_HEALTH_UNIT", _("सामुदायिक स्वास्थ्य इकाइ")
+    SUB_HEALTH_POST = "SUB_HEALTH_POST", _("उप स्वास्थ्य चौकी")
+    BIRTHING_CENTER = "BIRTHING_CENTER", _("प्रसूति केन्द्र")
+    CLINIC = "CLINIC", _("क्लिनिक")
+    OTHER = "OTHER", _("अन्य")
 
 
-class HealthInstitution(BaseModel):
-    """Health Institution (5.2.1 - स्वास्थ्य संस्था)"""
+class WardWiseHealthInstitution(BaseModel):
+    """Ward wise health institutions details (5.2.1)
+
+    This model handles data for health institutions across different wards
+    including hospitals, health posts, primary health centers, and ayurvedic centers.
+    """
 
     ward_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(9)],
         verbose_name=_("वडा नं."),
     )
-    name = models.CharField(max_length=200, verbose_name=_("संस्थाको नाम"))
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("स्वास्थ्य संस्थाको नाम"),
+        help_text=_("Full name of the health institution"),
+    )
     institution_type = models.CharField(
-        max_length=25,
+        max_length=50,
         choices=HealthInstitutionTypeChoice.choices,
         verbose_name=_("संस्थाको प्रकार"),
     )
 
     class Meta:
-        verbose_name = _("स्वास्थ्य संस्था")
-        verbose_name_plural = _("स्वास्थ्य संस्थाहरू")
+        verbose_name = _("वडागत स्वास्थ्य संस्था विवरण")
+        verbose_name_plural = _("वडागत स्वास्थ्य संस्था विवरण")
         unique_together = ["ward_number", "name"]
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.name}"
 
-    def save(self, *args, **kwargs):
-        # Auto-detect institution type from name
+    def get_institution_type_from_name(self):
+        """Automatically determine institution type from name"""
+        name = self.name.lower()
         if "चौकी" in self.name:
-            self.institution_type = HealthInstitutionTypeChoice.HEALTH_POST
-        elif "आ.स्वा.से.के" in self.name:
-            self.institution_type = HealthInstitutionTypeChoice.PRIMARY_HEALTH_CENTER
+            return HealthInstitutionTypeChoice.HEALTH_POST
+        elif "आ.स्वा.से.के." in self.name:
+            return HealthInstitutionTypeChoice.PRIMARY_HEALTH_CENTER
         elif "सा.स्वा.इकाइ" in self.name:
-            self.institution_type = HealthInstitutionTypeChoice.COMMUNITY_HEALTH_UNIT
+            return HealthInstitutionTypeChoice.COMMUNITY_HEALTH_UNIT
+        elif "अस्पताल" in name:
+            return HealthInstitutionTypeChoice.HOSPITAL
+        elif "आयुर्वेद" in name:
+            return HealthInstitutionTypeChoice.AYURVEDA_CENTER
+        elif "क्लिनिक" in name:
+            return HealthInstitutionTypeChoice.CLINIC
+        else:
+            return HealthInstitutionTypeChoice.OTHER
+
+    def save(self, *args, **kwargs):
+        """Auto-populate institution type if not provided"""
+        if not self.institution_type:
+            self.institution_type = self.get_institution_type_from_name()
         super().save(*args, **kwargs)
 
 

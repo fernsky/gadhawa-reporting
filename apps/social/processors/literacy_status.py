@@ -274,3 +274,24 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
         )
 
         return " ".join(content)
+
+    def process_for_pdf(self):
+        """Process literacy status data for PDF generation including charts"""
+        # Get raw data
+        data = self.get_data()
+
+        # Generate analysis text
+        coherent_analysis = self.generate_analysis_text(data)
+
+        # Generate and save charts
+        charts = self.generate_and_save_charts(data)
+
+        return {
+            "municipality_data": data.get("municipality_data", {}),
+            "ward_data": data.get("ward_data", {}),
+            "total_population": data.get("total_population", 0),
+            "coherent_analysis": coherent_analysis,
+            "pdf_charts": {"literacy_status": charts},
+            "section_title": self.get_section_title(),
+            "section_number": self.get_section_number(),
+        }

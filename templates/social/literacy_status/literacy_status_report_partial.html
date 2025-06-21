@@ -7,7 +7,7 @@
     ५.१.१ पाँच वर्षभन्दा माथि र १५ बर्षभन्दा माथिको साक्षरता विवरण
   </h2>
 
-  <!-- Analysis Content -->
+  <!-- Coherent Analysis Text -->
   <div class="content-section">
     <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
   </div>
@@ -89,6 +89,13 @@
   {% if not municipality_data and not ward_data %}
     <div class="no-data-message" style="text-align: center; padding: 2em; background-color: #fef3c7; border-radius: 8px; margin: 1em 0;">
       <p>साक्षरता सम्बन्धी डाटा उपलब्ध छैन</p>
+    </div>
+  {% endif %}
+
+  <!-- No Analysis Message -->
+  {% if not coherent_analysis %}
+    <div class="no-analysis-message" style="text-align: center; padding: 1.5em; background-color: #fef2f2; border-radius: 8px; margin: 1em 0; border: 1px solid #fecaca;">
+      <p>साक्षरता स्थितिको विश्लेषण उपलब्ध छैन</p>
     </div>
   {% endif %}
 </div>

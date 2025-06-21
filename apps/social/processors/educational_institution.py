@@ -92,6 +92,9 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     "female_students": female,
                     "total_students": total,
                     "percentage": 0,  # Will be calculated later
+                    "gender_ratio": (
+                        round((female / total) * 100, 1) if total > 0 else 0
+                    ),
                     "name_nepali": self._get_level_name_nepali(level),
                 }
 
@@ -145,6 +148,10 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     ).order_by("-male_students", "-female_students")
 
                     for inst in institutions:
+                        inst_male = inst.male_students or 0
+                        inst_female = inst.female_students or 0
+                        inst_total = inst_male + inst_female
+
                         ward_data[ward_num]["institutions"].append(
                             {
                                 "name": inst.institution_name,
@@ -152,9 +159,14 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                                 "level_nepali": self._get_level_name_nepali(
                                     inst.school_level
                                 ),
-                                "male_students": inst.male_students,
-                                "female_students": inst.female_students,
-                                "total_students": inst.total_students,
+                                "male_students": inst_male,
+                                "female_students": inst_female,
+                                "total_students": inst_total,
+                                "gender_ratio": (
+                                    round((inst_female / inst_total) * 100, 1)
+                                    if inst_total > 0
+                                    else 0
+                                ),
                             }
                         )
 

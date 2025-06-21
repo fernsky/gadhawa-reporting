@@ -72,6 +72,7 @@
           <th>महिला विद्यार्थी</th>
           <th>कुल विद्यार्थी</th>
           <th>प्रतिशत</th>
+          <th>लैङ्गिक अनुपात (%)</th>
         </tr>
       </thead>
       <tbody>
@@ -83,6 +84,7 @@
           <td class="number-cell">{{ data.female_students|nepali_number }}</td>
           <td class="number-cell total-cell">{{ data.total_students|nepali_number }}</td>
           <td class="percentage-cell">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+          <td class="percentage-cell">{{ data.gender_ratio|floatformat:1|nepali_number }}%</td>
         </tr>
         {% endfor %}
         <tr class="total-row">
@@ -92,6 +94,7 @@
           <td class="number-cell total-cell"><strong>{{ total_female_students|nepali_number }}</strong></td>
           <td class="number-cell grand-total-cell"><strong>{{ total_students|nepali_number }}</strong></td>
           <td class="percentage-cell"><strong>१००.०%</strong></td>
+          <td class="percentage-cell"><strong>{{ gender_ratio|floatformat:1|nepali_number }}%</strong></td>
         </tr>
       </tbody>
     </table>
@@ -130,11 +133,7 @@
             <td class="number-cell">{{ institution.female_students|nepali_number }}</td>
             <td class="number-cell total-cell">{{ institution.total_students|nepali_number }}</td>
             <td class="percentage-cell">
-              {% if institution.total_students > 0 %}
-                {{ institution.female_students|nepali_percentage:institution.total_students|floatformat:1|nepali_number }}%
-              {% else %}
-                ०.०%
-              {% endif %}
+              {{ institution.gender_ratio|floatformat:1|nepali_number }}%
             </td>
           </tr>
           {% endfor %}

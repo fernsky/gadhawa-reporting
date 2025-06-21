@@ -19,7 +19,7 @@
   <!-- Pie Chart for Teacher Distribution by Level -->
   {% if municipality_data_by_level %}
   <div class="chart-section">
-    <div class="chart-title">शिक्षकको तह अनुसार वितरण</div>
+    <h3 class="chart-title">चित्र ५.१.५.१: शिक्षकको तह अनुसार वितरण</h3>
     <div class="pdf-chart-container">
       {% load static %}
       <img src="{% static 'images/charts/teacher_staffing_pie_chart.png' %}" alt="शिक्षकको तह अनुसार वितरण" class="pdf-chart-image">
@@ -30,7 +30,7 @@
   <!-- Bar Chart for Ward-wise Teacher Distribution -->
   {% if ward_data %}
   <div class="chart-section">
-    <div class="chart-title">वडागत शिक्षक वितरण</div>
+    <h3 class="chart-title">चित्र ५.१.५.२: वडागत शिक्षक वितरण</h3>
     <div class="pdf-chart-container">
       {% load static %}
       <img src="{% static 'images/charts/teacher_staffing_bar_chart.png' %}" alt="वडागत शिक्षक वितरण" class="pdf-chart-image">
