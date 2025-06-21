@@ -204,16 +204,4 @@ Thumbs.db
 /exports/
 /backups/
 *.pdf
-static/images/charts/caste_pie_chart.png
-static/images/charts/caste_pie_chart.svg
-static/images/charts/language_pie_chart.png
-static/images/charts/language_pie_chart.svg
-static/images/charts/religion_pie_chart.png
-static/images/charts/religion_pie_chart.svg
-apps/social/processors/solid_waste_management.py
-static/images/charts/caste_pie_chart.png
-static/images/charts/caste_pie_chart.svg
-static/images/charts/language_pie_chart.png
-static/images/charts/language_pie_chart.svg
-static/images/charts/religion_pie_chart.png
-static/images/charts/religion_pie_chart.svg
+
