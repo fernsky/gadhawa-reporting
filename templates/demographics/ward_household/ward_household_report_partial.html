@@ -1,0 +1,333 @@
+{% load nepali_filters %}
+{% load chart_tags %}
+
+<!-- Ward Household Demographics Report Partial for PDF -->
+<p class="section-content ward-household-demographics-section" id="section-ward-household-demographics">
+    <h3 class="section-header level-3" style="color: #1e40af; font-size: 14pt; margin-top: 1.5em; margin-bottom: 1em;">
+        ३.१.२ घरपरिवारको विवरण
+    </h3>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">
+            {% if report_content.coherent_analysis %}
+                {{ report_content.coherent_analysis|linebreaks }}
+            {% elif coherent_analysis %}
+                {{ coherent_analysis|linebreaks }}
+            {% elif report_content %}
+                {{ report_content|linebreaks }}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Population Comparison Bar Chart -->
+    {% if data.ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.१.२.१: वडागत जनसंख्या तुलना</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                
+                <!-- Try chart management system first -->
+                {% chart_url "demographics_ward_household_population" as pop_chart_url %}
+                {% if pop_chart_url %}
+                    <img src="{{ pop_chart_url }}" alt="वडागत जनसंख्या तुलना" class="pdf-chart-image">
+                {% elif charts.population_bar_chart_url %}
+                    <img src="{{ charts.population_bar_chart_url }}" alt="वडागत जनसंख्या तुलना" class="pdf-chart-image">
+                {% else %}
+                    <p style="text-align: center; color: #666;">चित्र उपलब्ध छैन</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Population Density Comparison Bar Chart -->
+    {% if data.ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.१.२.२: वडागत जनसंख्या घनत्व तुलना</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                
+                <!-- Try chart management system first -->
+                {% chart_url "demographics_ward_household_density" as density_chart_url %}
+                {% if density_chart_url %}
+                    <img src="{{ density_chart_url }}" alt="वडागत जनसंख्या घनत्व तुलना" class="pdf-chart-image">
+                {% elif charts.density_bar_chart_url %}
+                    <img src="{{ charts.density_bar_chart_url }}" alt="वडागत जनसंख्या घनत्व तुलना" class="pdf-chart-image">
+                {% else %}
+                    <p style="text-align: center; color: #666;">चित्र उपलब्ध छैन</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Latest Year Detailed Table -->
+    {% if data.ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१.२.१: वडागत घरपरिवारको विस्तृत विवरण (वर्ष {{ data.latest_year|default:"२०८१" }})</h3>
+        <table class="pdf-data-table ward-household-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">वडा नं.</th>
+                    <th rowspan="2">वडाको नाम</th>
+                    <th colspan="4">जनसंख्या</th>
+                    <th rowspan="2">कुल<br/>घरपरिवार</th>
+                    <th rowspan="2">औसत<br/>घरपरिवार<br/>आकार</th>
+                    <th rowspan="2">क्षेत्रफल<br/>(वर्ग कि.मी.)</th>
+                    <th rowspan="2">जनघनत्व<br/>(प्रति वर्ग कि.मी.)</th>
+                    <th rowspan="2">लिङ्ग<br/>अनुपात</th>
+                </tr>
+                <tr>
+                    <th>कुल</th>
+                    <th>पुरुष</th>
+                    <th>महिला</th>
+                    <th>अन्य</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in data.ward_data.items %}
+                <tr>
+                    <td style="text-align: center;">{{ ward_num|nepali_number }}</td>
+                    <td>{{ ward_info.ward_name|default:"वडा नं. "|add:ward_num }}</td>
+                    <td style="text-align: right;">{{ ward_info.total_population|nepali_number }}</td>
+                    <td style="text-align: right;">{{ ward_info.male_population|nepali_number }}</td>
+                    <td style="text-align: right;">{{ ward_info.female_population|nepali_number }}</td>
+                    <td style="text-align: right;">{{ ward_info.other_population|nepali_number }}</td>
+                    <td style="text-align: right;">{{ ward_info.total_households|nepali_number }}</td>
+                    <td style="text-align: right;">{{ ward_info.average_household_size|floatformat:1 }}</td>
+                    <td style="text-align: right;">{{ ward_info.area_sq_km|floatformat:2 }}</td>
+                    <td style="text-align: right;">{{ ward_info.population_density|floatformat:2 }}</td>
+                    <td style="text-align: right;">{{ ward_info.sex_ratio|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2">जम्मा</th>
+                    <th style="text-align: right;">{{ summary_stats.total_population|nepali_number }}</th>
+                    <th style="text-align: right;">{{ summary_stats.total_male|nepali_number }}</th>
+                    <th style="text-align: right;">{{ summary_stats.total_female|nepali_number }}</th>
+                    <th style="text-align: right;">०</th>
+                    <th style="text-align: right;">{{ summary_stats.total_households|nepali_number }}</th>
+                    <th style="text-align: right;">{{ summary_stats.overall_avg_household_size|floatformat:2 }}</th>
+                    <th style="text-align: right;">-</th>
+                    <th style="text-align: right;">-</th>
+                    <th style="text-align: right;">{{ summary_stats.overall_sex_ratio|floatformat:2 }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Time Series Comparison Table (if multiple years available) -->
+    {% if data.comparison_years|length > 1 %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१.२.२: वडागत जनसंख्या र घरपरिवारको समयानुसार तुलना</h3>
+        <table class="pdf-data-table ward-household-comparison-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">वडा नं.</th>
+                    <th rowspan="2">वडाको नाम</th>
+                    {% for year in data.comparison_years %}
+                    <th colspan="2">वर्ष {{ year|nepali_number }}</th>
+                    {% endfor %}
+                    {% if data.comparison_years|length == 2 %}
+                    <th rowspan="2">वृद्धि दर<br/>(%)</th>
+                    {% endif %}
+                </tr>
+                <tr>
+                    {% for year in data.comparison_years %}
+                    <th>जनसंख्या</th>
+                    <th>घरपरिवार</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num in data.ward_data.keys %}
+                <tr>
+                    <td style="text-align: center;">{{ ward_num|nepali_number }}</td>
+                    <td>{% with ward_info=data.ward_data|get_item:ward_num %}{{ ward_info.ward_name|default:"वडा नं. "|add:ward_num }}{% endwith %}</td>
+                    {% for year in data.comparison_years %}
+                        {% if data.time_series_data|get_item:year|get_item:ward_num %}
+                            <td style="text-align: right;">{{ data.time_series_data|get_item:year|get_item:ward_num.total_population|nepali_number }}</td>
+                            <td style="text-align: right;">{{ data.time_series_data|get_item:year|get_item:ward_num.total_households|nepali_number }}</td>
+                        {% else %}
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: center;">-</td>
+                        {% endif %}
+                    {% endfor %}
+                    {% if data.comparison_years|length == 2 %}
+                        <td style="text-align: center;">-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.ward-household-demographics-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 8pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 3px 4px;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.2;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+    font-size: 8pt;
+}
+
+.ward-household-table th,
+.ward-household-table td,
+.ward-household-comparison-table th,
+.ward-household-comparison-table td {
+    font-size: 8pt;
+    padding: 3px 4px;
+}
+
+.ward-household-table th {
+    background-color: #e8f4f8;
+    font-size: 7pt;
+    padding: 2px 3px;
+}
+
+.ward-household-comparison-table th {
+    background-color: #f0f8ff;
+    font-size: 7pt;
+    padding: 2px 3px;
+}
+
+.pdf-chart-container {
+    border: none;
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 350px;
+    height: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 350px;
+    height: auto;
+}
+
+.chart-title,
+.table-title {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.ward-household-table tbody tr:nth-child(even),
+.ward-household-comparison-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ward-household-table tbody tr:hover,
+.ward-household-comparison-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.ward-household-table tfoot tr,
+.ward-household-comparison-table tfoot tr {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+
+/* Responsive table for smaller content */
+@media print {
+    .pdf-data-table {
+        font-size: 7pt;
+    }
+    
+    .pdf-data-table th,
+    .pdf-data-table td {
+        padding: 2px 3px;
+    }
+    
+    .ward-household-table th,
+    .ward-household-table td,
+    .ward-household-comparison-table th,
+    .ward-household-comparison-table td {
+        font-size: 7pt;
+        padding: 2px 3px;
+    }
+}
+
+/* Print optimization */
+@media print {
+    .ward-household-demographics-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>
