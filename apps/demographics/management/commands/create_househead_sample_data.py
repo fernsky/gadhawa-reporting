@@ -30,20 +30,20 @@ class Command(BaseCommand):
 
         # Raw ward-wise househead gender data from actual census
         raw_ward_data = [
-            (1, "MALE", 2692),
-            (1, "FEMALE", 2911),
-            (2, "MALE", 2038),
-            (2, "FEMALE", 2227),
-            (3, "MALE", 1429),
-            (3, "FEMALE", 1609),
-            (4, "MALE", 1858),
-            (4, "FEMALE", 2201),
-            (5, "MALE", 1521),
-            (5, "FEMALE", 1885),
-            (6, "MALE", 2081),
-            (6, "FEMALE", 2430),
-            (7, "MALE", 1239),
-            (7, "FEMALE", 1374),
+            (1, "MALE", 267),
+            (1, "FEMALE", 654),
+            (2, "MALE", 584),
+            (2, "FEMALE", 561),
+            (3, "MALE", 830),
+            (3, "FEMALE", 64),
+            (4, "MALE", 603),
+            (4, "FEMALE", 337),
+            (5, "MALE", 199),
+            (5, "FEMALE", 177),
+            (6, "MALE", 499),
+            (6, "FEMALE", 397),
+            (7, "MALE", 289),
+            (7, "FEMALE", 178),
         ]
 
         # Convert to the format expected by the rest of the code

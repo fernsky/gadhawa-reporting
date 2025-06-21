@@ -12,11 +12,17 @@
     
     <!-- Coherent Analysis Text -->
     <div class="content-section">
-        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+        <div class="content-paragraph">
+            {% if report_content.coherent_analysis %}
+                {{ report_content.coherent_analysis|linebreaks }}
+            {% elif coherent_analysis %}
+                {{ coherent_analysis|linebreaks }}
+            {% endif %}
+        </div>
     </div>
 
     <!-- Ward-wise Settlement Table -->
-    {% if ward_data %}
+    {% if report_content.ward_data or data.ward_data or ward_data %}
     <div class="table-section">
         <h3 class="table-title">तालिका ३.१.१: वडागत मुख्य बस्तीहरूको विवरण</h3>
         <table class="pdf-data-table ward-settlement-table">
@@ -27,26 +33,58 @@
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                <tr>
-                    <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
-                    <td style="text-align: left; padding: 8px;">
-                        {% if ward_info.settlement_areas %}
-                            {% for settlement in ward_info.settlement_areas %}
-                                {{ settlement }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            <em>विवरण उपलब्ध छैन</em>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
+                {% if report_content.ward_data %}
+                    {% for ward_num, ward_info in report_content.ward_data.items %}
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
+                        <td style="text-align: left; padding: 8px;">
+                            {% if ward_info.settlement_areas %}
+                                {% for settlement in ward_info.settlement_areas %}
+                                    {{ settlement }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <em>विवरण उपलब्ध छैन</em>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% elif data.ward_data %}
+                    {% for ward_num, ward_info in data.ward_data.items %}
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
+                        <td style="text-align: left; padding: 8px;">
+                            {% if ward_info.settlement_areas %}
+                                {% for settlement in ward_info.settlement_areas %}
+                                    {{ settlement }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <em>विवरण उपलब्ध छैन</em>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% elif ward_data %}
+                    {% for ward_num, ward_info in ward_data.items %}
+                    <tr>
+                        <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
+                        <td style="text-align: left; padding: 8px;">
+                            {% if ward_info.settlement_areas %}
+                                {% for settlement in ward_info.settlement_areas %}
+                                    {{ settlement }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <em>विवरण उपलब्ध छैन</em>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
             <tfoot>
                 <tr style="background-color: #f0f8ff; font-weight: bold;">
                     <td style="text-align: center;">जम्मा</td>
                     <td style="text-align: left; padding: 8px;">
-                        कुल {{ total_wards|nepali_number }} वडामा {{ total_settlements|nepali_number }} भन्दा बढी मुख्य बस्तीहरु
+                        कुल {% if report_content.total_wards %}{{ report_content.total_wards|nepali_number }}{% elif total_wards %}{{ total_wards|nepali_number }}{% elif data.total_wards %}{{ data.total_wards|nepali_number }}{% endif %} वडामा {% if report_content.total_settlements %}{{ report_content.total_settlements|nepali_number }}{% elif total_settlements %}{{ total_settlements|nepali_number }}{% elif data.total_settlements %}{{ data.total_settlements|nepali_number }}{% endif %} भन्दा बढी मुख्य बस्तीहरु
                     </td>
                 </tr>
             </tfoot>

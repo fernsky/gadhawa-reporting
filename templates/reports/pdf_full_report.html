@@ -394,6 +394,9 @@
         </div>
       </div>
       
+      <!-- Ward Settlement Demographics Section -->
+      {% include 'demographics/ward_settlement/ward_settlement_report_partial.html' with ward_data=all_demographics_data.ward_settlement.data total_settlements=all_demographics_data.ward_settlement.total_settlements total_wards=all_demographics_data.ward_settlement.total_wards report_content=all_demographics_data.ward_settlement.report_content %}
+
       <!-- Language Demographics Section -->
       {% if all_demographics_data.language %}
         {% include 'demographics/language/language_report_partial.html' with language_data=all_demographics_data.language.data total_population=all_demographics_data.language.total_population coherent_analysis=all_demographics_data.language.report_content %}
