@@ -1,0 +1,74 @@
+{% load nepali_filters %}
+
+<!-- Political Status Report Partial for PDF -->
+<p class="section-content gross-domestic-product-section" id="section-gross-domestic-product">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        २.७	ग्रार्हस्थ उत्पादन  
+    </h2>
+    
+    <!-- Analysis Content -->
+    <div class="content-section">
+        <div class="content-paragraph">
+          ग्रार्हस्थ उत्पादन (जिडिपी) भनेको एक प्रकारको मापदण्ड हो जसले कुनै एक मुलुकको समग्र अर्थतन्त्र प्रतिविम्बित गर्दछ । यसले कुनै एक निश्चित अवधिमा मुलुकभित्र वा ठाउँभित्र भएको वस्तु तथा सेवाको अन्तिम कारोबार मूल्यको योगफल जनाउँछ । सबै निजी तथा सार्वजनिक खपत, सरकारको खर्च, लगानी, मौज्दात सामग्री, निर्माणका क्रममा भएका खर्च, आयात तथा निर्यातमा भएको खर्च तथा आम्दानी सबै पर्दछन् । नेपालमा यसको वार्षिक रुपमा नै गणना गर्ने गरिएको देखिन्छ । ट्रेडिङ्ग इकोनोमिक्सका अनुसार सन् २०२३ मा नेपालको जिडिपी करिब ४० खर्ब हाराहारीमा रहेको छ भने प्रतिव्यक्ति आय एक हजार तीन सय ९९ अमेरिकी डलर रहेको छ ।   
+        </div>
+    </div>
+</p>
+
+<style>
+/* Political Status Section Styles */
+.gross-domestic-product-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.8em 0;
+    text-indent: 1.5em;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.political-status-table tbody tr:nth-child(even),
+.growth-analysis-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.political-status-table tbody tr:hover,
+.growth-analysis-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Print optimization */
+@media print {
+    .gross-domestic-product-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>

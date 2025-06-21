@@ -1,16 +1,18 @@
 """
-Economics Manager
+Municipality Introduction Manager
 
 Coordinates all municipality introduction processors and provides unified interface for PDF generation.
 """
 
+from .political_status import PoliticalStatusProcessor
+
 
 class MunicipalityIntroductionManager:
-    """Manager for all economics processors"""
+    """Manager for all municipality introduction processors"""
 
     def __init__(self):
         self.processors = {
-            # Processors go here
+            "political_status": PoliticalStatusProcessor(),
         }
 
     def get_processor(self, category):

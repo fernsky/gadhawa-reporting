@@ -1,0 +1,74 @@
+{% load nepali_filters %}
+
+<!-- Political Status Report Partial for PDF -->
+<p class="section-content human-development-indicator-section" id="section-human-development-indicator-section">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        २.८	मानव विकास सुचकाङ्क
+    </h2>
+    
+    <!-- Analysis Content -->
+    <div class="content-section">
+        <div class="content-paragraph">
+           संयुक्त राष्ट्रसंघीय विकास कार्यक्रम (UNDP) को २०२१ को प्रतिवेदन अनुसार नेपालको मानव विकास सुचकाङ्क ०.६०२ रहेको र यसका आधारमा विश्वका १९१ देशहरु मध्ये नेपाल १४३ श्रेणीमा रहेको छ । नेपालको यो सूचकाङ्क मध्यम मानव विकास सूचकाङ्क भएका देशहरुको औसत ०.६३६ भन्दा पनि कम रहेको छ । सन् १९९० मा नेपालको यो सूचकाङ्क ०.३७८ थियो भने २०२१ को प्रतिवेदन अनुसार लुम्बिनी प्रदेशको मानव विकास सुचकाङ्क $##missing##$ रहेको छ । 
+        </div>
+    </div>
+</p>
+
+<style>
+/* Political Status Section Styles */
+.human-development-indicator-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.8em 0;
+    text-indent: 1.5em;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.political-status-table tbody tr:nth-child(even),
+.growth-analysis-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.political-status-table tbody tr:hover,
+.growth-analysis-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Print optimization */
+@media print {
+    .human-development-indicator-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>

@@ -17,11 +17,25 @@
 /* Simplified page setup with consistent Nepali numerals for target-counter compatibility */
 @page {
   size: A4;
-  margin: 2.4892cm 2.4892cm 2.4892cm 2.4892cm;
+  margin: 2.5 2.5 2.5 2.5;
   /* 1 inch margins */
 
   @bottom-right {
-    content: counter(page, nepali-numerals) " | लुङ्ग्री गाउँपालिकाको पार्श्वचित्र";
+    content: counter(page, nepali-numerals);
+    font-size: 9pt;
+    color: #666;
+    font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
+  }
+
+  @top-right {
+    content: लुङ्ग्री गाउँपालिका पार्श्वचित्र, २०८१;
+    font-size: 9pt;
+    color: #666;
+    font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
+  }
+
+  @bottom-left {
+    content: "माडी कन्सल्टेनसी प्रा.लि., ललितपुर";
     font-size: 9pt;
     color: #666;
     font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
