@@ -1,0 +1,172 @@
+<!-- Maps Section for PDF Full Report -->
+<div class="maps-section">
+    
+    <!-- Map 1: Aspect Classification -->
+    <div class="map-page" id="map-aspect-classification">
+        <div class="map-container">
+            <img src="/static/images/maps/aspect.png" alt="Aspect Classification Map" class="landscape-map">
+            <div class="map-caption">
+                <strong>नक्सा १:</strong> जमिनको मोहडाको वर्गीकरण (Aspect Classification)
+                <p class="map-description">यो नक्साले लुङ्ग्री गाउँपालिकाको भू-भागको विभिन्न जमिनका मोहडाहरूको वर्गीकरण देखाउँछ । उत्तर, दक्षिण, पूर्व, पश्चिम र अन्य दिशाहरूमा फर्केका ढलानहरूले कृषि उत्पादन, घरजग्गाको स्थान र जलवायुमा फरक प्रभाव पार्दछ ।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map 2: Elevation Classification -->
+    <div class="map-page" id="map-elevation-classification">
+        <div class="map-container">
+            <img src="/static/images/maps/elevation.png" alt="Elevation Classification Map" class="landscape-map">
+            <div class="map-caption">
+                <strong>नक्सा २:</strong> उचाइ वर्गीकरण (Elevation Classification)
+                <p class="map-description">यो नक्साले गाउँपालिकाको विभिन्न उचाइ क्षेत्रहरूको वर्गीकरण प्रस्तुत गर्दछ । समुद्री सतहबाट विभिन्न उचाइमा रहेका क्षेत्रहरूले फरक प्रकारका बाली उत्पादन, मौसमी अवस्था र जीवनशैलीमा प्रभाव पार्दछ ।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map 3: Land Use Classification -->
+    <div class="map-page" id="map-land-use-classification">
+        <div class="map-container">
+            <img src="/static/images/maps/land-use.png" alt="Land Use Classification Map" class="landscape-map">
+            <div class="map-caption">
+                <strong>नक्सा ३:</strong> भूमि उपयोग वर्गीकरण (Land Use Classification)
+                <p class="map-description">यो नक्साले गाउँपालिकाको भूमिको विभिन्न उपयोगका क्षेत्रहरू जस्तै कृषि भूमि, वन क्षेत्र, आवासीय क्षेत्र, र अन्य उपयोगका भूमिहरूको वर्गीकरण देखाउँछ । यसले भूमि व्यवस्थापन र विकास योजना निर्माणमा महत्वपूर्ण आधार प्रदान गर्दछ ।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map 4: Slope Classification -->
+    <div class="map-page" id="map-slope-classification">
+        <div class="map-container">
+            <img src="/static/images/maps/slope.png" alt="Slope Classification Map" class="landscape-map">
+            <div class="map-caption">
+                <strong>नक्सा ४:</strong> भिरालोपन वर्गीकरण (Slope Classification)
+                <p class="map-description">यो नक्साले गाउँपालिकाको भिरालोपनको वर्गीकरण प्रस्तुत गर्दछ । समतल देखि अत्यधिक भिरालोपन भएका क्षेत्रहरूको पहिचान गरी कृषि योग्यता, भू-क्षरण जोखिम र पूर्वाधार निर्माणका लागि उपयुक्त क्षेत्रहरूको निर्धारण गर्न सकिन्छ ।</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+/* Maps Section Styles for PDF */
+.maps-section {
+    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    color: #1f2937;
+}
+
+.map-page {
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: avoid;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1cm;
+}
+
+.map-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.landscape-map {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-caption {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: #f8fafc;
+    border-left: 4px solid #3b82f6;
+    border-radius: 4px;
+    max-width: 90%;
+    text-align: left;
+}
+
+.map-caption strong {
+    color: #1e40af;
+    font-size: 12pt;
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.map-description {
+    font-size: 10pt;
+    line-height: 1.5;
+    margin: 0.5em 0 0 0;
+    text-align: justify;
+    color: #374151;
+}
+
+/* Landscape page setup specifically for maps */
+@page map-landscape {
+    size: A4 landscape;
+    margin: 1.5cm;
+    
+    @top-right {
+        content: "लुङ्ग्री गाउँपालिका पार्श्वचित्र, २०८१";
+        font-size: 9pt;
+        color: #666;
+        font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
+    }
+    
+    @bottom-right {
+        content: counter(page, nepali-numerals);
+        font-size: 9pt;
+        color: #666;
+        font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
+    }
+    
+    @bottom-left {
+        content: "माडी कन्सल्टेनसी प्रा.लि., ललितपुर";
+        font-size: 9pt;
+        color: #666;
+        font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
+    }
+}
+
+.map-page {
+    page: map-landscape;
+}
+
+/* Print optimization */
+@media print {
+    .maps-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .map-page {
+        page-break-before: always;
+        page-break-after: always;
+        page-break-inside: avoid;
+        height: 100vh;
+    }
+    
+    .landscape-map {
+        max-width: 100%;
+        max-height: 75vh;
+        page-break-inside: avoid;
+    }
+    
+    .map-caption {
+        page-break-inside: avoid;
+        background-color: #f8fafc !important;
+        border-left: 4px solid #3b82f6 !important;
+    }
+}
+</style>
