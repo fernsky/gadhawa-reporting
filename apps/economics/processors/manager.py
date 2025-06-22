@@ -6,6 +6,9 @@ Coordinates all economics processors and provides unified interface for PDF gene
 
 from .remittance_expenses import RemittanceExpensesProcessor
 from .major_skills import MajorSkillsProcessor
+from .wardwise_house_ownership import WardWiseHouseOwnershipProcessor
+from .wardwise_house_base import WardWiseHouseBaseProcessor
+from .wardwise_house_outer_wall import WardWiseHouseOuterWallProcessor
 
 
 class EconomicsManager:
@@ -15,6 +18,9 @@ class EconomicsManager:
         self.processors = {
             "remittance_expenses": RemittanceExpensesProcessor(),
             "major_skills": MajorSkillsProcessor(),
+            "wardwise_house_ownership": WardWiseHouseOwnershipProcessor(),
+            "wardwise_house_base": WardWiseHouseBaseProcessor(),
+            "wardwise_house_outer_wall": WardWiseHouseOuterWallProcessor(),
         }
 
     def get_processor(self, category):

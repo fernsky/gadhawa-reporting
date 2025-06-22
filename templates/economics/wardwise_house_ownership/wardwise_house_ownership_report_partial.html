@@ -1,0 +1,209 @@
+{% load nepali_filters %}
+
+<!-- Ward Wise House Ownership Economics Report Partial for PDF -->
+<p class="section-content wardwise-house-ownership-section" id="section-wardwise-house-ownership">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ४.१.७ घरको स्वामित्वको आधारमा घरधुरीको विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if municipality_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.१.७.१: घर स्वामित्वको प्रकार अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/wardwise_house_ownership_pie_chart.png' %}" alt="घर स्वामित्वको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Bar Chart for Ward-wise Distribution -->
+    {% if ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.१.७.२: वडागत घर स्वामित्वको प्रकार अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/wardwise_house_ownership_bar_chart.png' %}" alt="वडागत घर स्वामित्वको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Ward-wise Detailed Table -->
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ४.१.७.१: वडागत घर स्वामित्वको प्रकार अनुसार घरपरिवार विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-house-ownership-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%; text-align: left; padding: 6px;">घर स्वामित्वको प्रकार</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ownership_type, data in municipality_data.items %}
+                    {% if data.households > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info|get_item:ownership_type as own_demo %}
+                                        {{ own_demo.households|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.households|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                            {{ ward_info.total_households|nepali_number }}
+                        </td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+.wardwise-house-ownership-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-house-ownership-table th,
+.ward-house-ownership-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+.ward-house-ownership-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-house-ownership-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-house-ownership-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-house-ownership-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+
+.pdf-chart-container {
+    border: none;    
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 500px;
+    height: auto;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+@media print {
+    .wardwise-house-ownership-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    .pdf-data-table tr {
+        page-break-inside: auto;
+    }
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>

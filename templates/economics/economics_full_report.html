@@ -20,6 +20,21 @@
         {% include 'economics/remittance_expenses/remittance_expenses_report_partial.html' with municipality_data=all_economics_data.remittance_expenses.data.municipality_data ward_data=all_economics_data.remittance_expenses.data.ward_data total_households=all_economics_data.remittance_expenses.total_households coherent_analysis=all_economics_data.remittance_expenses.report_content pdf_charts=pdf_charts %}
     {% endif %}
 
+    <!-- Ward Wise House Ownership Section -->
+    {% if all_economics_data.wardwise_house_ownership %}
+        {% include 'economics/wardwise_house_ownership/wardwise_house_ownership_report_partial.html' with municipality_data=all_economics_data.wardwise_house_ownership.data.municipality_data ward_data=all_economics_data.wardwise_house_ownership.data.ward_data total_households=all_economics_data.wardwise_house_ownership.total_households coherent_analysis=all_economics_data.wardwise_house_ownership.report_content pdf_charts=pdf_charts %}
+    {% endif %}
+
+    <!-- Ward Wise House Base Section -->
+    {% if all_economics_data.wardwise_house_base %}
+        {% include 'economics/wardwise_house_base/wardwise_house_base_report_partial.html' with municipality_data=all_economics_data.wardwise_house_base.data.municipality_data ward_data=all_economics_data.wardwise_house_base.data.ward_data total_households=all_economics_data.wardwise_house_base.total_households coherent_analysis=all_economics_data.wardwise_house_base.report_content pdf_charts=pdf_charts %}
+    {% endif %}
+
+    <!-- Ward Wise House Outer Wall Section -->
+    {% if all_economics_data.wardwise_house_outer_wall %}
+        {% include 'economics/wardwise_house_outer_wall/wardwise_house_outer_wall_report_partial.html' with municipality_data=all_economics_data.wardwise_house_outer_wall.data.municipality_data ward_data=all_economics_data.wardwise_house_outer_wall.data.ward_data total_households=all_economics_data.wardwise_house_outer_wall.total_households coherent_analysis=all_economics_data.wardwise_house_outer_wall.report_content pdf_charts=pdf_charts %}
+    {% endif %}
+
 </div>
 
 <style>

@@ -1,0 +1,126 @@
+{% load nepali_filters %}
+
+<!-- Ward Wise House Outer Wall Economics Report Partial for PDF -->
+<p class="section-content wardwise-house-outer-wall-section" id="section-wardwise-house-outer-wall">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ४.१.९ बाहिरी गारोको आधारमा घरधुरीको विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if municipality_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.१.९.१: बाहिरी गारोको प्रकार अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/wardwise_house_outer_wall_pie_chart.png' %}" alt="बाहिरी गारोको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Bar Chart for Ward-wise Distribution -->
+    {% if ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.१.९.२: वडागत बाहिरी गारोको प्रकार अनुसार घरपरिवार वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/wardwise_house_outer_wall_bar_chart.png' %}" alt="वडागत बाहिरी गारोको प्रकार अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Ward-wise Detailed Table -->
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ४.१.९.१: वडागत बाहिरी गारोको प्रकार अनुसार घरपरिवार विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-house-outer-wall-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%; text-align: left; padding: 6px;">बाहिरी गारोको प्रकार</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
+                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wall_type, data in municipality_data.items %}
+                    {% if data.households > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name }}</td>
+                            {% for ward_num, ward_info in ward_data.items %}
+                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                    {% with ward_info|get_item:wall_type as wall_demo %}
+                                        {{ wall_demo.households|default:0|nepali_number }}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
+                                {{ data.households|nepali_number }}
+                            </td>
+                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
+                                {{ data.percentage|nepali_percentage }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                            {{ ward_info.total_households|nepali_number }}
+                        </td>
+                    {% endfor %}
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_households|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+.wardwise-house-outer-wall-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.ward-house-outer-wall-table th,
+.ward-house-outer-wall-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+.ward-house-outer-wall-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-house-outer-wall-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-house-outer-wall-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-house-outer-wall-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+</style>
