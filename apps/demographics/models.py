@@ -949,6 +949,38 @@ class WardAgeGenderWiseDeceasedPopulation(BaseModel):
 
 
 # घ मृत्युको कारण अनुसार मृतकको संख्या
+class DeathCauseChoice(models.TextChoices):
+    CANCER = "CANCER", _("क्यान्सर")
+    DEATH_BY_OLD_AGE = "DEATH_BY_OLD_AGE", _("कालगतिले")
+    HEART_RELATED_DISEASES = "HEART_RELATED_DISEASES", _("मुटु सम्बन्धी रोग")
+    BLOOD_PRESSURE_HIGH_AND_LOW_BLOOD_PRESSURE = (
+        "BLOOD_PRESSURE_HIGH_AND_LOW_BLOOD_PRESSURE",
+        _("रक्तचाप (उच्च/निम्न)"),
+    )
+    PNEUMONIA = "PNEUMONIA", _("निमोनिया")
+    ASTHMA = "ASTHMA", _("दमा")
+    DIABETES = "DIABETES", _("मधुमेह")
+    KIDNEY_RELATED_DISEASES = "KIDNEY_RELATED_DISEASES", _("मिर्गौला सम्बन्धी रोग")
+    LIVER_RELATED_DISEASES = "LIVER_RELATED_DISEASES", _("कलेजो सम्बन्धी रोग")
+    TYPHOID = "TYPHOID", _("टाइफाइड")
+    FLU = "FLU", _("फ्लु")
+    SUICIDE = "SUICIDE", _("आत्महत्या")
+    TRAFFIC_ACCIDENT = "TRAFFIC_ACCIDENT", _("सवारी दुर्घटना")
+    OTHER_ACCIDENTS = "OTHER_ACCIDENTS", _("अन्य दुर्घटना")
+    NATURAL_DISASTER = "NATURAL_DISASTER", _("प्राकृतिक प्रकोप")
+    NOT_STATED = "NOT_STATED", _("कारण नखुलेको")
+    LEPROSY = "LEPROSY", _("कुष्ठरोग")
+    KALA_AZAR = "KALA_AZAR", _("कालाजार")
+    RESPIRATORY_DISEASES = "RESPIRATORY_DISEASES", _("श्वासप्रश्वास सम्बन्धी रोग")
+    GASTRIC_ULCER_INTESTINAL_DISEASE = "GASTRIC_ULCER_INTESTINAL_DISEASE", _(
+        "ग्यास्ट्रिक/आन्द्रा सम्बन्धी रोग"
+    )
+    EPILEPSY = "EPILEPSY", _("मिर्गी")
+    TUBERCULOSIS = "TUBERCULOSIS", _("क्षयरोग")
+    SCABIES = "SCABIES", _("खटिरा")
+    OTHER = "OTHER", _("अन्य")
+
+
 class WardWiseDeathCause(BaseModel):
     """Ward wise death cause"""
 
@@ -956,7 +988,11 @@ class WardWiseDeathCause(BaseModel):
         validators=[MinValueValidator(1), MaxValueValidator(9)],
         verbose_name=_("वडा नं."),
     )
-    death_cause = models.TextField(verbose_name=_("मृत्युको कारण"))
+    death_cause = models.CharField(
+        max_length=50,
+        choices=DeathCauseChoice.choices,
+        verbose_name=_("मृत्युको कारण"),
+    )
     population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
 
     class Meta:

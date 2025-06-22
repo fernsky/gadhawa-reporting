@@ -1,0 +1,281 @@
+{% load nepali_filters %}
+{% load chart_tags %}
+<p class="section-content death-cause-section" id="section-death-cause">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ३.१२.घ मृत्युको कारण अनुसार मृतकको संख्या
+    </h2>
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+    {% if municipality_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.१२.१: मृत्युको कारण अनुसार मृतकको जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                {% if pdf_charts.death_cause.pie_chart_png %}
+                    <img src="{% static pdf_charts.death_cause.pie_chart_png %}" alt="मृत्युको कारण अनुसार मृतकको जनसंख्या वितरण" class="pdf-chart-image">
+                {% elif pdf_charts.death_cause.pie_chart_svg %}
+                    <img src="{% static pdf_charts.death_cause.pie_chart_svg %}" alt="मृत्युको कारण अनुसार मृतकको जनसंख्या वितरण" class="pdf-chart-image">
+                {% else %}
+                    <img src="{% static 'images/charts/death_cause_pie_chart.png' %}" alt="मृत्युको कारण अनुसार मृतकको जनसंख्या वितरण" class="pdf-chart-image">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१२.२: वडागत मृत्युको कारण अनुसार मृतकको जनसंख्या विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-death-cause-table">
+            <thead>
+                <tr>
+                    <th class="death-cause-name-col">मृत्युको कारण</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th class="ward-col">वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th class="total-col">जम्मा</th>
+                    <th class="percentage-col">प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cause, data in municipality_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td class="death-cause-name-col">{{ data.name_nepali }}</td>
+                            {% for pop in data.ward_populations %}
+                                <td class="ward-col">{{ pop|nepali_number }}</td>
+                            {% endfor %}
+                            <td class="total-col">{{ data.population|nepali_number }}</td>
+                            <td class="percentage-col">{{ data.percentage|floatformat:1|nepali_number }}%</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td class="death-cause-name-col">जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td class="ward-col">{{ ward_info.total_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td class="total-col">{{ total_population|nepali_number }}</td>
+                    <td class="percentage-col">१००.०%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+.death-cause-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-death-cause-table th,
+.ward-death-cause-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+.ward-death-cause-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ward-death-cause-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+
+.ward-death-cause-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+
+.ward-death-cause-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+
+.pdf-chart-container {
+    border: none;    
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 500px;
+    height: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 500px;
+    height: auto;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.ward-death-cause-table {
+    table-layout: fixed;
+}
+.ward-death-cause-table .death-cause-name-col {
+    width: 25%;
+    text-align: left !important;
+    padding: 3px 4px;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    font-size: 7pt;
+}
+.ward-death-cause-table .ward-col {
+    width: 2.8%;
+    text-align: center;
+    padding: 1px;
+    font-size: 6pt;
+    min-width: 18px;
+}
+.ward-death-cause-table .total-col {
+    width: 8%;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f0f8ff;
+    font-size: 7pt;
+}
+.ward-death-cause-table .percentage-col {
+    width: 6%;
+    text-align: center;
+    font-weight: bold;
+    background-color: #e8f4f8;
+    color: #666;
+    font-size: 7pt;
+}
+.ward-death-cause-table thead th.death-cause-name-col {
+    background-color: #e8f4f8;
+    font-size: 8pt;
+    padding: 4px;
+}
+.ward-death-cause-table thead th.ward-col {
+    background-color: #e8f4f8;
+    font-size: 5pt;
+    padding: 1px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    height: 40px;
+}
+.ward-death-cause-table thead th.total-col,
+.ward-death-cause-table thead th.percentage-col {
+    background-color: #e8f4f8;
+    font-size: 7pt;
+}
+.ward-death-cause-table .total-row {
+    font-weight: bold;
+    background-color: #f8fafc;
+    border-top: 2px solid #333;
+}
+.ward-death-cause-table .total-row .death-cause-name-col {
+    background-color: #e8f4f8 !important;
+    font-size: 8pt;
+}
+.ward-death-cause-table .total-row .total-col {
+    background-color: #e8f4f8;
+    font-size: 8pt;
+}
+.ward-death-cause-table .total-row .percentage-col {
+    background-color: #d4edda;
+    font-size: 8pt;
+}
+.ward-death-cause-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.ward-death-cause-table tbody tr:nth-child(even) .death-cause-name-col {
+    background-color: #f0f0f0;
+}
+@media print {
+    .pdf-data-table {
+        font-size: 6pt;
+    }
+    .ward-death-cause-table .ward-col {
+        width: 2.5%;
+        font-size: 5pt;
+    }
+    .ward-death-cause-table .death-cause-name-col {
+        font-size: 6pt;
+    }
+    .ward-death-cause-table thead th.ward-col {
+        font-size: 4pt;
+        height: 35px;
+    }
+}
+@media screen and (max-width: 1400px) {
+    .ward-death-cause-table .ward-col {
+        width: 2.5%;
+        font-size: 5pt;
+    }
+    .ward-death-cause-table thead th.ward-col {
+        font-size: 4pt;
+    }
+}
+</style>

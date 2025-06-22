@@ -1,0 +1,184 @@
+{% load nepali_filters %}
+{% load chart_tags %}
+
+<!-- Death Registration Demographics Report Partial for PDF -->
+<p class="section-content death-registration-demographics-section" id="section-death-registration-demographics">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ३.४ मृत्यु दर्ता (उमेर तथा लिङ्ग अनुसार) विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Death Registration Population Pyramid Chart -->
+    {% if death_registration_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.४.१: मृत्यु दर्ता पिरामिड (उमेर तथा लिङ्ग अनुसार)</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                {% chart_url "demographics_death_registration_pyramid" as pyramid_chart_url %}
+                {% if pyramid_chart_url %}
+                    <img src="{{ pyramid_chart_url }}" alt="मृत्यु दर्ता पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_png %}
+                    <img src="{% static charts.pyramid_chart_png %}" alt="मृत्यु दर्ता पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_url %}
+                    <img src="{{ charts.pyramid_chart_url }}" alt="मृत्यु दर्ता पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% elif charts.pyramid_chart_svg %}
+                    <img src="{% static charts.pyramid_chart_svg %}" alt="मृत्यु दर्ता पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% else %}
+                    <img src="{% static 'images/charts/demographics_death_registration_pyramid.png' %}" alt="मृत्यु दर्ता पिरामिड" class="pdf-chart-image pyramid-chart">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Ward-wise Death Registration Table (Matrix) -->
+    {% if ward_table_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.४.१: वडागत उमेर समूह र लिङ्ग अनुसार मृत्यु दर्ता विवरण</h3>
+        <table class="pdf-data-table ward-age-gender-block-table">
+            <thead>
+                <tr>
+                    <th>वडा नं.</th>
+                    <th>उमेर समूह</th>
+                    <th>पुरुष</th>
+                    <th>महिला</th>
+                    <th>जम्मा</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in ward_table_data %}
+                    {% if row.type == 'ward_header' %}
+                        <tr style="background-color: #e0e7ef; font-weight: bold;">
+                            <td colspan="5" style="text-align: left;">वडा {{ row.ward_number|nepali_number }}</td>
+                        </tr>
+                    {% elif row.type == 'age_group' %}
+                        <tr>
+                            <td></td>
+                            <td>{{ row.age_group_name }}</td>
+                            <td style="text-align: right;">{{ row.male|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.female|nepali_number }}</td>
+                            <td style="text-align: right; font-weight: bold;">{{ row.total|nepali_number }}</td>
+                        </tr>
+                    {% elif row.type == 'ward_total' %}
+                        <tr style="font-weight: bold; background-color: #f3f4f6;">
+                            <td></td>
+                            <td>जम्मा</td>
+                            <td style="text-align: right;">{{ row.male|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.female|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.total|nepali_number }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.death-registration-demographics-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 9pt;
+    page-break-inside: auto;
+}
+
+.pdf-data-table th,
+.pdf-data-table td {
+    border: 1px solid #333;
+    padding: 10px 16px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 12pt;
+    min-width: 80px;
+}
+
+.pdf-data-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+    font-size: 13pt;
+}
+
+.ward-age-gender-block-table td,
+.ward-age-gender-block-table th {
+    font-size: 12pt;
+    padding: 10px 16px;
+    min-width: 80px;
+}
+
+.pdf-chart-container {
+    border: none;
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 600px;
+    height: auto;
+}
+
+.pyramid-chart {
+    max-height: 800px !important;
+}
+
+.chart-title,
+.table-title {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+@media print {
+    .death-registration-demographics-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style>

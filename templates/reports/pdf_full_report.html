@@ -5,7 +5,7 @@
 
 {% block content %}
 <!-- Cover Page -->
-<div class="cover-page">
+<div class="cover-page>
   <div style="text-align: center; margin-bottom: 4cm">
     <div
       style="
@@ -264,6 +264,11 @@
     <span class="page-ref"><a href="#section-disability-cause-demographics"></a></span>
   </div>
 
+  <div class="toc-item level-2">
+    <span class="toc-link">३.१२ व्यक्तिगत घटना दर्ता सम्बन्धी विवरण</span>
+    <span class="page-ref"><a href="#section-death-registration-demographics"></a></span>
+  </div>
+
   <!-- Economics Chapter TOC -->
   <div class="toc-item level-1">
     <span class="toc-link">४. आर्थिक अवस्था</span>
@@ -454,11 +459,11 @@
         {% include 'demographics/caste/caste_report_partial.html' with caste_data=all_demographics_data.caste.data total_population=all_demographics_data.caste.total_population coherent_analysis=all_demographics_data.caste.report_content %}
       {% endif %}       
       
-      <!-- Househead Demographics Section -->
-       {% if all_demographics_data.househead %}
-       {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
-      {% endif %}
+     
       
+      <!-- Househead Demographics Section -->
+      {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
+
 
         <!-- Ward wise economically active Population -->
       {% if all_demographics_data.economically_active %}
@@ -479,8 +484,21 @@
       {% if all_demographics_data.disability_cause %}
         {% include 'demographics/disability_cause/disability_cause_report_partial.html' with municipality_data=all_demographics_data.disability_cause.data.municipality_data ward_data=all_demographics_data.disability_cause.data.ward_data total_population=all_demographics_data.disability_cause.total_population coherent_analysis=all_demographics_data.disability_cause.report_content pdf_charts=pdf_charts %}
       {% endif %}
+
+      <!-- Death Registration Demographics Section -->
+      {% if all_demographics_data.death_registration %}
+        {% include 'demographics/death_registration/death_registration_report_partial.html' with death_registration_data=all_demographics_data.death_registration.death_registration_data ward_data=all_demographics_data.death_registration.ward_data ward_table_data=all_demographics_data.death_registration.ward_table_data total_population=all_demographics_data.death_registration.total_population total_male=all_demographics_data.death_registration.total_male total_female=all_demographics_data.death_registration.total_female male_percentage=all_demographics_data.death_registration.male_percentage female_percentage=all_demographics_data.death_registration.female_percentage coherent_analysis=all_demographics_data.death_registration.report_content charts=all_demographics_data.death_registration.charts %}
+      {% endif %}
+
+       <!-- Death Cause Demographics Section -->
+      {% if all_demographics_data.death_cause %}
+      {% include 'demographics/death_cause/death_cause_report_partial.html' with municipality_data=all_demographics_data.death_cause.municipality_data ward_data=all_demographics_data.death_cause.ward_data total_population=all_demographics_data.death_cause.total_population coherent_analysis=all_demographics_data.death_cause.coherent_analysis charts=all_demographics_data.death_cause.charts %}
+      {% endif %}
+
     </p>
   </div>
+
+
 
   <!-- Economics Chapter -->
   <div class="category-break" id="category-economics">

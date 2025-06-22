@@ -226,3 +226,81 @@ def mul(value, arg):
         return float(value) * float(arg)
     except (ValueError, TypeError):
         return 0
+
+
+@register.filter
+def get_male_deaths(municipality_data):
+    """Get total male deaths from municipality data"""
+    total_male = 0
+    for age_group, data in municipality_data.items():
+        if isinstance(data, dict) and "male" in data:
+            total_male += data["male"]
+    return total_male
+
+
+@register.filter
+def get_female_deaths(municipality_data):
+    """Get total female deaths from municipality data"""
+    total_female = 0
+    for age_group, data in municipality_data.items():
+        if isinstance(data, dict) and "female" in data:
+            total_female += data["female"]
+    return total_female
+
+
+@register.filter
+def get_male_percentage(municipality_data):
+    """Get male death percentage from municipality data"""
+    total_male = 0
+    total_deaths = 0
+    for age_group, data in municipality_data.items():
+        if isinstance(data, dict):
+            total_male += data.get("male", 0)
+            total_deaths += data.get("total", 0)
+
+    if total_deaths > 0:
+        return (total_male / total_deaths) * 100
+    return 0
+
+
+@register.filter
+def get_female_percentage(municipality_data):
+    """Get female death percentage from municipality data"""
+    total_female = 0
+    total_deaths = 0
+    for age_group, data in municipality_data.items():
+        if isinstance(data, dict):
+            total_female += data.get("female", 0)
+            total_deaths += data.get("total", 0)
+
+    if total_deaths > 0:
+        return (total_female / total_deaths) * 100
+    return 0
+
+
+@register.filter
+def nepali_percentage(value):
+    """Format percentage with Nepali digits"""
+    try:
+        if value is None:
+            return "0%"
+
+        # Convert to float and format
+        pct = float(value)
+        formatted = f"{pct:.1f}%"
+
+        # Convert digits to Nepali
+        for english, nepali in NEPALI_DIGITS.items():
+            formatted = formatted.replace(english, nepali)
+
+        return formatted
+    except (ValueError, TypeError):
+        return "0%"
+
+
+@register.filter
+def dict_get(d, key):
+    """Get a value from a dict by key (for use in templates)"""
+    if isinstance(d, dict):
+        return d.get(key)
+    return None

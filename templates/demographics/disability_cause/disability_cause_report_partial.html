@@ -55,44 +55,40 @@
         <table class="pdf-data-table ward-disability-cause-table">
             <thead>
                 <tr>
-                    <th style="width: 30%; text-align: left; padding: 6px;">अपाङ्गताको कारण</th>
+                    <th class="disability-cause-name-col">अपाङ्गताको कारण</th>
                     {% for ward_num, ward_info in ward_data.items %}
-                        <th style="text-align: center; font-size: 9pt; padding: 4px;">वडा {{ ward_num|nepali_number }}</th>
+                        <th class="ward-col">वडा {{ ward_num|nepali_number }}</th>
                     {% endfor %}
-                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">जम्मा</th>
-                    <th style="text-align: center; font-weight: bold; font-size: 9pt;">प्रतिशत</th>
+                    <th class="total-col">जम्मा</th>
+                    <th class="percentage-col">प्रतिशत</th>
                 </tr>
             </thead>
             <tbody>
                 {% for disability_type, data in municipality_data.items %}
                     {% if data.population > 0 %}
                         <tr>
-                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ data.name_nepali }}</td>
+                            <td class="disability-cause-name-col">{{ data.name_nepali }}</td>
                             {% for ward_num, ward_info in ward_data.items %}
-                                <td style="text-align: center; font-size: 9pt; padding: 4px;">
+                                <td class="ward-col">
                                     {% with ward_info.demographics|get_item:disability_type as disability_demo %}
                                         {{ disability_demo.population|default:0|nepali_number }}
                                     {% endwith %}
                                 </td>
                             {% endfor %}
-                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #f0f8ff;">
-                                {{ data.population|nepali_number }}
-                            </td>
-                            <td style="text-align: center; font-weight: bold; font-size: 9pt; background-color: #e8f4f8; color: #666;">
-                                {{ data.percentage|nepali_percentage }}
-                            </td>
+                            <td class="total-col">{{ data.population|nepali_number }}</td>
+                            <td class="percentage-col">{{ data.percentage|nepali_percentage }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
             </tbody>
             <tfoot>
-                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
-                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                <tr class="total-row">
+                    <td class="disability-cause-name-col">जम्मा</td>
                     {% for ward_num, ward_info in ward_data.items %}
-                        <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ ward_info.total_population|nepali_number }}</td>
+                        <td class="ward-col">{{ ward_info.total_population|nepali_number }}</td>
                     {% endfor %}
-                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
-                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
+                    <td class="total-col">{{ total_population|nepali_number }}</td>
+                    <td class="percentage-col">१००.०%</td>
                 </tr>
             </tfoot>
         </table>
@@ -135,88 +131,104 @@
     padding: 6px 8px;
 }
 
-.ward-disability-cause-table th,
-.ward-disability-cause-table td {
-    font-size: 9pt;
-    padding: 4px 6px;
-    border: 1px solid #333;
-    vertical-align: middle;
+.ward-disability-cause-table {
+    table-layout: fixed;
 }
-
-.ward-disability-cause-table th {
-    background-color: #e8f4f8;
-    font-weight: bold;
-    text-align: center;
-}
-
-.ward-disability-cause-table td:first-child {
-    background-color: #f9f9f9;
-    font-weight: bold;
+.ward-disability-cause-table .disability-cause-name-col {
+    width: 25%;
     text-align: left !important;
-    padding-left: 8px;
-    white-space: nowrap;
+    padding: 3px 4px;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    font-size: 7pt;
 }
-
-.ward-disability-cause-table tbody tr:nth-child(even) td:first-child {
+.ward-disability-cause-table .ward-col {
+    width: 2.8%;
+    text-align: center;
+    padding: 1px;
+    font-size: 6pt;
+    min-width: 18px;
+}
+.ward-disability-cause-table .total-col {
+    width: 8%;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f0f8ff;
+    font-size: 7pt;
+}
+.ward-disability-cause-table .percentage-col {
+    width: 6%;
+    text-align: center;
+    font-weight: bold;
+    background-color: #e8f4f8;
+    color: #666;
+    font-size: 7pt;
+}
+.ward-disability-cause-table thead th.disability-cause-name-col {
+    background-color: #e8f4f8;
+    font-size: 8pt;
+    padding: 4px;
+}
+.ward-disability-cause-table thead th.ward-col {
+    background-color: #e8f4f8;
+    font-size: 5pt;
+    padding: 1px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    height: 40px;
+}
+.ward-disability-cause-table thead th.total-col,
+.ward-disability-cause-table thead th.percentage-col {
+    background-color: #e8f4f8;
+    font-size: 7pt;
+}
+.ward-disability-cause-table .total-row {
+    font-weight: bold;
+    background-color: #f8fafc;
+    border-top: 2px solid #333;
+}
+.ward-disability-cause-table .total-row .disability-cause-name-col {
+    background-color: #e8f4f8 !important;
+    font-size: 8pt;
+}
+.ward-disability-cause-table .total-row .total-col {
+    background-color: #e8f4f8;
+    font-size: 8pt;
+}
+.ward-disability-cause-table .total-row .percentage-col {
+    background-color: #d4edda;
+    font-size: 8pt;
+}
+.ward-disability-cause-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.ward-disability-cause-table tbody tr:nth-child(even) .disability-cause-name-col {
     background-color: #f0f0f0;
 }
-
-.ward-disability-cause-table tfoot td:first-child {
-    background-color: #e8f4f8 !important;
-    font-weight: bold;
+@media print {
+    .pdf-data-table {
+        font-size: 6pt;
+    }
+    .ward-disability-cause-table .ward-col {
+        width: 2.5%;
+        font-size: 5pt;
+    }
+    .ward-disability-cause-table .disability-cause-name-col {
+        font-size: 6pt;
+    }
+    .ward-disability-cause-table thead th.ward-col {
+        font-size: 4pt;
+        height: 35px;
+    }
 }
-
-.pdf-chart-container {
-    border: none;    
-    text-align: center;
-    margin: 1em 0;
-    page-break-inside: auto;
-}
-
-.pdf-chart-container svg {
-    max-width: 100%;
-    max-height: 500px;
-    height: auto;
-}
-
-.pdf-chart-image {
-    max-width: 100%;
-    max-height: 500px;
-    height: auto;
-}
-
-.chart-title,
-.table-title {
-    font-size: 11pt;
-    font-weight: bold;
-    color: #333;
-    margin: 0.5em 0;
-    text-align: center;
-}
-
-.content-paragraph {
-    line-height: 1.6;
-    text-align: justify;
-    margin: 0.5em 0;
-}
-
-.content-paragraph p {
-    margin: 0.5em 0;
-    text-indent: 0;
-}
-
-.content-section {
-    margin: 1em 0;
-}
-
-.chart-section {
-    margin: 1.5em 0;
-    page-break-inside: auto;
-}
-
-.table-section {
-    margin: 1.5em 0;
-    page-break-inside: auto;
+@media screen and (max-width: 1400px) {
+    .ward-disability-cause-table .ward-col {
+        width: 2.5%;
+        font-size: 5pt;
+    }
+    .ward-disability-cause-table thead th.ward-col {
+        font-size: 4pt;
+    }
 }
 
 /* Enhanced table styling */
@@ -251,4 +263,4 @@
         page-break-inside: auto;
     }
 }
-</style> 
+</style>

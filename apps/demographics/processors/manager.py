@@ -16,6 +16,8 @@ from .demographic_summary import DemographicSummaryProcessor
 from .age_gender import AgeGenderProcessor
 from .female_property_ownership import FemalePropertyOwnershipProcessor
 from .disability_cause import DisabilityCauseProcessor
+from .death_registration import DeathRegistrationProcessor
+from .death_cause import DeathCauseProcessor
 
 
 class DemographicsManager:
@@ -35,6 +37,8 @@ class DemographicsManager:
             "economically_active": EconomicallyActiveProcessor(),
             "female_property_ownership": FemalePropertyOwnershipProcessor(),
             "disability_cause": DisabilityCauseProcessor(),
+            "death_registration": DeathRegistrationProcessor(),
+            "death_cause": DeathCauseProcessor(),
         }
 
     def get_processor(self, category):
