@@ -81,7 +81,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         # Initialize ward data
         for ward_num in range(1, 8):
-            ward_data[ward_num] = {
+            ward_data[str(ward_num)] = {
                 "male": 0,
                 "female": 0,
                 "other": 0,
@@ -92,7 +92,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             # Initialize age groups for each ward
             for age_choice in AgeGroupChoice.choices:
                 age_code = age_choice[0]
-                ward_data[ward_num]["age_groups"][age_code] = {
+                ward_data[str(ward_num)]["age_groups"][age_code] = {
                     "male": 0,
                     "female": 0,
                     "other": 0,
@@ -109,7 +109,9 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             age_group = population_obj.age_group
             gender = population_obj.gender
             population = population_obj.population
-            ward_num = population_obj.ward_number
+            ward_num = str(
+                population_obj.ward_number
+            )  # Convert to string for consistency
 
             # Update totals
             total_population += population
@@ -130,7 +132,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             age_gender_data[age_group]["total"] += population
 
-            # Update ward data
+            # Update ward data (fix: always update nested age_groups)
             if gender == "MALE":
                 ward_data[ward_num]["male"] += population
                 ward_data[ward_num]["age_groups"][age_group]["male"] += population
@@ -309,22 +311,6 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         """Generate age-gender chart SVG"""
         if chart_type == "pyramid":
             return self.generate_population_pyramid_svg(data)
-        elif chart_type == "bar":
-            # Generate ward-wise age-gender bar chart
-            ward_chart_data = {}
-            for ward_num, ward_info in data["ward_data"].items():
-                ward_chart_data[f"वडा {ward_num}"] = {
-                    "male": ward_info["male"],
-                    "female": ward_info["female"],
-                    "total": ward_info["total"],
-                }
-
-            return self.chart_generator.generate_bar_chart_svg(
-                ward_chart_data,
-                include_title=True,
-                title_nepali="वडागत लिङ्गीय जनसंख्या वितरण",
-                title_english="Ward-wise Gender Population Distribution",
-            )
         return None
 
     def generate_and_track_charts(self, data):
@@ -424,10 +410,16 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         # Generate charts only if needed
         charts = self.generate_and_track_charts(data)
 
+        # Create template-friendly ward table data
+        ward_table_data = self._create_ward_table_data(
+            data["ward_data"], data["age_gender_data"]
+        )
+
         return {
             "data": data,
             "age_gender_data": data["age_gender_data"],
             "ward_data": data["ward_data"],
+            "ward_table_data": ward_table_data,  # New flattened structure for templates
             "report_content": report_content,
             "coherent_analysis": report_content,
             "charts": charts,
@@ -443,6 +435,56 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             "section_title": self.get_section_title(),
             "section_number": self.get_section_number(),
         }
+
+    def _create_ward_table_data(self, ward_data, age_gender_data):
+        """Create a flattened data structure for easy template access"""
+        ward_table_rows = []
+
+        for ward_num_str, ward_info in ward_data.items():
+            ward_num = int(ward_num_str)
+
+            # Add ward header row
+            ward_table_rows.append(
+                {
+                    "type": "ward_header",
+                    "ward_number": ward_num,
+                    "ward_number_nepali": ward_num_str,
+                    "colspan": 5,
+                }
+            )
+
+            # Add age group rows for this ward
+            for age_group_code, age_group_info in age_gender_data.items():
+                age_group_data = ward_info["age_groups"].get(
+                    age_group_code, {"male": 0, "female": 0, "other": 0, "total": 0}
+                )
+
+                ward_table_rows.append(
+                    {
+                        "type": "age_group",
+                        "ward_number": ward_num,
+                        "age_group_code": age_group_code,
+                        "age_group_name": age_group_info["name_nepali"],
+                        "male": age_group_data["male"],
+                        "female": age_group_data["female"],
+                        "other": age_group_data["other"],
+                        "total": age_group_data["total"],
+                    }
+                )
+
+            # Add ward total row
+            ward_table_rows.append(
+                {
+                    "type": "ward_total",
+                    "ward_number": ward_num,
+                    "male": ward_info["male"],
+                    "female": ward_info["female"],
+                    "other": ward_info["other"],
+                    "total": ward_info["total"],
+                }
+            )
+
+        return ward_table_rows
 
     class AgeGenderReportFormatter(BaseReportFormatter):
         """Age-gender specific report formatter with detailed analysis"""
@@ -483,7 +525,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             if gender_ratio > 103:
                 gender_analysis = "पुरुषको बाहुल्यता रहेको"
             elif gender_ratio < 97:
-                gender_analysis = "महिलाको बाहुल्यता रहेको"
+                gender_analysis = "महिलाको बाहुल्ता रहेको"
             else:
                 gender_analysis = "लिङ्गीय सन्तुलन रहेको"
 
@@ -587,15 +629,15 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             # Ward-wise analysis
             ward_analysis = []
-            for ward_num, ward_info in ward_data.items():
+            for ward_num_str, ward_info in ward_data.items():
+                ward_num = int(ward_num_str)  # Convert back to int for display
                 ward_total = ward_info["total"]
                 ward_male = ward_info["male"]
                 ward_female = ward_info["female"]
                 ward_male_pct = ward_info["male_percentage"]
                 ward_female_pct = ward_info["female_percentage"]
-
                 ward_analysis.append(
-                    f"वडा नं. {ward_num} मा कुल {format_nepali_number(ward_total)} जनसंख्या रहेको छ, "
+                    f"वडा नं. {format_nepali_number(ward_num)} मा कुल {format_nepali_number(ward_total)} जनसंख्या रहेको छ, "
                     f"जसमा {format_nepali_number(ward_male)} पुरुष ({format_nepali_percentage(ward_male_pct)}%) र "
                     f"{format_nepali_number(ward_female)} महिला ({format_nepali_percentage(ward_female_pct)}%) छन् ।"
                 )

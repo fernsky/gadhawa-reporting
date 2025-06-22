@@ -421,7 +421,7 @@
 
       <!-- Age-Gender Demographics Section -->
       {% if all_demographics_data.age_gender %}
-        {% include 'demographics/age_gender/age_gender_report_partial.html' with age_gender_data=all_demographics_data.age_gender.data ward_data=all_demographics_data.age_gender.ward_data total_population=all_demographics_data.age_gender.total_population total_male=all_demographics_data.age_gender.total_male total_female=all_demographics_data.age_gender.total_female male_percentage=all_demographics_data.age_gender.male_percentage female_percentage=all_demographics_data.age_gender.female_percentage demographic_indicators=all_demographics_data.age_gender.demographic_indicators dependency_ratios=all_demographics_data.age_gender.dependency_ratios coherent_analysis=all_demographics_data.age_gender.report_content charts=all_demographics_data.age_gender.charts %}
+        {% include 'demographics/age_gender/age_gender_report_partial.html' with age_gender_data=all_demographics_data.age_gender.age_gender_data ward_data=all_demographics_data.age_gender.ward_data ward_table_data=all_demographics_data.age_gender.ward_table_data total_population=all_demographics_data.age_gender.total_population total_male=all_demographics_data.age_gender.total_male total_female=all_demographics_data.age_gender.total_female male_percentage=all_demographics_data.age_gender.male_percentage female_percentage=all_demographics_data.age_gender.female_percentage demographic_indicators=all_demographics_data.age_gender.demographic_indicators dependency_ratios=all_demographics_data.age_gender.dependency_ratios coherent_analysis=all_demographics_data.age_gender.report_content charts=all_demographics_data.age_gender.charts %}
       {% endif %}
 
       <!-- Language Demographics Section -->

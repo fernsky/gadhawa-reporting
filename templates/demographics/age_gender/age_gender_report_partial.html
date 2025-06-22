@@ -37,9 +37,10 @@
     {% endif %}
 
     <!-- Ward-wise Age-Gender Table (Matrix) -->
-    {% if ward_data and age_gender_data %}
+    {% if ward_table_data %}
     <div class="table-section">
         <h3 class="table-title">तालिका ३.३.१: वडागत उमेर समूह र लिङ्ग अनुसार जनसंख्या विवरण</h3>
+        
         <table class="pdf-data-table ward-age-gender-block-table">
             <thead>
                 <tr>
@@ -51,26 +52,28 @@
                 </tr>
             </thead>
             <tbody>
-                {% for ward_num, ward_info in ward_data.items %}
-                    <tr style="background-color: #e0e7ef; font-weight: bold;">
-                        <td colspan="5" style="text-align: left;">वडा {{ ward_num|nepali_number }}</td>
-                    </tr>
-                    {% for age_group, data in age_gender_data.items %}
+                {% for row in ward_table_data %}
+                    {% if row.type == 'ward_header' %}
+                        <tr style="background-color: #e0e7ef; font-weight: bold;">
+                            <td colspan="5" style="text-align: left;">वडा {{ row.ward_number|nepali_number }}</td>
+                        </tr>
+                    {% elif row.type == 'age_group' %}
                         <tr>
                             <td></td>
-                            <td>{{ data.name_nepali }}</td>
-                            <td style="text-align: right;">{{ ward_info.age_groups|get_item:age_group|get_item:'male'|nepali_number }}</td>
-                            <td style="text-align: right;">{{ ward_info.age_groups|get_item:age_group|get_item:'female'|nepali_number }}</td>
-                            <td style="text-align: right; font-weight: bold;">{{ ward_info.age_groups|get_item:age_group|get_item:'total'|nepali_number }}</td>
+                            <td>{{ row.age_group_name }}</td>
+                            <td style="text-align: right;">{{ row.male|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.female|nepali_number }}</td>
+                            <td style="text-align: right; font-weight: bold;">{{ row.total|nepali_number }}</td>
                         </tr>
-                    {% endfor %}
-                    <tr style="font-weight: bold; background-color: #f3f4f6;">
-                        <td></td>
-                        <td>जम्मा</td>
-                        <td style="text-align: right;">{{ ward_info.male|nepali_number }}</td>
-                        <td style="text-align: right;">{{ ward_info.female|nepali_number }}</td>
-                        <td style="text-align: right;">{{ ward_info.total|nepali_number }}</td>
-                    </tr>
+                    {% elif row.type == 'ward_total' %}
+                        <tr style="font-weight: bold; background-color: #f3f4f6;">
+                            <td></td>
+                            <td>जम्मा</td>
+                            <td style="text-align: right;">{{ row.male|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.female|nepali_number }}</td>
+                            <td style="text-align: right;">{{ row.total|nepali_number }}</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
@@ -144,15 +147,18 @@
 .pdf-data-table th,
 .pdf-data-table td {
     border: 1px solid #333;
-    padding: 4px 6px;
+    padding: 10px 16px; /* Increased padding */
     text-align: left;
     vertical-align: top;
+    font-size: 12pt; /* Larger font size */
+    min-width: 80px; /* Minimum width for better readability */
 }
 
 .pdf-data-table th {
     background-color: #f0f0f0;
     font-weight: bold;
     text-align: center;
+    font-size: 13pt; /* Slightly larger for headers */
 }
 
 .age-gender-summary-table th,
@@ -161,12 +167,11 @@
     padding: 4px 6px;
 }
 
-.ward-age-gender-table th,
-.ward-age-gender-table td {
-    font-size: 9pt;
-    padding: 4px 6px;
-    border: 1px solid #333;
-    vertical-align: middle;
+.ward-age-gender-block-table td,
+.ward-age-gender-block-table th {
+    font-size: 12pt;
+    padding: 10px 16px;
+    min-width: 80px;
 }
 
 .demographic-indicators-table th,

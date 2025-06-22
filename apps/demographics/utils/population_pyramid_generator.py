@@ -136,20 +136,20 @@ class PopulationPyramidGenerator:
         bar_height = chart_height / len(age_groups_ordered) - 4
 
         # Add title
-        if title_nepali:
-            title_element = ET.SubElement(
-                svg,
-                "text",
-                {
-                    "x": str(width / 2),
-                    "y": "40",
-                    "text-anchor": "middle",
-                    "class": "pyramid-title",
-                    "font-size": str(self.font_size_title),
-                    "fill": self.text_color,
-                },
-            )
-            title_element.text = title_nepali
+        # if title_nepali:
+        #     title_element = ET.SubElement(
+        #         svg,
+        #         "text",
+        #         {
+        #             "x": str(width / 2),
+        #             "y": "40",
+        #             "text-anchor": "middle",
+        #             "class": "pyramid-title",
+        #             "font-size": str(self.font_size_title),
+        #             "fill": self.text_color,
+        #         },
+        #     )
+        #     title_element.text = title_nepali
 
         # Add center line
         center_line = ET.SubElement(

@@ -95,7 +95,6 @@ class BaseDemographicsProcessor(ABC):
                 for item in data.values()
                 if isinstance(item, dict) and "population" in item
             )
-
         return {
             "data": data,
             "report_content": report_content,
