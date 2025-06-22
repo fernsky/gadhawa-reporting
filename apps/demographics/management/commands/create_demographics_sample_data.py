@@ -45,6 +45,10 @@ class Command(BaseCommand):
                 "Female Property Ownership Demographics",
             ),
             (
+                "create_disability_cause_sample_data",
+                "Disability Cause Demographics",
+            ),
+            (
                 "create_economically_active_sample_data",
                 "Economically Active Demographics",
             ),

@@ -259,6 +259,11 @@
     <span class="page-ref"><a href="#section-female-property-ownership"></a></span>
   </div>
 
+  <div class="toc-item level-2">
+    <span class="toc-link">३.१० अपाङ्गताका आधारमा जनसंख्याको विवरण</span>
+    <span class="page-ref"><a href="#section-disability-cause-demographics"></a></span>
+  </div>
+
   <!-- Economics Chapter TOC -->
   <div class="toc-item level-1">
     <span class="toc-link">४. आर्थिक अवस्था</span>
@@ -453,6 +458,7 @@
        {% if all_demographics_data.househead %}
        {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
       {% endif %}
+      
 
         <!-- Ward wise economically active Population -->
       {% if all_demographics_data.economically_active %}
@@ -467,6 +473,11 @@
       <!-- Female Property Ownership Demographics Section -->
       {% if all_demographics_data.female_property_ownership %}
         {% include 'demographics/female_property_ownership/female_property_ownership_report_partial.html' with data=all_demographics_data.female_property_ownership.data municipality_totals=all_demographics_data.female_property_ownership.data.municipality_data ward_data=all_demographics_data.female_property_ownership.data.ward_data total_population=all_demographics_data.female_property_ownership.total_population municipality_percentages=all_demographics_data.female_property_ownership.data.municipality_data property_type_names=all_demographics_data.female_property_ownership.data.municipality_data coherent_analysis=all_demographics_data.female_property_ownership.report_content charts=all_demographics_data.female_property_ownership.charts %}
+      {% endif %}
+
+      <!-- Disability Cause Demographics Section -->
+      {% if all_demographics_data.disability_cause %}
+        {% include 'demographics/disability_cause/disability_cause_report_partial.html' with municipality_data=all_demographics_data.disability_cause.data.municipality_data ward_data=all_demographics_data.disability_cause.data.ward_data total_population=all_demographics_data.disability_cause.total_population coherent_analysis=all_demographics_data.disability_cause.report_content pdf_charts=pdf_charts %}
       {% endif %}
     </p>
   </div>
