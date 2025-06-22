@@ -1,0 +1,318 @@
+{% load nepali_filters %}
+{% load chart_tags %}
+
+<!-- Female Property Ownership Report Partial for PDF -->
+<p class="section-content female-property-ownership-section" id="section-female-property-ownership">
+    <h3 class="section-header level-3" style="color: #1e40af; font-size: 14pt; margin-top: 1.5em; margin-bottom: 1em;">
+        ३.१३ महिला सम्पत्ति स्वामित्व सम्बन्धी विवरण
+    </h3>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">
+            {% if report_content.coherent_analysis %}
+                {{ report_content.coherent_analysis|linebreaks }}
+            {% elif coherent_analysis %}
+                {{ coherent_analysis|linebreaks }}
+            {% elif report_content %}
+                {{ report_content|linebreaks }}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Municipality-wide Property Ownership Pie Chart -->
+    {% if data.municipality_totals %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ३.१३.१: महिला सम्पत्ति स्वामित्व - सम्पत्तिको प्रकार अनुसार</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                    <img src="{% static 'images/charts/female_property_ownership_pie_chart.png' %}" alt="रेमिटेन्स खर्चको कार्यक्षेत्र अनुसार घरपरिवार वितरण" class="pdf-chart-image">
+              
+            </div>
+        </div>
+    {% endif %}
+
+   
+    
+    <!-- Municipality-wide Summary Table -->
+    {% if data.municipality_totals %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१३.१: महिला सम्पत्ति स्वामित्वको सारांश</h3>
+        <table class="pdf-data-table female-property-ownership-table">
+            <thead>
+                <tr>
+                    <th>सम्पत्तिको प्रकार</th>
+                    <th>जनसंख्या</th>
+                    <th>प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property_type, population in data.municipality_totals.items %}
+                    {% if population > 0 %}
+                    <tr>
+                        <td>{{ data.property_type_names|get_item:property_type }}</td>
+                        <td style="text-align: right;">{{ population|nepali_number }}</td>
+                        <td style="text-align: right;">{{ data.municipality_percentages|get_item:property_type|floatformat:1|nepali_number }}%</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>जम्मा</th>
+                    <th style="text-align: right;">{{ data.total_population|nepali_number }}</th>
+                    <th style="text-align: right;">१००.०%</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Ward-wise Detailed Table -->
+    {% if data.ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ३.१३.२: वडागत महिला सम्पत्ति स्वामित्वको विस्तृत विवरण</h3>
+        <table class="pdf-data-table female-property-ownership-ward-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">वडा नं.</th>
+                    <th colspan="4">सम्पत्तिको प्रकार अनुसार जनसंख्या</th>
+                    <th rowspan="2">कुल<br/>जनसंख्या</th>
+                    <th rowspan="2">सम्पत्ति<br/>स्वामित्व<br/>दर (%)</th>
+                </tr>
+                <tr>
+                    <th>घर मात्र</th>
+                    <th>जग्गा मात्र</th>
+                    <th>घर र जग्गा दुवै</th>
+                    <th>कुनै पनि छैन</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ward_num, ward_info in data.ward_data.items %}
+                    {% if ward_info.total_population > 0 %}
+                    <tr>
+                        <td style="text-align: center;">{{ ward_num|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.property_types.HOUSE_ONLY.population|default:0|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.property_types.LAND_ONLY.population|default:0|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.property_types.BOTH_HOUSE_AND_LAND.population|default:0|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.property_types.NEITHER_HOUSE_NOR_LAND.population|default:0|nepali_number }}</td>
+                        <td style="text-align: right;">{{ ward_info.total_population|nepali_number }}</td>
+                        <td style="text-align: right;">
+                            {% with property_owners=ward_info.property_types.HOUSE_ONLY.population|default:0|add:ward_info.property_types.LAND_ONLY.population|default:0|add:ward_info.property_types.BOTH_HOUSE_AND_LAND.population|default:0 %}
+                                {% if ward_info.total_population > 0 %}
+                                    {% widthratio property_owners ward_info.total_population 100 as ownership_rate %}
+                                    {{ ownership_rate|floatformat:1|nepali_number }}%
+                                {% else %}
+                                    ०.०%
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>जम्मा</th>
+                    <th style="text-align: right;">{{ data.municipality_totals.HOUSE_ONLY|default:0|nepali_number }}</th>
+                    <th style="text-align: right;">{{ data.municipality_totals.LAND_ONLY|default:0|nepali_number }}</th>
+                    <th style="text-align: right;">{{ data.municipality_totals.BOTH_HOUSE_AND_LAND|default:0|nepali_number }}</th>
+                    <th style="text-align: right;">{{ data.municipality_totals.NEITHER_HOUSE_NOR_LAND|default:0|nepali_number }}</th>
+                    <th style="text-align: right;">{{ data.total_population|nepali_number }}</th>
+                    <th style="text-align: right;">
+                        {% with total_property_owners=data.municipality_totals.HOUSE_ONLY|default:0|add:data.municipality_totals.LAND_ONLY|default:0|add:data.municipality_totals.BOTH_HOUSE_AND_LAND|default:0 %}
+                            {% if data.total_population > 0 %}
+                                {% widthratio total_property_owners data.total_population 100 as total_ownership_rate %}
+                                {{ total_ownership_rate|floatformat:1|nepali_number }}%
+                            {% else %}
+                                ०.०%
+                            {% endif %}
+                        {% endwith %}
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Property Ownership Analysis -->
+    {% if data.municipality_totals %}
+    <div class="analysis-section">
+        <h3 class="analysis-title">सम्पत्ति स्वामित्वको विश्लेषण</h3>
+        <div class="content-paragraph">
+            <p>
+                लुङ्ग्री गाउँपालिकामा महिला सम्पत्ति स्वामित्वको विश्लेषणले समाजमा महिलाको आर्थिक स्थिति र स्वतन्त्रताको महत्वपूर्ण तस्विर प्रस्तुत गर्दछ। 
+                कुल {{ data.total_population|nepali_number }} महिलामध्ये मात्र 
+                {% with property_owners=data.municipality_totals.HOUSE_ONLY|default:0|add:data.municipality_totals.LAND_ONLY|default:0|add:data.municipality_totals.BOTH_HOUSE_AND_LAND|default:0 %}
+                    {% if data.total_population > 0 %}
+                        {% widthratio property_owners data.total_population 100 as ownership_rate %}
+                        {{ ownership_rate|floatformat:1|nepali_number }}%
+                    {% else %}
+                        ०.०%
+                    {% endif %}
+                {% endwith %}
+                ले कुनै न कुनै रूपमा सम्पत्ति स्वामित्व राख्छन्।
+            </p>
+            
+            <p>
+                सबैभन्दा धेरै महिला ({{ data.municipality_percentages.NEITHER_HOUSE_NOR_LAND|default:0|floatformat:1|nepali_number }}%) ले घर र जग्गा कुनै पनि नराख्ने हुनाले समाजमा महिलाको आर्थिक निर्भरताको गम्भीर समस्या देखिन्छ। 
+                यसको विपरीत, मात्र {{ data.municipality_percentages.BOTH_HOUSE_AND_LAND|default:0|floatformat:1|nepali_number }}% महिलाले घर र जग्गा दुवै स्वामित्व राख्छन्, जसले महिलाको पूर्ण आर्थिक स्वतन्त्रताको चुनौती देखाउँछ।
+            </p>
+        </div>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+/* PDF-specific styles */
+.female-property-ownership-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+
+.pdf-data-table,
+.female-property-ownership-table,
+.female-property-ownership-ward-table {
+    font-size: 8pt !important;
+    line-height: 1.2;
+    border-collapse: collapse;
+}
+
+.pdf-data-table th, .pdf-data-table td,
+.female-property-ownership-table th, .female-property-ownership-table td,
+.female-property-ownership-ward-table th, .female-property-ownership-ward-table td {
+    padding: 2px 4px !important;
+    font-size: 8pt !important;
+    line-height: 1.2;
+}
+
+.pdf-data-table th, .female-property-ownership-table th, .female-property-ownership-ward-table th {
+    font-weight: 600;
+    background-color: #f3f4f6;
+    text-align: center;
+}
+
+.pdf-data-table td, .female-property-ownership-table td, .female-property-ownership-ward-table td {
+    text-align: right;
+}
+
+.pdf-chart-container {
+    border: none;
+    text-align: center;
+    margin: 1em 0;
+    page-break-inside: auto;
+}
+
+.pdf-chart-container svg {
+    max-width: 100%;
+    max-height: 350px;
+    height: auto;
+}
+
+.pdf-chart-image {
+    max-width: 100%;
+    max-height: 350px;
+    height: auto;
+}
+
+.chart-title,
+.table-title,
+.analysis-title {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #333;
+    margin: 0.5em 0;
+    text-align: center;
+}
+
+.content-paragraph {
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0.5em 0;
+}
+
+.content-paragraph p {
+    margin: 0.5em 0;
+    text-indent: 0;
+}
+
+.content-section {
+    margin: 1em 0;
+}
+
+.chart-section {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.table-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+.analysis-section {
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+/* Enhanced table styling */
+.female-property-ownership-table tbody tr:nth-child(even),
+.female-property-ownership-ward-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.female-property-ownership-table tbody tr:hover,
+.female-property-ownership-ward-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.female-property-ownership-table tfoot tr,
+.female-property-ownership-ward-table tfoot tr {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+
+/* Responsive table for smaller content */
+@media print {
+    .pdf-data-table {
+        font-size: 9pt;
+    }
+    
+    .pdf-data-table th,
+    .pdf-data-table td {
+        padding: 2px 3px;
+    }
+    
+    .female-property-ownership-table th,
+    .female-property-ownership-table td,
+    .female-property-ownership-ward-table th,
+    .female-property-ownership-ward-table td {
+        font-size: 9pt;
+        padding: 2px 3px;
+    }
+}
+
+/* Print optimization */
+@media print {
+    .female-property-ownership-section {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .pdf-data-table {
+        page-break-inside: auto;
+    }
+    
+    .pdf-data-table tr {
+        page-break-inside: avoid;
+    }
+    
+    .chart-section {
+        page-break-inside: avoid;
+    }
+    
+    .table-section {
+        page-break-inside: auto;
+    }
+}
+</style> 

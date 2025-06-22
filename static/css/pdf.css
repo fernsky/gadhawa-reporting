@@ -420,6 +420,70 @@ li {
 }
 
 /* ========================================
+   TABLES: COMPACT PDF STYLES
+   ======================================== */
+
+.data-table,
+.pdf-data-table,
+.ward-household-table,
+.ward-household-comparison-table {
+  font-size: 8pt !important;
+  line-height: 1.2;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td,
+.pdf-data-table th,
+.pdf-data-table td,
+.ward-household-table th,
+.ward-household-table td,
+.ward-household-comparison-table th,
+.ward-household-comparison-table td {
+  padding: 2px 4px !important;
+  font-size: 8pt !important;
+  line-height: 1.2;
+}
+
+.data-table th,
+.pdf-data-table th,
+.ward-household-table th,
+.ward-household-comparison-table th {
+  font-weight: 600;
+  background-color: #f3f4f6;
+  text-align: center;
+}
+
+.data-table td,
+.pdf-data-table td,
+.ward-household-table td,
+.ward-household-comparison-table td {
+  text-align: right;
+}
+
+@media print {
+
+  .data-table,
+  .pdf-data-table,
+  .ward-household-table,
+  .ward-household-comparison-table {
+    font-size: 8pt !important;
+  }
+
+  .data-table th,
+  .data-table td,
+  .pdf-data-table th,
+  .pdf-data-table td,
+  .ward-household-table th,
+  .ward-household-table td,
+  .ward-household-comparison-table th,
+  .ward-household-comparison-table td {
+    padding: 2px 3px !important;
+    font-size: 8pt !important;
+  }
+}
+
+/* ========================================
    UTILITY CLASSES
    ======================================== */
 

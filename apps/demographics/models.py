@@ -671,7 +671,7 @@ class WardAgeWisePopulation(BaseModel):
     gender = models.CharField(
         max_length=10, choices=GenderChoice.choices, verbose_name=_("लिङ्ग")
     )
-    population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
+    population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत उमेरगत जनसंख्या")
@@ -679,7 +679,7 @@ class WardAgeWisePopulation(BaseModel):
         unique_together = ["ward_number", "age_group", "gender"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_age_group_display()} - {self.get_gender_display()}"
+        return f"वडा {self.ward_number} - {self.age_group} - {self.gender}"
 
 
 # Refactored models for scalability and alignment with report-structure.md
@@ -756,7 +756,7 @@ class WardWiseHouseheadGender(BaseModel):
     gender = models.CharField(
         max_length=10, choices=GenderChoice.choices, verbose_name=_("घरमुखियाको लिङ्ग")
     )
-    population = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार संख्या"))
+    population = models.PositiveIntegerField(verbose_name=_("घरपरिवार संख्या"))
 
     class Meta:
         verbose_name = _("वडागत घरमुखियाको लिङ्ग")
@@ -764,7 +764,7 @@ class WardWiseHouseheadGender(BaseModel):
         unique_together = ["ward_number", "gender"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_gender_display()} मुखिया"
+        return f"वडा {self.ward_number} - {self.gender} मुखिया"
 
 
 # ३.८ पेशाका आधारमा जनसंख्या विवरण
@@ -778,7 +778,7 @@ class WardWiseMajorOccupation(BaseModel):
     occupation = models.CharField(
         max_length=50, choices=OccupationTypeChoice.choices, verbose_name=_("पेशा")
     )
-    population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
+    population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत मुख्य पेशा")
@@ -786,7 +786,7 @@ class WardWiseMajorOccupation(BaseModel):
         unique_together = ["ward_number", "occupation"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_occupation_display()}"
+        return f"वडा {self.ward_number} - {self.occupation}"
 
 
 # Special age group choices for economically active population
@@ -812,9 +812,7 @@ class WardAgeWiseEconomicallyActivePopulation(BaseModel):
     gender = models.CharField(
         max_length=20, choices=GenderChoice.choices, verbose_name=_("लिङ्ग")
     )
-    population = models.PositiveIntegerField(
-        default=0, verbose_name=_("आर्थिक रूपमा सक्रिय जनसंख्या")
-    )
+    population = models.PositiveIntegerField(verbose_name=_("आर्थिक रूपमा सक्रिय जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत उमेर र लिङ्गअनुसार आर्थिक रूपमा सक्रिय जनसंख्या")
@@ -822,7 +820,7 @@ class WardAgeWiseEconomicallyActivePopulation(BaseModel):
         unique_together = ["ward_number", "age_group", "gender"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_age_group_display()} - {self.get_gender_display()}"
+        return f"वडा {self.ward_number} - {self.age_group} - {self.gender}"
 
 
 # ३.१० अपाङ्गताको आधारमा जनसंख्या विवरण
@@ -838,7 +836,7 @@ class WardWiseDisabilityCause(BaseModel):
         choices=DisabilityCauseChoice.choices,
         verbose_name=_("अपाङ्गताको कारण"),
     )
-    population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
+    population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत अपाङ्गताको कारण")
@@ -846,7 +844,7 @@ class WardWiseDisabilityCause(BaseModel):
         unique_together = ["ward_number", "disability_cause"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_disability_cause_display()}"
+        return f"वडा {self.ward_number} - {self.disability_cause}"
 
 
 # ३.११ बसाइंसराइ सम्बन्धी विवरण
@@ -861,7 +859,7 @@ class WardWiseBirthplaceHouseholds(BaseModel):
     birth_place = models.CharField(
         max_length=50, choices=BirthPlaceChoice.choices, verbose_name=_("जन्मस्थान")
     )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार संख्या"))
+    households = models.PositiveIntegerField(verbose_name=_("घरपरिवार संख्या"))
 
     class Meta:
         verbose_name = _("वडागत जन्मस्थानअनुसार घरपरिवार")
@@ -869,7 +867,7 @@ class WardWiseBirthplaceHouseholds(BaseModel):
         unique_together = ["ward_number", "birth_place"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_birth_place_display()}"
+        return f"वडा {self.ward_number} - {self.birth_place}"
 
 
 # ख) बसाईसराई गरी आउने संख्याको आधारमा जनसंख्याको विवरण
@@ -885,7 +883,7 @@ class WardWiseMigratedHouseholds(BaseModel):
         choices=MigratedFromChoice.choices,
         verbose_name=_("बसाइसराइको स्थान"),
     )
-    households = models.PositiveIntegerField(default=0, verbose_name=_("घरपरिवार संख्या"))
+    households = models.PositiveIntegerField(verbose_name=_("घरपरिवार संख्या"))
 
     class Meta:
         verbose_name = _("वडागत बसाइसराइ गरेका घरपरिवार")
@@ -893,11 +891,11 @@ class WardWiseMigratedHouseholds(BaseModel):
         unique_together = ["ward_number", "migrated_from"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_migrated_from_display()}"
+        return f"वडा {self.ward_number} - {self.migrated_from}"
 
 
 # ३.१२ व्यक्तिगत घटना सम्बन्धी विवरण
-# क) पाँच वर्षमुनिका बालबालिकाको जन्मदर्ताको आधारमा वडागत विवरण
+# क पाँच वर्षमुनिका बालबालिकाको जन्मदर्ताको आधारमा वडागत विवरण
 class WardWiseBirthCertificatePopulation(BaseModel):
     """Ward wise birth certificate population"""
 
@@ -906,10 +904,10 @@ class WardWiseBirthCertificatePopulation(BaseModel):
         verbose_name=_("वडा नं."),
     )
     with_birth_certificate = models.PositiveIntegerField(
-        default=0, verbose_name=_("जन्म दर्ता भएका")
+        verbose_name=_("जन्म दर्ता भएका")
     )
     without_birth_certificate = models.PositiveIntegerField(
-        default=0, verbose_name=_("जन्म दर्ता नभएका")
+        verbose_name=_("जन्म दर्ता नभएका")
     )
     total_population_under_5 = models.PositiveIntegerField(
         null=True, blank=True, verbose_name=_("५ वर्षमुनिका कुल बालबालिका")
@@ -939,9 +937,7 @@ class WardAgeGenderWiseDeceasedPopulation(BaseModel):
     gender = models.CharField(
         max_length=10, choices=GenderChoice.choices, verbose_name=_("लिङ्ग")
     )
-    deceased_population = models.PositiveIntegerField(
-        default=0, verbose_name=_("मृत्यु जनसंख्या")
-    )
+    deceased_population = models.PositiveIntegerField(verbose_name=_("मृत्यु जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत उमेर लिङ्गअनुसार मृत्यु जनसंख्या")
@@ -949,10 +945,10 @@ class WardAgeGenderWiseDeceasedPopulation(BaseModel):
         unique_together = ["ward_number", "age_group", "gender"]
 
     def __str__(self):
-        return f"वडा {self.ward_number} - {self.get_age_group_display()} - {self.get_gender_display()} (मृत्यु)"
+        return f"वडा {self.ward_number} - {self.age_group} - {self.gender} (मृत्यु)"
 
 
-# घ) मृत्युको कारण अनुसार मृतकको संख्या
+# घ मृत्युको कारण अनुसार मृतकको संख्या
 class WardWiseDeathCause(BaseModel):
     """Ward wise death cause"""
 
@@ -961,7 +957,7 @@ class WardWiseDeathCause(BaseModel):
         verbose_name=_("वडा नं."),
     )
     death_cause = models.TextField(verbose_name=_("मृत्युको कारण"))
-    population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
+    population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
 
     class Meta:
         verbose_name = _("वडागत मृत्युको कारण")
@@ -970,3 +966,35 @@ class WardWiseDeathCause(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.death_cause}"
+
+
+# ३.१३ महिला सम्पत्ति स्वामित्व सम्बन्धी विवरण
+class PropertyTypeChoice(models.TextChoices):
+    HOUSE_ONLY = "HOUSE_ONLY", _("घर मात्र")
+    LAND_ONLY = "LAND_ONLY", _("जग्गा मात्र")
+    BOTH_HOUSE_AND_LAND = "BOTH_HOUSE_AND_LAND", _("घर र जग्गा दुवै")
+    NEITHER_HOUSE_NOR_LAND = "NEITHER_HOUSE_NOR_LAND", _("घर र जग्गा कुनै पनि छैन")
+
+
+class WardWiseFemalePropertyOwnership(BaseModel):
+    """Ward wise female property ownership data"""
+
+    ward_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(9)],
+        verbose_name=_("वडा नं."),
+    )
+    property_type = models.CharField(
+        max_length=50,
+        choices=PropertyTypeChoice.choices,
+        verbose_name=_("सम्पत्तिको प्रकार"),
+    )
+    count = models.PositiveIntegerField(verbose_name=_("गणना"))
+    population = models.PositiveIntegerField(verbose_name=_("जनसंख्या"))
+
+    class Meta:
+        verbose_name = _("वडागत महिला सम्पत्ति स्वामित्व")
+        verbose_name_plural = _("वडागत महिला सम्पत्ति स्वामित्व")
+        unique_together = ["ward_number", "property_type"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.property_type}"

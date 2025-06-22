@@ -14,6 +14,7 @@ from .ward_settlement import WardSettlementProcessor
 from .ward_household import WardHouseholdProcessor
 from .demographic_summary import DemographicSummaryProcessor
 from .age_gender import AgeGenderProcessor
+from .female_property_ownership import FemalePropertyOwnershipProcessor
 
 
 class DemographicsManager:
@@ -31,6 +32,7 @@ class DemographicsManager:
             "househead": HouseheadProcessor(),
             "occupation": OccupationProcessor(),
             "economically_active": EconomicallyActiveProcessor(),
+            "female_property_ownership": FemalePropertyOwnershipProcessor(),
         }
 
     def get_processor(self, category):

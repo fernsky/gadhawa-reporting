@@ -41,6 +41,10 @@ class Command(BaseCommand):
             ("create_househead_sample_data", "Househead Demographics"),
             ("create_occupation_sample_data", "Occupation Demographics"),
             (
+                "create_female_property_ownership_sample_data",
+                "Female Property Ownership Demographics",
+            ),
+            (
                 "create_economically_active_sample_data",
                 "Economically Active Demographics",
             ),

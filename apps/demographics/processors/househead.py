@@ -59,7 +59,7 @@ class HouseheadProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         # Ward-wise data for bar chart and detailed table
         ward_data = {}
-        for ward_num in range(1, 10):  # Wards 1-9
+        for ward_num in range(1, 8):  # Wards 1-7
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "demographics": {},

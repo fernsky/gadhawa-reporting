@@ -249,6 +249,16 @@
     <span class="page-ref"><a href="#section-househead-demographics"></a></span>
   </div>
 
+  <div class="toc-item level-2">
+    <span class="toc-link">३.८ पेशाका आधारमा जनसंख्या विवरण</span>
+    <span class="page-ref"><a href="#section-occupation-demographics"></a></span>
+  </div>
+
+  <div class="toc-item level-2">
+    <span class="toc-link">३.१३ महिला सम्पत्ति स्वामित्व सम्बन्धी विवरण</span>
+    <span class="page-ref"><a href="#section-female-property-ownership"></a></span>
+  </div>
+
   <!-- Economics Chapter TOC -->
   <div class="toc-item level-1">
     <span class="toc-link">४. आर्थिक अवस्था</span>
@@ -452,6 +462,11 @@
       <!-- Occupation Demographics Section -->
       {% if all_demographics_data.occupation %}
        {% include 'demographics/occupation/occupation_report_partial.html' with municipality_data=all_demographics_data.occupation.data.municipality_data ward_data=all_demographics_data.occupation.data.ward_data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+
+      <!-- Female Property Ownership Demographics Section -->
+      {% if all_demographics_data.female_property_ownership %}
+        {% include 'demographics/female_property_ownership/female_property_ownership_report_partial.html' with data=all_demographics_data.female_property_ownership.data municipality_totals=all_demographics_data.female_property_ownership.data.municipality_data ward_data=all_demographics_data.female_property_ownership.data.ward_data total_population=all_demographics_data.female_property_ownership.total_population municipality_percentages=all_demographics_data.female_property_ownership.data.municipality_data property_type_names=all_demographics_data.female_property_ownership.data.municipality_data coherent_analysis=all_demographics_data.female_property_ownership.report_content charts=all_demographics_data.female_property_ownership.charts %}
       {% endif %}
     </p>
   </div>
