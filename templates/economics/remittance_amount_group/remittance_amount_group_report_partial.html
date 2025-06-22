@@ -1,0 +1,69 @@
+{% load nepali_filters dict_extras %}
+<!-- Remittance Amount Group Report Partial for PDF -->
+<p class="section-content remittance-amount-group-section" id="section-remittance-amount-group">
+    <h2 class="section-header level-2">
+        ४.३ विगत १२ महिनामा वैदेशिक रोजगारीमा गएका मध्येबाट आम्दानी गरी रकम पठाउनेको विवरण
+    </h2>
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+    {% if municipality_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.३.१: रकम समूह अनुसार पठाउने जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/remittance_amount_group_pie_chart.png' %}" alt="रकम समूह अनुसार पठाउने जनसंख्या वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    {% if ward_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.३.२: वडागत रकम समूह अनुसार पठाउने जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/remittance_amount_group_bar_chart.png' %}" alt="वडागत रकम समूह अनुसार पठाउने जनसंख्या वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    {% if ward_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ४.३.१: वडागत रकम समूह अनुसार पठाउने जनसंख्या विस्तृत विवरण</h3>
+        <table class="pdf-data-table ward-remittance-amount-group-table">
+            <thead>
+                <tr>
+                    <th>रकम समूह</th>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <th>वडा {{ ward_num|nepali_number }}</th>
+                    {% endfor %}
+                    <th>जम्मा</th>
+                    <th>प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group_code, data in municipality_data.items %}
+                    {% if data.sending_population > 0 %}
+                    <tr>
+                        <td>{{ data.name_nepali }}</td>
+                        {% for ward_num, ward_info in ward_data.items %}
+                            <td>{{ ward_info.amount_groups|dict_get:group_code.sending_population|nepali_number }}</td>
+                        {% endfor %}
+                        <td>{{ data.sending_population|nepali_number }}</td>
+                        <td>{{ data.percentage|floatformat:2 }}%</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>जम्मा</td>
+                    {% for ward_num, ward_info in ward_data.items %}
+                        <td>{{ ward_info.total_sending_population|nepali_number }}</td>
+                    {% endfor %}
+                    <td>{{ total_sending_population|nepali_number }}</td>
+                    <td>१००%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>

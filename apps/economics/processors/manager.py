@@ -9,6 +9,10 @@ from .major_skills import MajorSkillsProcessor
 from .wardwise_house_ownership import WardWiseHouseOwnershipProcessor
 from .wardwise_house_base import WardWiseHouseBaseProcessor
 from .wardwise_house_outer_wall import WardWiseHouseOuterWallProcessor
+from .municipality_wide_foreign_employment_countries import (
+    MunicipalityWideForeignEmploymentCountriesProcessor,
+)
+from .remittance_amount_group import RemittanceAmountGroupProcessor
 
 
 class EconomicsManager:
@@ -21,6 +25,8 @@ class EconomicsManager:
             "wardwise_house_ownership": WardWiseHouseOwnershipProcessor(),
             "wardwise_house_base": WardWiseHouseBaseProcessor(),
             "wardwise_house_outer_wall": WardWiseHouseOuterWallProcessor(),
+            "municipality_wide_foreign_employment_countries": MunicipalityWideForeignEmploymentCountriesProcessor(),
+            "remittance_amount_group": RemittanceAmountGroupProcessor(),
         }
 
     def get_processor(self, category):

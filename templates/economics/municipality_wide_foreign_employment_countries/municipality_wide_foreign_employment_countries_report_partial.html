@@ -1,0 +1,91 @@
+{% load nepali_filters %}
+
+<!-- Municipality Wide Foreign Employment Countries Report Partial for PDF -->
+<p class="section-content municipality-wide-foreign-employment-countries-section" id="section-municipality-wide-foreign-employment-countries">
+    <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
+        ४.१.१० वैदेशिक रोजगारीमा गएका देश अनुसार जनसंख्या विवरण
+    </h2>
+    
+    <!-- Coherent Analysis Text -->
+    <div class="content-section">
+        <div class="content-paragraph">{{ coherent_analysis|linebreaks }}</div>
+    </div>
+
+    <!-- Pie Chart for Municipality-wide Distribution -->
+    {% if country_data %}
+        <div class="chart-section">
+            <h3 class="chart-title">चित्र ४.१.१०.१: देश अनुसार वैदेशिक रोजगारीमा गएका जनसंख्या वितरण</h3>
+            <div class="pdf-chart-container">
+                {% load static %}
+                <img src="{% static 'images/charts/municipality_wide_foreign_employment_countries_pie_chart.png' %}" alt="देश अनुसार वैदेशिक रोजगारीमा गएका जनसंख्या वितरण" class="pdf-chart-image">
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Detailed Table -->
+    {% if country_data %}
+    <div class="table-section">
+        <h3 class="table-title">तालिका ४.१.१०.१: देश अनुसार वैदेशिक रोजगारीमा गएका जनसंख्या विस्तृत विवरण</h3>
+        <table class="pdf-data-table country-population-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%; text-align: left; padding: 6px;">देश</th>
+                    <th style="text-align: center; font-size: 9pt; padding: 4px;">जनसंख्या</th>
+                    <th style="text-align: center; font-size: 9pt; padding: 4px;">प्रतिशत</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for country, data in country_data.items %}
+                    {% if data.population > 0 %}
+                        <tr>
+                            <td style="text-align: left; font-weight: bold; padding: 6px; font-size: 9pt;">{{ country }}</td>
+                            <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ data.population|nepali_number }}</td>
+                            <td style="text-align: center; font-size: 9pt; padding: 4px;">{{ data.percentage|nepali_percentage }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
+                    <td style="text-align: left; padding: 6px; font-size: 10pt;">जम्मा</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #e8f4f8;">{{ total_population|nepali_number }}</td>
+                    <td style="text-align: center; font-size: 10pt; background-color: #d4edda;">१००.०%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% endif %}
+</p>
+
+<style>
+.municipality-wide-foreign-employment-countries-section {
+    page-break-inside: auto;
+    margin-bottom: 2em;
+}
+.country-population-table th,
+.country-population-table td {
+    font-size: 9pt;
+    padding: 4px 6px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+.country-population-table th {
+    background-color: #e8f4f8;
+    font-weight: bold;
+    text-align: center;
+}
+.country-population-table td:first-child {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left !important;
+    padding-left: 8px;
+    white-space: nowrap;
+}
+.country-population-table tbody tr:nth-child(even) td:first-child {
+    background-color: #f0f0f0;
+}
+.country-population-table tfoot td:first-child {
+    background-color: #e8f4f8 !important;
+    font-weight: bold;
+}
+</style>

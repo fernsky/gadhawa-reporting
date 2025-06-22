@@ -35,6 +35,12 @@
         {% include 'economics/wardwise_house_outer_wall/wardwise_house_outer_wall_report_partial.html' with municipality_data=all_economics_data.wardwise_house_outer_wall.data.municipality_data ward_data=all_economics_data.wardwise_house_outer_wall.data.ward_data total_households=all_economics_data.wardwise_house_outer_wall.total_households coherent_analysis=all_economics_data.wardwise_house_outer_wall.report_content pdf_charts=pdf_charts %}
     {% endif %}
 
+    <!-- Municipality Wide Foreign Employment Countries Section -->
+    {% if all_economics_data.municipality_wide_foreign_employment_countries %}
+        {% include 'economics/municipality_wide_foreign_employment_countries/municipality_wide_foreign_employment_countries_report_partial.html' with country_data=all_economics_data.municipality_wide_foreign_employment_countries.data.country_data total_population=all_economics_data.municipality_wide_foreign_employment_countries.total_population coherent_analysis=all_economics_data.municipality_wide_foreign_employment_countries.report_content pdf_charts=pdf_charts %}
+    {% endif %}
+
+ 
 </div>
 
 <style>

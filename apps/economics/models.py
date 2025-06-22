@@ -684,6 +684,21 @@ class WardWiseHouseholdOuterWall(BaseModel):
 # ४.१.१२ वैदेशिक रोजगारीमा गएकाहरुको विवरण
 
 
+class MunicipalityWideForeignEmploymentCountries(BaseModel):
+    """Ward wise foreign employment countries"""
+
+    country = models.CharField(max_length=100, verbose_name=_("देश"))
+    population = models.PositiveIntegerField(default=0, verbose_name=_("जनसंख्या"))
+
+    class Meta:
+        verbose_name = _("वैदेशिक रोजगार देश")
+        verbose_name_plural = _("वैदेशिक रोजगार देश")
+        unique_together = ["country"]
+
+    def __str__(self):
+        return f"वडा {self.ward_number} - {self.country}"
+
+
 class WardWiseForeignEmploymentCountries(BaseModel):
     """Ward wise foreign employment countries"""
 

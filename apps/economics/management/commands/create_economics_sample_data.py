@@ -47,6 +47,26 @@ class Command(BaseCommand):
                 "description": "Remittance Expenses Sample Data",
                 "app": "economics",
             },
+            {
+                "command": "create_wardwise_house_ownership_sample_data",
+                "description": "Ward Wise House Ownership Sample Data",
+                "app": "economics",
+            },
+            {
+                "command": "create_wardwise_house_base_sample_data",
+                "description": "Ward Wise House Base Sample Data",
+                "app": "economics",
+            },
+            {
+                "command": "create_wardwise_house_outer_wall_sample_data",
+                "description": "Ward Wise House Outer Wall Sample Data",
+                "app": "economics",
+            },
+            {
+                "command": "create_municipality_wide_foreign_employment_countries_sample_data",
+                "description": "Municipality Wide Foreign Employment Countries Sample Data",
+                "app": "economics",
+            },
         ]
 
         # Track results
