@@ -509,11 +509,11 @@ class FemalePropertyOwnershipProcessor(BaseDemographicsProcessor, SimpleChartPro
                 nepali_lowest_rate = format_nepali_percentage(lowest_property_rate)
 
                 content.append(
-                    f"""वडागत विश्लेषणले महिला सम्पत्ति स्वामित्वको भौगोलिक विविधता देखाउँछ। वडा {highest_property_ward} मा सबैभन्दा धेरै महिला ({nepali_highest_rate} प्रतिशत) ले सम्पत्ति स्वामित्व राख्छन्, जसले यस वडाको महिला सशक्तिकरणको सकारात्मक चित्र देखाउँछ।"""
+                    f"""वडागत विश्लेषणले महिला सम्पत्ति स्वामित्वको भौगोलिक विविधता देखाउँछ। वडा {format_nepali_number(highest_property_ward)} मा सबैभन्दा धेरै महिला ({nepali_highest_rate} प्रतिशत) ले सम्पत्ति स्वामित्व राख्छन्, जसले यस वडाको महिला सशक्तिकरणको सकारात्मक चित्र देखाउँछ।"""
                 )
 
                 content.append(
-                    f"""यसको विपरीत, वडा {lowest_property_ward} मा मात्र {nepali_lowest_rate} प्रतिशत महिलाले सम्पत्ति स्वामित्व राख्छन्, जसले यस क्षेत्रमा महिला सशक्तिकरणको लागि विशेष ध्यान दिनुपर्ने आवश्यकता देखाउँछ।"""
+                    f"""यसको विपरीत, वडा {format_nepali_number(lowest_property_ward)} मा मात्र {nepali_lowest_rate} प्रतिशत महिलाले सम्पत्ति स्वामित्व राख्छन्, जसले यस क्षेत्रमा महिला सशक्तिकरणको लागि विशेष ध्यान दिनुपर्ने आवश्यकता देखाउँछ।"""
                 )
 
             # Policy implications
