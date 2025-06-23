@@ -612,11 +612,15 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             elderly_pop = dependency_ratios["elderly_population"]
             working_age_pop = dependency_ratios["working_age_population"]
 
+            # Prevent ZeroDivisionError for total_pop
+            child_pop_pct = (child_pop / total_pop * 100) if total_pop > 0 else 0
+            elderly_pop_pct = (elderly_pop / total_pop * 100) if total_pop > 0 else 0
+
             analysis_parts.append(
                 f"बालबालिका तथा शिशुहरूको संख्या {format_nepali_number(child_pop)} "
-                f"({format_nepali_percentage(child_pop/total_pop*100)}%) हुनुले क्रमशः प्रजनन दर घट्दै गएको संकेत गर्दछ "
+                f"({format_nepali_percentage(child_pop_pct)}%) हुनुले क्रमशः प्रजनन दर घट्दै गएको संकेत गर्दछ "
                 f"भने वृद्धवृद्धाहरूको संख्या {format_nepali_number(elderly_pop)} "
-                f"({format_nepali_percentage(elderly_pop/total_pop*100)}%) हुनुले औसत आयु अन्य देशहरूको तुलनामा कम हुनु र "
+                f"({format_nepali_percentage(elderly_pop_pct)}%) हुनुले औसत आयु अन्य देशहरूको तुलनामा कम हुनु र "
                 "प्रौढ अवस्थामा लाग्ने रोगका कारण पाका उमेरको जनसंख्याको मृत्युदर बढी हुनु भन्ने जनाउँछ ।"
             )
 
@@ -634,8 +638,8 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 ward_total = ward_info["total"]
                 ward_male = ward_info["male"]
                 ward_female = ward_info["female"]
-                ward_male_pct = ward_info["male_percentage"]
-                ward_female_pct = ward_info["female_percentage"]
+                ward_male_pct = ward_info.get("male_percentage", 0)
+                ward_female_pct = ward_info.get("female_percentage", 0)
                 ward_analysis.append(
                     f"वडा नं. {format_nepali_number(ward_num)} मा कुल {format_nepali_number(ward_total)} जनसंख्या रहेको छ, "
                     f"जसमा {format_nepali_number(ward_male)} पुरुष ({format_nepali_percentage(ward_male_pct)}%) र "
