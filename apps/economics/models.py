@@ -1242,7 +1242,6 @@ class MunicipalityWideCooperatives(BaseModel):
         verbose_name=_("सहकारी प्रकार"),
         default=CooperativeTypeChoice.AGRICULTURE,
     )
-    address = models.CharField(max_length=255, verbose_name=_("ठेगाना"), blank=True)
 
     class Meta:
         verbose_name = _("गाउँपालिका व्यापी सहकारी")
