@@ -74,10 +74,7 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
         """Get major skills data - both municipality-wide and ward-wise"""
         # Municipality-wide summary
         municipality_data = {}
-
-        # Initialize all skill types
         skill_types = dict(SkillTypeChoice.choices)
-
         for skill_code, skill_name in skill_types.items():
             municipality_data[skill_code] = {
                 "population": 0,
@@ -85,9 +82,12 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
                 "name_nepali": skill_name,
             }
 
-        # Ward-wise data for bar chart and detailed table
+        # Dynamically determine all ward numbers from the data
+        all_wards = sorted(
+            set(WardWiseMajorSkills.objects.values_list("ward_number", flat=True))
+        )
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7 based on sample data
+        for ward_num in all_wards:
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "demographics": {},

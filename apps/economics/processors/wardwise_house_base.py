@@ -43,8 +43,12 @@ class WardWiseHouseBaseProcessor(BaseEconomicsProcessor):
         nepali_names = {code: name for code, name in base_types.items()}
         for code, name in base_types.items():
             municipality_data[code] = {"name": name, "households": 0, "percentage": 0}
+        # Dynamically determine all ward numbers from the data
+        all_wards = sorted(
+            set(WardWiseHouseholdBase.objects.values_list("ward_number", flat=True))
+        )
         ward_data = {}
-        for ward_num in range(1, 8):
+        for ward_num in all_wards:
             ward_data[ward_num] = {
                 code: {"name": name, "households": 0, "percentage": 0}
                 for code, name in base_types.items()

@@ -96,9 +96,8 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor, SimpleChartProcesso
                     age_group_data[age_code]["population"] / total_population * 100
                 )
 
-        # Municipality-wide summary by gender
+        # Municipality-wide summary by gender (now includes OTHER)
         gender_data = {}
-
         for gender_choice in GenderChoice.choices:
             gender_code = gender_choice[0]
             gender_name = gender_choice[1]
@@ -122,9 +121,9 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor, SimpleChartProcesso
                     ),
                 }
 
-        # Ward-wise data
+        # Ward-wise data (now supports wards 1-8 and all genders)
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7
+        for ward_num in range(1, 9):  # Wards 1-8
             ward_population = (
                 WardAgeWiseEconomicallyActivePopulation.objects.filter(
                     ward_number=ward_num
@@ -155,36 +154,26 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor, SimpleChartProcesso
 
                     if age_pop > 0:
                         ward_data[ward_num]["age_groups"][age_code] = {
+                            "name_english": age_code,
                             "name_nepali": age_name,
                             "population": age_pop,
-                            "percentage": (
-                                (age_pop / ward_population * 100)
-                                if ward_population > 0
-                                else 0
-                            ),
                         }
 
-                # Gender breakdown for this ward
+                # Gender breakdown for this ward (now includes OTHER)
                 for gender_choice in GenderChoice.choices:
                     gender_code = gender_choice[0]
                     gender_name = gender_choice[1]
-
                     gender_pop = (
                         WardAgeWiseEconomicallyActivePopulation.objects.filter(
                             ward_number=ward_num, gender=gender_code
                         ).aggregate(total=models.Sum("population"))["total"]
                         or 0
                     )
-
                     if gender_pop > 0:
                         ward_data[ward_num]["genders"][gender_code] = {
+                            "name_english": gender_code,
                             "name_nepali": gender_name,
                             "population": gender_pop,
-                            "percentage": (
-                                (gender_pop / ward_population * 100)
-                                if ward_population > 0
-                                else 0
-                            ),
                         }
 
         return {

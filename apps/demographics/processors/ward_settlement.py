@@ -30,10 +30,8 @@ class WardSettlementProcessor(BaseDemographicsProcessor):
         return "३.१.१"
 
     def get_data(self):
-        """Get ward settlement data"""
+        """Get ward settlement data from the database"""
         ward_data = {}
-
-        # Get all ward settlement data
         for ward_settlement in WardSettlement.objects.all().order_by("ward_number"):
             ward_data[ward_settlement.ward_number] = {
                 "ward_number": ward_settlement.ward_number,
@@ -44,13 +42,10 @@ class WardSettlementProcessor(BaseDemographicsProcessor):
                     else 0
                 ),
             }
-
-        # Calculate total settlements
         total_settlements = sum(
             len(data["settlement_areas"]) if data["settlement_areas"] else 0
             for data in ward_data.values()
         )
-
         return {
             "ward_data": ward_data,
             "total_settlements": total_settlements,
@@ -103,19 +98,14 @@ class WardSettlementProcessor(BaseDemographicsProcessor):
         def generate_formal_report(self, data):
             """Generate formal ward settlement report"""
 
-            # Analysis text as provided
-            analysis_text = """यस गाउँपालिकामा पहाडी क्षेत्रका साना र ठूला बस्ती गरी ९४ भन्दा बढी मुख्य वस्तीहरु रहेका छन् भने घर निर्माण शैली परम्परागत रहेको छ । यस क्षेत्रमा मुख्यतया न्यानो समशितोष्ण देखी ठण्डा समशितोष्ण सम्मको हावापानी भएतापनि आर्थिक रुपमा कृषि र पशुपालनमा राम्रो सम्भावना रहेका कारण बसोबासका लागि मानिसहरुको रोजाइको क्षेत्र पर्दछ । तथापी सेवा, सुविधा तथा अवसरको उपलब्धताका कारण विकटमा रहेका गाउँवाट र अन्य जिल्लाहरुका बजार क्षेत्रमा बसाँइसराई गरेको पाइन्छ ।
-
-गाउँपालिकाका विभिन्न क्षेत्रहरूको व्यवस्थित तवरले विकास गर्न प्रत्येक बस्तीहरुमा आवत जावत गर्न मोटर बाटो, खुल्ला क्षेत्रको प्रावधान, लगायत भौतिक तथा पूर्वाधारको निर्माण सहितको व्यवस्थित बस्तीको विकास गर्न जग्गा एकीकरण वा सेवा सुविधा जस्ता कार्यक्रमहरू संचालन गर्नुपर्दछ । यसरी जग्गा विकास कार्यक्रम संचालन गर्दा बजार क्षेत्र विस्तार प्रस्तावना गरिएका क्षेत्रहरूलाई टेवा पु¥याउने हिसाबले प्राथमिकता दिनुपर्दछ ।"""
+            # Updated analysis/description for Gadhawa
+            analysis_text = "गढवा गाउँपालिका तराई–मधेशको दक्षिणी भागमा अवस्थित छ, जहाँ समथर भू–भाग, उप–उष्ण तथा समशीतोष्ण जलवायु पाइन्छ । यहाँका बस्तीहरू मुख्यतया कृषि, पशुपालन, र व्यापारमा आधारित छन् । गाउँपालिकाका अधिकांश बस्तीहरू सडक सञ्जाल, सिंचाइ, खानेपानी, शिक्षा र स्वास्थ्य सेवामा पहुँच भएका छन् । तर, केही बस्तीहरू अझै पनि आधारभूत पूर्वाधार र सेवाबाट वञ्चित छन् । यहाँका बस्तीहरूमा विभिन्न जातजाति, भाषा र संस्कृतिका समुदायहरूको सह–अस्तित्व पाइन्छ । जलवायु अनुकूलता, उर्वर भूमि, र सीमावर्ती क्षेत्रको कारण यहाँ बसोबासको आकर्षण बढ्दो छ । विकासका दृष्टिले, बस्तीहरूको व्यवस्थित विस्तार, पूर्वाधार सुदृढीकरण, र सामाजिक समावेशीकरणमा जोड दिनुपर्ने देखिन्छ ।"
 
             ward_data = data.get("ward_data", {})
             total_settlements = data.get("total_settlements", 0)
             total_wards = data.get("total_wards", 0)
 
-            # Generate summary
-            summary = f"""गढवा गाउँपालिकामा कुल {format_nepali_number(total_wards)} वडामा {format_nepali_number(total_settlements)} भन्दा बढी मुख्य बस्तीहरु रहेका छन् । """
-
-            # Combine analysis and summary
+            summary = f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_wards)} वडामा {format_nepali_number(total_settlements)} भन्दा बढी मुख्य बस्तीहरू रहेका छन् । "
             report = f"{summary}\n\n{analysis_text}"
 
             return {

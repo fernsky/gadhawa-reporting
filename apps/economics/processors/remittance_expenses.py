@@ -66,7 +66,7 @@ class RemittanceExpensesProcessor(BaseEconomicsProcessor):
 
         # Ward-wise data for bar chart and detailed table
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7 based on sample data
+        for ward_num in range(1, 9):  # Wards 1-8 based on new sample data
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "expense_types": {},

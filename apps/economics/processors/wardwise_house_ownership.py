@@ -43,18 +43,21 @@ class WardWiseHouseOwnershipProcessor(BaseEconomicsProcessor):
         for code, name in ownership_types.items():
             municipality_data[code] = {"name": name, "households": 0, "percentage": 0}
         ward_data = {}
-        for ward_num in range(1, 8):
+        # Update: support wards 1-8 (not just 1-7)
+        for ward_num in range(1, 9):
             ward_data[ward_num] = {
                 code: {"name": name, "households": 0, "percentage": 0}
                 for code, name in ownership_types.items()
             }
         total_households = 0
         for obj in WardWiseHouseOwnership.objects.all():
-            municipality_data[obj.ownership_type]["households"] += obj.households
-            ward_data[obj.ward_number][obj.ownership_type][
-                "households"
-            ] += obj.households
-            total_households += obj.households
+            # Only count valid ownership types
+            if obj.ownership_type in ownership_types:
+                municipality_data[obj.ownership_type]["households"] += obj.households
+                ward_data[obj.ward_number][obj.ownership_type][
+                    "households"
+                ] += obj.households
+                total_households += obj.households
         if total_households > 0:
             for code in ownership_types:
                 municipality_data[code]["percentage"] = round(

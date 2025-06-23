@@ -74,20 +74,20 @@ class OccupationProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         # Municipality-wide summary
         occupation_data = {}
 
-        # Initialize all occupations
+        # Updated occupation types and mapping for new codes
         occupation_types = {
-            "ANIMAL_HUSBANDRY": "पशुपालन",
-            "BUSINESS": "व्यापार/व्यवसाय",
-            "DAILY_WAGE": "दैनिक ज्यालादारी",
-            "FOREIGN_EMPLOYMENT": "वैदेशिक रोजगारी",
-            "GOVERNMENT_SERVICE": "सरकारी सेवा",
-            "HOUSEHOLD_WORK": "घरेलु काम",
-            "INDUSTRY": "उद्योग",
-            "NON_GOVERNMENT_SERVICE": "गैरसरकारी सेवा",
-            "OTHER": "अन्य",
-            "OTHER_SELF_EMPLOYMENT": "अन्य स्वरोजगार",
-            "OTHER_UNEMPLOYMENT": "अन्य बेरोजगार",
-            "STUDENT": "विद्यार्थी",
+            "animal_husbandry": "पशुपालन",
+            "business": "व्यापार/व्यवसाय",
+            "foreign_employment": "वैदेशिक रोजगारी",
+            "governmental_job": "सरकारी सेवा",
+            "householder": "गृहस्थ",
+            "industry": "उद्योग",
+            "labour": "श्रमिक/ज्यालादारी",
+            "non_governmental_job": "गैरसरकारी सेवा",
+            "other": "अन्य",
+            "other_self_employment": "अन्य स्वरोजगार",
+            "other_unemployment": "अन्य बेरोजगार",
+            "student": "विद्यार्थी",
         }
 
         for occ_code, occ_name in occupation_types.items():
@@ -99,7 +99,7 @@ class OccupationProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         # Ward-wise data for bar chart and detailed table
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7 based on sample data
+        for ward_num in range(1, 9):  # Wards 1-8 based on new data
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "demographics": {},
@@ -122,20 +122,33 @@ class OccupationProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             if occupation in occupation_data:
                 occupation_data[occupation]["population"] += population
                 total_population += population
+            else:
+                # Handle new/unknown occupation types gracefully
+                occupation_data[occupation] = {
+                    "population": population,
+                    "percentage": 0.0,
+                    "name_nepali": occupation,
+                }
+                total_population += population
 
             # Add to ward-wise data
-            if (
-                ward_num in ward_data
-                and occupation in ward_data[ward_num]["demographics"]
-            ):
-                ward_data[ward_num]["demographics"][occupation][
-                    "population"
-                ] = population
+            if ward_num in ward_data:
+                if occupation in ward_data[ward_num]["demographics"]:
+                    ward_data[ward_num]["demographics"][occupation][
+                        "population"
+                    ] += population
+                else:
+                    ward_data[ward_num]["demographics"][occupation] = {
+                        "population": population,
+                        "name_nepali": occupation,
+                    }
 
         # Calculate percentages for municipality-wide data
         if total_population > 0:
             for occupation, data in occupation_data.items():
-                data["percentage"] = (data["population"] / total_population) * 100
+                data["percentage"] = round(
+                    (data["population"] / total_population) * 100, 2
+                )
 
         # Calculate ward totals and percentages
         for ward_num, ward_info in ward_data.items():
@@ -143,12 +156,11 @@ class OccupationProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 demo["population"] for demo in ward_info["demographics"].values()
             )
             ward_info["total_population"] = ward_total
-
-            # Calculate percentages within each ward
+            # Calculate percentages within each ward (optional)
             if ward_total > 0:
-                for occupation, demo in ward_info["demographics"].items():
-                    demo["percentage"] = (
-                        (demo["population"] / ward_total) * 100 if ward_total > 0 else 0
+                for occ_code, demo in ward_info["demographics"].items():
+                    demo["percentage"] = round(
+                        (demo["population"] / ward_total) * 100, 2
                     )
 
         return {

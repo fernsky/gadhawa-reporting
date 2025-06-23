@@ -30,278 +30,283 @@ class Command(BaseCommand):
             "Creating solid waste management social data based on actual municipality-wide data..."
         )
 
-        # Sample data representing actual solid waste management patterns by ward
+        # Updated sample data representing actual solid waste management patterns by ward (including ward 8)
         solid_waste_management_data = [
-            # Ward 1
             {
-                "id": str(uuid.uuid4()),
+                "id": "d2c1f7ae-e445-4990-b5c9-f40fbeb5a0ed",
                 "ward_number": 1,
                 "solid_waste_management": "BURNING",
-                "households": 72,
+                "households": 830,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "66080f96-27f2-4472-9700-d18e90be1bfe",
                 "ward_number": 1,
                 "solid_waste_management": "COMPOST_MANURE",
-                "households": 880,
+                "households": 66,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "93604dcb-6422-49f4-92cb-0f4ebc6fbefe",
                 "ward_number": 1,
                 "solid_waste_management": "DIGGING",
-                "households": 6,
+                "households": 668,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "71274897-d235-45a6-b67a-98feb74ce610",
                 "ward_number": 1,
                 "solid_waste_management": "HOME_COLLECTION",
-                "households": 5,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 1,
-                "solid_waste_management": "RIVER",
-                "households": 52,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 1,
-                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
                 "households": 2,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "65d78d6e-49e2-46b2-a648-b202529e4a79",
+                "ward_number": 1,
+                "solid_waste_management": "RIVER",
+                "households": 106,
+            },
+            {
+                "id": "42177090-a20a-4aa7-89f0-1170c2c62a1f",
+                "ward_number": 1,
+                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
+                "households": 6,
+            },
+            {
+                "id": "98cca696-c1dd-427b-b75c-ff2eca8675fe",
                 "ward_number": 1,
                 "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 122,
+                "households": 57,
             },
-            # Ward 2
             {
-                "id": str(uuid.uuid4()),
+                "id": "c0507dfe-d773-4b22-8bb7-e0c23a04053b",
                 "ward_number": 2,
                 "solid_waste_management": "BURNING",
-                "households": 319,
+                "households": 696,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "32dce89f-0bcd-43b8-9ed3-ebb01a4c5c98",
                 "ward_number": 2,
+                "solid_waste_management": "COMPOST_MANURE",
+                "households": 114,
+            },
+            {
+                "id": "2f2b9ab6-cc98-46cd-9e9d-50a7ed83ff52",
+                "ward_number": 2,
+                "solid_waste_management": "DIGGING",
+                "households": 60,
+            },
+            {
+                "id": "7f7b7404-13ca-475d-b471-d008e2831e5f",
+                "ward_number": 2,
+                "solid_waste_management": "RIVER",
+                "households": 37,
+            },
+            {
+                "id": "122bcd6a-510e-478e-a0a9-aa54186ad64a",
+                "ward_number": 2,
+                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
+                "households": 1,
+            },
+            {
+                "id": "dcd80072-0848-4a9c-9a6f-c902b21779f3",
+                "ward_number": 2,
+                "solid_waste_management": "WASTE_COLLECTING_PLACE",
+                "households": 293,
+            },
+            {
+                "id": "0229d9ef-a650-465a-a893-7b2cf9bebdcb",
+                "ward_number": 3,
+                "solid_waste_management": "BURNING",
+                "households": 872,
+            },
+            {
+                "id": "b0a80976-c595-4376-8c11-4fc40651f3ca",
+                "ward_number": 3,
                 "solid_waste_management": "COMPOST_MANURE",
                 "households": 133,
             },
             {
-                "id": str(uuid.uuid4()),
-                "ward_number": 2,
-                "solid_waste_management": "DIGGING",
-                "households": 114,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 2,
-                "solid_waste_management": "HOME_COLLECTION",
-                "households": 1,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 2,
-                "solid_waste_management": "RIVER",
-                "households": 244,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 2,
-                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
-                "households": 3,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 2,
-                "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 104,
-            },
-            # Ward 3
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 3,
-                "solid_waste_management": "BURNING",
-                "households": 98,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 3,
-                "solid_waste_management": "COMPOST_MANURE",
-                "households": 410,
-            },
-            {
-                "id": str(uuid.uuid4()),
+                "id": "d3c850a7-aebc-4a5d-9a50-7ee1e23e3f50",
                 "ward_number": 3,
                 "solid_waste_management": "DIGGING",
-                "households": 6,
+                "households": 17,
             },
             {
-                "id": str(uuid.uuid4()),
-                "ward_number": 3,
-                "solid_waste_management": "HOME_COLLECTION",
-                "households": 2,
-            },
-            {
-                "id": str(uuid.uuid4()),
+                "id": "9178f0c7-89b9-4d25-9338-9b39231cddfb",
                 "ward_number": 3,
                 "solid_waste_management": "RIVER",
-                "households": 39,
+                "households": 216,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "b5a51555-8f0c-4ad5-bed4-894de028f21d",
                 "ward_number": 3,
-                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
-                "households": 5,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 3,
-                "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 4,
-            },
-            # Ward 4
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "BURNING",
-                "households": 141,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "COMPOST_MANURE",
-                "households": 592,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "DIGGING",
-                "households": 73,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "RIVER",
-                "households": 25,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
-                "households": 6,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 4,
-                "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 11,
-            },
-            # Ward 5
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 5,
-                "solid_waste_management": "BURNING",
-                "households": 67,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 5,
-                "solid_waste_management": "COMPOST_MANURE",
-                "households": 130,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 5,
-                "solid_waste_management": "DIGGING",
-                "households": 204,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 5,
-                "solid_waste_management": "RIVER",
-                "households": 123,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 5,
-                "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 195,
-            },
-            # Ward 6
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
-                "solid_waste_management": "BURNING",
-                "households": 67,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
-                "solid_waste_management": "COMPOST_MANURE",
-                "households": 563,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
-                "solid_waste_management": "DIGGING",
-                "households": 89,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
-                "solid_waste_management": "HOME_COLLECTION",
-                "households": 5,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
-                "solid_waste_management": "RIVER",
-                "households": 86,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "ward_number": 6,
                 "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
                 "households": 1,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "5e189b1b-23e7-454c-8bf2-80bfe6b689f8",
+                "ward_number": 3,
+                "solid_waste_management": "WASTE_COLLECTING_PLACE",
+                "households": 55,
+            },
+            {
+                "id": "3e60e035-1ca5-4b9e-8f08-e365d3ab25e5",
+                "ward_number": 4,
+                "solid_waste_management": "BURNING",
+                "households": 821,
+            },
+            {
+                "id": "69472163-2d16-462d-846a-77d779de9992",
+                "ward_number": 4,
+                "solid_waste_management": "COMPOST_MANURE",
+                "households": 35,
+            },
+            {
+                "id": "28327246-d71f-4b00-84fe-868528d15865",
+                "ward_number": 4,
+                "solid_waste_management": "DIGGING",
+                "households": 369,
+            },
+            {
+                "id": "ec4b85b6-ff86-43ac-9b45-6d8adbb3c1f1",
+                "ward_number": 4,
+                "solid_waste_management": "RIVER",
+                "households": 51,
+            },
+            {
+                "id": "5aa29ab0-7559-4147-83ab-1a80a70e46c9",
+                "ward_number": 4,
+                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
+                "households": 9,
+            },
+            {
+                "id": "b3836a78-a1fe-4ce0-b3c4-500fc6770a36",
+                "ward_number": 4,
+                "solid_waste_management": "WASTE_COLLECTING_PLACE",
+                "households": 15,
+            },
+            {
+                "id": "1c978585-413a-4564-a26e-63d874d82f23",
+                "ward_number": 5,
+                "solid_waste_management": "BURNING",
+                "households": 631,
+            },
+            {
+                "id": "b5bf57e5-e5f4-47d8-927b-2be5c8888a82",
+                "ward_number": 5,
+                "solid_waste_management": "COMPOST_MANURE",
+                "households": 152,
+            },
+            {
+                "id": "b4abe570-4438-4817-b25a-76345a4545ae",
+                "ward_number": 5,
+                "solid_waste_management": "DIGGING",
+                "households": 614,
+            },
+            {
+                "id": "92f3ec4a-83fd-4247-937b-192c599e4b23",
+                "ward_number": 5,
+                "solid_waste_management": "HOME_COLLECTION",
+                "households": 1,
+            },
+            {
+                "id": "18f02758-f148-40c6-9b50-032bef5b572c",
+                "ward_number": 5,
+                "solid_waste_management": "RIVER",
+                "households": 50,
+            },
+            {
+                "id": "d2b41cb8-e6b4-47d6-9bdd-fcd02abcfe20",
+                "ward_number": 5,
+                "solid_waste_management": "WASTE_COLLECTING_PLACE",
+                "households": 74,
+            },
+            {
+                "id": "62326623-b2cc-4549-90a9-aca3d59f9d2b",
+                "ward_number": 6,
+                "solid_waste_management": "BURNING",
+                "households": 808,
+            },
+            {
+                "id": "2292760c-8fb3-4752-a4de-5d710760e553",
+                "ward_number": 6,
+                "solid_waste_management": "COMPOST_MANURE",
+                "households": 145,
+            },
+            {
+                "id": "34603139-a590-4dda-a4fc-dfdb20780990",
+                "ward_number": 6,
+                "solid_waste_management": "DIGGING",
+                "households": 305,
+            },
+            {
+                "id": "f54d358f-4db3-477f-ab45-ace9d5e8fcb2",
+                "ward_number": 6,
+                "solid_waste_management": "HOME_COLLECTION",
+                "households": 192,
+            },
+            {
+                "id": "43844baa-38eb-42e9-ba25-cb84c030b3f4",
+                "ward_number": 6,
+                "solid_waste_management": "RIVER",
+                "households": 59,
+            },
+            {
+                "id": "f393c32f-ad2a-4f6a-a5f8-6a46e5c55dc1",
+                "ward_number": 6,
+                "solid_waste_management": "ROAD_OR_PUBLIC_PLACE",
+                "households": 18,
+            },
+            {
+                "id": "b7a62040-66e1-44f9-8969-0655d7f0dcc7",
                 "ward_number": 6,
                 "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 53,
+                "households": 234,
             },
-            # Ward 7
             {
-                "id": str(uuid.uuid4()),
+                "id": "959f786e-f896-4ad2-af76-9ee71b65bd52",
                 "ward_number": 7,
                 "solid_waste_management": "BURNING",
-                "households": 361,
+                "households": 152,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "7614d7f4-fd29-473d-b40e-c4d596889cd2",
                 "ward_number": 7,
                 "solid_waste_management": "COMPOST_MANURE",
-                "households": 54,
+                "households": 405,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "68c5268a-4941-4f53-81bf-97a012bcdadf",
                 "ward_number": 7,
                 "solid_waste_management": "DIGGING",
-                "households": 57,
+                "households": 118,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "80104f40-44b4-4a19-8013-0b146825e080",
                 "ward_number": 7,
-                "solid_waste_management": "RIVER",
-                "households": 107,
+                "solid_waste_management": "HOME_COLLECTION",
+                "households": 6,
             },
             {
-                "id": str(uuid.uuid4()),
+                "id": "2052ac4a-fe47-4ee5-ba71-0aa7234970fa",
                 "ward_number": 7,
                 "solid_waste_management": "WASTE_COLLECTING_PLACE",
-                "households": 8,
+                "households": 676,
+            },
+            {
+                "id": "ddedec05-5e74-4e49-b1b2-f4dbcad4d598",
+                "ward_number": 8,
+                "solid_waste_management": "BURNING",
+                "households": 60,
+            },
+            {
+                "id": "370bf79e-1b10-4320-9aca-408ce4189716",
+                "ward_number": 8,
+                "solid_waste_management": "RIVER",
+                "households": 66,
+            },
+            {
+                "id": "0db4e581-882d-4ffd-a547-6f6af2819d4b",
+                "ward_number": 8,
+                "solid_waste_management": "WASTE_COLLECTING_PLACE",
+                "households": 70,
             },
         ]
 
@@ -419,7 +424,7 @@ class Command(BaseCommand):
 
         # Ward-wise summary
         self.stdout.write("\nWard-wise solid waste management summary:")
-        for ward_num in range(1, 8):
+        for ward_num in range(1, 9):
             ward_households = (
                 WardWiseSolidWasteManagement.objects.filter(
                     ward_number=ward_num

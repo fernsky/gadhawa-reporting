@@ -87,7 +87,7 @@ class DisabilityCauseProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
         # Ward-wise data for bar chart and detailed table
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7 based on sample data
+        for ward_num in range(1, 9):  # Wards 1-8
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "demographics": {},
@@ -103,7 +103,9 @@ class DisabilityCauseProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         total_population = 0
         try:
             for disability_obj in WardWiseDisabilityCause.objects.all():
-                disability = disability_obj.disability_cause
+                disability = disability_obj.disability_cause.upper()
+                if disability == "UNKNOWN":
+                    disability = "OTHER"
                 ward_num = disability_obj.ward_number
                 population = disability_obj.population
 
@@ -119,7 +121,7 @@ class DisabilityCauseProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 ):
                     ward_data[ward_num]["demographics"][disability][
                         "population"
-                    ] = population
+                    ] += population
         except Exception as e:
             print(f"Error fetching disability cause data: {e}")
             # Return empty data structure if database error

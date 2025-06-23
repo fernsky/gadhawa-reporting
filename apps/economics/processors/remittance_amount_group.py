@@ -55,8 +55,12 @@ class RemittanceAmountGroupProcessor(BaseEconomicsProcessor):
                 "name_nepali": group_name,
             }
 
+        # Dynamically determine all ward numbers from the data
+        all_wards = sorted(
+            set(WardWiseRemittance.objects.values_list("ward_number", flat=True))
+        )
         ward_data = {}
-        for ward_num in range(1, 10):
+        for ward_num in all_wards:
             ward_data[ward_num] = {
                 "ward_name": f"वडा नं. {ward_num}",
                 "amount_groups": {},

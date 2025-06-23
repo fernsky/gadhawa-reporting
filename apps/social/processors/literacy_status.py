@@ -31,7 +31,7 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
         return "5.1.1"
 
     def get_data(self) -> Dict[str, Any]:
-        """Get literacy status data aggregated by municipality and ward"""
+        """Get literacy status data aggregated by municipality and ward (dynamic for all wards and types)"""
         try:
             all_records = WardWiseLiteracyStatus.objects.all().order_by(
                 "ward_number", "literacy_type"
@@ -40,21 +40,29 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
             if not all_records.exists():
                 return self._empty_data_structure()
 
+            # Dynamically get all literacy types and ward numbers from the database
+            all_literacy_types = WardWiseLiteracyStatus.objects.values_list(
+                "literacy_type", flat=True
+            ).distinct()
+            all_wards = WardWiseLiteracyStatus.objects.values_list(
+                "ward_number", flat=True
+            ).distinct()
+
             # Municipality-wide summary
             municipality_data = {}
             total_population = 0
 
-            for literacy_choice in LiteracyTypeChoice.choices:
-                literacy_code = literacy_choice[0]
-                literacy_name = literacy_choice[1]
-
+            for literacy_code in all_literacy_types:
+                # Try to get Nepali name from choices, else fallback to code
+                literacy_name = dict(getattr(LiteracyTypeChoice, "choices", [])).get(
+                    literacy_code, literacy_code
+                )
                 literacy_population = (
                     WardWiseLiteracyStatus.objects.filter(
                         literacy_type=literacy_code
                     ).aggregate(total=models.Sum("population"))["total"]
                     or 0
                 )
-
                 if literacy_population > 0:
                     municipality_data[literacy_code] = {
                         "name_english": literacy_code,
@@ -73,38 +81,34 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
                         * 100
                     )
 
-            # Ward-wise data
+            # Ward-wise data (dynamic for all wards)
             ward_data = {}
-            for ward_num in range(1, 8):  # Wards 1-7
+            for ward_num in sorted(all_wards):
                 ward_population = (
                     WardWiseLiteracyStatus.objects.filter(
                         ward_number=ward_num
                     ).aggregate(total=models.Sum("population"))["total"]
                     or 0
                 )
-
                 if ward_population > 0:
                     ward_data[ward_num] = {
                         "ward_number": ward_num,
                         "ward_name": f"वडा नं. {ward_num}",
                         "total_population": ward_population,
-                        "literacy_types": {},
+                        "demographics": {},
                     }
-
-                    # Literacy type breakdown for this ward
-                    for literacy_choice in LiteracyTypeChoice.choices:
-                        literacy_code = literacy_choice[0]
-                        literacy_name = literacy_choice[1]
-
+                    for literacy_code in all_literacy_types:
+                        literacy_name = dict(
+                            getattr(LiteracyTypeChoice, "choices", [])
+                        ).get(literacy_code, literacy_code)
                         literacy_population_ward = (
                             WardWiseLiteracyStatus.objects.filter(
                                 ward_number=ward_num, literacy_type=literacy_code
                             ).aggregate(total=models.Sum("population"))["total"]
                             or 0
                         )
-
                         if literacy_population_ward > 0:
-                            ward_data[ward_num]["literacy_types"][literacy_code] = {
+                            ward_data[ward_num]["demographics"][literacy_code] = {
                                 "name_nepali": literacy_name,
                                 "population": literacy_population_ward,
                                 "percentage": (
@@ -118,7 +122,7 @@ class LiteracyStatusProcessor(BaseSocialProcessor):
                 "municipality_data": municipality_data,
                 "ward_data": ward_data,
                 "total_population": total_population,
-                "literacy_types": [choice.value for choice in LiteracyTypeChoice],
+                "literacy_types": list(all_literacy_types),
             }
 
         except Exception as e:

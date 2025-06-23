@@ -126,6 +126,9 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 "literacy_rate": float(record.literacy_rate or 0),
                 "male_literacy_rate": float(record.male_literacy_rate or 0),
                 "female_literacy_rate": float(record.female_literacy_rate or 0),
+                "population_0_to_14": record.population_0_to_14 or 0,
+                "population_15_to_59": record.population_15_to_59 or 0,
+                "population_60_and_above": record.population_60_and_above or 0,
             }
 
             time_series_data[year][ward_num] = ward_info
@@ -406,122 +409,82 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         def generate_formal_report(self, data):
             """Generate comprehensive formal ward household report with detailed analysis"""
             if not data or not data.get("ward_data"):
-                return "वडागत घरपरिवारको तथ्याङ्क उपलब्ध छैन।"
+                return "गढवा गाउँपालिकाको वडागत घरपरिवारको तथ्याङ्क उपलब्ध छैन।"
 
             ward_data = data["ward_data"]
             summary_stats = data.get("summary_stats", {})
             latest_year = data.get("latest_year")
 
             if not summary_stats:
-                return "वडागत घरपरिवारको विश्लेषणका लागि पर्याप्त तथ्याङ्क उपलब्ध छैन।"
+                return "गढवा गाउँपालिकाको वडागत घरपरिवारको विश्लेषणका लागि पर्याप्त तथ्याङ्क उपलब्ध छैन।"
 
-            # Detailed analysis paragraphs
             analysis_parts = []
 
             # Overall introduction
             analysis_parts.append(
-                f"गढवा गाउँपालिकाको वडागत जनसंख्या र घरपरिवारको विस्तृत विश्लेषण गर्दा गाउँपालिकामा कुल "
-                f"{format_nepali_number(summary_stats.get('total_population', 0))} जनसंख्या र "
-                f"{format_nepali_number(summary_stats.get('total_households', 0))} घरपरिवार रहेका छन् । "
-                f"गाउँपालिकाको औसत घरपरिवारको आकार {format_nepali_number(round(summary_stats.get('overall_avg_household_size', 0), 2))} व्यक्ति प्रति घरपरिवार रहेको छ ।"
+                f"गढवा गाउँपालिकाका {format_nepali_number(len(ward_data))} वडामा वर्ष {format_nepali_number(latest_year)} को तथ्याङ्क अनुसार कुल "
+                f"{format_nepali_number(summary_stats.get('total_population', 0))} जनसंख्या, "
+                f"{format_nepali_number(summary_stats.get('total_households', 0))} घरपरिवार, "
+                f"औसत घरपरिवार आकार {format_nepali_number(round(summary_stats.get('overall_avg_household_size', 2), 2))} व्यक्ति रहेको छ।"
             )
+
+            # Literacy analysis (if available)
+            if any(w.get("literacy_rate") for w in ward_data.values()):
+                avg_lit = sum(
+                    [
+                        w.get("literacy_rate", 0) or 0
+                        for w in ward_data.values()
+                        if w.get("literacy_rate") is not None
+                    ]
+                ) / max(
+                    1,
+                    len(
+                        [
+                            w
+                            for w in ward_data.values()
+                            if w.get("literacy_rate") is not None
+                        ]
+                    ),
+                )
+                analysis_parts.append(
+                    f"औसत साक्षरता दर {format_nepali_number(round(avg_lit, 2))}% रहेको छ।"
+                )
+
+            # Age group analysis (if available)
+            if any(w.get("population_0_to_14") for w in ward_data.values()):
+                total_0_14 = sum(
+                    [w.get("population_0_to_14", 0) or 0 for w in ward_data.values()]
+                )
+                total_15_59 = sum(
+                    [w.get("population_15_to_59", 0) or 0 for w in ward_data.values()]
+                )
+                total_60p = sum(
+                    [
+                        w.get("population_60_and_above", 0) or 0
+                        for w in ward_data.values()
+                    ]
+                )
+                analysis_parts.append(
+                    f"बालबालिका (०-१४ वर्ष): {format_nepali_number(total_0_14)}, युवा तथा प्रौढ (१५-५९ वर्ष): {format_nepali_number(total_15_59)}, जेष्ठ नागरिक (६० वर्ष+) : {format_nepali_number(total_60p)} जना रहेका छन्।"
+                )
 
             # Population distribution analysis
             max_pop_ward = summary_stats.get("max_pop_ward", {})
             min_pop_ward = summary_stats.get("min_pop_ward", {})
-
             if max_pop_ward and min_pop_ward:
                 analysis_parts.append(
-                    f"जनसंख्याको वितरणको आधारमा हेर्दा सबैभन्दा धेरै जनसंख्या वडा नं. {format_nepali_number(max_pop_ward.get('ward_number'))} मा रहेको छ "
-                    f"जसमा कुल {format_nepali_number(max_pop_ward.get('total_population', 0))} जनसंख्या "
-                    f"(पुरुष {format_nepali_number(max_pop_ward.get('male_population', 0))} जना र "
-                    f"महिला {format_nepali_number(max_pop_ward.get('female_population', 0))} जना) रहेका छन् । "
-                    f"यस वडामा {format_nepali_number(max_pop_ward.get('total_households', 0))} घरपरिवार रहेका छन् "
-                    f"र औसत घरपरिवारको आकार {format_nepali_number(round(max_pop_ward.get('average_household_size', 0), 1))} व्यक्ति रहेको छ ।"
-                )
-
-                analysis_parts.append(
-                    f"त्यसैगरी सबैभन्दा कम जनसंख्या वडा नं. {format_nepali_number(min_pop_ward.get('ward_number'))} मा रहेको छ "
-                    f"जसमा कुल {format_nepali_number(min_pop_ward.get('total_population', 0))} जनसंख्या "
-                    f"(पुरुष {format_nepali_number(min_pop_ward.get('male_population', 0))} जना र "
-                    f"महिला {format_nepali_number(min_pop_ward.get('female_population', 0))} जना) रहेका छन् । "
-                    f"यस वडामा {format_nepali_number(min_pop_ward.get('total_households', 0))} घरपरिवार रहेका छन् "
-                    f"र औसत घरपरिवारको आकार {format_nepali_number(round(min_pop_ward.get('average_household_size', 0), 1))} व्यक्ति रहेको छ ।"
-                )
-
-            # Population density analysis
-            max_density_ward = summary_stats.get("max_density_ward", {})
-            min_density_ward = summary_stats.get("min_density_ward", {})
-
-            if max_density_ward and min_density_ward:
-                analysis_parts.append(
-                    f"जनसंख्या घनत्वको विश्लेषण गर्दा सबैभन्दा बढी जनघनत्व वडा नं. {format_nepali_number(max_density_ward.get('ward_number'))} मा "
-                    f"{format_nepali_number(round(max_density_ward.get('population_density', 0)))} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ । "
-                    f"यस वडाको क्षेत्रफल {format_nepali_number(round(max_density_ward.get('area_sq_km', 0), 2))} वर्ग किलोमिटर रहेको छ । "
-                    f"त्यसैगरी सबैभन्दा कम जनघनत्व वडा नं. {format_nepali_number(min_density_ward.get('ward_number'))} मा "
-                    f"{format_nepali_number(round(min_density_ward.get('population_density', 0)))} व्यक्ति प्रति वर्ग किलोमिटर रहेको छ ।"
+                    f"सबैभन्दा बढी जनसंख्या वडा नं. {format_nepali_number(max_pop_ward.get('ward_number'))} ({max_pop_ward.get('ward_name','')}) मा {format_nepali_number(max_pop_ward.get('total_population', 0))} जना रहेको छ। "
+                    f"सबैभन्दा कम जनसंख्या वडा नं. {format_nepali_number(min_pop_ward.get('ward_number'))} ({min_pop_ward.get('ward_name','')}) मा {format_nepali_number(min_pop_ward.get('total_population', 0))} जना रहेको छ।"
                 )
 
             # Gender composition analysis
             total_male = summary_stats.get("total_male", 0)
             total_female = summary_stats.get("total_female", 0)
             sex_ratio = summary_stats.get("overall_sex_ratio", 0)
-
             if total_male > 0 and total_female > 0:
                 analysis_parts.append(
-                    f"लिङ्गीय संरचनाको आधारमा विश्लेषण गर्दा गाउँपालिकामा कुल पुरुष जनसंख्या "
-                    f"{format_nepali_number(total_male)} जना र महिला जनसंख्या {format_nepali_number(total_female)} जना रहेको छ । "
-                    f"लिङ्ग अनुपात {format_nepali_number(round(sex_ratio, 2))} (प्रति १०० महिलामा {format_nepali_number(round(sex_ratio, 1))} पुरुष) रहेको छ । "
-                    f"यो अनुपातले गाउँपालिकामा {'पुरुष' if sex_ratio > 100 else 'महिला'} जनसंख्याको "
-                    f"{'प्रभुत्व' if abs(sex_ratio - 100) > 10 else 'सन्तुलित वितरण'} रहेको देखाउँछ ।"
+                    f"लिङ्ग अनुपात {format_nepali_number(round(sex_ratio, 2))} (प्रति १०० महिलामा {format_nepali_number(round(sex_ratio, 1))} पुरुष) रहेको छ।"
                 )
-
-            # Ward-wise detailed comparison
-            analysis_parts.append("वडागत विस्तृत तुलनामा हेर्दा:")
-
-            # Sort wards by population for detailed analysis
-            sorted_wards = sorted(
-                ward_data.items(),
-                key=lambda x: x[1].get("total_population", 0),
-                reverse=True,
-            )
-
-            for i, (ward_num, ward_info) in enumerate(sorted_wards[:3]):  # Top 3 wards
-                ranking = ["पहिलो", "दोस्रो", "तेस्रो"][i]
-                analysis_parts.append(
-                    f"{ranking} स्थानमा रहेको वडा नं. {format_nepali_number(ward_num)} मा "
-                    f"{format_nepali_number(ward_info.get('total_population', 0))} जनसंख्या र "
-                    f"{format_nepali_number(ward_info.get('total_households', 0))} घरपरिवार रहेका छन् । "
-                    f"यस वडाको जनघनत्व {format_nepali_number(round(ward_info.get('population_density', 0)))} व्यक्ति प्रति वर्ग किमी छ ।"
-                )
-
-            # Growth and development trends (if time series data available)
-            time_series_data = data.get("time_series_data", {})
-            comparison_years = data.get("comparison_years", [])
-
-            if len(comparison_years) >= 2:
-                latest_year = comparison_years[0]
-                previous_year = comparison_years[1]
-
-                latest_total = sum(
-                    w.get("total_population", 0)
-                    for w in time_series_data.get(latest_year, {}).values()
-                )
-                previous_total = sum(
-                    w.get("total_population", 0)
-                    for w in time_series_data.get(previous_year, {}).values()
-                )
-
-                if previous_total > 0:
-                    growth_rate = (
-                        (latest_total - previous_total) / previous_total
-                    ) * 100
-                    analysis_parts.append(
-                        f"वर्ष {format_nepali_number(previous_year)} देखि वर्ष {format_nepali_number(latest_year)} सम्मको "
-                        f"जनसंख्या वृद्धि दर {format_nepali_number(round(growth_rate, 2))}% रहेको छ । "
-                        f"यो {'सकारात्मक' if growth_rate > 0 else 'नकारात्मक'} वृद्धि दरले गाउँपालिकाको "
-                        f"{'विकास र बसाइसराइको अनुकूल वातावरण' if growth_rate > 0 else 'बसाइसराइको चुनौती'} रहेको देखाउँछ ।"
-                    )
 
             # Household size analysis
             household_sizes = [
@@ -532,21 +495,33 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             if household_sizes:
                 max_household_size = max(household_sizes)
                 min_household_size = min(household_sizes)
-
                 analysis_parts.append(
-                    f"घरपरिवारको आकारको विश्लेषण गर्दा सबैभन्दा ठूलो घरपरिवारको औसत आकार {format_nepali_number(round(max_household_size, 2))} व्यक्ति "
-                    f"र सबैभन्दा सानो घरपरिवारको औसत आकार {format_nepali_number(round(min_household_size, 2))} व्यक्ति रहेको छ । "
-                    f"यसले गाउँपालिकामा पारिवारिक संरचनामा {'एकरूपता' if abs(max_household_size - min_household_size) < 1 else 'विविधता'} "
-                    f"रहेको देखाउँछ ।"
+                    f"सबैभन्दा ठूलो घरपरिवारको औसत आकार {format_nepali_number(round(max_household_size, 2))} व्यक्ति र सबैभन्दा सानो घरपरिवारको औसत आकार {format_nepali_number(round(min_household_size, 2))} व्यक्ति रहेको छ।"
                 )
 
-            # Conclusion
-            analysis_parts.append(
-                f"समग्रमा गढवा गाउँपालिकाको जनसांख्यिकीय संरचना र घरपरिवारको वितरणले गाउँपालिकाको "
-                f"सामाजिक आर्थिक अवस्थाको स्पष्ट चित्र प्रस्तुत गर्छ । विभिन्न वडाहरूबीचको जनसंख्या र "
-                f"घनत्वको भिन्नताले स्थानीय विकास योजना र सेवा प्रवाहमा वडाअनुसार प्राथमिकता निर्धारण गर्न "
-                f"आवश्यक रहेको देखाउँछ । उपलब्ध तथ्याङ्कको आधारमा यी विवरणहरूको विस्तृत विश्लेषण तलको "
-                f"तालिका र चित्रमा प्रस्तुत गरिएको छ ।"
-            )
+            # Growth and development trends (if time series data available)
+            time_series_data = data.get("time_series_data", {})
+            comparison_years = data.get("comparison_years", [])
+            if len(comparison_years) >= 2:
+                latest_year = comparison_years[0]
+                previous_year = comparison_years[1]
+                latest_total = sum(
+                    w.get("total_population", 0)
+                    for w in time_series_data.get(latest_year, {}).values()
+                )
+                previous_total = sum(
+                    w.get("total_population", 0)
+                    for w in time_series_data.get(previous_year, {}).values()
+                )
+                if previous_total > 0:
+                    growth_rate = (
+                        (latest_total - previous_total) / previous_total
+                    ) * 100
+                    analysis_parts.append(
+                        f"वर्ष {format_nepali_number(previous_year)} देखि {format_nepali_number(latest_year)} सम्म जनसंख्या वृद्धि दर {format_nepali_number(round(growth_rate, 2))}% रहेको छ।"
+                    )
 
+            analysis_parts.append(
+                f"समग्रमा, गढवा गाउँपालिकाको वडागत घरपरिवार र जनसंख्या संरचनाले स्थानीय विकास, सेवा प्रवाह र योजना निर्माणमा महत्वपूर्ण आधार प्रदान गर्दछ। विस्तृत विवरण तलको तालिका र चित्रमा प्रस्तुत गरिएको छ।"
+            )
             return " ".join(analysis_parts)

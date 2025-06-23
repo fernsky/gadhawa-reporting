@@ -29,34 +29,29 @@ class Command(BaseCommand):
 
         # Sample data structure: [ward_number, literacy_type, population]
         sample_data = [
-            # Ward 1
-            (1, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 3320),
-            (1, LiteracyTypeChoice.ILLITERATE, 2256),
-            (1, LiteracyTypeChoice.READING_ONLY, 27),
-            # Ward 2
-            (2, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 2557),
-            (2, LiteracyTypeChoice.ILLITERATE, 1703),
-            (2, LiteracyTypeChoice.READING_ONLY, 5),
-            # Ward 3
-            (3, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 1945),
-            (3, LiteracyTypeChoice.ILLITERATE, 1071),
-            (3, LiteracyTypeChoice.READING_ONLY, 22),
-            # Ward 4
-            (4, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 2941),
-            (4, LiteracyTypeChoice.ILLITERATE, 1109),
-            (4, LiteracyTypeChoice.READING_ONLY, 9),
-            # Ward 5
-            (5, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 2485),
-            (5, LiteracyTypeChoice.ILLITERATE, 899),
-            (5, LiteracyTypeChoice.READING_ONLY, 22),
-            # Ward 6
-            (6, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 2926),
-            (6, LiteracyTypeChoice.ILLITERATE, 1575),
-            (6, LiteracyTypeChoice.READING_ONLY, 10),
-            # Ward 7
-            (7, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 1579),
-            (7, LiteracyTypeChoice.ILLITERATE, 1025),
+            (1, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 6130),
+            (1, LiteracyTypeChoice.ILLITERATE, 1624),
+            (1, LiteracyTypeChoice.READING_ONLY, 21),
+            (2, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 4614),
+            (2, LiteracyTypeChoice.ILLITERATE, 1107),
+            (2, LiteracyTypeChoice.READING_ONLY, 103),
+            (3, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 4722),
+            (3, LiteracyTypeChoice.ILLITERATE, 1028),
+            (3, LiteracyTypeChoice.READING_ONLY, 34),
+            (4, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 4989),
+            (4, LiteracyTypeChoice.ILLITERATE, 1157),
+            (4, LiteracyTypeChoice.READING_ONLY, 5),
+            (5, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 5684),
+            (5, LiteracyTypeChoice.ILLITERATE, 1473),
+            (5, LiteracyTypeChoice.READING_ONLY, 11),
+            (6, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 6409),
+            (6, LiteracyTypeChoice.ILLITERATE, 1624),
+            (6, LiteracyTypeChoice.READING_ONLY, 36),
+            (7, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 4652),
+            (7, LiteracyTypeChoice.ILLITERATE, 1624),
             (7, LiteracyTypeChoice.READING_ONLY, 9),
+            (8, LiteracyTypeChoice.BOTH_READING_AND_WRITING, 760),
+            (8, LiteracyTypeChoice.ILLITERATE, 113),
         ]
 
         created_count = 0

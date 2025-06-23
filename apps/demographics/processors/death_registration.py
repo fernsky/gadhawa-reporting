@@ -76,8 +76,8 @@ class DeathRegistrationProcessor(BaseDemographicsProcessor, SimpleChartProcessor
                 "total_percentage": 0.0,
             }
 
-        # Initialize ward data
-        for ward_num in range(1, 8):
+        # Initialize ward data for wards 1-8 (dynamic for new data)
+        for ward_num in range(1, 9):
             ward_data[ward_num] = {
                 "ward_number": ward_num,
                 "age_groups": {},
@@ -109,7 +109,7 @@ class DeathRegistrationProcessor(BaseDemographicsProcessor, SimpleChartProcessor
             if age_group not in age_gender_data:
                 age_gender_data[age_group] = {
                     "code": age_group,
-                    "name_nepali": age_group,  # Optionally map to Nepali label if available
+                    "name_nepali": age_group,
                     "MALE": 0,
                     "FEMALE": 0,
                     "OTHER": 0,
@@ -119,38 +119,23 @@ class DeathRegistrationProcessor(BaseDemographicsProcessor, SimpleChartProcessor
                     "other_percentage": 0.0,
                     "total_percentage": 0.0,
                 }
-                # Also add to each ward's age group
-                for ward_num in ward_data:
-                    ward_data[ward_num][age_group] = {
-                        "MALE": 0,
-                        "FEMALE": 0,
-                        "OTHER": 0,
-                        "TOTAL": 0,
-                    }
 
             if age_group in age_gender_data and gender in ["MALE", "FEMALE", "OTHER"]:
                 age_gender_data[age_group][gender] += count
                 age_gender_data[age_group]["TOTAL"] += count
-                if gender == "MALE":
-                    total_male += count
-                elif gender == "FEMALE":
-                    total_female += count
-                else:
-                    total_other += count
-                total_population += count
+                if ward_number in ward_data:
+                    ward_data[ward_number][age_group][gender] += count
+                    ward_data[ward_number][age_group]["TOTAL"] += count
+                    ward_data[ward_number][gender] += count
+                    ward_data[ward_number]["TOTAL"] += count
 
-            if ward_number in ward_data:
-                if age_group not in ward_data[ward_number]:
-                    ward_data[ward_number][age_group] = {
-                        "MALE": 0,
-                        "FEMALE": 0,
-                        "OTHER": 0,
-                        "TOTAL": 0,
-                    }
-                ward_data[ward_number][gender] += count
-                ward_data[ward_number]["TOTAL"] += count
-                ward_data[ward_number][age_group][gender] += count
-                ward_data[ward_number][age_group]["TOTAL"] += count
+            if gender == "MALE":
+                total_male += count
+            elif gender == "FEMALE":
+                total_female += count
+            elif gender == "OTHER":
+                total_other += count
+            total_population += count
 
         # Calculate percentages
         if total_population > 0:

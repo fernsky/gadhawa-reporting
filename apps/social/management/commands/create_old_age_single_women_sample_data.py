@@ -10,49 +10,55 @@ class Command(BaseCommand):
     help = "Create sample data for WardWiseOldAgePopulationAndSingleWomen"
 
     def handle(self, *args, **options):
-        # Sample data based on the provided information
+        # Updated sample data based on the provided information (including ward 8)
         sample_data = [
             {
                 "ward_number": 1,
-                "male_old_age_population": 393,
-                "female_old_age_population": 229,
-                "single_women_population": 0,
-            },  # Single women data not provided, using 0
+                "male_old_age_population": 322,
+                "female_old_age_population": 265,
+                "single_women_population": 232,
+            },
             {
                 "ward_number": 2,
-                "male_old_age_population": 168,
-                "female_old_age_population": 230,
-                "single_women_population": 0,
+                "male_old_age_population": 272,
+                "female_old_age_population": 298,
+                "single_women_population": 186,
             },
             {
                 "ward_number": 3,
-                "male_old_age_population": 104,
-                "female_old_age_population": 117,
-                "single_women_population": 0,
+                "male_old_age_population": 247,
+                "female_old_age_population": 282,
+                "single_women_population": 166,
             },
             {
                 "ward_number": 4,
-                "male_old_age_population": 170,
-                "female_old_age_population": 191,
-                "single_women_population": 0,
+                "male_old_age_population": 283,
+                "female_old_age_population": 287,
+                "single_women_population": 147,
             },
             {
                 "ward_number": 5,
-                "male_old_age_population": 194,
-                "female_old_age_population": 184,
-                "single_women_population": 0,
+                "male_old_age_population": 337,
+                "female_old_age_population": 409,
+                "single_women_population": 213,
             },
             {
                 "ward_number": 6,
-                "male_old_age_population": 272,
-                "female_old_age_population": 284,
-                "single_women_population": 0,
+                "male_old_age_population": 333,
+                "female_old_age_population": 525,
+                "single_women_population": 240,
             },
             {
                 "ward_number": 7,
-                "male_old_age_population": 89,
-                "female_old_age_population": 173,
-                "single_women_population": 0,
+                "male_old_age_population": 295,
+                "female_old_age_population": 276,
+                "single_women_population": 176,
+            },
+            {
+                "ward_number": 8,
+                "male_old_age_population": 43,
+                "female_old_age_population": 36,
+                "single_women_population": 44,
             },
         ]
 

@@ -79,8 +79,8 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 "other_percentage": 0.0,
             }
 
-        # Initialize ward data
-        for ward_num in range(1, 8):
+        # Initialize ward data for wards 1-8 (dynamic for new data)
+        for ward_num in range(1, 9):
             ward_data[str(ward_num)] = {
                 "male": 0,
                 "female": 0,
@@ -88,11 +88,8 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 "total": 0,
                 "age_groups": {},
             }
-
-            # Initialize age groups for each ward
             for age_choice in AgeGroupChoice.choices:
-                age_code = age_choice[0]
-                ward_data[str(ward_num)]["age_groups"][age_code] = {
+                ward_data[str(ward_num)][age_choice[0]] = {
                     "male": 0,
                     "female": 0,
                     "other": 0,
@@ -109,9 +106,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             age_group = population_obj.age_group
             gender = population_obj.gender
             population = population_obj.population
-            ward_num = str(
-                population_obj.ward_number
-            )  # Convert to string for consistency
+            ward_num = str(population_obj.ward_number)
 
             # Update totals
             total_population += population
@@ -135,16 +130,15 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             # Update ward data (fix: always update nested age_groups)
             if gender == "MALE":
                 ward_data[ward_num]["male"] += population
-                ward_data[ward_num]["age_groups"][age_group]["male"] += population
+                ward_data[ward_num][age_group]["male"] += population
             elif gender == "FEMALE":
                 ward_data[ward_num]["female"] += population
-                ward_data[ward_num]["age_groups"][age_group]["female"] += population
+                ward_data[ward_num][age_group]["female"] += population
             else:
                 ward_data[ward_num]["other"] += population
-                ward_data[ward_num]["age_groups"][age_group]["other"] += population
-
+                ward_data[ward_num][age_group]["other"] += population
             ward_data[ward_num]["total"] += population
-            ward_data[ward_num]["age_groups"][age_group]["total"] += population
+            ward_data[ward_num][age_group]["total"] += population
 
         # Calculate percentages
         if total_population > 0:

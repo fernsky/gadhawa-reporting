@@ -88,23 +88,31 @@ class MajorSubjectProcessor(BaseSocialProcessor):
         return "५.१.२"
 
     def get_data(self):
-        """Get ward wise major subject data"""
-        # Municipality-wide summary
+        """Get ward wise major subject data (dynamic for all wards and subject types)"""
+        # Dynamically get all subject types and ward numbers from the database
+        all_subject_types = WardWiseMajorSubject.objects.values_list(
+            "subject_type", flat=True
+        ).distinct()
+        all_wards = WardWiseMajorSubject.objects.values_list(
+            "ward_number", flat=True
+        ).distinct()
+
         subject_data = {}
         total_population = 0
 
-        for subject_choice in MajorSubjectTypeChoice.choices:
-            subject_code = subject_choice[0]
-            subject_name = subject_choice[1]
-
+        # Aggregate municipality-wide subject data
+        for subject_code in all_subject_types:
             subject_population = (
                 WardWiseMajorSubject.objects.filter(
                     subject_type=subject_code
                 ).aggregate(total=models.Sum("population"))["total"]
                 or 0
             )
-
-            if subject_population > 0:  # Only include subjects with population
+            if subject_population > 0:
+                # Try to get Nepali name from choices, else fallback to code
+                subject_name = dict(getattr(MajorSubjectTypeChoice, "choices", [])).get(
+                    subject_code, subject_code
+                )
                 subject_data[subject_code] = {
                     "name_english": subject_code,
                     "name_nepali": subject_name,
@@ -120,16 +128,15 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     subject_data[subject_code]["population"] / total_population * 100
                 )
 
-        # Ward-wise data
+        # Ward-wise data (dynamic for all wards)
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7
+        for ward_num in sorted(all_wards):
             ward_population = (
                 WardWiseMajorSubject.objects.filter(ward_number=ward_num).aggregate(
                     total=models.Sum("population")
                 )["total"]
                 or 0
             )
-
             if ward_population > 0:
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
@@ -137,19 +144,16 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                     "total_population": ward_population,
                     "subjects": {},
                 }
-
-                # Subject type breakdown for this ward
-                for subject_choice in MajorSubjectTypeChoice.choices:
-                    subject_code = subject_choice[0]
-                    subject_name = subject_choice[1]
-
+                for subject_code in all_subject_types:
+                    subject_name = dict(
+                        getattr(MajorSubjectTypeChoice, "choices", [])
+                    ).get(subject_code, subject_code)
                     subject_population_ward = (
                         WardWiseMajorSubject.objects.filter(
                             ward_number=ward_num, subject_type=subject_code
                         ).aggregate(total=models.Sum("population"))["total"]
                         or 0
                     )
-
                     if subject_population_ward > 0:
                         ward_data[ward_num]["subjects"][subject_code] = {
                             "name_nepali": subject_name,
@@ -162,21 +166,18 @@ class MajorSubjectProcessor(BaseSocialProcessor):
                         }
 
         # Prepare top subjects list
-        top_subjects = []
-        for subject_code, subject_info in subject_data.items():
-            top_subjects.append(
-                {
-                    "subject_code": subject_code,
-                    "subject_name": subject_info["name_nepali"],
-                    "population": subject_info["population"],
-                    "percentage": subject_info["percentage"],
-                }
-            )
-
-        # Sort by population (descending)
+        top_subjects = [
+            {
+                "subject_code": subject_code,
+                "subject_name": subject_info["name_nepali"],
+                "population": subject_info["population"],
+                "percentage": subject_info["percentage"],
+            }
+            for subject_code, subject_info in subject_data.items()
+        ]
         top_subjects.sort(key=lambda x: x["population"], reverse=True)
 
-        # Categorize subjects by field
+        # Categorize subjects by field (keep as is)
         field_categories = self._categorize_subjects_by_field(
             subject_data, total_population
         )

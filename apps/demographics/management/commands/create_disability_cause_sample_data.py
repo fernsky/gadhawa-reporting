@@ -1,5 +1,5 @@
 """
-Management command to create disability cause demographics data based on actual data
+Management command to create disability cause demographics data based on latest actual data (wards 1-8, new cause keys, unknown mapped to OTHER)
 """
 
 from django.core.management.base import BaseCommand
@@ -10,7 +10,7 @@ import uuid
 
 
 class Command(BaseCommand):
-    help = "Create disability cause demographics data based on actual municipality-wide data"
+    help = "Create disability cause demographics data based on latest actual municipality-wide data (wards 1-8, new cause keys, unknown mapped to OTHER)"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -27,265 +27,283 @@ class Command(BaseCommand):
             WardWiseDisabilityCause.objects.all().delete()
 
         self.stdout.write(
-            "Creating disability cause demographics data based on actual municipality-wide data..."
+            "Creating disability cause demographics data based on latest actual municipality-wide data (wards 1-8, new cause keys, unknown mapped to OTHER)..."
         )
 
-        # Sample data representing actual disability cause patterns by ward
+        # Latest sample data (wards 1-8, new cause keys, unknown mapped to OTHER)
         disability_data = [
-            # Ward 1
             {
-                "id": "84bb751d-af1b-4a9e-a977-fce853431c03",
+                "id": "80d8bcf1-f4da-4f9c-8943-c8815bc288c9",
                 "ward_number": 1,
-                "disability_cause": "ACCIDENT",
-                "population": 11,
-            },
-            {
-                "id": "0c9a0b39-eb06-47d4-809d-8b744e8b7a8f",
-                "ward_number": 1,
-                "disability_cause": "CONGENITAL",
-                "population": 55,
-            },
-            {
-                "id": "3a435a50-4ca5-47bd-94fc-b72b34e0c5c6",
-                "ward_number": 1,
-                "disability_cause": "DISEASE",
-                "population": 52,
-            },
-            {
-                "id": "1f9340dd-b87b-4759-a27f-fe94cc27fdb2",
-                "ward_number": 1,
-                "disability_cause": "MALNUTRITION",
-                "population": 2,
-            },
-            {
-                "id": "cb5697a5-84ad-435f-8183-6799e62a779e",
-                "ward_number": 1,
-                "disability_cause": "OTHER",
-                "population": 4,
-            },
-            {
-                "id": "a26f7963-2a12-4776-a155-94af5f976950",
-                "ward_number": 1,
-                "disability_cause": "OTHER",
-                "population": 69,
-            },  # unknown mapped to OTHER
-            # Ward 2
-            {
-                "id": "463e605a-fce1-41f6-9b95-f5e67e4fc918",
-                "ward_number": 2,
-                "disability_cause": "ACCIDENT",
-                "population": 18,
-            },
-            {
-                "id": "dc2a7b61-4024-46bb-ac14-7c3f3258025f",
-                "ward_number": 2,
-                "disability_cause": "CONGENITAL",
-                "population": 43,
-            },
-            {
-                "id": "f8b5f973-f4a9-431b-9a0c-efa8dcdecb26",
-                "ward_number": 2,
-                "disability_cause": "DISEASE",
+                "disability_cause": "accident",
                 "population": 24,
             },
             {
-                "id": "5c0e3c4f-d581-4b49-aab9-012f439cd109",
-                "ward_number": 2,
-                "disability_cause": "MALNUTRITION",
-                "population": 2,
+                "id": "39021dfc-7b78-4b24-8a34-d98748d706fe",
+                "ward_number": 1,
+                "disability_cause": "congenital",
+                "population": 40,
             },
             {
-                "id": "d8241848-0da9-435d-8edf-972323c3c4a5",
-                "ward_number": 2,
-                "disability_cause": "OTHER",
-                "population": 3,
+                "id": "c5ba2f34-565b-4ec4-bd88-616a9d3eae7a",
+                "ward_number": 1,
+                "disability_cause": "disease",
+                "population": 34,
             },
             {
-                "id": "9bf7afec-57b4-482d-b304-e9640579b613",
-                "ward_number": 2,
-                "disability_cause": "OTHER",
-                "population": 7,
-            },  # unknown mapped to OTHER
-            # Ward 3
-            {
-                "id": "7322676f-13a7-428d-82cf-1208012e0d65",
-                "ward_number": 3,
-                "disability_cause": "ACCIDENT",
-                "population": 16,
+                "id": "ea7fdaaa-7d39-4211-99f1-f0064c8261ff",
+                "ward_number": 1,
+                "disability_cause": "other",
+                "population": 1,
             },
             {
-                "id": "2d00c089-70c7-4459-90ca-7f6047ea78d3",
-                "ward_number": 3,
-                "disability_cause": "CONGENITAL",
+                "id": "788dfb94-247e-4f9c-a9cf-44251d0455bc",
+                "ward_number": 1,
+                "disability_cause": "unknown",
+                "population": 60,
+            },
+            {
+                "id": "cae49efb-560e-457c-93ac-65498b9eb78d",
+                "ward_number": 2,
+                "disability_cause": "accident",
+                "population": 24,
+            },
+            {
+                "id": "3091cc41-5bea-4ad2-a540-fb89416491db",
+                "ward_number": 2,
+                "disability_cause": "congenital",
+                "population": 41,
+            },
+            {
+                "id": "720625ca-a979-4327-ab9c-36ec7d357a83",
+                "ward_number": 2,
+                "disability_cause": "disease",
                 "population": 18,
             },
             {
-                "id": "62b9859f-4244-430b-ad16-da9a2ecacde0",
-                "ward_number": 3,
-                "disability_cause": "DISEASE",
-                "population": 13,
-            },
-            {
-                "id": "8a029e6e-6e1b-4e74-8396-d23856700dab",
-                "ward_number": 3,
-                "disability_cause": "MALNUTRITION",
-                "population": 1,
-            },
-            {
-                "id": "c3d4cb6b-1ea3-4b57-bde4-7fc3abc0fa62",
-                "ward_number": 3,
-                "disability_cause": "OTHER",
+                "id": "7ef12aa1-b22c-45ec-9d22-b6b1e0f5c3fc",
+                "ward_number": 2,
+                "disability_cause": "malnutrition",
                 "population": 4,
-            },  # unknown mapped to OTHER
-            # Ward 4
-            {
-                "id": "d997892d-709d-4660-afb8-1452778024e8",
-                "ward_number": 4,
-                "disability_cause": "ACCIDENT",
-                "population": 18,
             },
             {
-                "id": "6764eb8d-9108-44e0-8b29-6166f3d0abe5",
-                "ward_number": 4,
-                "disability_cause": "CONFLICT",
-                "population": 1,
-            },
-            {
-                "id": "2f73f48e-5bf9-4260-b918-e8ac291be925",
-                "ward_number": 4,
-                "disability_cause": "CONGENITAL",
-                "population": 26,
-            },
-            {
-                "id": "fb79ae79-8234-460e-a24c-906fb5105523",
-                "ward_number": 4,
-                "disability_cause": "DISEASE",
-                "population": 15,
-            },
-            {
-                "id": "0d725a86-d3d0-475b-a0c4-8d15e3ac27a5",
-                "ward_number": 4,
-                "disability_cause": "MALNUTRITION",
+                "id": "7d6d3427-7e00-4976-a918-2ca8f5f36214",
+                "ward_number": 2,
+                "disability_cause": "unknown",
                 "population": 3,
             },
             {
-                "id": "0c06504d-aea8-4681-9ad9-95607aa7cd26",
-                "ward_number": 4,
-                "disability_cause": "OTHER",
-                "population": 4,
-            },  # unknown mapped to OTHER
-            # Ward 5
-            {
-                "id": "b88c2e09-3d59-41f3-af2c-726c72fd6711",
-                "ward_number": 5,
-                "disability_cause": "ACCIDENT",
-                "population": 36,
-            },
-            {
-                "id": "36ff0853-251d-4965-a840-17f510cacc5f",
-                "ward_number": 5,
-                "disability_cause": "CONFLICT",
-                "population": 2,
-            },
-            {
-                "id": "361f74c9-33c2-454b-81b1-04cc8bf833ff",
-                "ward_number": 5,
-                "disability_cause": "CONGENITAL",
-                "population": 36,
-            },
-            {
-                "id": "b9caf33f-6e7e-4b2f-81b9-bf1d7bd6cf20",
-                "ward_number": 5,
-                "disability_cause": "DISEASE",
-                "population": 36,
-            },
-            {
-                "id": "4798cb86-6cb9-450e-a915-1c3e304e1a79",
-                "ward_number": 5,
-                "disability_cause": "MALNUTRITION",
-                "population": 2,
-            },
-            {
-                "id": "07ac5161-0659-4afa-ba33-a0f059fcff83",
-                "ward_number": 5,
-                "disability_cause": "OTHER",
-                "population": 7,
-            },
-            {
-                "id": "a56f234b-3497-481c-8ff7-028cfba7bf5c",
-                "ward_number": 5,
-                "disability_cause": "OTHER",
-                "population": 36,
-            },  # unknown mapped to OTHER
-            # Ward 6
-            {
-                "id": "f10cf7c2-bb42-4f39-8673-87502ac2fdc7",
-                "ward_number": 6,
-                "disability_cause": "ACCIDENT",
-                "population": 4,
-            },
-            {
-                "id": "430c7ffa-2a19-4a82-affd-964f3752f778",
-                "ward_number": 6,
-                "disability_cause": "CONFLICT",
-                "population": 2,
-            },
-            {
-                "id": "8fd478f0-566c-49b2-87b2-b5aa3e9453ff",
-                "ward_number": 6,
-                "disability_cause": "CONGENITAL",
-                "population": 27,
-            },
-            {
-                "id": "b7501919-11a2-4295-bdfa-b72871edd8eb",
-                "ward_number": 6,
-                "disability_cause": "DISEASE",
-                "population": 9,
-            },
-            {
-                "id": "97376caa-9574-4c07-8288-191e8e190d83",
-                "ward_number": 6,
-                "disability_cause": "OTHER",
-                "population": 12,
-            },  # unknown mapped to OTHER
-            # Ward 7
-            {
-                "id": "4031562d-fd0b-431f-af5e-ae671a54d770",
-                "ward_number": 7,
-                "disability_cause": "ACCIDENT",
-                "population": 48,
-            },
-            {
-                "id": "274584e1-302a-4077-80db-172aa84b779d",
-                "ward_number": 7,
-                "disability_cause": "CONFLICT",
-                "population": 1,
-            },
-            {
-                "id": "cbcdac07-4e4f-4325-939c-25fa9dc315be",
-                "ward_number": 7,
-                "disability_cause": "CONGENITAL",
-                "population": 36,
-            },
-            {
-                "id": "b2e58d38-ba2a-4c36-bb8e-49fbfbed8904",
-                "ward_number": 7,
-                "disability_cause": "DISEASE",
+                "id": "01153314-ffb8-4579-ab50-ea451d7de6c8",
+                "ward_number": 3,
+                "disability_cause": "accident",
                 "population": 44,
             },
             {
-                "id": "1de7af53-0708-4134-8dfa-5c48bbc7f090",
-                "ward_number": 7,
-                "disability_cause": "OTHER",
+                "id": "720acd35-2763-4132-965d-00da5857b63e",
+                "ward_number": 3,
+                "disability_cause": "congenital",
+                "population": 47,
+            },
+            {
+                "id": "7e1bf992-cfa7-4c8a-b75c-191479338e8d",
+                "ward_number": 3,
+                "disability_cause": "disease",
+                "population": 64,
+            },
+            {
+                "id": "50ec9c0a-b967-45de-9433-b779bf5b8618",
+                "ward_number": 3,
+                "disability_cause": "malnutrition",
                 "population": 2,
             },
             {
-                "id": "114222a9-0cc8-4652-90a5-af5fa902446c",
+                "id": "4e7f60a0-7dc8-4165-bf7b-15bccb44733a",
+                "ward_number": 3,
+                "disability_cause": "other",
+                "population": 1,
+            },
+            {
+                "id": "dc29e65e-d10f-454d-8e41-d48b23f85bbb",
+                "ward_number": 4,
+                "disability_cause": "accident",
+                "population": 17,
+            },
+            {
+                "id": "7a937be3-a5a4-472b-8ab6-5dcf7298c479",
+                "ward_number": 4,
+                "disability_cause": "congenital",
+                "population": 47,
+            },
+            {
+                "id": "fcd07adb-56b7-4001-97c1-b5518677b231",
+                "ward_number": 4,
+                "disability_cause": "disease",
+                "population": 57,
+            },
+            {
+                "id": "53996fc9-dc36-4cd8-a3d8-1f1e4e82ad01",
+                "ward_number": 4,
+                "disability_cause": "malnutrition",
+                "population": 2,
+            },
+            {
+                "id": "9d850891-d9af-4f16-89dd-108ddf9a81fb",
+                "ward_number": 4,
+                "disability_cause": "other",
+                "population": 7,
+            },
+            {
+                "id": "7b0e3bea-781e-489f-ace8-36b463c69214",
+                "ward_number": 4,
+                "disability_cause": "unknown",
+                "population": 18,
+            },
+            {
+                "id": "209bfb8e-91d2-4415-91b9-d526400a1e51",
+                "ward_number": 5,
+                "disability_cause": "accident",
+                "population": 15,
+            },
+            {
+                "id": "29ceb399-eb76-41cf-9cb9-fda6fb13d1fc",
+                "ward_number": 5,
+                "disability_cause": "conflict",
+                "population": 4,
+            },
+            {
+                "id": "ff1d2599-635a-4e67-bc5a-79224a39443f",
+                "ward_number": 5,
+                "disability_cause": "congenital",
+                "population": 35,
+            },
+            {
+                "id": "d6b3797c-5bf7-4097-ace1-807caaa9d1c9",
+                "ward_number": 5,
+                "disability_cause": "disease",
+                "population": 54,
+            },
+            {
+                "id": "ac400af3-7acd-470d-868c-588125631c11",
+                "ward_number": 5,
+                "disability_cause": "malnutrition",
+                "population": 7,
+            },
+            {
+                "id": "a542ca17-64a1-404b-9921-c29867fb1bdc",
+                "ward_number": 5,
+                "disability_cause": "other",
+                "population": 3,
+            },
+            {
+                "id": "af26e3bb-a148-4a91-8843-c4c9028ad3f2",
+                "ward_number": 5,
+                "disability_cause": "unknown",
+                "population": 16,
+            },
+            {
+                "id": "6d659c33-8aa1-459f-ab30-c4850a8f4207",
+                "ward_number": 6,
+                "disability_cause": "accident",
+                "population": 56,
+            },
+            {
+                "id": "32e13b1e-988a-48da-b72e-ce7c55569a19",
+                "ward_number": 6,
+                "disability_cause": "conflict",
+                "population": 1,
+            },
+            {
+                "id": "48247605-f675-401b-8d75-15b1015c9dd8",
+                "ward_number": 6,
+                "disability_cause": "congenital",
+                "population": 39,
+            },
+            {
+                "id": "e6bcc5d0-0e31-40cf-a17d-1bd0437c4126",
+                "ward_number": 6,
+                "disability_cause": "disease",
+                "population": 43,
+            },
+            {
+                "id": "234683bb-285b-4a09-a5d0-f26861e2c145",
+                "ward_number": 6,
+                "disability_cause": "malnutrition",
+                "population": 1,
+            },
+            {
+                "id": "433e2125-f7e6-4bbf-bf03-e21d31ababeb",
+                "ward_number": 6,
+                "disability_cause": "other",
+                "population": 4,
+            },
+            {
+                "id": "747a43b4-72ba-42ab-8326-5f7caa0563eb",
+                "ward_number": 6,
+                "disability_cause": "unknown",
+                "population": 20,
+            },
+            {
+                "id": "92b912dd-23f7-478f-ad69-a7f76261606a",
                 "ward_number": 7,
-                "disability_cause": "OTHER",
-                "population": 32,
-            },  # unknown mapped to OTHER
+                "disability_cause": "accident",
+                "population": 15,
+            },
+            {
+                "id": "e13cfa07-9c29-43c8-b4cd-92d1f29baa3a",
+                "ward_number": 7,
+                "disability_cause": "conflict",
+                "population": 3,
+            },
+            {
+                "id": "c710dfe0-819a-4578-ab2b-8402653eb5dc",
+                "ward_number": 7,
+                "disability_cause": "congenital",
+                "population": 26,
+            },
+            {
+                "id": "1e707070-da47-4a95-9643-75e5eee82a20",
+                "ward_number": 7,
+                "disability_cause": "disease",
+                "population": 8,
+            },
+            {
+                "id": "345166a6-d012-4c29-9b27-4ce13a6c2066",
+                "ward_number": 7,
+                "disability_cause": "unknown",
+                "population": 40,
+            },
+            {
+                "id": "7a97eb16-2a94-4245-8194-91c789f5aac8",
+                "ward_number": 8,
+                "disability_cause": "accident",
+                "population": 3,
+            },
+            {
+                "id": "96418189-2148-4c99-b839-459422b5db47",
+                "ward_number": 8,
+                "disability_cause": "congenital",
+                "population": 3,
+            },
+            {
+                "id": "d22efa76-eab3-4ec5-82c7-a5055bb4bfef",
+                "ward_number": 8,
+                "disability_cause": "disease",
+                "population": 8,
+            },
+            {
+                "id": "633978d3-b7d9-4e80-a862-143bd9a9635f",
+                "ward_number": 8,
+                "disability_cause": "unknown",
+                "population": 4,
+            },
         ]
+
+        # Map all cause keys to uppercase and map 'unknown' to 'OTHER'
+        for entry in disability_data:
+            cause = entry["disability_cause"].upper()
+            if cause == "UNKNOWN":
+                cause = "OTHER"
+            entry["disability_cause"] = cause
 
         existing_count = WardWiseDisabilityCause.objects.count()
         if existing_count > 0 and not options["clear"]:
@@ -354,14 +372,18 @@ class Command(BaseCommand):
             disability_totals[cause] = cause_population
 
             if cause_population > 0:
-                percentage = cause_population / total_population * 100
+                percentage = (
+                    cause_population / total_population * 100
+                    if total_population > 0
+                    else 0
+                )
                 self.stdout.write(
                     f"  {cause}: {cause_population:,} people ({percentage:.2f}%)"
                 )
 
         # Ward-wise summary
         self.stdout.write("\nWard-wise disability cause summary:")
-        for ward_num in range(1, 8):  # Wards 1-7 based on data
+        for ward_num in range(1, 9):  # Now covering wards 1-8
             ward_population = (
                 WardWiseDisabilityCause.objects.filter(ward_number=ward_num).aggregate(
                     total=models.Sum("population")

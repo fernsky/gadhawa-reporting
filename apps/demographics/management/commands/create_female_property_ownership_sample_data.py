@@ -1,5 +1,5 @@
 """
-Management command to create female property ownership demographics data based on actual data
+Management command to create female property ownership demographics data based on latest actual data (wards 1-8, all property types)
 """
 
 from django.core.management.base import BaseCommand
@@ -9,7 +9,7 @@ import uuid
 
 
 class Command(BaseCommand):
-    help = "Create female property ownership demographics data based on actual municipality-wide data"
+    help = "Create female property ownership demographics data based on latest actual municipality-wide data (wards 1-8, all property types)"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -28,208 +28,268 @@ class Command(BaseCommand):
             WardWiseFemalePropertyOwnership.objects.all().delete()
 
         self.stdout.write(
-            "Creating female property ownership demographics data based on actual municipality-wide data..."
+            "Creating female property ownership demographics data based on latest actual municipality-wide data (wards 1-8, all property types)..."
         )
 
-        # Actual data from the provided JSON
+        # Latest data from provided JSON (wards 1-8, all property types)
         female_property_data = [
             {
-                "id": "093ee6d0-e12c-400f-9abe-1c35cbbb5080",
+                "id": "43725587-539f-42ad-8996-de26bacbef95",
                 "ward_number": 1,
+                "ward_name": None,
+                "property_type": "HOUSE_ONLY",
+                "count": 24,
+                "population": 24,
+            },
+            {
+                "id": "4a3d55af-89c4-461f-bc11-bfbf447f0c95",
+                "ward_number": 1,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 1449,
+                "population": 1449,
+            },
+            {
+                "id": "13802f45-bd48-46e1-84d9-b6eed94d16a1",
+                "ward_number": 1,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 197,
+                "population": 197,
+            },
+            {
+                "id": "677b5f5b-34b6-4a20-99cd-1e0c6b48de4b",
+                "ward_number": 1,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 65,
+                "population": 65,
+            },
+            {
+                "id": "8a32dc9f-25f2-4451-911d-3b27be95e3ae",
+                "ward_number": 2,
+                "ward_name": None,
+                "property_type": "HOUSE_ONLY",
+                "count": 4,
+                "population": 4,
+            },
+            {
+                "id": "a00fe7f0-4ea8-4af0-9f01-d908d7fb64d9",
+                "ward_number": 2,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 1030,
+                "population": 1030,
+            },
+            {
+                "id": "1c94f3bb-4f25-408c-892e-03d8b368fcf6",
+                "ward_number": 2,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 64,
+                "population": 64,
+            },
+            {
+                "id": "82c2664a-2920-41ec-ae1a-502a6e52433b",
+                "ward_number": 2,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 103,
+                "population": 103,
+            },
+            {
+                "id": "6a92d20a-72f6-40f5-b470-1ad8c1c8ce53",
+                "ward_number": 3,
+                "ward_name": None,
+                "property_type": "HOUSE_ONLY",
+                "count": 15,
+                "population": 15,
+            },
+            {
+                "id": "921cd5d3-d2a4-4b26-8135-c803423d87b0",
+                "ward_number": 3,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 1027,
+                "population": 1027,
+            },
+            {
+                "id": "a4e10617-413f-4831-ab12-c002a445f2dc",
+                "ward_number": 3,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 156,
+                "population": 156,
+            },
+            {
+                "id": "9e5255fe-2d2d-41e1-a24c-a558e8e4a796",
+                "ward_number": 3,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 96,
+                "population": 96,
+            },
+            {
+                "id": "12435944-6e1c-44e5-b174-2be94606ccf2",
+                "ward_number": 4,
+                "ward_name": None,
+                "property_type": "HOUSE_ONLY",
+                "count": 4,
+                "population": 4,
+            },
+            {
+                "id": "82c3346d-32f2-4c02-b74c-1ec346fbb1e5",
+                "ward_number": 4,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 996,
+                "population": 996,
+            },
+            {
+                "id": "76880892-5899-4497-8cbf-9b46f4bfac94",
+                "ward_number": 4,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 189,
+                "population": 189,
+            },
+            {
+                "id": "9f7dae95-25dd-49de-a3f2-34b0760c2d09",
+                "ward_number": 4,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 111,
+                "population": 111,
+            },
+            {
+                "id": "85a464eb-2858-40b3-9a40-a9af1e36c244",
+                "ward_number": 5,
+                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 25,
                 "population": 25,
             },
             {
-                "id": "87a3dc41-c8fa-4854-acb0-d5653658ebbc",
-                "ward_number": 1,
-                "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 999,
-                "population": 999,
-            },
-            {
-                "id": "65bcfb1d-eb09-4a36-8825-de41294f6e6f",
-                "ward_number": 1,
-                "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 80,
-                "population": 80,
-            },
-            {
-                "id": "625982ed-db5c-489b-91e1-837ca2c1f908",
-                "ward_number": 1,
-                "property_type": "LAND_ONLY",
-                "count": 35,
-                "population": 35,
-            },
-            {
-                "id": "4e716c83-7b71-4e0a-89f3-71e4f5bd9f9a",
-                "ward_number": 2,
-                "property_type": "HOUSE_ONLY",
-                "count": 12,
-                "population": 12,
-            },
-            {
-                "id": "2d29da74-4ed1-49a6-99c5-e696c437ce28",
-                "ward_number": 2,
-                "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 653,
-                "population": 653,
-            },
-            {
-                "id": "f7d51a64-c02e-415a-b70a-ffc18f1c2ce8",
-                "ward_number": 2,
-                "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 185,
-                "population": 185,
-            },
-            {
-                "id": "36ca2047-2076-4ec8-ac9d-a7766bd83813",
-                "ward_number": 2,
-                "property_type": "LAND_ONLY",
-                "count": 68,
-                "population": 68,
-            },
-            {
-                "id": "128ef8cd-3abb-48d9-99a0-2cc6955fbba7",
-                "ward_number": 3,
-                "property_type": "HOUSE_ONLY",
-                "count": 10,
-                "population": 10,
-            },
-            {
-                "id": "4908e162-4a0b-4790-9b93-4b2f68725c4f",
-                "ward_number": 3,
-                "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 534,
-                "population": 534,
-            },
-            {
-                "id": "d32dcd3c-6b88-47b4-b8a0-f7f0b44d7fd9",
-                "ward_number": 3,
-                "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 8,
-                "population": 8,
-            },
-            {
-                "id": "bd4c370e-c1d7-46ec-bcff-78a945e624cb",
-                "ward_number": 3,
-                "property_type": "LAND_ONLY",
-                "count": 12,
-                "population": 12,
-            },
-            {
-                "id": "ba2118c3-9855-4533-9a7e-58050cb5975c",
-                "ward_number": 4,
-                "property_type": "HOUSE_ONLY",
-                "count": 3,
-                "population": 3,
-            },
-            {
-                "id": "329f883d-bcfb-4497-87b1-020418b0e804",
-                "ward_number": 4,
-                "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 702,
-                "population": 702,
-            },
-            {
-                "id": "8f710890-28da-4cd1-a337-3e73e04ef331",
-                "ward_number": 4,
-                "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 70,
-                "population": 70,
-            },
-            {
-                "id": "55481e97-e943-4493-9da9-1e2b2d75006b",
-                "ward_number": 4,
-                "property_type": "LAND_ONLY",
-                "count": 73,
-                "population": 73,
-            },
-            {
-                "id": "81155404-dba2-4b02-aa10-8b880f2ad3cb",
+                "id": "45eb908d-eb16-449e-9e71-a7a759ce6727",
                 "ward_number": 5,
-                "property_type": "HOUSE_ONLY",
-                "count": 3,
-                "population": 3,
-            },
-            {
-                "id": "89127543-58d3-4f81-ae09-d1a3eadf0fee",
-                "ward_number": 5,
+                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 543,
-                "population": 543,
+                "count": 1186,
+                "population": 1186,
             },
             {
-                "id": "c8ba4db5-585b-4f8d-8763-eff47eae3266",
+                "id": "af2cf948-9c32-4129-ad7f-2af6f06b8d18",
                 "ward_number": 5,
+                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 73,
-                "population": 73,
+                "count": 160,
+                "population": 160,
             },
             {
-                "id": "2b0a2049-ff1d-4e27-8b57-53c1f07a87a3",
+                "id": "88f05ea8-9d76-4bdc-adbc-fc736fdcc905",
                 "ward_number": 5,
+                "ward_name": None,
                 "property_type": "LAND_ONLY",
-                "count": 100,
-                "population": 100,
+                "count": 151,
+                "population": 151,
             },
             {
-                "id": "2c82a9a3-e76f-469e-acc8-bbb77f59d980",
+                "id": "740ff9e6-3a1b-4953-9bca-65eb25dc161f",
                 "ward_number": 6,
+                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
-                "count": 82,
-                "population": 82,
-            },
-            {
-                "id": "29fdb0ea-5bca-4d80-b702-696820de0c7c",
-                "ward_number": 6,
-                "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 681,
-                "population": 681,
-            },
-            {
-                "id": "6ff833b4-aeec-4a52-a44f-7aa6b1f815f8",
-                "ward_number": 6,
-                "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 67,
-                "population": 67,
-            },
-            {
-                "id": "0021c699-dd04-4d5a-bbfe-2b6b6d67d695",
-                "ward_number": 6,
-                "property_type": "LAND_ONLY",
                 "count": 34,
                 "population": 34,
             },
             {
-                "id": "24dd55b4-707d-4a0f-a972-7ea9495702a5",
-                "ward_number": 7,
-                "property_type": "HOUSE_ONLY",
-                "count": 5,
-                "population": 5,
-            },
-            {
-                "id": "27ef13b9-4be8-424c-87f3-e19efdc9ef37",
-                "ward_number": 7,
+                "id": "5f2f4b2b-b6ad-4125-bf4b-8706bbbe7aae",
+                "ward_number": 6,
+                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
-                "count": 497,
-                "population": 497,
+                "count": 1238,
+                "population": 1238,
             },
             {
-                "id": "c16b59de-a312-4bce-8a35-961ccf33e16d",
-                "ward_number": 7,
+                "id": "c3a57f3e-24f9-4006-ab18-90e0d0312f33",
+                "ward_number": 6,
+                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
-                "count": 78,
-                "population": 78,
+                "count": 217,
+                "population": 217,
             },
             {
-                "id": "6f1b18b6-4398-498b-853e-38ae77055de3",
-                "ward_number": 7,
+                "id": "1e8b244d-b92a-4d25-807d-8d42f19fc35e",
+                "ward_number": 6,
+                "ward_name": None,
                 "property_type": "LAND_ONLY",
-                "count": 7,
-                "population": 7,
+                "count": 272,
+                "population": 272,
+            },
+            {
+                "id": "46f05ff2-bf5d-4b46-841b-3a1e1db5529c",
+                "ward_number": 7,
+                "ward_name": None,
+                "property_type": "HOUSE_ONLY",
+                "count": 28,
+                "population": 28,
+            },
+            {
+                "id": "f64e0e11-742e-48b8-a0c9-04f0609b7c92",
+                "ward_number": 7,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 959,
+                "population": 959,
+            },
+            {
+                "id": "a6168d6c-3bfb-4a34-bfdb-780c1c71de10",
+                "ward_number": 7,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 154,
+                "population": 154,
+            },
+            {
+                "id": "04480f0d-d815-4a46-9c0f-18f8f79663f8",
+                "ward_number": 7,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 216,
+                "population": 216,
+            },
+            {
+                "id": "86a5d97a-2730-41e7-af6b-f05d2fa2e508",
+                "ward_number": 8,
+                "ward_name": None,
+                "property_type": "NEITHER_HOUSE_NOR_LAND",
+                "count": 189,
+                "population": 189,
+            },
+            {
+                "id": "89e5b814-b469-4c40-b124-a89488bc4985",
+                "ward_number": 8,
+                "ward_name": None,
+                "property_type": "BOTH_HOUSE_AND_LAND",
+                "count": 4,
+                "population": 4,
+            },
+            {
+                "id": "6785b649-aa21-43bd-a62b-1a87d7fe2389",
+                "ward_number": 8,
+                "ward_name": None,
+                "property_type": "LAND_ONLY",
+                "count": 3,
+                "population": 3,
             },
         ]
+
+        # Set ward_name if missing
+        ward_name_map = {i: f"वडा नं. {i}" for i in range(1, 9)}
+        for entry in female_property_data:
+            if not entry["ward_name"]:
+                entry["ward_name"] = ward_name_map.get(
+                    entry["ward_number"], f"वडा नं. {entry['ward_number']}"
+                )
 
         self.stdout.write(
             f"Processing {len(female_property_data)} female property ownership records..."
@@ -253,6 +313,7 @@ class Command(BaseCommand):
                     property_type=data_item["property_type"],
                     defaults={
                         "id": data_item["id"],
+                        "ward_name": data_item["ward_name"],
                         "count": data_item["count"],
                         "population": data_item["population"],
                     },
@@ -263,6 +324,7 @@ class Command(BaseCommand):
                 else:
                     obj.count = data_item["count"]
                     obj.population = data_item["population"]
+                    obj.ward_name = data_item["ward_name"]
                     obj.save()
                     updated_count += 1
 
@@ -295,14 +357,18 @@ class Command(BaseCommand):
             )
 
             if property_total > 0:
-                percentage = property_total / total_population * 100
+                percentage = (
+                    property_total / total_population * 100
+                    if total_population > 0
+                    else 0
+                )
                 self.stdout.write(
                     f"  {property_name}: {property_total:,} people ({percentage:.1f}%)"
                 )
 
         # Display ward breakdown
         self.stdout.write("\nWard breakdown:")
-        for ward_num in range(1, 8):  # Only wards 1-7 based on actual data
+        for ward_num in range(1, 9):  # Now covering wards 1-8
             ward_total = sum(
                 WardWiseFemalePropertyOwnership.objects.filter(
                     ward_number=ward_num
@@ -310,7 +376,9 @@ class Command(BaseCommand):
             )
 
             if ward_total > 0:
-                percentage = ward_total / total_population * 100
+                percentage = (
+                    ward_total / total_population * 100 if total_population > 0 else 0
+                )
                 self.stdout.write(
-                    f"  Ward {ward_num}: {ward_total:,} people ({percentage:.1f}%)"
+                    f"  वडा {ward_num}: {ward_total:,} people ({percentage:.1f}%)"
                 )

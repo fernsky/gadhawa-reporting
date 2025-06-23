@@ -45,6 +45,10 @@ class DeathCauseProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
     def get_data(self):
         # Municipality-wide summary
         cause_types = {k: v for k, v in DeathCauseChoice.choices}
+        # Dynamically add any new cause codes from data
+        for obj in WardWiseDeathCause.objects.all():
+            if obj.death_cause not in cause_types:
+                cause_types[obj.death_cause] = obj.death_cause
         cause_data = {}
         for cause_code, cause_name in cause_types.items():
             cause_data[cause_code] = {

@@ -77,22 +77,26 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
             "UNITED_STATES_OF_AMERICA": "संयुक्त राज्य अमेरिका",
             "YEMEN": "येमेन",
         }
-        # Collect and sort all data
-        all_objs = list(MunicipalityWideForeignEmploymentCountries.objects.all())
-        all_objs.sort(key=lambda x: -x.population)
+        # Aggregate population by country across all wards
+        from collections import defaultdict
+
+        country_pop = defaultdict(int)
+        for obj in MunicipalityWideForeignEmploymentCountries.objects.all():
+            country_pop[obj.country] += obj.population
+        # Sort by population descending
+        sorted_countries = sorted(country_pop.items(), key=lambda x: -x[1])
         # Top 10 + sum rest as 'अन्य'
-        top_objs = all_objs[:10]
-        other_objs = all_objs[10:]
-        # Prepare data
-        for obj in top_objs:
-            nep_name = nepali_names.get(obj.country, obj.country)
+        top_countries = sorted_countries[:10]
+        other_countries = sorted_countries[10:]
+        for country, pop in top_countries:
+            nep_name = nepali_names.get(country, country)
             country_data[nep_name] = {
                 "country": nep_name,
-                "population": obj.population,
+                "population": pop,
                 "percentage": 0,
             }
-            total_population += obj.population
-        other_population = sum(obj.population for obj in other_objs)
+            total_population += pop
+        other_population = sum(pop for country, pop in other_countries)
         if other_population > 0:
             country_data["अन्य"] = {
                 "country": "अन्य",

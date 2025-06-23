@@ -36,7 +36,7 @@ class ReligionProcessor(BaseDemographicsProcessor):
         """Get religion population data - municipality-wide format similar to househead/economically_active"""
         religion_data = {}
 
-        # Initialize all religions
+        # Initialize all religions (including new types from sample data)
         for choice in ReligionTypeChoice.choices:
             religion_data[choice[0]] = {
                 "population": 0,
@@ -44,12 +44,20 @@ class ReligionProcessor(BaseDemographicsProcessor):
                 "name_nepali": choice[1],
             }
 
-        # Get actual data from database
+        # Get actual data from database (all records, all types)
         total_population = 0
         for religion_obj in MunicipalityWideReligionPopulation.objects.all():
-            religion = religion_obj.religion  # Correct attribute based on models.py
+            religion = religion_obj.religion
             if religion in religion_data:
                 religion_data[religion]["population"] += religion_obj.population
+                total_population += religion_obj.population
+            else:
+                # Handle new/unknown religion types gracefully
+                religion_data[religion] = {
+                    "population": religion_obj.population,
+                    "percentage": 0.0,
+                    "name_nepali": religion,  # fallback to code if not in choices
+                }
                 total_population += religion_obj.population
 
         # Calculate percentages

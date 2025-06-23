@@ -54,10 +54,10 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
         return "३.४"
 
     def get_data(self):
-        """Get language population data - municipality-wide format similar to househead/economically_active"""
+        """Get language population data - municipality-wide format, supporting all codes in DB"""
         language_data = {}
 
-        # Initialize all languages
+        # Initialize all languages from LanguageTypeChoice
         for choice in LanguageTypeChoice.choices:
             language_data[choice[0]] = {
                 "population": 0,
@@ -65,12 +65,20 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 "name_nepali": choice[1],
             }
 
-        # Get actual data from database
+        # Get actual data from database (all records, all types)
         total_population = 0
         for language_obj in MunicipalityWideMotherTonguePopulation.objects.all():
-            language = language_obj.language  # Correct attribute based on models.py
+            language = language_obj.language
             if language in language_data:
                 language_data[language]["population"] += language_obj.population
+                total_population += language_obj.population
+            else:
+                # Handle new/unknown language types gracefully
+                language_data[language] = {
+                    "population": language_obj.population,
+                    "percentage": 0.0,
+                    "name_nepali": language,  # fallback to code if not in choices
+                }
                 total_population += language_obj.population
 
         # Calculate percentages
@@ -87,7 +95,7 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             )
         )
 
-        # Return structured format similar to househead/economically_active
+        # Return structured format
         return {
             "municipality_data": sorted_language_data,
             "total_population": total_population,
