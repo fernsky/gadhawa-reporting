@@ -4,7 +4,7 @@
 <!-- Death Registration Demographics Report Partial for PDF -->
 <p class="section-content death-registration-demographics-section" id="section-death-registration-demographics">
     <h2 class="section-header level-2" style="color: #1e40af; border-bottom: 2px solid #0ea5e9; padding-bottom: 0.3em; font-size: 16pt; margin-top: 2em;">
-        ३.४ मृत्यु दर्ता (उमेर तथा लिङ्ग अनुसार) विवरण
+        ३.१२.१ लिङ्ग र उमेर समूह अनुसार विगत १२ महिनामा मृत्यु भएकाको विवरण	
     </h2>
     
     <!-- Coherent Analysis Text -->
@@ -15,7 +15,7 @@
     <!-- Death Registration Population Pyramid Chart -->
     {% if death_registration_data %}
         <div class="chart-section">
-            <h3 class="chart-title">चित्र ३.४.१: मृत्यु दर्ता पिरामिड (उमेर तथा लिङ्ग अनुसार)</h3>
+            <h3 class="chart-title">चित्र ३.४.१: लिङ्ग र उमेर समूह अनुसार विगत १२ महिनामा मृत्यु भएकाको विवरण</h3>
             <div class="pdf-chart-container">
                 {% load static %}
                 {% chart_url "demographics_death_registration_pyramid" as pyramid_chart_url %}
@@ -37,7 +37,7 @@
     <!-- Ward-wise Death Registration Table (Matrix) -->
     {% if ward_table_data %}
     <div class="table-section">
-        <h3 class="table-title">तालिका ३.४.१: वडागत उमेर समूह र लिङ्ग अनुसार मृत्यु दर्ता विवरण</h3>
+        <h3 class="table-title">तालिका ३.४.१: लिङ्ग र उमेर समूह अनुसार विगत १२ महिनामा मृत्यु भएकाको विवरण</h3>
         <table class="pdf-data-table ward-age-gender-block-table">
             <thead>
                 <tr>

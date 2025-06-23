@@ -425,14 +425,14 @@
           लुङ्ग्री गाउँपालिकामा विभिन्न धर्म, जातजाति र मातृभाषी समुदायहरूको बसोबास रहेको छ । यस खण्डमा गाउँपालिकाको जनसांख्यिकीय विविधता, सामाजिक संरचना र सांस्कृतिक पहिचानको विस्तृत विवरण प्रस्तुत गरिएको छ । नेपालको संविधान २०७२ ले प्रत्याभूत गरेका भाषिक, धार्मिक र सांस्कृतिक अधिकारहरूको सन्दर्भमा यहाँका विविध समुदायहरूको अवस्था र चुनौतीहरूको विश्लेषण गरिएको छ ।
         </div>
       </div>
-      
+      <!-- Ward Settlement Demographics Section -->
+      {% include 'demographics/ward_settlement/ward_settlement_report_partial.html' with ward_data=all_demographics_data.ward_settlement.data total_settlements=all_demographics_data.ward_settlement.total_settlements total_wards=all_demographics_data.ward_settlement.total_wards report_content=all_demographics_data.ward_settlement.report_content %}
+
       <!-- Demographic Summary Section -->
       {% if all_demographics_data.demographic_summary %}
         {% include 'demographics/demographic_summary/demographic_summary_report_partial.html' with data=all_demographics_data.demographic_summary.data report_content=all_demographics_data.demographic_summary.report_content %}
       {% endif %}
       
-      <!-- Ward Settlement Demographics Section -->
-      {% include 'demographics/ward_settlement/ward_settlement_report_partial.html' with ward_data=all_demographics_data.ward_settlement.data total_settlements=all_demographics_data.ward_settlement.total_settlements total_wards=all_demographics_data.ward_settlement.total_wards report_content=all_demographics_data.ward_settlement.report_content %}
 
       <!-- Ward Household Demographics Section -->
       {% if all_demographics_data.ward_household %}
@@ -465,25 +465,28 @@
       {% include 'demographics/househead/househead_report_partial.html' with househead_data=all_demographics_data.househead.data.municipality_data ward_data=all_demographics_data.househead.data.ward_data total_population=all_demographics_data.househead.data.total_population coherent_analysis=all_demographics_data.househead.report_content %}
 
 
+       <!-- Occupation Demographics Section -->
+      {% if all_demographics_data.occupation %}
+       {% include 'demographics/occupation/occupation_report_partial.html' with municipality_data=all_demographics_data.occupation.data.municipality_data ward_data=all_demographics_data.occupation.data.ward_data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content pdf_charts=pdf_charts %}
+      {% endif %}
+
         <!-- Ward wise economically active Population -->
       {% if all_demographics_data.economically_active %}
        {% include 'demographics/economically_active/economically_active_report_partial.html' with age_group_data=all_demographics_data.economically_active.data.age_group_data gender_data=all_demographics_data.economically_active.data.gender_data ward_data=all_demographics_data.economically_active.data.ward_data total_population=all_demographics_data.economically_active.total_population coherent_analysis=all_demographics_data.economically_active.report_content pdf_charts=pdf_charts %}
       {% endif %}
 
-      <!-- Occupation Demographics Section -->
-      {% if all_demographics_data.occupation %}
-       {% include 'demographics/occupation/occupation_report_partial.html' with municipality_data=all_demographics_data.occupation.data.municipality_data ward_data=all_demographics_data.occupation.data.ward_data total_population=all_demographics_data.occupation.total_population coherent_analysis=all_demographics_data.occupation.report_content pdf_charts=pdf_charts %}
+        <!-- Disability Cause Demographics Section -->
+      {% if all_demographics_data.disability_cause %}
+        {% include 'demographics/disability_cause/disability_cause_report_partial.html' with municipality_data=all_demographics_data.disability_cause.data.municipality_data ward_data=all_demographics_data.disability_cause.data.ward_data total_population=all_demographics_data.disability_cause.total_population coherent_analysis=all_demographics_data.disability_cause.report_content pdf_charts=pdf_charts %}
       {% endif %}
+     
 
       <!-- Female Property Ownership Demographics Section -->
       {% if all_demographics_data.female_property_ownership %}
         {% include 'demographics/female_property_ownership/female_property_ownership_report_partial.html' with data=all_demographics_data.female_property_ownership.data municipality_totals=all_demographics_data.female_property_ownership.data.municipality_data ward_data=all_demographics_data.female_property_ownership.data.ward_data total_population=all_demographics_data.female_property_ownership.total_population municipality_percentages=all_demographics_data.female_property_ownership.data.municipality_data property_type_names=all_demographics_data.female_property_ownership.data.municipality_data coherent_analysis=all_demographics_data.female_property_ownership.report_content charts=all_demographics_data.female_property_ownership.charts %}
       {% endif %}
 
-      <!-- Disability Cause Demographics Section -->
-      {% if all_demographics_data.disability_cause %}
-        {% include 'demographics/disability_cause/disability_cause_report_partial.html' with municipality_data=all_demographics_data.disability_cause.data.municipality_data ward_data=all_demographics_data.disability_cause.data.ward_data total_population=all_demographics_data.disability_cause.total_population coherent_analysis=all_demographics_data.disability_cause.report_content pdf_charts=pdf_charts %}
-      {% endif %}
+    
 
       <!-- Death Registration Demographics Section -->
       {% if all_demographics_data.death_registration %}
