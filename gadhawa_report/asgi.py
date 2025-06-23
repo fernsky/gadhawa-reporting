@@ -1,5 +1,5 @@
 """
-ASGI config for lungri_report project.
+ASGI config for gadhawa_report project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
 
 application = get_asgi_application()

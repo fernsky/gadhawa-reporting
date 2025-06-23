@@ -179,7 +179,7 @@ class BaseMunicipalityIntroductionReportFormatter(ABC):
     """Base report formatter with common functionality"""
 
     def __init__(self):
-        self.municipality_name = "लुङ्ग्री गाउँपालिका"
+        self.municipality_name = "गढवा गाउँपालिका"
 
     @abstractmethod
     def generate_formal_report(self, data):

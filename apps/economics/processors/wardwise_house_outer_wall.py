@@ -180,13 +180,13 @@ class WardWiseHouseOuterWallProcessor(BaseEconomicsProcessor):
                     for nepali, count, percent, code in used_types
                 ]
                 main_sentence = (
-                    f"लुङ्ग्री गाउँपालिकामा बाहिरी गारोको आधारमा घरधुरीको विवरण हेर्दा, कुल {format_nepali_number(total_households)} घरधुरीमध्ये "
+                    f"गढवा गाउँपालिकामा बाहिरी गारोको आधारमा घरधुरीको विवरण हेर्दा, कुल {format_nepali_number(total_households)} घरधुरीमध्ये "
                     + "; ".join(type_strs)
                     + " रहेका छन् ।"
                 )
             else:
                 main_sentence = (
-                    f"लुङ्ग्री गाउँपालिकामा बाहिरी गारोको आधारमा कुनै घरधुरी विवरण उपलब्ध छैन ।"
+                    f"गढवा गाउँपालिकामा बाहिरी गारोको आधारमा कुनै घरधुरी विवरण उपलब्ध छैन ।"
                 )
             # Compose analysis
             traditional = [

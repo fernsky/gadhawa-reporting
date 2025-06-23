@@ -1,5 +1,5 @@
 """
-Social models for Lungri Rural Municipality Digital Profile
+Social models for Gadhawa Rural Municipality Digital Profile
 
 This module contains models for Chapter 5 (सामाजिक अवस्था) including:
 - 5.1 शैक्षिक तथा मानव संशाधन विकास (Education and Human Resource Development)
@@ -1025,7 +1025,7 @@ class WardWiseTeacherStaffing(BaseModel):
     @property
     def school_display_name(self):
         """Return shortened school name for display"""
-        return self.school_name.replace("लुङ्ग्री-", "").replace("लुग्री-", "")
+        return self.school_name.replace("गढवा-", "").replace("लुग्री-", "")
 
 
 class WardWiseTeacherSummary(BaseModel):

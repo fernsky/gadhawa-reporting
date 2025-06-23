@@ -140,7 +140,7 @@ class SolidWasteManagementProcessor(BaseSocialProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको ठोस फोहोर व्यवस्थापनको अवस्था विश्लेषण गर्दा विभिन्न विधिहरूको प्रयोग भइरहेको देखिन्छ।"
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको ठोस फोहोर व्यवस्थापनको अवस्था विश्लेषण गर्दा विभिन्न विधिहरूको प्रयोग भइरहेको देखिन्छ।"
         )
 
         # Environmental impact analysis

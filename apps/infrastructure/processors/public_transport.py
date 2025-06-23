@@ -136,7 +136,7 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको सार्वजनिक यातायातमा पहुँचको अवस्था विश्लेषण गर्दा विभिन्न समयावधिमा सार्वजनिक यातायात पुग्ने सुविधा उपलब्ध रहेको देखिन्छ।"
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारको सार्वजनिक यातायातमा पहुँचको अवस्था विश्लेषण गर्दा विभिन्न समयावधिमा सार्वजनिक यातायात पुग्ने सुविधा उपलब्ध रहेको देखिन्छ।"
         )
 
         # Accessibility analysis

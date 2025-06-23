@@ -31,11 +31,11 @@ class Command(BaseCommand):
 
         # Sample data representing actual health institutions
         health_institution_data = [
-            {"s_n": 1, "name": "पाङ लुङ्ग्री चौकी", "ward_number": 1},
-            {"s_n": 2, "name": "सिर्प लुङ्ग्री चौकी", "ward_number": 2},
-            {"s_n": 3, "name": "बडाचौर लुङ्ग्री चौकी", "ward_number": 5},
-            {"s_n": 4, "name": "गुम्चाल लुङ्ग्री चौकी", "ward_number": 6},
-            {"s_n": 5, "name": "हार्जङ लुङ्ग्री चौकी", "ward_number": 7},
+            {"s_n": 1, "name": "पाङ गढवा चौकी", "ward_number": 1},
+            {"s_n": 2, "name": "सिर्प गढवा चौकी", "ward_number": 2},
+            {"s_n": 3, "name": "बडाचौर गढवा चौकी", "ward_number": 5},
+            {"s_n": 4, "name": "गुम्चाल गढवा चौकी", "ward_number": 6},
+            {"s_n": 5, "name": "हार्जङ गढवा चौकी", "ward_number": 7},
             {"s_n": 6, "name": "आ.स्वा.से.के.जुतुङखोला", "ward_number": 3},
             {"s_n": 7, "name": "आ.स्वा.से.के.नम्जा", "ward_number": 4},
             {"s_n": 8, "name": "सा.स्वा.इकाइ हार्जङ", "ward_number": 7},

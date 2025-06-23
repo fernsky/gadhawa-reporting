@@ -1,6 +1,6 @@
 # Demographics Processing System
 
-This system provides a unified, extensible pipeline for processing all demographic data categories in the Lungri Rural Municipality Digital Profile with enhanced image generation capabilities.
+This system provides a unified, extensible pipeline for processing all demographic data categories in the Gadhawa Rural Municipality Digital Profile with enhanced image generation capabilities.
 
 ## Architecture
 

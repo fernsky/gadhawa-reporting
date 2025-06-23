@@ -1,5 +1,5 @@
 """
-WSGI config for lungri_report project.
+WSGI config for gadhawa_report project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
 
 application = get_wsgi_application()

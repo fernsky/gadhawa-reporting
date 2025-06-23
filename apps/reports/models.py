@@ -203,9 +203,9 @@ class PublicationSettings(models.Model):
     Global settings for report publication
     """
 
-    municipality_name = models.CharField(max_length=200, default="लुङ्ग्री गाउँपालिका")
+    municipality_name = models.CharField(max_length=200, default="गढवा गाउँपालिका")
     municipality_name_english = models.CharField(
-        max_length=200, default="lungri Rural Municipality"
+        max_length=200, default="gadhawa Rural Municipality"
     )
     report_title = models.CharField(max_length=300, default="डिजिटल प्रोफाइल प्रतिवेदन")
     report_title_english = models.CharField(

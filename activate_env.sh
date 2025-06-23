@@ -1,14 +1,14 @@
 #!/bin/bash
-# Activation script for Lungri Report System
+# Activation script for Gadhawa Report System
 # This ensures the correct Django settings module is loaded
 
-echo "🚀 Activating Lungri Report System environment..."
+echo "🚀 Activating Gadhawa Report System environment..."
 
 # Activate virtual environment
 source .venv/bin/activate
 
 # Set Django settings module
-export DJANGO_SETTINGS_MODULE=lungri_report.settings.development
+export DJANGO_SETTINGS_MODULE=gadhawa_report.settings.development
 
 # Clear any cached Python files
 echo "🧹 Clearing Python cache..."

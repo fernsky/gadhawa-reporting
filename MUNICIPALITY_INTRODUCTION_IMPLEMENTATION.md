@@ -1,7 +1,7 @@
 # Municipality Introduction Implementation Summary
 
 ## Overview
-Successfully implemented the complete "Municipality Introduction" (२. गाउँपालिका/नगरपालिकाको चिनारी) section for the Lungri Rural Municipality Digital Profile report system.
+Successfully implemented the complete "Municipality Introduction" (२. गाउँपालिका/नगरपालिकाको चिनारी) section for the Gadhawa Rural Municipality Digital Profile report system.
 
 ## Implemented Components
 
@@ -87,7 +87,7 @@ Successfully implemented the complete "Municipality Introduction" (२. गा�
   - `0001_initial.py`: PhysicalStatusInfo model
   - `0002_historicalbackgroundinfo.py`: HistoricalBackgroundInfo model
 
-- **Django Settings**: Registered in `lungri_report/settings/base.py`
+- **Django Settings**: Registered in `gadhawa_report/settings/base.py`
 
 ### 7. Template Integration ✅
 - **Main PDF Report**: Updated `templates/reports/pdf_full_report.html`
@@ -133,9 +133,9 @@ Successfully implemented the complete "Municipality Introduction" (२. गा�
 
 ### Historical Background (२.२)
 - **Historical Narrative**: Ancient history and development
-- **Naming Origin**: Story of how Lungri got its name from the river
+- **Naming Origin**: Story of how Gadhawa got its name from the river
 - **Geographic Features**: 
-  - Main river (Lungri River) with detailed description
+  - Main river (Gadhawa River) with detailed description
   - Forest types (8 varieties: साल, सखुवा, चिलाउने, etc.)
   - Wildlife diversity
 - **Cultural Heritage**:

@@ -1,5 +1,5 @@
 """
-Base models for lungri Report System.
+Base models for gadhawa Report System.
 
 This module contains abstract base models that provide common functionality
 for other models in the system.
@@ -57,8 +57,8 @@ class WardModel(BaseModel):
     ward_number = models.IntegerField(
         verbose_name=_("वडा नं"),  # Ward Number
         help_text=_(
-            "लुङ्ग्री गाउँपालिकाको वडा नम्बर (१-८)"
-        ),  # Ward number of LungriRural Municipality (1-8)
+            "गढवा गाउँपालिकाको वडा नम्बर (१-८)"
+        ),  # Ward number of GadhawaRural Municipality (1-8)
     )
 
     class Meta:

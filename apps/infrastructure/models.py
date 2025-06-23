@@ -1,5 +1,5 @@
 """
-Infrastructure models for Lungri Rural Municipality Digital Profile
+Infrastructure models for Gadhawa Rural Municipality Digital Profile
 
 This module contains models for Chapter 7 (भौतिक विकासको अवस्था) including:
 - 7.1 यातायात पूर्वाधार (Transportation Infrastructure)

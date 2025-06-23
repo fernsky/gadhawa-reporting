@@ -230,8 +230,8 @@
 ### Day 1 Code Structure
 ```python
 # Project structure after Day 1
-lungri_report/
-├── lungri_report/
+gadhawa_report/
+├── gadhawa_report/
 │   ├── settings/
 │   │   ├── base.py      # ✅ Common settings
 │   │   ├── development.py # ✅ Dev settings

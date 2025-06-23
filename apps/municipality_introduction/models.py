@@ -1,5 +1,5 @@
 """
-Municipality Introduction models for Lungri Rural Municipality Digital Profile
+Municipality Introduction models for Gadhawa Rural Municipality Digital Profile
 
 This module contains models related to municipality introduction information.
 """

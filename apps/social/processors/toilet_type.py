@@ -131,7 +131,7 @@ class ToiletTypeProcessor(BaseSocialProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारमा विभिन्न प्रकारका शौचालयहरूको प्रयोग भइरहेको छ।"
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_households)} घरपरिवारमा विभिन्न प्रकारका शौचालयहरूको प्रयोग भइरहेको छ।"
         )
 
         # Dominant toilet type analysis

@@ -11,7 +11,7 @@ import django
 sys.path.insert(0, os.path.abspath('.'))
 
 # Setup Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lungri_report.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gadhawa_report.settings.development')
 django.setup()
 
 from apps.infrastructure.models import WardWiseTimeToMarketCenter, TimeDurationChoice

@@ -281,7 +281,7 @@ class MajorSubjectProcessor(BaseSocialProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा पाँच वर्ष र सोभन्दा माथिका कुल {format_nepali_number(total_population)} जना जनसंख्याको शैक्षिक योग्यताको विश्लेषण गर्दा विभिन्न विषयहरूमा शिक्षा ग्रहण गरेको पाइन्छ।"
+            f"गढवा गाउँपालिकामा पाँच वर्ष र सोभन्दा माथिका कुल {format_nepali_number(total_population)} जना जनसंख्याको शैक्षिक योग्यताको विश्लेषण गर्दा विभिन्न विषयहरूमा शिक्षा ग्रहण गरेको पाइन्छ।"
         )
 
         # Subject distribution analysis

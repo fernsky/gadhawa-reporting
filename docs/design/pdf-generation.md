@@ -76,7 +76,7 @@ This document outlines the approach for generating beautiful, professional A4 PD
   }
 
   @bottom-center {
-    content: "लुङ्ग्री नगरपालिका";
+    content: "गढवा नगरपालिका";
     font-size: 8pt;
     color: #666;
     font-family: "Mukti", serif;

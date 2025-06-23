@@ -5,19 +5,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {% block title %}{{ page_title|default:"लुङ्ग्री गाउँपालिका" }}{% endblock %}
+      {% block title %}{{ page_title|default:"गढवा गाउँपालिका" }}{% endblock %}
     </title>
 
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="{% block description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+      content="{% block description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
     />
     <meta
       name="keywords"
-      content="{% block keywords %}लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल{% endblock %}"
+      content="{% block keywords %}गढवा, गाउँपालिका, नेपाल, प्रतिवेदन, डिजिटल प्रोफाइल{% endblock %}"
     />
-    <meta name="author" content="लुङ्ग्री गाउँपालिका" />
+    <meta name="author" content="गढवा गाउँपालिका" />
     <meta name="robots" content="index, follow" />
     <link
       rel="canonical"
@@ -27,29 +27,29 @@
     <!-- Open Graph Meta Tags -->
     <meta
       property="og:title"
-      content="{% block og_title %}{{ page_title|default:'लुङ्ग्री गाउँपालिका' }}{% endblock %}"
+      content="{% block og_title %}{{ page_title|default:'गढवा गाउँपालिका' }}{% endblock %}"
     />
     <meta
       property="og:description"
-      content="{% block og_description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+      content="{% block og_description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
     />
     <meta
       property="og:type"
       content="{% block og_type %}website{% endblock %}"
     />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:site_name" content="लुङ्ग्री गाउँपालिका" />
+    <meta property="og:site_name" content="गढवा गाउँपालिका" />
     <meta property="og:locale" content="ne_NP" />
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="{% block twitter_title %}{{ page_title|default:'लुङ्ग्री गाउँपालिका' }}{% endblock %}"
+      content="{% block twitter_title %}{{ page_title|default:'गढवा गाउँपालिका' }}{% endblock %}"
     />
     <meta
       name="twitter:description"
-      content="{% block twitter_description %}{{ meta_description|default:'लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
+      content="{% block twitter_description %}{{ meta_description|default:'गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।' }}{% endblock %}"
     />
 
     <!-- Bootstrap CSS -->
@@ -78,14 +78,14 @@
       {
         "@context": "https://schema.org",
         "@type": "GovernmentOrganization",
-        "name": "लुङ्ग्री गाउँपालिका",
-        "alternateName": "lungri Rural Municipality",
-        "description": "लुङ्ग्री गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
+        "name": "गढवा गाउँपालिका",
+        "alternateName": "gadhawa Rural Municipality",
+        "description": "गढवा गाउँपालिका - नेपालको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।",
         "url": "{{ request.build_absolute_uri }}",
         "address": {
           "@type": "PostalAddress",
           "addressCountry": "NP",
-          "addressLocality": "लुङ्ग्री"
+          "addressLocality": "गढवा"
         }
       }
     </script>
@@ -97,7 +97,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'reports:home' %}">
           <i class="fas fa-city me-2"></i>
-          लुङ्ग्री गाउँपालिका
+          गढवा गाउँपालिका
         </a>
         <button
           class="navbar-toggler"
@@ -296,12 +296,12 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6">
-            <h5>लुङ्ग्री गाउँपालिका</h5>
+            <h5>गढवा गाउँपालिका</h5>
             <p>डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</p>
           </div>
           <div class="col-md-6 text-md-end">
             <p>
-              &copy; {% now "Y" %} लुङ्ग्री गाउँपालिका। सबै अधिकार सुरक्षित।
+              &copy; {% now "Y" %} गढवा गाउँपालिका। सबै अधिकार सुरक्षित।
             </p>
             <p class="small">
               <a href="{% url 'reports:sitemap' %}" class="text-light"
@@ -419,7 +419,7 @@
             currentCategory: sidebarState.currentCategory,
             currentSection: sidebarState.currentSection,
           };
-          localStorage.setItem("lungri_sidebar_state", JSON.stringify(state));
+          localStorage.setItem("gadhawa_sidebar_state", JSON.stringify(state));
         } catch (e) {
           console.log("Could not save sidebar state:", e);
         }
@@ -427,7 +427,7 @@
 
       function loadSidebarState() {
         try {
-          const saved = localStorage.getItem("lungri_sidebar_state");
+          const saved = localStorage.getItem("gadhawa_sidebar_state");
           if (saved) {
             const state = JSON.parse(saved);
             if (

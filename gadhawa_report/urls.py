@@ -1,5 +1,5 @@
 """
-Main URL configuration for lungri Report System.
+Main URL configuration for gadhawa Report System.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -61,6 +61,6 @@ if settings.DEBUG:
         ] + urlpatterns
 
 # Customize admin site
-admin.site.site_header = "लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल प्रतिवेदन"
-admin.site.site_title = "lungri Report Admin"
+admin.site.site_header = "गढवा गाउँपालिका - डिजिटल प्रोफाइल प्रतिवेदन"
+admin.site.site_title = "gadhawa Report Admin"
 admin.site.index_title = "प्रतिवेदन व्यवस्थापन"

@@ -374,7 +374,7 @@ class BaseSocialReportFormatter(ABC):
 
     def __init__(self, processor_data):
         self.data = processor_data
-        self.municipality_name = "लुङ्ग्री गाउँपालिका"
+        self.municipality_name = "गढवा गाउँपालिका"
 
     @abstractmethod
     def format_for_html(self):

@@ -22,8 +22,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "municipality_name": "लुङ्ग्री गाउँपालिका",
-                "municipality_english": "lungri Rural Municipality",
+                "municipality_name": "गढवा गाउँपालिका",
+                "municipality_english": "gadhawa Rural Municipality",
                 "page_title": "मुख्य ड्यासबोर्ड",  # Main Dashboard
                 "user": self.request.user,
             }
@@ -43,8 +43,8 @@ class LoginView(DjangoLoginView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "municipality_name": "लुङ्ग्री गाउँपालिका",
-                "municipality_english": "LungriRural Municipality",
+                "municipality_name": "गढवा गाउँपालिका",
+                "municipality_english": "GadhawaRural Municipality",
                 "page_title": "लगइन",  # Login
             }
         )
@@ -70,8 +70,8 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(
             {
-                "municipality_name": "लुङ्ग्री गाउँपालिका",
-                "municipality_english": "LungriRural Municipality",
+                "municipality_name": "गढवा गाउँपालिका",
+                "municipality_english": "GadhawaRural Municipality",
                 "page_title": "प्रोफाइल",  # Profile
                 "user": self.request.user,
             }

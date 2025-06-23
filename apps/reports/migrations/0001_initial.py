@@ -31,12 +31,12 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "municipality_name",
-                    models.CharField(default="लुङ्ग्री गाउँपालिका", max_length=200),
+                    models.CharField(default="गढवा गाउँपालिका", max_length=200),
                 ),
                 (
                     "municipality_name_english",
                     models.CharField(
-                        default="lungri Rural Municipality", max_length=200
+                        default="gadhawa Rural Municipality", max_length=200
                     ),
                 ),
                 (

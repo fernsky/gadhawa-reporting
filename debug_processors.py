@@ -9,9 +9,9 @@ import django
 
 # Add the project directory to the Python path
 sys.path.append(
-    "/Users/trilochan/Desktop/final-delivery/digital-profile/lungri/lungri-report"
+    "/Users/trilochan/Desktop/final-delivery/digital-profile/gadhawa/gadhawa-report"
 )
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lungri_report.settings.development")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gadhawa_report.settings.development")
 
 # Setup Django
 django.setup()

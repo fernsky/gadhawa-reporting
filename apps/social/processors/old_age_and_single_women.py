@@ -165,7 +165,7 @@ class OldAgeAndSingleWomenProcessor(BaseSocialProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_old_age)} जना जेष्ठ नागरिकहरू छन्। "
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_old_age)} जना जेष्ठ नागरिकहरू छन्। "
             f"यसमध्ये {format_nepali_number(total_male_old_age)} जना पुरुष र "
             f"{format_nepali_number(total_female_old_age)} जना महिला जेष्ठ नागरिकहरू छन्।"
         )

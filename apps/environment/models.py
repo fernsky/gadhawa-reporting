@@ -1,5 +1,5 @@
 """
-Environment models for Lungri Rural Municipality Digital Profile
+Environment models for Gadhawa Rural Municipality Digital Profile
 
 This module contains models related to forests, water resources, biodiversity,
 parks, and disaster risk management as specified in Chapter 6 of the report structure.

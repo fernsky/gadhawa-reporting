@@ -158,7 +158,7 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
             # Handle case where no data is available
             if not country_data:
                 return (
-                    "यस खण्डमा कुनै वैदेशिक रोजगारीको तथ्यांक उपलब्ध छैन। लुङ्ग्री गाउँपालिकाका "
+                    "यस खण्डमा कुनै वैदेशिक रोजगारीको तथ्यांक उपलब्ध छैन। गढवा गाउँपालिकाका "
                     "नागरिकहरूको वैदेशिक रोजगारीको विवरण सङ्कलन गर्न सकिएको छैन।"
                 )
 
@@ -175,7 +175,7 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
 
             # Introduction with total overview
             analysis_parts.append(
-                f"लुङ्ग्री गाउँपालिकाको जनसंख्या तथ्यांक विश्लेषण गर्दा वैदेशिक रोजगारीको क्षेत्रमा "
+                f"गढवा गाउँपालिकाको जनसंख्या तथ्यांक विश्लेषण गर्दा वैदेशिक रोजगारीको क्षेत्रमा "
                 f"महत्त्वपूर्ण गतिविधि देखिन्छ। यस गाउँपालिकाबाट कुल {format_nepali_number(total_population)} "
                 f"जना नागरिकहरूले विभिन्न देशहरूमा रोजगारीको अवसर खोजेका छन्। यो तथ्यांकले "
                 f"स्थानीय जनसंख्याको आर्थिक गतिविधि र श्रम बजारको अवस्थालाई प्रतिबिम्बित गर्दछ।"
@@ -261,7 +261,7 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
                 other_percentage = other_countries_data.get("percentage", 0)
 
                 analysis_parts.append(
-                    f"वैदेशिक रोजगारी गन्तव्यको विविधताको सन्दर्भमा, लुङ्ग्री गाउँपालिकाका नागरिकहरूले "
+                    f"वैदेशिक रोजगारी गन्तव्यको विविधताको सन्दर्भमा, गढवा गाउँपालिकाका नागरिकहरूले "
                     f"विश्वभरका {total_countries} भन्दा बढी देशहरूमा रोजगारी प्राप्त गरेका छन्। "
                     f"शीर्ष १० देशहरू बाहेकका अन्य देशहरूमा {format_nepali_number(other_population)} जना "
                     f"({format_nepali_percentage(other_percentage)}) नागरिकहरूको उपस्थिति छ। यसले "
@@ -271,7 +271,7 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
 
             # Economic implications
             analysis_parts.append(
-                f"यो वैदेशिक रोजगारीको तथ्यांकले लुङ्ग्री गाउँपालिकाको आर्थिक संरचनामा महत्त्वपूर्ण प्रभाव "
+                f"यो वैदेशिक रोजगारीको तथ्यांकले गढवा गाउँपालिकाको आर्थिक संरचनामा महत्त्वपूर्ण प्रभाव "
                 f"पारेको छ। वैदेशिक रोजगारीबाट प्राप्त हुने रेमिट्यान्सले स्थानीय अर्थतन्त्रमा तरलतारा "
                 f"वृद्धि गरेको छ। साथै, यसले स्थानीय श्रमशक्तिको कुशलता विकास र अन्तर्राष्ट्रिय "
                 f"अनुभवको आदानप्रदानमा योगदान पुर्‍याएको छ।"
@@ -279,7 +279,7 @@ class MunicipalityWideForeignEmploymentCountriesProcessor(BaseEconomicsProcessor
 
             # Concluding remarks
             analysis_parts.append(
-                f"समग्रमा, लुङ्ग्री गाउँपालिकाको वैदेशिक रोजगारीको अवस्थाले नेपालको राष्ट्रिय श्रम "
+                f"समग्रमा, गढवा गाउँपालिकाको वैदेशिक रोजगारीको अवस्थाले नेपालको राष्ट्रिय श्रम "
                 f"निर्यातको ढाँचालाई प्रतिबिम्बित गर्दै, विविधीकृत गन्तव्य देशहरूमा कुशल र अकुशल "
                 f"दुवै प्रकारका कामदारहरूको सहभागितालाई देखाउँछ। भविष्यमा यस क्षेत्रको थप विकासका "
                 f"लागि सीप विकास, सुरक्षित बसाइसराइ र श्रमिक कल्याणका कार्यक्रमहरूलाई प्राथमिकता "

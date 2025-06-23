@@ -136,7 +136,7 @@ class SchoolDropoutProcessor(BaseSocialProcessor):
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_children)} बालबालिकाहरूले विभिन्न कारणहरूले गर्दा विद्यालय छाडेका वा विद्यालय वाहिर रहेका छन्।"
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_children)} बालबालिकाहरूले विभिन्न कारणहरूले गर्दा विद्यालय छाडेका वा विद्यालय वाहिर रहेका छन्।"
         )
 
         # Dominant cause analysis

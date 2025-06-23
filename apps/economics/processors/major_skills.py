@@ -277,7 +277,7 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
             # Introduction
             nepali_total = format_nepali_number(total_population)
             content.append(
-                f"""लुङ्ग्री गाउँपालिकामा कुल {nepali_total} जनसंख्यासँग विभिन्न सीप र कौशलताहरू छन् । मुख्य सीपका आधारमा जनसंख्याको वितरण गर्दा गाउँपालिकाको मानव संसाधनको गुणस्तर र आर्थिक क्षमताको अवस्था देखिन्छ ।"""
+                f"""गढवा गाउँपालिकामा कुल {nepali_total} जनसंख्यासँग विभिन्न सीप र कौशलताहरू छन् । मुख्य सीपका आधारमा जनसंख्याको वितरण गर्दा गाउँपालिकाको मानव संसाधनको गुणस्तर र आर्थिक क्षमताको अवस्था देखिन्छ ।"""
             )
 
             # Top skills analysis

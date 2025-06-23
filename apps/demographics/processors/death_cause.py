@@ -171,7 +171,7 @@ class DeathCauseProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             if not major_causes:
                 return "गत १२ महिनामा मृत्युको कारणसम्बन्धी कुनै तथ्याङ्क उपलब्ध छैन ।"
             # Top 3 causes
-            intro = f"लुङ्ग्री गाउँपालिकामा विगत १२ महिनामा जम्मा {nepali_total} जनाको मृत्यु भएको छ । मृत्युका प्रमुख कारणहरूमा "
+            intro = f"गढवा गाउँपालिकामा विगत १२ महिनामा जम्मा {nepali_total} जनाको मृत्यु भएको छ । मृत्युका प्रमुख कारणहरूमा "
             if len(major_causes) >= 3:
                 first, second, third = major_causes[:3]
                 intro += f"{first[0]} ({format_nepali_number(first[1])} जना, {format_nepali_percentage(first[2])}%), {second[0]} ({format_nepali_number(second[1])} जना, {format_nepali_percentage(second[2])}%) र {third[0]} ({format_nepali_number(third[1])} जना, {format_nepali_percentage(third[2])}%) रहेका छन् । "

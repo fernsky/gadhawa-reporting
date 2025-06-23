@@ -1,5 +1,5 @@
 """
-Governance models for Lungri Rural Municipality Digital Profile
+Governance models for Gadhawa Rural Municipality Digital Profile
 
 This module contains models related to organizational structure, human resources,
 service delivery, civil organizations, and policies as specified in Chapter 8

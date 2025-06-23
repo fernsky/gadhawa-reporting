@@ -3,15 +3,15 @@
 {% load nepali_filters %}
 
 {% block title %}
-सूचीपत्र - लुङ्ग्री गाउँपालिका
+सूचीपत्र - गढवा गाउँपालिका
 {% endblock %}
 
 {% block description %}
-लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र। सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।
+गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र। सबै विषयहरू र उप-विषयहरूको विस्तृत सूची।
 {% endblock %}
 
 {% block keywords %}
-सूचीपत्र, विषयसूची, लुङ्ग्री, गाउँपालिका, प्रतिवेदन
+सूचीपत्र, विषयसूची, गढवा, गाउँपालिका, प्रतिवेदन
 {% endblock %}
 
 {% block breadcrumb %}
@@ -31,16 +31,16 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "सूचीपत्र",
-    "description": "लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।",
+    "description": "गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदनको सम्पूर्ण सूचीपत्र।",
     "url": "{{ request.build_absolute_uri }}",
     "isPartOf": {
       "@type": "WebSite",
-      "name": "लुङ्ग्री गाउँपालिका",
+      "name": "गढवा गाउँपालिका",
       "url": "{% url 'reports:home' %}"
     },
     "publisher": {
       "@type": "GovernmentOrganization",
-      "name": "लुङ्ग्री गाउँपालिका"
+      "name": "गढवा गाउँपालिका"
     }
   }
 </script>
@@ -52,7 +52,7 @@
     <div>
       <h1><i class="fas fa-list me-3"></i>सूचीपत्र</h1>
       <p class="lead text-muted">
-        लुङ्ग्री गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
+        गढवा गाउँपालिका डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन
       </p>
     </div>
     <div class="no-print">
@@ -78,7 +78,7 @@
         <table class="table table-borderless">
           <tr>
             <td class="fw-bold">शीर्षक:</td>
-            <td>लुङ्ग्री गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</td>
+            <td>गढवा गाउँपालिका - डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन</td>
           </tr>
           <tr>
             <td class="fw-bold">प्रकाशन मिति:</td>
@@ -108,7 +108,7 @@
       <div class="col-md-4 text-center">
         <div class="p-4 bg-light rounded">
           <i class="fas fa-city fa-4x text-primary mb-3"></i>
-          <h5>लुङ्ग्री गाउँपालिका</h5>
+          <h5>गढवा गाउँपालिका</h5>
           <p class="text-muted">नेपाल सरकार<br />स्थानीय तह</p>
         </div>
       </div>
@@ -352,7 +352,7 @@
             <a href="{% url 'reports:sitemap' %}"><i class="fas fa-sitemap me-2"></i>साइटम्याप</a>
           </li>
           <li>
-            <a href="mailto:info@lungri.gov.np"><i class="fas fa-envelope me-2"></i>सम्पर्क</a>
+            <a href="mailto:info@gadhawa.gov.np"><i class="fas fa-envelope me-2"></i>सम्पर्क</a>
           </li>
         </ul>
       </div>

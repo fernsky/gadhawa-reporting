@@ -102,7 +102,7 @@ class HealthInstitutionProcessor(BaseSocialProcessor):
     def generate_analysis_text(self, data: Dict[str, Any]) -> str:
         """Generate comprehensive analysis text for health institution"""
         if not data or data["total_institutions"] == 0:
-            return """लुङ्ग्री गाउँपालिकामा स्वास्थ्य संस्थाको विवरण सम्बन्धी पर्याप्त तथ्यांक उपलब्ध छैन । स्वास्थ्य सेवाको पहुँच र गुणस्तर सुधारका लागि विस्तृत अध्ययन र तथ्यांक संकलन आवश्यक छ ।"""
+            return """गढवा गाउँपालिकामा स्वास्थ्य संस्थाको विवरण सम्बन्धी पर्याप्त तथ्यांक उपलब्ध छैन । स्वास्थ्य सेवाको पहुँच र गुणस्तर सुधारका लागि विस्तृत अध्ययन र तथ्यांक संकलन आवश्यक छ ।"""
 
         municipality_data = data["municipality_data"]
         ward_data = data["ward_data"]
@@ -130,7 +130,7 @@ class HealthInstitutionProcessor(BaseSocialProcessor):
         # Introduction
         nepali_total = format_nepali_number(total_institutions)
         content.append(
-            f"""लुङ्ग्री गाउँपालिकामा कुल {nepali_total} स्वास्थ्य संस्थाहरूको विश्लेषण गर्दा स्वास्थ्य सेवाको पहुँच र वितरणको स्थिति स्पष्ट देखिन्छ । यी संस्थाहरूले गाउँपालिकाका नागरिकहरूलाई प्राथमिक देखि विशेषीकृत स्वास्थ्य सेवासम्म प्रदान गर्ने महत्वपूर्ण भूमिका खेल्छन् ।"""
+            f"""गढवा गाउँपालिकामा कुल {nepali_total} स्वास्थ्य संस्थाहरूको विश्लेषण गर्दा स्वास्थ्य सेवाको पहुँच र वितरणको स्थिति स्पष्ट देखिन्छ । यी संस्थाहरूले गाउँपालिकाका नागरिकहरूलाई प्राथमिक देखि विशेषीकृत स्वास्थ्य सेवासम्म प्रदान गर्ने महत्वपूर्ण भूमिका खेल्छन् ।"""
         )
 
         # Institution type analysis

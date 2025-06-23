@@ -113,7 +113,7 @@ class WardSettlementProcessor(BaseDemographicsProcessor):
             total_wards = data.get("total_wards", 0)
 
             # Generate summary
-            summary = f"""लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_wards)} वडामा {format_nepali_number(total_settlements)} भन्दा बढी मुख्य बस्तीहरु रहेका छन् । """
+            summary = f"""गढवा गाउँपालिकामा कुल {format_nepali_number(total_wards)} वडामा {format_nepali_number(total_settlements)} भन्दा बढी मुख्य बस्तीहरु रहेका छन् । """
 
             # Combine analysis and summary
             report = f"{summary}\n\n{analysis_text}"

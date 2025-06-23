@@ -15,7 +15,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 # Set up Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lungri_report.settings.development")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gadhawa_report.settings.development")
 django.setup()
 
 from apps.chart_management.services import get_chart_service

@@ -12,7 +12,7 @@ class ReportSitemapView(TemplateView):
 
         # Municipality name - make dynamic
         municipality_name = "गढवा गाउँपालिका"
-        municipality_name_english = "Lungri Rural Municipality"
+        municipality_name_english = "Gadhawa Rural Municipality"
 
         # Get all published content
         categories = ReportCategory.objects.filter(is_active=True)

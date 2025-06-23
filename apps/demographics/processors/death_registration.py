@@ -355,7 +355,7 @@ class DeathRegistrationProcessor(BaseDemographicsProcessor, SimpleChartProcessor
             min_group_total = min_group[1]["TOTAL"]
 
             return (
-                f"लुङ्ग्री गाउँपालिकामा मृत्यु दर्ता भएका कुल जनसंख्या {format_nepali_number(total)} जना छन् । "
+                f"गढवा गाउँपालिकामा मृत्यु दर्ता भएका कुल जनसंख्या {format_nepali_number(total)} जना छन् । "
                 f"जसमध्ये पुरुष {format_nepali_number(male)} जना ({format_nepali_percentage(male_pct)}) र महिला {format_nepali_number(female)} जना ({format_nepali_percentage(female_pct)}) रहेका छन् । \n\n"
                 f"मृत्यु दर्ता पिरामिडले उमेर समूह र लिङ्ग अनुसार मृत्यु हुनेको वितरण देखाउँछ । सबैभन्दा बढी मृत्यु दर्ता '{max_group_label}' उमेर समूहमा {format_nepali_number(max_group_total)} जना र सबैभन्दा कम '{min_group_label}' उमेर समूहमा {format_nepali_number(min_group_total)} जना रहेका छन् ।\n\n"
                 f"यस विवरणले स्वास्थ्य नीति, सामाजिक सुरक्षा, तथा लक्षित कार्यक्रम निर्माणमा महत्वपूर्ण आधार प्रदान गर्छ । मृत्यु हुनेको उमेर समूह, लिङ्ग, र वडागत वितरणको विश्लेषणले जोखिम समूह पहिचान गर्न र आवश्यक हस्तक्षेप योजना बनाउन सहयोग पुर्‍याउँछ ।\n\n"
@@ -367,4 +367,4 @@ class DeathRegistrationProcessor(BaseDemographicsProcessor, SimpleChartProcessor
             total = data["total_population"]
             male = data["total_male"]
             female = data["total_female"]
-            return f"""लुङ्ग्री गाउँपालिकामा मृत्यु दर्ता भएका कुल जनसंख्या {format_nepali_number(total)} जना छन् । जसमध्ये पुरुष {format_nepali_number(male)} जना र महिला {format_nepali_number(female)} जना रहेका छन् । मृत्यु दर्ता पिरामिडले उमेर समूह र लिङ्ग अनुसार मृत्यु हुनेको वितरण देखाउँछ । यसले स्वास्थ्य नीति तथा कार्यक्रम निर्माणमा महत्वपूर्ण आधार प्रदान गर्छ ।"""
+            return f"""गढवा गाउँपालिकामा मृत्यु दर्ता भएका कुल जनसंख्या {format_nepali_number(total)} जना छन् । जसमध्ये पुरुष {format_nepali_number(male)} जना र महिला {format_nepali_number(female)} जना रहेका छन् । मृत्यु दर्ता पिरामिडले उमेर समूह र लिङ्ग अनुसार मृत्यु हुनेको वितरण देखाउँछ । यसले स्वास्थ्य नीति तथा कार्यक्रम निर्माणमा महत्वपूर्ण आधार प्रदान गर्छ ।"""

@@ -209,7 +209,7 @@ class EconomicallyActiveProcessor(BaseDemographicsProcessor, SimpleChartProcesso
 
         # Overall summary
         analysis_parts.append(
-            f"लुङ्ग्री गाउँपालिकामा कुल {format_nepali_number(total_pop)} जना आर्थिक रूपले सक्रिय जनसंख्या रहेको छ।"
+            f"गढवा गाउँपालिकामा कुल {format_nepali_number(total_pop)} जना आर्थिक रूपले सक्रिय जनसंख्या रहेको छ।"
         )
 
         # Age group analysis

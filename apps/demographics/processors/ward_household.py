@@ -420,7 +420,7 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             # Overall introduction
             analysis_parts.append(
-                f"लुङ्ग्री गाउँपालिकाको वडागत जनसंख्या र घरपरिवारको विस्तृत विश्लेषण गर्दा गाउँपालिकामा कुल "
+                f"गढवा गाउँपालिकाको वडागत जनसंख्या र घरपरिवारको विस्तृत विश्लेषण गर्दा गाउँपालिकामा कुल "
                 f"{format_nepali_number(summary_stats.get('total_population', 0))} जनसंख्या र "
                 f"{format_nepali_number(summary_stats.get('total_households', 0))} घरपरिवार रहेका छन् । "
                 f"गाउँपालिकाको औसत घरपरिवारको आकार {format_nepali_number(round(summary_stats.get('overall_avg_household_size', 0), 2))} व्यक्ति प्रति घरपरिवार रहेको छ ।"
@@ -542,7 +542,7 @@ class WardHouseholdProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
 
             # Conclusion
             analysis_parts.append(
-                f"समग्रमा लुङ्ग्री गाउँपालिकाको जनसांख्यिकीय संरचना र घरपरिवारको वितरणले गाउँपालिकाको "
+                f"समग्रमा गढवा गाउँपालिकाको जनसांख्यिकीय संरचना र घरपरिवारको वितरणले गाउँपालिकाको "
                 f"सामाजिक आर्थिक अवस्थाको स्पष्ट चित्र प्रस्तुत गर्छ । विभिन्न वडाहरूबीचको जनसंख्या र "
                 f"घनत्वको भिन्नताले स्थानीय विकास योजना र सेवा प्रवाहमा वडाअनुसार प्राथमिकता निर्धारण गर्न "
                 f"आवश्यक रहेको देखाउँछ । उपलब्ध तथ्याङ्कको आधारमा यी विवरणहरूको विस्तृत विश्लेषण तलको "

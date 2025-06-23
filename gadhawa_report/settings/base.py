@@ -1,5 +1,5 @@
 """
-Base settings for lungri Report System.
+Base settings for gadhawa Report System.
 
 This file contains settings common to all environments.
 """
@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config(
-    "SECRET_KEY", default="django-insecure-lungri-dev-key-change-in-production"
+    "SECRET_KEY", default="django-insecure-gadhawa-dev-key-change-in-production"
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -66,7 +66,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "lungri_report.urls"
+ROOT_URLCONF = "gadhawa_report.urls"
 
 TEMPLATES = [
     {
@@ -84,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "lungri_report.wsgi.application"
+WSGI_APPLICATION = "gadhawa_report.wsgi.application"
 
 # Database
 DATABASES = {
@@ -170,8 +170,8 @@ SIMPLE_JWT = {
 
 # API Documentation
 SPECTACULAR_SETTINGS = {
-    "TITLE": "lungri Digital Profile Report API",
-    "DESCRIPTION": "API for managing and generating digital profile reports for lungri Rural Municipality",
+    "TITLE": "gadhawa Digital Profile Report API",
+    "DESCRIPTION": "API for managing and generating digital profile reports for gadhawa Rural Municipality",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
@@ -211,7 +211,7 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs" / "lungri_report.log",
+            "filename": BASE_DIR / "logs" / "gadhawa_report.log",
             "formatter": "verbose",
         },
         "console": {
@@ -230,7 +230,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "lungri_report": {
+        "gadhawa_report": {
             "handlers": ["console", "file"],
             "level": "DEBUG",
             "propagate": False,

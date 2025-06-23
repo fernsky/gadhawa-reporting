@@ -1,5 +1,5 @@
 """
-Economics processors package for Lungri Rural Municipality.
+Economics processors package for Gadhawa Rural Municipality.
 """
 
 from .manager import (

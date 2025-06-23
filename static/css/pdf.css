@@ -1,5 +1,5 @@
 /* ========================================
-   lungri MUNICIPALITY PDF REPORT STYLES
+   gadhawa MUNICIPALITY PDF REPORT STYLES
    Clean, consolidated CSS for PDF generation
    ======================================== */
 
@@ -28,7 +28,7 @@
   }
 
   @top-right {
-    content: लुङ्ग्री गाउँपालिका पार्श्वचित्र, २०८१;
+    content: गढवा गाउँपालिका पार्श्वचित्र, २०८१;
     font-size: 9pt;
     color: #666;
     font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
@@ -651,7 +651,7 @@ blockquote {
   margin: 1.5cm;
 
   @top-right {
-    content: "लुङ्ग्री गाउँपालिका पार्श्वचित्र, २०८१";
+    content: "गढवा गाउँपालिका पार्श्वचित्र, २०८१";
     font-size: 9pt;
     color: #666;
     font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
