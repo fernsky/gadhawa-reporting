@@ -3,15 +3,15 @@
 {% load nepali_filters %}
 
 {% block title %}
-{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिका
+{{ section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवा गाउँपालिका
 {% endblock %}
 
 {% block description %}
-{{ section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - लुङ्ग्री गाउँपालिकाको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।
+{{ section.summary_nepali|default:section.summary|default:section.title_nepali|default:section.title }} - {{ category.name_nepali|default:category.name }} - गढवाँपालिकाको डिजिटल प्रोफाइल र वार्षिक प्रतिवेदन।
 {% endblock %}
 
 {% block keywords %}
-{{ section.title_nepali|default:section.title }}, {{ category.name_nepali|default:category.name }}, लुङ्ग्री, गाउँपालिका, नेपाल, प्रतिवेदन
+{{ section.title_nepali|default:section.title }}, {{ category.name_nepali|default:category.name }}, गढवाउँपालिका, नेपाल, प्रतिवेदन
 {% endblock %}
 
 {% block breadcrumb %}
@@ -47,7 +47,7 @@
     "dateModified": "{{ section.updated_at|date:'c' }}",
     "publisher": {
       "@type": "GovernmentOrganization",
-      "name": "लुङ्ग्री गाउँपालिका"
+      "name": "गढवाँपालिका"
     },
     "breadcrumb": {
       "@type": "BreadcrumbList",
