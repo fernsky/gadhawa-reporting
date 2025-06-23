@@ -54,87 +54,51 @@
         <table class="pdf-data-table ward-school-dropout-table">
             <thead>
                 <tr>
-                    <th rowspan="2">वडा नं.</th>
-                    <th colspan="2">विवाह</th>
-                    <th colspan="2">घरायसी काम</th>
-                    <th colspan="2">रोजगारी</th>
-                    <th colspan="2">पढाइ पूरा</th>
-                    <th colspan="2">महँगो</th>
-                    <th colspan="2">अन्य</th>
-                    <th colspan="2">जम्मा</th>
-                </tr>
-                <tr>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
-                    <th>पुरुष</th>
-                    <th>महिला</th>
+                    <th>वडा नं.</th>
+                    <th>सीमित ठाउँ</th>
+                    <th>महँगो</th>
+                    <th>टाढा</th>
+                    <th>घरको काम</th>
+                    <th>अनिच्छुक अभिभावक</th>
+                    <th>अध्ययन पूरा गर्न चाहना</th>
+                    <th>विवाह</th>
+                    <th>रोजगारी</th>
+                    <th>अज्ञात</th>
+                    <th>अन्य</th>
+                    <th>जम्मा</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ward_num, ward_info in ward_data.items %}
                 <tr>
                     <td class="ward-number">{{ ward_num|nepali_digits }}</td>
-                    <!-- Marriage -->
-                    <td>{{ ward_info.MARRIAGE.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.MARRIAGE.female|default:0|nepali_digits }}</td>
-                    <!-- House Help -->
-                    <td>{{ ward_info.HOUSE_HELP.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.HOUSE_HELP.female|default:0|nepali_digits }}</td>
-                    <!-- Employment -->
-                    <td>{{ ward_info.EMPLOYMENT.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.EMPLOYMENT.female|default:0|nepali_digits }}</td>
-                    <!-- Study Completed -->
-                    <td>{{ ward_info.WANTED_STUDY_COMPLETED.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.WANTED_STUDY_COMPLETED.female|default:0|nepali_digits }}</td>
-                    <!-- Expensive -->
-                    <td>{{ ward_info.EXPENSIVE.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.EXPENSIVE.female|default:0|nepali_digits }}</td>
-                    <!-- Other -->
-                    <td>{{ ward_info.OTHER.male|default:0|nepali_digits }}</td>
-                    <td>{{ ward_info.OTHER.female|default:0|nepali_digits }}</td>
-                    <!-- Total -->
-                    <td class="total-cell">{{ ward_info.total.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ ward_info.total.female|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.LIMITED_SPACE.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.EXPENSIVE.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.FAR.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.HOUSE_HELP.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.UNWILLING_PARENTS.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.WANTED_STUDY_COMPLETED.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.MARRIAGE.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.EMPLOYMENT.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.UNKNOWN.population|default:0|nepali_digits }}</td>
+                    <td>{{ ward_info.dropout_causes.OTHER.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ ward_info.total_population|default:0|nepali_digits }}</td>
                 </tr>
                 {% endfor %}
-                
-                <!-- Municipality Total Row -->
-                {% if municipality_data %}
                 <tr class="total-row">
                     <td class="total-label">जम्मा</td>
-                    <!-- Marriage -->
-                    <td class="total-cell">{{ municipality_data.MARRIAGE.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.MARRIAGE.female|default:0|nepali_digits }}</td>
-                    <!-- House Help -->
-                    <td class="total-cell">{{ municipality_data.HOUSE_HELP.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.HOUSE_HELP.female|default:0|nepali_digits }}</td>
-                    <!-- Employment -->
-                    <td class="total-cell">{{ municipality_data.EMPLOYMENT.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.EMPLOYMENT.female|default:0|nepali_digits }}</td>
-                    <!-- Study Completed -->
-                    <td class="total-cell">{{ municipality_data.WANTED_STUDY_COMPLETED.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.WANTED_STUDY_COMPLETED.female|default:0|nepali_digits }}</td>
-                    <!-- Expensive -->
-                    <td class="total-cell">{{ municipality_data.EXPENSIVE.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.EXPENSIVE.female|default:0|nepali_digits }}</td>
-                    <!-- Other -->
-                    <td class="total-cell">{{ municipality_data.OTHER.male|default:0|nepali_digits }}</td>
-                    <td class="total-cell">{{ municipality_data.OTHER.female|default:0|nepali_digits }}</td>
-                    <!-- Grand Total -->
-                    <td class="grand-total-cell">{{ total_population.male|default:0|nepali_digits }}</td>
-                    <td class="grand-total-cell">{{ total_population.female|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.LIMITED_SPACE.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.EXPENSIVE.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.FAR.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.HOUSE_HELP.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.UNWILLING_PARENTS.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.WANTED_STUDY_COMPLETED.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.MARRIAGE.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.EMPLOYMENT.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.UNKNOWN.population|default:0|nepali_digits }}</td>
+                    <td class="total-cell">{{ municipality_data.OTHER.population|default:0|nepali_digits }}</td>
+                    <td class="grand-total-cell">{{ municipality_total_population|default:0|nepali_digits }}</td>
                 </tr>
-                {% endif %}
             </tbody>
         </table>
     </div>

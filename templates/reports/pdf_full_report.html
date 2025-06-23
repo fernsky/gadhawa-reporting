@@ -486,8 +486,6 @@
         {% include 'demographics/female_property_ownership/female_property_ownership_report_partial.html' with data=all_demographics_data.female_property_ownership.data municipality_totals=all_demographics_data.female_property_ownership.data.municipality_data ward_data=all_demographics_data.female_property_ownership.data.ward_data total_population=all_demographics_data.female_property_ownership.total_population municipality_percentages=all_demographics_data.female_property_ownership.data.municipality_data property_type_names=all_demographics_data.female_property_ownership.data.municipality_data coherent_analysis=all_demographics_data.female_property_ownership.report_content charts=all_demographics_data.female_property_ownership.charts %}
       {% endif %}
 
-    
-
       <!-- Death Registration Demographics Section -->
       {% if all_demographics_data.death_registration %}
         {% include 'demographics/death_registration/death_registration_report_partial.html' with death_registration_data=all_demographics_data.death_registration.death_registration_data ward_data=all_demographics_data.death_registration.ward_data ward_table_data=all_demographics_data.death_registration.ward_table_data total_population=all_demographics_data.death_registration.total_population total_male=all_demographics_data.death_registration.total_male total_female=all_demographics_data.death_registration.total_female male_percentage=all_demographics_data.death_registration.male_percentage female_percentage=all_demographics_data.death_registration.female_percentage coherent_analysis=all_demographics_data.death_registration.report_content charts=all_demographics_data.death_registration.charts %}
@@ -516,7 +514,7 @@
 
   <!-- Social Chapter -->
   <div class="category-break" id="category-social">
-    <h1 class="category-title" style="color: #2563eb; text-align: center; padding: 0.5em; page-break-before: always;">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
       परिच्छेद – ५ः सामाजिक अवस्था
     </h1>
     <p class="section-content">
@@ -542,10 +540,6 @@
           {% include 'social/teacher_staffing/teacher_staffing_report_partial.html' with municipality_data_by_level=all_social_data.teacher_staffing.municipality_data_by_level municipality_data_by_position=all_social_data.teacher_staffing.municipality_data_by_position ward_data=all_social_data.teacher_staffing.ward_data detailed_breakdown=all_social_data.teacher_staffing.detailed_breakdown total_teachers=all_social_data.teacher_staffing.total_teachers coherent_analysis=all_social_data.teacher_staffing.coherent_analysis %}
       {% endif %}
 
-      <!-- Major Subject Section -->
-      {% if all_social_data.major_subject %}
-        {% include 'social/major_subject/major_subject_report_partial.html' with municipality_data=all_social_data.major_subject.municipality_data ward_data=all_social_data.major_subject.ward_data total_population=all_social_data.major_subject.total_population coherent_analysis=all_social_data.major_subject.coherent_analysis %}
-      {% endif %}
       
       <!-- School Dropout Section -->
       {% if all_social_data.school_dropout %}
@@ -571,7 +565,7 @@
 
   <!-- Infrastructure Chapter -->
   <div class="category-break" id="category-infrastructure">
-    <h1 class="category-title" style="color: #16a34a; text-align: center; padding: 0.5em; page-break-before: always;">
+    <h1 class="category-title" style="color: #dc2626; text-align: center; padding: 0.5em; page-break-before: always;">
       परिच्छेद – ७ः भौतिक विकासको अवस्था
     </h1>
     <p class="section-content">
