@@ -89,15 +89,25 @@ class LanguageProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 )
 
         # Sort by population in descending order
-        sorted_language_data = dict(
-            sorted(
-                language_data.items(), key=lambda x: x[1]["population"], reverse=True
-            )
+        sorted_languages = sorted(
+            language_data.items(), key=lambda x: x[1]["population"], reverse=True
         )
+
+        # Top 10 + other
+        top_10 = dict(sorted_languages[:10])
+        if len(sorted_languages) > 10:
+            other_population = sum(x[1]["population"] for x in sorted_languages[10:])
+            other_percentage = sum(x[1]["percentage"] for x in sorted_languages[10:])
+            if other_population > 0:
+                top_10["OTHER"] = {
+                    "population": other_population,
+                    "percentage": round(other_percentage, 2),
+                    "name_nepali": "अन्य",
+                }
 
         # Return structured format
         return {
-            "municipality_data": sorted_language_data,
+            "municipality_data": top_10,
             "total_population": total_population,
         }
 
