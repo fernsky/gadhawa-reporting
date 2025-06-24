@@ -89,7 +89,7 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
                 "age_groups": {},
             }
             for age_choice in AgeGroupChoice.choices:
-                ward_data[str(ward_num)][age_choice[0]] = {
+                ward_data[str(ward_num)]["age_groups"][age_choice[0]] = {
                     "male": 0,
                     "female": 0,
                     "other": 0,
@@ -130,15 +130,15 @@ class AgeGenderProcessor(BaseDemographicsProcessor, SimpleChartProcessor):
             # Update ward data (fix: always update nested age_groups)
             if gender == "MALE":
                 ward_data[ward_num]["male"] += population
-                ward_data[ward_num][age_group]["male"] += population
+                ward_data[ward_num]["age_groups"][age_group]["male"] += population
             elif gender == "FEMALE":
                 ward_data[ward_num]["female"] += population
-                ward_data[ward_num][age_group]["female"] += population
+                ward_data[ward_num]["age_groups"][age_group]["female"] += population
             else:
                 ward_data[ward_num]["other"] += population
-                ward_data[ward_num][age_group]["other"] += population
+                ward_data[ward_num]["age_groups"][age_group]["other"] += population
             ward_data[ward_num]["total"] += population
-            ward_data[ward_num][age_group]["total"] += population
+            ward_data[ward_num]["age_groups"][age_group]["total"] += population
 
         # Calculate percentages
         if total_population > 0:
