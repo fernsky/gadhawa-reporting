@@ -21,7 +21,7 @@
   /* 1 inch margins */
 
   @bottom-right {
-    content: counter(page, nepali-numerals);
+    content: counter(page, nepali-numerals) " | गढवा गाउँपालिका पार्श्वचित्र, २०८१;";
     font-size: 9pt;
     color: #666;
     font-family: "Noto Sans Devanagari", "DejaVu Sans", sans-serif;
