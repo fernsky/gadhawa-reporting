@@ -204,6 +204,12 @@ class SchoolTypeChoice(models.TextChoices):
     BOARDING = "BOARDING", _("बोर्डिङ")
 
 
+class SchoolOperationalStatusChoice(models.TextChoices):
+    OPERATIONAL = "OPERATIONAL", _("सञ्चालनमा")
+    CLOSED = "CLOSED", _("बन्द")
+    OTHER = "OTHER", _("अन्य")
+
+
 class School(BaseModel):
     """School master data"""
 
@@ -218,6 +224,25 @@ class School(BaseModel):
         default=SchoolTypeChoice.COMMUNITY,
         verbose_name=_("विद्यालयको प्रकार"),
     )
+    address = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("ठेगाना")
+    )
+    headmaster_name = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name=_("प्रधानाध्यापकको नाम")
+    )
+    contact_number = models.CharField(
+        max_length=30, blank=True, null=True, verbose_name=_("सम्पर्क नम्बर")
+    )
+    established_year = models.CharField(
+        max_length=10, blank=True, null=True, verbose_name=_("स्थापना वर्ष")
+    )
+    operational_status = models.CharField(
+        max_length=15,
+        choices=SchoolOperationalStatusChoice.choices,
+        default=SchoolOperationalStatusChoice.OPERATIONAL,
+        verbose_name=_("सञ्चालन अवस्था"),
+    )
+    remarks = models.TextField(blank=True, null=True, verbose_name=_("कैफियत"))
 
     class Meta:
         verbose_name = _("विद्यालय")
@@ -226,35 +251,6 @@ class School(BaseModel):
 
     def __str__(self):
         return f"वडा {self.ward_number} - {self.school_name}"
-
-
-class SchoolStudentData(BaseModel):
-    """School student data by year (5.1.3 - from table data)"""
-
-    school = models.ForeignKey(
-        School,
-        on_delete=models.CASCADE,
-        related_name="student_data",
-        verbose_name=_("विद्यालय"),
-    )
-    year = models.CharField(max_length=10, verbose_name=_("वर्ष"))
-    female_students = models.PositiveIntegerField(default=0, verbose_name=_("छात्रा"))
-    male_students = models.PositiveIntegerField(default=0, verbose_name=_("छात्र"))
-
-    class Meta:
-        verbose_name = _("विद्यालय विद्यार्थी तथ्यांक")
-        verbose_name_plural = _("विद्यालय विद्यार्थी तथ्यांक")
-        unique_together = ["school", "year"]
-
-    def __str__(self):
-        return f"{self.school.school_name} - {self.year}"
-
-    @property
-    def total_students(self):
-        return self.female_students + self.male_students
-
-
-# ५.१.४ विद्यालयमा अध्ययन गरिरहेका तहगत छात्रछात्राको विवरण
 
 
 class EducationalLevelTypeChoice(models.TextChoices):
@@ -279,6 +275,44 @@ class EducationalLevelTypeChoice(models.TextChoices):
     OTHER = "OTHER", _("अन्य")
     EDUCATED = "EDUCATED", _("शिक्षित")
     UNKNOWN = "UNKNOWN", _("अज्ञात")
+
+
+class SchoolStudentData(BaseModel):
+    """School student data by year (5.1.3 - from table data)"""
+
+    school = models.ForeignKey(
+        School,
+        on_delete=models.CASCADE,
+        related_name="student_data",
+        verbose_name=_("विद्यालय"),
+    )
+    year = models.CharField(max_length=10, verbose_name=_("वर्ष"))
+    female_students = models.PositiveIntegerField(default=0, verbose_name=_("छात्रा"))
+    male_students = models.PositiveIntegerField(default=0, verbose_name=_("छात्र"))
+    level = models.CharField(
+        max_length=30,
+        choices=EducationalLevelTypeChoice.choices,
+        blank=True,
+        null=True,
+        verbose_name=_("शैक्षिक तह"),
+    )
+    is_operational = models.BooleanField(default=True, verbose_name=_("सञ्चालनमा छ/छैन"))
+    remarks = models.TextField(blank=True, null=True, verbose_name=_("कैफियत (वर्षगत)"))
+
+    class Meta:
+        verbose_name = _("विद्यालय विद्यार्थी तथ्यांक")
+        verbose_name_plural = _("विद्यालय विद्यार्थी तथ्यांक")
+        unique_together = ["school", "year"]
+
+    def __str__(self):
+        return f"{self.school.school_name} - {self.year}"
+
+    @property
+    def total_students(self):
+        return self.female_students + self.male_students
+
+
+# ५.१.४ विद्यालयमा अध्ययन गरिरहेका तहगत छात्रछात्राको विवरण
 
 
 class WardWiseEducationalLevel(BaseModel):

@@ -46,25 +46,27 @@
             </thead>
             <tbody>
                 {% for road_code, road_info in municipality_data.items %}
+                {% if road_code in 'BLACK_TOPPED,GRAVELED,DIRT,GORETO' %}
                 <tr>
                     <td style="text-align: center;">{{ forloop.counter|nepali_number }}</td>
                     <td>{{ road_info.name_nepali }}</td>
                     <td style="text-align: right;">{{ road_info.population|nepali_number }}</td>
                     <td style="text-align: right;">{{ road_info.percentage|nepali_percentage }}%</td>
                     <td style="text-align: center;">
-                        {% if road_code == 'BLACKTOPPED' %}
+                        {% if road_code == 'BLACK_TOPPED' %}
                             <span class="excellent-quality">उत्कृष्ट</span>
                         {% elif road_code == 'GRAVELED' %}
                             <span class="good-quality">राम्रो</span>
-                        {% elif road_code == 'EARTHEN' %}
-                            <span class="basic-quality">आधारभूत</span>
-                        {% elif road_code == 'NO_ROAD' %}
-                            <span class="no-access">पहुँच छैन</span>
+                        {% elif road_code == 'DIRT' %}
+                            <span class="basic-quality">कच्ची</span>
+                        {% elif road_code == 'GORETO' %}
+                            <span class="other-quality">गोरेटो</span>
                         {% else %}
                             <span class="other-quality">अन्य</span>
                         {% endif %}
                     </td>
                 </tr>
+                {% endif %}
                 {% endfor %}
                 <tr style="background-color: #f0f8ff; font-weight: bold;">
                     <td colspan="2" style="text-align: center;">कुल जम्मा</td>
@@ -87,14 +89,11 @@
             <thead>
                 <tr>
                     <th rowspan="2">वडा नं.</th>
-                    <th colspan="4">सडकको अवस्था</th>
-                    <th rowspan="2">कुल घरपरिवार</th>
-                </tr>
-                <tr>
                     <th>कालोपत्रे</th>
                     <th>ढुंगामाटो</th>
                     <th>कच्ची</th>
-                    <th>सडक छैन</th>
+                    <th>गोरेटो</th>
+                    <th rowspan="2">कुल घरपरिवार</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,8 +101,8 @@
                     <tr>
                         <td style="text-align: center; font-weight: bold;">{{ ward_num|nepali_number }}</td>
                         <td style="text-align: right;">
-                            {% if ward_info.road_statuses.BLACKTOPPED %}
-                                {{ ward_info.road_statuses.BLACKTOPPED.population|nepali_number }}
+                            {% if ward_info.road_statuses.BLACK_TOPPED %}
+                                {{ ward_info.road_statuses.BLACK_TOPPED.population|nepali_number }}
                             {% else %}
                                 ०
                             {% endif %}
@@ -116,15 +115,15 @@
                             {% endif %}
                         </td>
                         <td style="text-align: right;">
-                            {% if ward_info.road_statuses.EARTHEN %}
-                                {{ ward_info.road_statuses.EARTHEN.population|nepali_number }}
+                            {% if ward_info.road_statuses.DIRT %}
+                                {{ ward_info.road_statuses.DIRT.population|nepali_number }}
                             {% else %}
                                 ०
                             {% endif %}
                         </td>
                         <td style="text-align: right;">
-                            {% if ward_info.road_statuses.NO_ROAD %}
-                                {{ ward_info.road_statuses.NO_ROAD.population|nepali_number }}
+                            {% if ward_info.road_statuses.GORETO %}
+                                {{ ward_info.road_statuses.GORETO.population|nepali_number }}
                             {% else %}
                                 ०
                             {% endif %}
@@ -137,8 +136,8 @@
                 <tr style="font-weight: bold; background-color: #f8fafc; border-top: 2px solid #333;">
                     <td style="text-align: center;">जम्मा</td>
                     <td style="text-align: right;">
-                        {% if municipality_data.BLACKTOPPED %}
-                            {{ municipality_data.BLACKTOPPED.population|nepali_number }}
+                        {% if municipality_data.BLACK_TOPPED %}
+                            {{ municipality_data.BLACK_TOPPED.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
@@ -151,15 +150,15 @@
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if municipality_data.EARTHEN %}
-                            {{ municipality_data.EARTHEN.population|nepali_number }}
+                        {% if municipality_data.DIRT %}
+                            {{ municipality_data.DIRT.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        {% if municipality_data.NO_ROAD %}
-                            {{ municipality_data.NO_ROAD.population|nepali_number }}
+                        {% if municipality_data.GORETO %}
+                            {{ municipality_data.GORETO.population|nepali_number }}
                         {% else %}
                             ०
                         {% endif %}

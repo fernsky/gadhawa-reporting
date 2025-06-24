@@ -82,7 +82,7 @@ class MajorSkillsProcessor(BaseEconomicsProcessor):
                 "name_nepali": skill_name,
             }
 
-        # Dynamically determine all ward numbers from the data
+        # Dynamically determine all ward numbers from the data (now supports up to 8 wards)
         all_wards = sorted(
             set(WardWiseMajorSkills.objects.values_list("ward_number", flat=True))
         )

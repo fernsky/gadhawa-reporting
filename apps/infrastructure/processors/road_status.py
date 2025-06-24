@@ -59,7 +59,11 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                 or 0
             )
 
-            if road_households > 0:
+            # Only add if the road code is present in the sample data (BLACK_TOPPED, GRAVELED, DIRT, GORETO)
+            if (
+                road_code in ["BLACK_TOPPED", "GRAVELED", "DIRT", "GORETO"]
+                and road_households > 0
+            ):
                 road_data[road_code] = {
                     "name_english": road_code,
                     "name_nepali": road_name,
@@ -94,18 +98,19 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                 for road_choice in RoadStatusChoice.choices:
                     road_code = road_choice[0]
                     road_name = road_choice[1]
-                    road_households_ward = (
-                        WardWiseRoadStatus.objects.filter(
-                            ward_number=ward_num, road_status=road_code
-                        ).aggregate(total=models.Sum("households"))["total"]
-                        or 0
-                    )
-                    if road_households_ward > 0:
-                        ward_data[ward_num]["road_statuses"][road_code] = {
-                            "name_english": road_code,
-                            "name_nepali": road_name,
-                            "population": road_households_ward,
-                        }
+                    if road_code in ["BLACK_TOPPED", "GRAVELED", "DIRT", "GORETO"]:
+                        road_households_ward = (
+                            WardWiseRoadStatus.objects.filter(
+                                ward_number=ward_num, road_status=road_code
+                            ).aggregate(total=models.Sum("households"))["total"]
+                            or 0
+                        )
+                        if road_households_ward > 0:
+                            ward_data[ward_num]["road_statuses"][road_code] = {
+                                "name_english": road_code,
+                                "name_nepali": road_name,
+                                "population": road_households_ward,
+                            }
 
         return {
             "municipality_data": road_data,

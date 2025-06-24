@@ -23,7 +23,7 @@ class Command(BaseCommand):
             self.stdout.write("Clearing existing major skills data...")
             WardWiseMajorSkills.objects.all().delete()
 
-        # Sample data based on provided information
+        # New sample data based on provided JSON
         sample_data = [
             (1, "SELF_PROTECTION_RELATED", 21),
             (1, "ENGINEERING_DESIGN_RELATED", 10),
@@ -225,9 +225,9 @@ class Command(BaseCommand):
         self.stdout.write(f"Total records: {total_records}")
         self.stdout.write(f"Total population: {format_nepali_number(total_population)}")
 
-        # Ward-wise totals
+        # Ward-wise totals (now 8 wards)
         self.stdout.write(f"\n=== WARD-WISE TOTALS ===")
-        for ward_num in range(1, 8):
+        for ward_num in range(1, 9):
             ward_total = (
                 WardWiseMajorSkills.objects.filter(ward_number=ward_num).aggregate(
                     total=models.Sum("population")
@@ -266,9 +266,9 @@ class Command(BaseCommand):
                 f"{i:2}. {skill_name}: {format_nepali_number(population)} ({percentage:.1f}%)"
             )
 
-        # Skill diversity by ward
+        # Skill diversity by ward (now 8 wards)
         self.stdout.write(f"\n=== SKILL DIVERSITY BY WARD ===")
-        for ward_num in range(1, 8):
+        for ward_num in range(1, 9):
             skill_count = (
                 WardWiseMajorSkills.objects.filter(ward_number=ward_num)
                 .values("skill_type")

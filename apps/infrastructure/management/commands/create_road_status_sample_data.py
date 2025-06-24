@@ -33,8 +33,7 @@ class Command(BaseCommand):
         )
 
         # Sample data representing actual road status patterns by ward and type
-        road_status_data = [
-            # Ward 1
+        road_status_sample_data = [
             {
                 "id": "cb9c6a9a-5f89-4c4f-af77-79240815493f",
                 "ward_number": 1,
@@ -59,7 +58,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 593,
             },
-            # Ward 2
             {
                 "id": "71a922f2-3252-46db-8305-698be4462fcb",
                 "ward_number": 2,
@@ -84,7 +82,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 174,
             },
-            # Ward 3
             {
                 "id": "9da99979-e06e-48de-b700-5564e19fccda",
                 "ward_number": 3,
@@ -109,7 +106,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 397,
             },
-            # Ward 4
             {
                 "id": "2f6fb8b1-063a-4a00-83b9-a5ed57a9e15f",
                 "ward_number": 4,
@@ -134,7 +130,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 787,
             },
-            # Ward 5
             {
                 "id": "87892379-5cc8-43d2-a625-5305cedb0b3e",
                 "ward_number": 5,
@@ -159,7 +154,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 1083,
             },
-            # Ward 6
             {
                 "id": "d253dead-733c-40b0-a686-c5de7c567561",
                 "ward_number": 6,
@@ -184,7 +178,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 414,
             },
-            # Ward 7
             {
                 "id": "65ee7db4-01fd-4d01-8c47-15b19819eb88",
                 "ward_number": 7,
@@ -209,7 +202,6 @@ class Command(BaseCommand):
                 "road_status": "GRAVELED",
                 "households": 366,
             },
-            # Ward 8
             {
                 "id": "8e78e257-fc8f-4185-90d5-aa4c8e3d246b",
                 "ward_number": 8,
@@ -243,7 +235,7 @@ class Command(BaseCommand):
         # Create records using Django ORM
         created_count = 0
         with transaction.atomic():
-            for data in road_status_data:
+            for data in road_status_sample_data:
                 obj, created = WardWiseRoadStatus.objects.get_or_create(
                     ward_number=data["ward_number"],
                     road_status=data["road_status"],
@@ -274,8 +266,8 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"\nSuccessfully processed {len(road_status_data)} road status infrastructure records "
-                f"({created_count} new, {len(road_status_data) - created_count} updated)\n"
+                f"\nSuccessfully processed {len(road_status_sample_data)} road status infrastructure records "
+                f"({created_count} new, {len(road_status_sample_data) - created_count} updated)\n"
                 f"Total records in database: {total_records}\n"
                 f"Total households covered: {total_households:,} households"
             )

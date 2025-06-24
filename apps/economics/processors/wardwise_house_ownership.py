@@ -161,7 +161,6 @@ class WardWiseHouseOwnershipProcessor(BaseEconomicsProcessor):
         def generate_formal_report(
             self, municipality_data, ward_data, total_households
         ):
-            # Get values and names
             private = municipality_data.get("PRIVATE", {})
             rent = municipality_data.get("RENT", {})
             institutional = municipality_data.get("INSTITUTIONAL", {})
@@ -170,9 +169,6 @@ class WardWiseHouseOwnershipProcessor(BaseEconomicsProcessor):
             rent_count = rent.get("households", 0)
             institutional_count = institutional.get("households", 0)
             other_count = other.get("households", 0)
-
-            def percent(val):
-                return f"{val:.2f}"
 
             private_pct = format_nepali_percentage(
                 (private_count / total_households * 100) if total_households else 0
@@ -185,26 +181,14 @@ class WardWiseHouseOwnershipProcessor(BaseEconomicsProcessor):
                 if total_households
                 else 0
             )
-            other_pct = format_nepali_percentage(
-                (other_count / total_households * 100) if total_households else 0
-            )
+
             lines = [
-                "यस गाउँपालिकामा घरको स्वामित्वको आधारमा ४ प्रकारका आवास संरचनाहरूको प्रयोग भएको छ । निजी स्वामित्वको घरमा वसोवास गरिरहेका घरधुरीको संख्या {0} अर्थात {1} रहेको छ । त्यसैगरी भाडामा बसोबास गर्नेको संख्या {2} अर्थात {3} रहेको छ । संस्थागत स्वामित्वमा रहेका घरधुरी {4} ({5}) छन् भने अन्य प्रकारका घरमा बस्ने घरधुरी {6} ({7}) छन् ।".format(
-                    format_nepali_number(private_count),
-                    private_pct,
-                    format_nepali_number(rent_count),
-                    rent_pct,
-                    format_nepali_number(institutional_count),
-                    institutional_pct,
-                    format_nepali_number(other_count),
-                    other_pct,
-                )
-                + " "
-                + "भूकम्पीय दृष्टिकोणले संवेदनशील रहेको नेपालमा घरहरू निर्माण गर्दा भूकम्प प्रतिरोधात्मक बनाउन आवश्यक छ । अति विपन्न परिवारका लागि एकीकृत बस्ती निर्माण गरी सरकारले उनीहरूको आवास सुरक्षाको अधिकार सुनिश्चित गर्न सकेको खण्डमा राज्यको लोककल्याणकारी भूमिका पुष्टी हुन जान्छ । "
-                + "घरको स्वामित्वको आधारमा घरपरिवारको विवरणले स्थानीय स्वामित्व, सामाजिक स्थायित्व, र आवास सुरक्षाको अवस्था प्रस्ट पार्दछ । निजी स्वामित्वको उच्च अनुपातले आर्थिक स्थायित्व र दीर्घकालीन लगानीको संकेत गर्छ । "
-                + "भाडामा बस्ने घरधुरीको उल्लेख्य उपस्थिति शहरीकरण, रोजगारीको खोजी, र आवासको पहुँचसँग सम्बन्धित छ । संस्थागत र अन्य स्वामित्वका घरधुरीको संख्या न्यून भए पनि, यी घरपरिवारका लागि लक्षित आवास नीति र सहुलियत कार्यक्रम आवश्यक देखिन्छ । "
-                + "गाउँपालिकाले आवास सुरक्षामा जोड दिँदै विपन्न, भाडामा बस्ने, र संस्थागत घरधुरीका लागि आवास अनुदान, सहुलियत ऋण, र भूकम्प प्रतिरोधात्मक प्रविधिको प्रवर्द्धन गर्नुपर्ने देखिन्छ । "
-                + "स्थानीय तहको आवास नीति, सामाजिक सुरक्षा, र दीर्घकालीन आवास योजना निर्माण गर्दा यी तथ्याङ्कहरूलाई आधार मानेर समावेशी र दिगो विकासको रणनीति बनाउन सकिन्छ ।"
+                f"गढवा गाउँपालिकामा घरधुरी स्वामित्वको विश्लेषण गर्दा, कुल घरधुरीमध्ये {format_nepali_number(private_count)} ({private_pct}) निजी स्वामित्वमा रहेका छन्, जुन अत्यधिक बहुमत हो।",
+                f"भाडामा बस्ने घरधुरी {format_nepali_number(rent_count)} ({rent_pct}) छन्, जसले शहरीकरण र आवासको पहुँचमा विविधता देखाउँछ।",
+                f"संस्थागत स्वामित्वमा रहेका घरधुरी {format_nepali_number(institutional_count)} ({institutional_pct}) मात्र छन्, जुन मुख्यतया केही वडामा सीमित छन्।",
+                "अन्य स्वामित्वका घरधुरी हालको तथ्याङ्कमा उल्लेखनीय रूपमा देखिएका छैनन्।",
+                "निजी स्वामित्वको उच्च अनुपातले आर्थिक स्थायित्व, दीर्घकालीन लगानी, र स्थानीय स्वामित्वको भावना झल्काउँछ। भाडामा र संस्थागत घरधुरीको उपस्थिति रोजगारी, आवासको आवश्यकता, र सामाजिक गतिशीलतासँग सम्बन्धित छ।",
+                "स्थानीय तहले आवास सुरक्षामा जोड दिँदै, सबै वर्गका नागरिकका लागि समावेशी र दिगो आवास नीति निर्माण गर्नुपर्ने आवश्यकता देखिन्छ।",
             ]
             return "\n\n".join(lines)
 

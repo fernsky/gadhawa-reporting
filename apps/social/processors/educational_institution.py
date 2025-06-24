@@ -12,6 +12,8 @@ from collections import defaultdict
 from typing import Dict, Any
 from django.db import models
 from django.db.models import Sum, Count, Q
+import os
+import json
 
 from apps.social.models import WardWiseEducationalInstitution, SchoolLevelChoice
 from .base import BaseSocialProcessor
@@ -54,128 +56,163 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
         return "educational_institution"
 
     def get_data(self) -> Dict[str, Any]:
-        """Get educational institution data aggregated by municipality and ward"""
+        """Get educational institution data aggregated from new JSON fixtures (per-year, per-school, per-grade, per-gender)"""
         try:
-            # Get latest year data (2081) for current statistics
-            latest_year = "2081"
-
-            # Municipality-wide summary
-            municipality_data = {}
-
-            # Get aggregated data by school level
-            level_stats = (
-                WardWiseEducationalInstitution.objects.filter(
-                    data_year=latest_year, is_operational=True
-                )
-                .values("school_level")
-                .annotate(
-                    institution_count=Count("institution_name", distinct=True),
-                    total_male=Sum("male_students"),
-                    total_female=Sum("female_students"),
-                )
+            fixtures_dir = os.path.join(
+                os.path.dirname(os.path.dirname(__file__)), "fixtures"
             )
+            years = ["2079", "2080", "2081"]
+            all_years_data = {}
+            for year in years:
+                file_path = os.path.join(
+                    fixtures_dir, f"educational_institution_{year}.json"
+                )
+                if os.path.exists(file_path):
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        all_years_data[year] = json.load(f)
+                else:
+                    all_years_data[year] = []
 
+            # Aggregate data
+            municipality_data = {}
+            ward_data = {}
             total_institutions = 0
             total_male_students = 0
             total_female_students = 0
+            per_grade_data = {}
+            per_school_data = {}
 
-            for level_data in level_stats:
-                level = level_data["school_level"]
-                count = level_data["institution_count"] or 0
-                male = level_data["total_male"] or 0
-                female = level_data["total_female"] or 0
-                total = male + female
+            latest_year = years[-1]
+            latest_data = all_years_data[latest_year]
 
-                municipality_data[level] = {
-                    "institution_count": count,
-                    "male_students": male,
-                    "female_students": female,
-                    "total_students": total,
-                    "percentage": 0,  # Will be calculated later
-                    "gender_ratio": (
-                        round((female / total) * 100, 1) if total > 0 else 0
-                    ),
-                    "name_nepali": self._get_level_name_nepali(level),
+            # --- Municipality-wide and ward-wise aggregation ---
+            for entry in latest_data:
+                ward = entry.get("ward_number")
+                school_level = entry.get("school_level")
+                school_type = entry.get("school_type", "OTHER")
+                institution_name = entry.get("institution_name")
+                student_counts = entry.get("student_counts", {})
+                if not ward:
+                    continue
+                # Per-school aggregation
+                if ward not in ward_data:
+                    ward_data[ward] = {
+                        "institution_count": 0,
+                        "male_students": 0,
+                        "female_students": 0,
+                        "total_students": 0,
+                        "gender_ratio": 0,
+                        "institutions": [],
+                        "per_grade": {},
+                    }
+                ward_data[ward]["institution_count"] += 1
+                school_male = 0
+                school_female = 0
+                school_total = 0
+                school_per_grade = {}
+                for grade, gdata in student_counts.items():
+                    boys = gdata.get("boys", 0)
+                    girls = gdata.get("girls", 0)
+                    total = gdata.get("total", boys + girls)
+                    school_male += boys
+                    school_female += girls
+                    school_total += total
+                    # Per-grade aggregation (municipality)
+                    if grade not in per_grade_data:
+                        per_grade_data[grade] = {"male": 0, "female": 0, "total": 0}
+                    per_grade_data[grade]["male"] += boys
+                    per_grade_data[grade]["female"] += girls
+                    per_grade_data[grade]["total"] += total
+                    # Per-grade per-school
+                    school_per_grade[grade] = {
+                        "male": boys,
+                        "female": girls,
+                        "total": total,
+                    }
+                ward_data[ward]["male_students"] += school_male
+                ward_data[ward]["female_students"] += school_female
+                ward_data[ward]["total_students"] += school_total
+                # Per-school data
+                school_info = {
+                    "name": institution_name,
+                    "level": school_level,
+                    "type": school_type,
+                    "male_students": school_male,
+                    "female_students": school_female,
+                    "total_students": school_total,
+                    "per_grade": school_per_grade,
                 }
+                ward_data[ward]["institutions"].append(school_info)
+                # Per-school (municipality)
+                per_school_data[institution_name] = school_info
+                # Municipality-wide by level
+                if school_level not in municipality_data:
+                    municipality_data[school_level] = {
+                        "institution_count": 0,
+                        "male_students": 0,
+                        "female_students": 0,
+                        "total_students": 0,
+                        "name_nepali": self._get_level_name_nepali(school_level),
+                    }
+                municipality_data[school_level]["institution_count"] += 1
+                municipality_data[school_level]["male_students"] += school_male
+                municipality_data[school_level]["female_students"] += school_female
+                municipality_data[school_level]["total_students"] += school_total
+                total_institutions += 1
+                total_male_students += school_male
+                total_female_students += school_female
 
-                total_institutions += count
-                total_male_students += male
-                total_female_students += female
-
-            # Calculate percentages
+            # Calculate gender ratios and percentages
             total_students = total_male_students + total_female_students
-            for level in municipality_data:
-                if total_students > 0:
-                    municipality_data[level]["percentage"] = round(
-                        (municipality_data[level]["total_students"] / total_students)
-                        * 100,
-                        1,
+            for ward in ward_data:
+                w = ward_data[ward]
+                if w["total_students"] > 0:
+                    w["gender_ratio"] = round(
+                        (w["female_students"] / w["total_students"]) * 100, 1
                     )
-
-            # Ward-wise data
-            ward_data = {}
-            for ward_num in range(1, 8):
-                ward_stats = WardWiseEducationalInstitution.objects.filter(
-                    ward_number=ward_num, data_year=latest_year, is_operational=True
-                ).aggregate(
-                    institution_count=Count("institution_name", distinct=True),
-                    total_male=Sum("male_students"),
-                    total_female=Sum("female_students"),
+            for level in municipality_data:
+                l = municipality_data[level]
+                if total_students > 0:
+                    l["percentage"] = round(
+                        (l["total_students"] / total_students) * 100, 1
+                    )
+                else:
+                    l["percentage"] = 0
+                l["gender_ratio"] = (
+                    round((l["female_students"] / l["total_students"]) * 100, 1)
+                    if l["total_students"] > 0
+                    else 0
                 )
 
-                ward_male = ward_stats["total_male"] or 0
-                ward_female = ward_stats["total_female"] or 0
-                ward_total = ward_male + ward_female
-                ward_institutions = ward_stats["institution_count"] or 0
-
-                if ward_total > 0 or ward_institutions > 0:
-                    ward_data[ward_num] = {
-                        "institution_count": ward_institutions,
-                        "male_students": ward_male,
-                        "female_students": ward_female,
-                        "total_students": ward_total,
-                        "gender_ratio": (
-                            round((ward_female / ward_total) * 100, 1)
-                            if ward_total > 0
-                            else 0
-                        ),
-                        "institutions": [],
-                    }
-
-                    # Get individual institutions in this ward
-                    institutions = WardWiseEducationalInstitution.objects.filter(
-                        ward_number=ward_num, data_year=latest_year, is_operational=True
-                    ).order_by("-male_students", "-female_students")
-
-                    for inst in institutions:
-                        inst_male = inst.male_students or 0
-                        inst_female = inst.female_students or 0
-                        inst_total = inst_male + inst_female
-
-                        ward_data[ward_num]["institutions"].append(
-                            {
-                                "name": inst.institution_name,
-                                "level": inst.school_level,
-                                "level_nepali": self._get_level_name_nepali(
-                                    inst.school_level
-                                ),
-                                "male_students": inst_male,
-                                "female_students": inst_female,
-                                "total_students": inst_total,
-                                "gender_ratio": (
-                                    round((inst_female / inst_total) * 100, 1)
-                                    if inst_total > 0
-                                    else 0
-                                ),
-                            }
-                        )
-
             # Historical data for trend analysis
-            historical_data = self._get_historical_trends()
+            historical_data = {}
+            for year in years:
+                ydata = all_years_data[year]
+                y_male = 0
+                y_female = 0
+                y_institutions = 0
+                for entry in ydata:
+                    grades = entry.get("grades", {})
+                    for g in grades.values():
+                        y_male += g.get("male", 0)
+                        y_female += g.get("female", 0)
+                    y_institutions += 1
+                y_total = y_male + y_female
+                historical_data[year] = {
+                    "male_students": y_male,
+                    "female_students": y_female,
+                    "total_students": y_total,
+                    "total_institutions": y_institutions,
+                    "gender_ratio": (
+                        round((y_female / y_total) * 100, 1) if y_total > 0 else 0
+                    ),
+                }
 
             return {
                 "municipality_data": municipality_data,
                 "ward_data": ward_data,
+                "per_grade_data": per_grade_data,
+                "per_school_data": per_school_data,
                 "historical_data": historical_data,
                 "total_institutions": total_institutions,
                 "total_students": total_students,
@@ -186,10 +223,9 @@ class EducationalInstitutionProcessor(BaseSocialProcessor):
                     if total_students > 0
                     else 0
                 ),
-                "years_available": ["2079", "2080", "2081"],
+                "years_available": years,
                 "latest_year": latest_year,
             }
-
         except Exception as e:
             print(f"Error in educational institution data processing: {e}")
             return self._empty_data_structure()

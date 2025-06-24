@@ -312,43 +312,44 @@ class LoanUseTypeChoice(models.TextChoices):
     CEREMONY = "CEREMONY", _("समारोह")
     OTHER = "OTHER", _("अन्य")
 
-
-# Major Skills (based on ward-wise-major-skills.ts)
-class SkillTypeChoice(models.TextChoices):
-    TEACHING_RELATED = "TEACHING_RELATED", _("शिक्षण सम्बन्धी")
-    PHOTOGRAPHY_RELATED = "PHOTOGRAPHY_RELATED", _("फोटोग्राफी सम्बन्धी")
-    HANDICRAFT_RELATED = "HANDICRAFT_RELATED", _("हस्तकला सम्बन्धी")
-    MUSIC_DRAMA_RELATED = "MUSIC_DRAMA_RELATED", _("संगीत नाटक सम्बन्धी")
-    STONEWORK_WOODWORK = "STONEWORK_WOODWORK", _("ढुंगा काठको काम")
-    CARPENTERY_RELATED = "CARPENTERY_RELATED", _("सिकर्मी सम्बन्धी")
-    PLUMBING = "PLUMBING", _("प्लम्बिंग")
-    HUMAN_HEALTH_RELATED = "HUMAN_HEALTH_RELATED", _("मानव स्वास्थ्य सम्बन्धी")
-    ANIMAL_HEALTH_RELATED = "ANIMAL_HEALTH_RELATED", _("पशु स्वास्थ्य सम्बन्धी")
-    ELECTRICITY_INSTALLMENT_RELATED = "ELECTRICITY_INSTALLMENT_RELATED", _(
-        "बिजुली जडान सम्बन्धी"
-    )
-    HOTEL_RESTAURANT_RELATED = "HOTEL_RESTAURANT_RELATED", _("होटल रेष्टुरेन्ट सम्बन्धी")
-    AGRICULTURE_RELATED = "AGRICULTURE_RELATED", _("कृषि सम्बन्धी")
-    PRINTING_RELATED = "PRINTING_RELATED", _("छपाई सम्बन्धी")
-    DRIVING_RELATED = "DRIVING_RELATED", _("ड्राइभिंग सम्बन्धी")
-    MECHANICS_RELATED = "MECHANICS_RELATED", _("मेकानिक्स सम्बन्धी")
-    FURNITURE_RELATED = "FURNITURE_RELATED", _("फर्निचर सम्बन्धी")
-    SHOEMAKING_RELATED = "SHOEMAKING_RELATED", _("जुत्ता बनाउने सम्बन्धी")
-    SEWING_RELATED = "SEWING_RELATED", _("सिलाई सम्बन्धी")
-    JWELLERY_MAKING_RELATED = "JWELLERY_MAKING_RELATED", _("गहना बनाउने सम्बन्धी")
-    BEUATICIAN_RELATED = "BEUATICIAN_RELATED", _("सौन्दर्य सम्बन्धी")
-    SELF_PROTECTION_RELATED = "SELF_PROTECTION_RELATED", _("आत्मरक्षा सम्बन्धी")
-    LAND_SURVEY_RELATED = "LAND_SURVEY_RELATED", _("जमिन सर्वेक्षण सम्बन्धी")
-    COMPUTER_SCIENCE_RELATED = "COMPUTER_SCIENCE_RELATED", _("कम्प्युटर विज्ञान सम्बन्धी")
-    ENGINEERING_DESIGN_RELATED = "ENGINEERING_DESIGN_RELATED", _(
-        "इन्जिनियरिङ डिजाइन सम्बन्धी"
-    )
-    RADIO_TELEVISION_ELECTRICAL_REPAIR = "RADIO_TELEVISION_ELECTRICAL_REPAIR", _(
-        "रेडियो टेलिभिजन विद्युतीय मर्मत"
-    )
-    LITERARY_CREATION_RELATED = "LITERARY_CREATION_RELATED", _("साहित्यिक सृजना सम्बन्धी")
-    OTHER = "OTHER", _("अन्य")
-    NONE = "NONE", _("छैन")
+    # Major Skills (based on ward-wise-major-skills.ts)
+    class SkillTypeChoice(models.TextChoices):
+        SELF_PROTECTION_RELATED = "SELF_PROTECTION_RELATED", _("आत्मरक्षा सम्बन्धी")
+        ENGINEERING_DESIGN_RELATED = "ENGINEERING_DESIGN_RELATED", _(
+            "इन्जिनियरिङ डिजाइन सम्बन्धी"
+        )
+        COMPUTER_SCIENCE_RELATED = "COMPUTER_SCIENCE_RELATED", _("कम्प्युटर विज्ञान सम्बन्धी")
+        AGRICULTURE_RELATED = "AGRICULTURE_RELATED", _("कृषि सम्बन्धी")
+        BEUATICIAN_RELATED = "BEUATICIAN_RELATED", _("सौन्दर्य सम्बन्धी")
+        SEWING_RELATED = "SEWING_RELATED", _("सिलाई सम्बन्धी")
+        PLUMBING = "PLUMBING", _("प्लम्बिंग")
+        ELECTRICITY_INSTALLMENT_RELATED = "ELECTRICITY_INSTALLMENT_RELATED", _(
+            "बिजुली जडान सम्बन्धी"
+        )
+        HUMAN_HEALTH_RELATED = "HUMAN_HEALTH_RELATED", _("मानव स्वास्थ्य सम्बन्धी")
+        MECHANICS_RELATED = "MECHANICS_RELATED", _("मेकानिक्स सम्बन्धी")
+        TEACHING_RELATED = "TEACHING_RELATED", _("शिक्षण सम्बन्धी")
+        DRIVING_RELATED = "DRIVING_RELATED", _("ड्राइभिंग सम्बन्धी")
+        LITERARY_CREATION_RELATED = "LITERARY_CREATION_RELATED", _(
+            "साहित्यिक सृजना सम्बन्धी"
+        )
+        CARPENTERY_RELATED = "CARPENTERY_RELATED", _("सिकर्मी सम्बन्धी")
+        HOTEL_RESTAURANT_RELATED = "HOTEL_RESTAURANT_RELATED", _("होटल रेष्टुरेन्ट सम्बन्धी")
+        MUSIC_DRAMA_RELATED = "MUSIC_DRAMA_RELATED", _("संगीत नाटक सम्बन्धी")
+        PRINTING_RELATED = "PRINTING_RELATED", _("छपाई सम्बन्धी")
+        LAND_SURVEY_RELATED = "LAND_SURVEY_RELATED", _("जमिन सर्वेक्षण सम्बन्धी")
+        ANIMAL_HEALTH_RELATED = "ANIMAL_HEALTH_RELATED", _("पशु स्वास्थ्य सम्बन्धी")
+        FURNITURE_RELATED = "FURNITURE_RELATED", _("फर्निचर सम्बन्धी")
+        RADIO_TELEVISION_ELECTRICAL_REPAIR = "RADIO_TELEVISION_ELECTRICAL_REPAIR", _(
+            "रेडियो टेलिभिजन विद्युतीय मर्मत"
+        )
+        HANDICRAFT_RELATED = "HANDICRAFT_RELATED", _("हस्तकला सम्बन्धी")
+        SHOEMAKING_RELATED = "SHOEMAKING_RELATED", _("जुत्ता बनाउने सम्बन्धी")
+        JWELLERY_MAKING_RELATED = "JWELLERY_MAKING_RELATED", _("गहना बनाउने सम्बन्धी")
+        PHOTOGRAPHY_RELATED = "PHOTOGRAPHY_RELATED", _("फोटोग्राफी सम्बन्धी")
+        STONEWORK_WOODWORK = "STONEWORK_WOODWORK", _("ढुंगा काठको काम")
+        OTHER = "OTHER", _("अन्य")
+        NONE = "NONE", _("छैन")
 
 
 # Remittance Amount Groups (based on ward-wise-remittance.ts)
