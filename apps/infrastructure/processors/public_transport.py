@@ -78,7 +78,7 @@ class PublicTransportProcessor(BaseInfrastructureProcessor):
 
         # Ward-wise data
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7
+        for ward_num in range(1, 9):  # Wards 1-8
             ward_households = (
                 WardWiseTimeToPublicTransport.objects.filter(
                     ward_number=ward_num

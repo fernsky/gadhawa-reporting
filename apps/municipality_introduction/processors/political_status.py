@@ -26,7 +26,7 @@ class PoliticalStatusProcessor(BaseMunicipalityIntroductionProcessor):
         return "२.३"
 
     def get_data(self):
-        """Get political status population data"""
+        """Get political status population data with all demographic fields"""
         political_data = {}
 
         # Get all data from database grouped by year
@@ -39,7 +39,15 @@ class PoliticalStatusProcessor(BaseMunicipalityIntroductionProcessor):
                 {
                     "ward_number": status_obj.ward_number,
                     "ward_name": status_obj.ward_name,
-                    "population": status_obj.population,
+                    "total_population": getattr(status_obj, "total_population", None),
+                    "male_population": getattr(status_obj, "male_population", None),
+                    "female_population": getattr(status_obj, "female_population", None),
+                    "other_population": getattr(status_obj, "other_population", None),
+                    "total_households": getattr(status_obj, "total_households", None),
+                    "average_household_size": getattr(
+                        status_obj, "average_household_size", None
+                    ),
+                    "sex_ratio": getattr(status_obj, "sex_ratio", None),
                     "year": status_obj.year,
                 }
             )
@@ -47,15 +55,17 @@ class PoliticalStatusProcessor(BaseMunicipalityIntroductionProcessor):
         return political_data
 
     def generate_report_content(self, data):
-        """Generate report content for political status"""
+        """Generate report content for political status with demographic explanation"""
 
         # Calculate totals
         total_records = sum(len(year_data) for year_data in data.values())
 
         # The main analysis text as requested
-        analysis_text = """गाउँपालिकाको भौतिक अवस्थाको विवरण तयार पार्दा यहाँको धरातलीय अवस्थाका बारेमा उल्लेख गर्नु अनिवार्य हुन्छ । क्षेत्रफलका हिसाबले सानो भए तापनि नेपाल धरातलीय विविधताका हिसाबले विश्वमै सम्पन्न मानिन्छ । विशेषतः भौगर्भिक प्रक्रियाका दौरान पछिल्लो समयमा निर्माण भएको महालङ्गुर हिमश्रृंखला निर्माण हुँदा तिब्बतीयन भू–खण्ड र भारतीय उपमहाद्वीपको एक आपसमा टकराव हुँदा यी दुई भू–खण्डका बिचमा रहेको टेथिस सागरको अस्तित्व समाप्त भई उच्च हिमालय पर्वत, मध्यम महाभारत पर्वत श्रृंखला तथा होचा चुरे पर्वत श्रृंखला र सबैभन्दा दक्षिण भेगमा फैलिएको विशाल गंगाको मैदानको अंशको रुपमा रहेको तराई भू–भाग मिलेर समग्र देशको भू–सतह निर्माण भएको छ । यो भू–धरातलको वस्तुगत चरित्रहरू मध्ये एक वा अर्को प्रकारको भू–धरातलको प्रधानता नेपालका गाउँपालिका वा नगरपालिकामा रहेको पाईन्छ । यस अनुसार गढवाे गाउँपालिकाको सम्पूर्ण भू–भाग मध्ये पहाडी खण्डमा अवस्थित छ ।
-
-भू–धरातलीय स्वरुपले विकास निर्माणमा अहम् भूमिका खेल्दछ । भू–धरातलको विवरण अन्तर्गत विशेषतः भिरालोपन, मोहडा, उचाई, भू–आवरण, माटोको बनावट जस्ता आधारभूत पक्षहरू पर्दछन् ।"""
+        analysis_text = (
+            "यस तालिकामा प्रत्येक वडाको कुल जनसंख्या, पुरुष/महिला जनसंख्या, घरपरिवार संख्या, औसत घरपरिवार आकार, र लिंगानुपात (sex ratio) को विवरण समावेश गरिएको छ। "
+            "यसले वडागत जनसंख्या संरचना, घरपरिवारको औसत आकार, र लिंगानुपातको अवस्थाबारे स्पष्ट जानकारी दिन्छ। "
+            "यस विवरणको आधारमा सामाजिक, शैक्षिक, तथा विकासका कार्यक्रमहरूलाई लक्षित गर्न सकिन्छ।"
+        )
 
         return analysis_text
 

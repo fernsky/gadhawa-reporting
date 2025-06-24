@@ -97,10 +97,10 @@ class FacilityChoice(models.TextChoices):
 
 # Road Status Enums
 class RoadStatusChoice(models.TextChoices):
-    BLACKTOPPED = "BLACKTOPPED", _("कालोपत्रे")
+    BLACK_TOPPED = "BLACK_TOPPED", _("कालोपत्रे")
     GRAVELED = "GRAVELED", _("ढुंगामाटो")
-    EARTHEN = "EARTHEN", _("कच्ची")
-    NO_ROAD = "NO_ROAD", _("सडक छैन")
+    DIRT = "DIRT", _("कच्ची")
+    GORETO = "GORETO", _("गोरेटो")
 
 
 # Time Duration Enums

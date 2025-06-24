@@ -36,7 +36,6 @@ class Command(BaseCommand):
             {
                 "id": "43725587-539f-42ad-8996-de26bacbef95",
                 "ward_number": 1,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 24,
                 "population": 24,
@@ -44,7 +43,6 @@ class Command(BaseCommand):
             {
                 "id": "4a3d55af-89c4-461f-bc11-bfbf447f0c95",
                 "ward_number": 1,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 1449,
                 "population": 1449,
@@ -52,7 +50,6 @@ class Command(BaseCommand):
             {
                 "id": "13802f45-bd48-46e1-84d9-b6eed94d16a1",
                 "ward_number": 1,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 197,
                 "population": 197,
@@ -60,7 +57,6 @@ class Command(BaseCommand):
             {
                 "id": "677b5f5b-34b6-4a20-99cd-1e0c6b48de4b",
                 "ward_number": 1,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 65,
                 "population": 65,
@@ -68,7 +64,6 @@ class Command(BaseCommand):
             {
                 "id": "8a32dc9f-25f2-4451-911d-3b27be95e3ae",
                 "ward_number": 2,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 4,
                 "population": 4,
@@ -76,7 +71,6 @@ class Command(BaseCommand):
             {
                 "id": "a00fe7f0-4ea8-4af0-9f01-d908d7fb64d9",
                 "ward_number": 2,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 1030,
                 "population": 1030,
@@ -84,7 +78,6 @@ class Command(BaseCommand):
             {
                 "id": "1c94f3bb-4f25-408c-892e-03d8b368fcf6",
                 "ward_number": 2,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 64,
                 "population": 64,
@@ -92,7 +85,6 @@ class Command(BaseCommand):
             {
                 "id": "82c2664a-2920-41ec-ae1a-502a6e52433b",
                 "ward_number": 2,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 103,
                 "population": 103,
@@ -100,7 +92,6 @@ class Command(BaseCommand):
             {
                 "id": "6a92d20a-72f6-40f5-b470-1ad8c1c8ce53",
                 "ward_number": 3,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 15,
                 "population": 15,
@@ -108,7 +99,6 @@ class Command(BaseCommand):
             {
                 "id": "921cd5d3-d2a4-4b26-8135-c803423d87b0",
                 "ward_number": 3,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 1027,
                 "population": 1027,
@@ -116,7 +106,6 @@ class Command(BaseCommand):
             {
                 "id": "a4e10617-413f-4831-ab12-c002a445f2dc",
                 "ward_number": 3,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 156,
                 "population": 156,
@@ -124,7 +113,6 @@ class Command(BaseCommand):
             {
                 "id": "9e5255fe-2d2d-41e1-a24c-a558e8e4a796",
                 "ward_number": 3,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 96,
                 "population": 96,
@@ -132,7 +120,6 @@ class Command(BaseCommand):
             {
                 "id": "12435944-6e1c-44e5-b174-2be94606ccf2",
                 "ward_number": 4,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 4,
                 "population": 4,
@@ -140,7 +127,6 @@ class Command(BaseCommand):
             {
                 "id": "82c3346d-32f2-4c02-b74c-1ec346fbb1e5",
                 "ward_number": 4,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 996,
                 "population": 996,
@@ -148,7 +134,6 @@ class Command(BaseCommand):
             {
                 "id": "76880892-5899-4497-8cbf-9b46f4bfac94",
                 "ward_number": 4,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 189,
                 "population": 189,
@@ -156,7 +141,6 @@ class Command(BaseCommand):
             {
                 "id": "9f7dae95-25dd-49de-a3f2-34b0760c2d09",
                 "ward_number": 4,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 111,
                 "population": 111,
@@ -164,7 +148,6 @@ class Command(BaseCommand):
             {
                 "id": "85a464eb-2858-40b3-9a40-a9af1e36c244",
                 "ward_number": 5,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 25,
                 "population": 25,
@@ -172,7 +155,6 @@ class Command(BaseCommand):
             {
                 "id": "45eb908d-eb16-449e-9e71-a7a759ce6727",
                 "ward_number": 5,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 1186,
                 "population": 1186,
@@ -180,7 +162,6 @@ class Command(BaseCommand):
             {
                 "id": "af2cf948-9c32-4129-ad7f-2af6f06b8d18",
                 "ward_number": 5,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 160,
                 "population": 160,
@@ -188,7 +169,6 @@ class Command(BaseCommand):
             {
                 "id": "88f05ea8-9d76-4bdc-adbc-fc736fdcc905",
                 "ward_number": 5,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 151,
                 "population": 151,
@@ -196,7 +176,6 @@ class Command(BaseCommand):
             {
                 "id": "740ff9e6-3a1b-4953-9bca-65eb25dc161f",
                 "ward_number": 6,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 34,
                 "population": 34,
@@ -204,7 +183,6 @@ class Command(BaseCommand):
             {
                 "id": "5f2f4b2b-b6ad-4125-bf4b-8706bbbe7aae",
                 "ward_number": 6,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 1238,
                 "population": 1238,
@@ -212,7 +190,6 @@ class Command(BaseCommand):
             {
                 "id": "c3a57f3e-24f9-4006-ab18-90e0d0312f33",
                 "ward_number": 6,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 217,
                 "population": 217,
@@ -220,7 +197,6 @@ class Command(BaseCommand):
             {
                 "id": "1e8b244d-b92a-4d25-807d-8d42f19fc35e",
                 "ward_number": 6,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 272,
                 "population": 272,
@@ -228,7 +204,6 @@ class Command(BaseCommand):
             {
                 "id": "46f05ff2-bf5d-4b46-841b-3a1e1db5529c",
                 "ward_number": 7,
-                "ward_name": None,
                 "property_type": "HOUSE_ONLY",
                 "count": 28,
                 "population": 28,
@@ -236,7 +211,6 @@ class Command(BaseCommand):
             {
                 "id": "f64e0e11-742e-48b8-a0c9-04f0609b7c92",
                 "ward_number": 7,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 959,
                 "population": 959,
@@ -244,7 +218,6 @@ class Command(BaseCommand):
             {
                 "id": "a6168d6c-3bfb-4a34-bfdb-780c1c71de10",
                 "ward_number": 7,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 154,
                 "population": 154,
@@ -252,7 +225,6 @@ class Command(BaseCommand):
             {
                 "id": "04480f0d-d815-4a46-9c0f-18f8f79663f8",
                 "ward_number": 7,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 216,
                 "population": 216,
@@ -260,7 +232,6 @@ class Command(BaseCommand):
             {
                 "id": "86a5d97a-2730-41e7-af6b-f05d2fa2e508",
                 "ward_number": 8,
-                "ward_name": None,
                 "property_type": "NEITHER_HOUSE_NOR_LAND",
                 "count": 189,
                 "population": 189,
@@ -268,7 +239,6 @@ class Command(BaseCommand):
             {
                 "id": "89e5b814-b469-4c40-b124-a89488bc4985",
                 "ward_number": 8,
-                "ward_name": None,
                 "property_type": "BOTH_HOUSE_AND_LAND",
                 "count": 4,
                 "population": 4,
@@ -276,20 +246,11 @@ class Command(BaseCommand):
             {
                 "id": "6785b649-aa21-43bd-a62b-1a87d7fe2389",
                 "ward_number": 8,
-                "ward_name": None,
                 "property_type": "LAND_ONLY",
                 "count": 3,
                 "population": 3,
             },
         ]
-
-        # Set ward_name if missing
-        ward_name_map = {i: f"वडा नं. {i}" for i in range(1, 9)}
-        for entry in female_property_data:
-            if not entry["ward_name"]:
-                entry["ward_name"] = ward_name_map.get(
-                    entry["ward_number"], f"वडा नं. {entry['ward_number']}"
-                )
 
         self.stdout.write(
             f"Processing {len(female_property_data)} female property ownership records..."
@@ -313,7 +274,6 @@ class Command(BaseCommand):
                     property_type=data_item["property_type"],
                     defaults={
                         "id": data_item["id"],
-                        "ward_name": data_item["ward_name"],
                         "count": data_item["count"],
                         "population": data_item["population"],
                     },
@@ -324,7 +284,6 @@ class Command(BaseCommand):
                 else:
                     obj.count = data_item["count"]
                     obj.population = data_item["population"]
-                    obj.ward_name = data_item["ward_name"]
                     obj.save()
                     updated_count += 1
 

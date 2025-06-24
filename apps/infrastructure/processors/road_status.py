@@ -25,10 +25,10 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
         self.chart_radius = 150
         # Set road status-specific colors with meaningful associations
         self.chart_generator.colors = {
-            "BLACKTOPPED": "#2E7D32",  # Dark Green - Best quality
+            "BLACK_TOPPED": "#2E7D32",  # Dark Green - Best quality
             "GRAVELED": "#4CAF50",  # Green - Good quality
-            "EARTHEN": "#FF9800",  # Orange - Basic quality
-            "NO_ROAD": "#F44336",  # Red - No access
+            "DIRT": "#FF9800",  # Orange - Basic quality
+            "GORETO": "#BDBDBD",  # Grey - Trail/Path
         }
 
     def get_chart_key(self):
@@ -43,7 +43,8 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
 
     def get_data(self):
         """Get road status data - both municipality-wide and ward-wise"""
-        # Municipality-wide summary
+        from ..models import RoadStatusChoice  # ensure updated enum is used
+
         road_data = {}
         total_households = 0
 
@@ -58,25 +59,24 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                 or 0
             )
 
-            if road_households > 0:  # Only include road statuses with households
+            if road_households > 0:
                 road_data[road_code] = {
                     "name_english": road_code,
                     "name_nepali": road_name,
-                    "population": road_households,  # Using households as population for consistency
-                    "percentage": 0,  # Will be calculated below
+                    "population": road_households,
+                    "percentage": 0,
                 }
                 total_households += road_households
 
-        # Calculate percentages
         for road_code in road_data:
             if total_households > 0:
                 road_data[road_code]["percentage"] = (
                     road_data[road_code]["population"] / total_households * 100
                 )
 
-        # Ward-wise data
+        # Ward-wise data (wards 1-8)
         ward_data = {}
-        for ward_num in range(1, 8):  # Wards 1-7
+        for ward_num in range(1, 9):
             ward_households = (
                 WardWiseRoadStatus.objects.filter(ward_number=ward_num).aggregate(
                     total=models.Sum("households")
@@ -88,31 +88,23 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                 ward_data[ward_num] = {
                     "ward_number": ward_num,
                     "ward_name": f"वडा नं. {to_nepali_digits(ward_num)}",
-                    "total_population": ward_households,  # Using households
+                    "total_population": ward_households,
                     "road_statuses": {},
                 }
-
-                # Road status breakdown for this ward
                 for road_choice in RoadStatusChoice.choices:
                     road_code = road_choice[0]
                     road_name = road_choice[1]
-
                     road_households_ward = (
                         WardWiseRoadStatus.objects.filter(
                             ward_number=ward_num, road_status=road_code
                         ).aggregate(total=models.Sum("households"))["total"]
                         or 0
                     )
-
                     if road_households_ward > 0:
                         ward_data[ward_num]["road_statuses"][road_code] = {
+                            "name_english": road_code,
                             "name_nepali": road_name,
                             "population": road_households_ward,
-                            "percentage": (
-                                (road_households_ward / ward_households * 100)
-                                if ward_households > 0
-                                else 0
-                            ),
                         }
 
         return {
@@ -140,12 +132,11 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
         # Road quality analysis
         if municipality_data:
             # Calculate road quality levels
-            blacktopped = municipality_data.get("BLACKTOPPED", {}).get("population", 0)
+            blacktopped = municipality_data.get("BLACK_TOPPED", {}).get("population", 0)
             graveled = municipality_data.get("GRAVELED", {}).get("population", 0)
-            earthen = municipality_data.get("EARTHEN", {}).get("population", 0)
-            no_road = municipality_data.get("NO_ROAD", {}).get("population", 0)
+            dirt = municipality_data.get("DIRT", {}).get("population", 0)
+            goreto = municipality_data.get("GORETO", {}).get("population", 0)
 
-            # Combined good road access (blacktopped + graveled)
             good_road_access = blacktopped + graveled
             good_road_percentage = (
                 (good_road_access / total_households * 100)
@@ -164,44 +155,39 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
                     f"({format_nepali_percentage(dominant_road[1]['percentage'])}) रहेको छ।"
                 )
 
-            # Road quality analysis
             if good_road_access > 0:
                 analysis_parts.append(
                     f"सडकको गुणस्तरको दृष्टिकोणले हेर्दा, {format_nepali_number(good_road_access)} घरपरिवार "
                     f"({format_nepali_percentage(good_road_percentage)}) ले कालोपत्रे वा ढुंगामाटो सडकमा पहुँच पाएका छन् जुन राम्रो सडक सुविधाको सूचक हो।"
                 )
-
-            # High quality road analysis
             if blacktopped > 0:
                 blacktopped_percentage = blacktopped / total_households * 100
                 analysis_parts.append(
                     f"विशेष गरी {format_nepali_number(blacktopped)} घरपरिवार "
                     f"({format_nepali_percentage(blacktopped_percentage)}) ले कालोपत्रे सडकमा पहुँच पाएका छन् जुन उत्कृष्ट सडक सुविधाको सूचक हो।"
                 )
-
-            # Graveled road analysis
             if graveled > 0:
                 graveled_percentage = graveled / total_households * 100
                 analysis_parts.append(
                     f"{format_nepali_number(graveled)} घरपरिवार "
                     f"({format_nepali_percentage(graveled_percentage)}) ले ढुंगामाटो सडकमा पहुँच पाएका छन्।"
                 )
-
-            # Basic road analysis
-            if earthen > 0:
-                earthen_percentage = earthen / total_households * 100
+            if dirt > 0:
+                dirt_percentage = dirt / total_households * 100
                 analysis_parts.append(
-                    f"{format_nepali_number(earthen)} घरपरिवार "
-                    f"({format_nepali_percentage(earthen_percentage)}) ले कच्ची सडकमा पहुँच पाएका छन्।"
+                    f"{format_nepali_number(dirt)} घरपरिवार "
+                    f"({format_nepali_percentage(dirt_percentage)}) ले कच्ची सडकमा पहुँच पाएका छन्।"
+                )
+            if goreto > 0:
+                goreto_percentage = goreto / total_households * 100
+                analysis_parts.append(
+                    f"{format_nepali_number(goreto)} घरपरिवार "
+                    f"({format_nepali_percentage(goreto_percentage)}) ले गोरेटो बाटोमा मात्र पहुँच पाएका छन्।"
                 )
 
-            # No road access analysis
-            if no_road > 0:
-                no_road_percentage = no_road / total_households * 100
-                analysis_parts.append(
-                    f"तर, {format_nepali_number(no_road)} घरपरिवार "
-                    f"({format_nepali_percentage(no_road_percentage)}) को सडक पहुँच नभएको अवस्था छ जसले सडक पूर्वाधारमा सुधारको आवश्यकता देखाउँछ।"
-                )
+            # No road access (if needed, but not in new codes)
+            no_road = 0  # Not present in new codes, but keep for logic compatibility
+            no_road_percentage = 0
 
         # Ward-wise comparative analysis
         if ward_data and len(ward_data) > 1:
@@ -240,9 +226,7 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
             analysis_parts.append(
                 "भविष्यमा सडक पूर्वाधार विकासमा प्राथमिकता दिएर सबै घरपरिवारलाई सडक सुविधा उपलब्ध गराउने नीति अपनाउनुपर्छ।"
             )
-        elif (
-            earthen > total_households * 0.3
-        ):  # If more than 30% have only earthen roads
+        elif dirt > total_households * 0.3:  # If more than 30% have only earthen roads
             analysis_parts.append(
                 "कच्ची सडकलाई ढुंगामाटो वा कालोपत्रे सडकमा स्तरोन्नति गर्ने कार्यक्रमलाई प्राथमिकता दिनुपर्छ।"
             )
@@ -252,7 +236,7 @@ class RoadStatusProcessor(BaseInfrastructureProcessor):
     def calculate_ward_road_access(self, ward_info):
         """Calculate good road access percentage for a ward"""
         blacktopped = (
-            ward_info["road_statuses"].get("BLACKTOPPED", {}).get("population", 0)
+            ward_info["road_statuses"].get("BLACK_TOPPED", {}).get("population", 0)
         )
         graveled = ward_info["road_statuses"].get("GRAVELED", {}).get("population", 0)
         good_road_access = blacktopped + graveled
